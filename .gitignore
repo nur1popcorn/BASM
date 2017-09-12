@@ -1,0 +1,13 @@
+.idea/*
+target/*
+*.iml
+dependency-reduced-pom.xml
+
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+hs_err_pid*
