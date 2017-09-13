@@ -93,7 +93,6 @@ public final class BASM {
                     .required();
             final OptionSpec<String> transformer = optionParser.accepts("transformer", "The class responsible for conversion.")
                     .withOptionalArg()
-                    .ofType(String.class)
                     .required();
 
             final OptionSet optionSet = optionParser.parse(args);

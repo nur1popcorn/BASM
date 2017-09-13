@@ -38,6 +38,8 @@ import java.util.stream.Stream;
  *     Attributes 4.7
  * </a>
  *
+ * @see ConstantPool
+ *
  * @author nur1popcorn
  * @since 1.0.0-alpha
  */
@@ -50,40 +52,40 @@ public abstract class AttributeInfo {
                  *     ConstantValue 4.7.2
                  * </a>
                  */
-                new SimpleEntry<>("ConstantValue", AttributeConstantValue.class.getDeclaredConstructor(DataInputStream.class)),
+                new SimpleEntry<>("ConstantValue", AttributeConstantValue.class.getDeclaredConstructor(int.class, DataInputStream.class)),
                 /*
                  * <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.3">
                  *     Code 4.7.3
                  * </a>
                  */
-                new SimpleEntry<>("Code", AttributeCode.class.getDeclaredConstructor(DataInputStream.class, ConstantPool.class)),
+                new SimpleEntry<>("Code", AttributeCode.class.getDeclaredConstructor(int.class, DataInputStream.class, ConstantPool.class)),
                 /*
                  * <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.4">
                  *     StackMapTable 4.7.4
                  * </a>
                  */
-                new SimpleEntry<>("StackMapTable", AttributeStackMapTable.class.getDeclaredConstructor(DataInputStream.class)),
+                new SimpleEntry<>("StackMapTable", AttributeStackMapTable.class.getDeclaredConstructor(int.class, DataInputStream.class)),
                 //TODO: impl
-                new SimpleEntry<>("Exceptions", AttributeConstantValue.class.getDeclaredConstructor(DataInputStream.class)),
-                new SimpleEntry<>("InnerClasses", AttributeConstantValue.class.getDeclaredConstructor(DataInputStream.class)),
-                new SimpleEntry<>("EnclosingMethod", AttributeConstantValue.class.getDeclaredConstructor(DataInputStream.class)),
-                new SimpleEntry<>("Synthetic", AttributeConstantValue.class.getDeclaredConstructor(DataInputStream.class)),
-                new SimpleEntry<>("Signature", AttributeConstantValue.class.getDeclaredConstructor(DataInputStream.class)),
-                new SimpleEntry<>("SourceFile", AttributeConstantValue.class.getDeclaredConstructor(DataInputStream.class)),
-                new SimpleEntry<>("SourceDebugExtension", AttributeConstantValue.class.getDeclaredConstructor(DataInputStream.class)),
-                new SimpleEntry<>("LineNumberTable", AttributeConstantValue.class.getDeclaredConstructor(DataInputStream.class)),
-                new SimpleEntry<>("LocalVariableTable", AttributeConstantValue.class.getDeclaredConstructor(DataInputStream.class)),
-                new SimpleEntry<>("LocalVariableTypeTable", AttributeConstantValue.class.getDeclaredConstructor(DataInputStream.class)),
-                new SimpleEntry<>("Deprecated", AttributeConstantValue.class.getDeclaredConstructor(DataInputStream.class)),
-                new SimpleEntry<>("RuntimeVisibleAnnotations", AttributeConstantValue.class.getDeclaredConstructor(DataInputStream.class)),
-                new SimpleEntry<>("RuntimeInvisibleAnnotations", AttributeConstantValue.class.getDeclaredConstructor(DataInputStream.class)),
-                new SimpleEntry<>("RuntimeVisibleParameterAnnotations", AttributeConstantValue.class.getDeclaredConstructor(DataInputStream.class)),
-                new SimpleEntry<>("RuntimeInvisibleParameterAnnotations", AttributeConstantValue.class.getDeclaredConstructor(DataInputStream.class)),
-                new SimpleEntry<>("RuntimeVisibleTypeAnnotations", AttributeConstantValue.class.getDeclaredConstructor(DataInputStream.class)),
-                new SimpleEntry<>("RuntimeInvisibleTypeAnnotations", AttributeConstantValue.class.getDeclaredConstructor(DataInputStream.class)),
-                new SimpleEntry<>("AnnotationDefault", AttributeConstantValue.class.getDeclaredConstructor(DataInputStream.class)),
-                new SimpleEntry<>("BootstrapMethods", AttributeConstantValue.class.getDeclaredConstructor(DataInputStream.class)),
-                new SimpleEntry<>("MethodParameters", AttributeConstantValue.class.getDeclaredConstructor(DataInputStream.class))
+                new SimpleEntry<>("Exceptions", AttributeConstantValue.class.getDeclaredConstructor(int.class, DataInputStream.class)),
+                new SimpleEntry<>("InnerClasses", AttributeConstantValue.class.getDeclaredConstructor(int.class, DataInputStream.class)),
+                new SimpleEntry<>("EnclosingMethod", AttributeConstantValue.class.getDeclaredConstructor(int.class, DataInputStream.class)),
+                new SimpleEntry<>("Synthetic", AttributeConstantValue.class.getDeclaredConstructor(int.class, DataInputStream.class)),
+                new SimpleEntry<>("Signature", AttributeConstantValue.class.getDeclaredConstructor(int.class, DataInputStream.class)),
+                new SimpleEntry<>("SourceFile", AttributeConstantValue.class.getDeclaredConstructor(int.class, DataInputStream.class)),
+                new SimpleEntry<>("SourceDebugExtension", AttributeConstantValue.class.getDeclaredConstructor(int.class, DataInputStream.class)),
+                new SimpleEntry<>("LineNumberTable", AttributeConstantValue.class.getDeclaredConstructor(int.class, DataInputStream.class)),
+                new SimpleEntry<>("LocalVariableTable", AttributeConstantValue.class.getDeclaredConstructor(int.class, DataInputStream.class)),
+                new SimpleEntry<>("LocalVariableTypeTable", AttributeConstantValue.class.getDeclaredConstructor(int.class, DataInputStream.class)),
+                new SimpleEntry<>("Deprecated", AttributeConstantValue.class.getDeclaredConstructor(int.class, DataInputStream.class)),
+                new SimpleEntry<>("RuntimeVisibleAnnotations", AttributeConstantValue.class.getDeclaredConstructor(int.class, DataInputStream.class)),
+                new SimpleEntry<>("RuntimeInvisibleAnnotations", AttributeConstantValue.class.getDeclaredConstructor(int.class, DataInputStream.class)),
+                new SimpleEntry<>("RuntimeVisibleParameterAnnotations", AttributeConstantValue.class.getDeclaredConstructor(int.class, DataInputStream.class)),
+                new SimpleEntry<>("RuntimeInvisibleParameterAnnotations", AttributeConstantValue.class.getDeclaredConstructor(int.class, DataInputStream.class)),
+                new SimpleEntry<>("RuntimeVisibleTypeAnnotations", AttributeConstantValue.class.getDeclaredConstructor(int.class, DataInputStream.class)),
+                new SimpleEntry<>("RuntimeInvisibleTypeAnnotations", AttributeConstantValue.class.getDeclaredConstructor(int.class, DataInputStream.class)),
+                new SimpleEntry<>("AnnotationDefault", AttributeConstantValue.class.getDeclaredConstructor(int.class, DataInputStream.class)),
+                new SimpleEntry<>("BootstrapMethods", AttributeConstantValue.class.getDeclaredConstructor(int.class, DataInputStream.class)),
+                new SimpleEntry<>("MethodParameters", AttributeConstantValue.class.getDeclaredConstructor(int.class, DataInputStream.class))
             ).collect(Collectors.toMap(SimpleEntry::getKey, SimpleEntry::getValue));
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
@@ -108,6 +110,7 @@ public abstract class AttributeInfo {
      * @param attributeLength the size of the {@link AttributeInfo} written to disc.
      */
     public AttributeInfo(int nameIndex, int attributeLength) {
+        this.nameIndex = nameIndex;
         this.attributeLength = attributeLength;
     }
 
@@ -141,7 +144,8 @@ public abstract class AttributeInfo {
                            nameIndex,
                            in
                        } :
-                       /* some constructors like AttributeCode's need 3 parameters. */
+                       /* some constructors like AttributeCode's require the constantpool
+                          to be passed as a parameter. */
                        new Object[] {
                            nameIndex,
                            in,

@@ -18,6 +18,12 @@
 
 package com.nur1popcorn.basm.utils;
 
+/**
+ * The {@link Opcodes} class is a class containing lots of useful constants.
+ *
+ * @author nur1popcorn
+ * @since 1.0.0-alpha
+ */
 public final class Opcodes {
 
     /**

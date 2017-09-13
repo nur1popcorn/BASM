@@ -21,6 +21,7 @@ package com.nur1popcorn.basm.classfile.attributes;
 import com.nur1popcorn.basm.classfile.ConstantPool;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class AttributeCode extends AttributeInfo {
@@ -47,6 +48,20 @@ public class AttributeCode extends AttributeInfo {
             exceptionTable[i] = new ExceptionTableEntry(in);
 
         attributes = AttributeInfo.read(in, constantPool);
+    }
+
+    @Override
+    public void write(DataOutputStream os, ConstantPool constantPool) throws IOException {
+        super.write(os, constantPool);
+    }
+
+    @Override
+    public String toString() {
+        return "Code" /* TODO: add stuff */;
+    }
+
+    public byte[] getByteCode() {
+        return code;
     }
 
     public static class ExceptionTableEntry {
