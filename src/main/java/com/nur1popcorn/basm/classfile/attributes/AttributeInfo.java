@@ -57,46 +57,68 @@ public abstract class AttributeInfo {
                  * </a>
                  */
                 new SimpleEntry<>("Code", AttributeCode.class.getDeclaredConstructor(DataInputStream.class, ConstantPool.class)),
+                /*
+                 * <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.4">
+                 *     StackMapTable 4.7.4
+                 * </a>
+                 */
+                new SimpleEntry<>("StackMapTable", AttributeStackMapTable.class.getDeclaredConstructor(DataInputStream.class)),
                 //TODO: impl
-                new SimpleEntry<>("StackMapTable", AttributeCode.class.getDeclaredConstructor(DataInputStream.class)),
-                new SimpleEntry<>("Exceptions", AttributeCode.class.getDeclaredConstructor(DataInputStream.class)),
-                new SimpleEntry<>("InnerClasses", AttributeCode.class.getDeclaredConstructor(DataInputStream.class)),
-                new SimpleEntry<>("EnclosingMethod", AttributeCode.class.getDeclaredConstructor(DataInputStream.class)),
-                new SimpleEntry<>("Synthetic", AttributeCode.class.getDeclaredConstructor(DataInputStream.class)),
-                new SimpleEntry<>("Signature", AttributeCode.class.getDeclaredConstructor(DataInputStream.class)),
-                new SimpleEntry<>("SourceFile", AttributeCode.class.getDeclaredConstructor(DataInputStream.class)),
-                new SimpleEntry<>("SourceDebugExtension", AttributeCode.class.getDeclaredConstructor(DataInputStream.class)),
-                new SimpleEntry<>("LineNumberTable", AttributeCode.class.getDeclaredConstructor(DataInputStream.class)),
-                new SimpleEntry<>("LocalVariableTable", AttributeCode.class.getDeclaredConstructor(DataInputStream.class)),
-                new SimpleEntry<>("LocalVariableTypeTable", AttributeCode.class.getDeclaredConstructor(DataInputStream.class)),
-                new SimpleEntry<>("Deprecated", AttributeCode.class.getDeclaredConstructor(DataInputStream.class)),
-                new SimpleEntry<>("RuntimeVisibleAnnotations", AttributeCode.class.getDeclaredConstructor(DataInputStream.class)),
-                new SimpleEntry<>("RuntimeInvisibleAnnotations", AttributeCode.class.getDeclaredConstructor(DataInputStream.class)),
-                new SimpleEntry<>("RuntimeVisibleParameterAnnotations", AttributeCode.class.getDeclaredConstructor(DataInputStream.class)),
-                new SimpleEntry<>("RuntimeInvisibleParameterAnnotations", AttributeCode.class.getDeclaredConstructor(DataInputStream.class)),
-                new SimpleEntry<>("RuntimeVisibleTypeAnnotations", AttributeCode.class.getDeclaredConstructor(DataInputStream.class)),
-                new SimpleEntry<>("RuntimeInvisibleTypeAnnotations", AttributeCode.class.getDeclaredConstructor(DataInputStream.class)),
-                new SimpleEntry<>("AnnotationDefault", AttributeCode.class.getDeclaredConstructor(DataInputStream.class)),
-                new SimpleEntry<>("BootstrapMethods", AttributeCode.class.getDeclaredConstructor(DataInputStream.class)),
-                new SimpleEntry<>("MethodParameters", AttributeCode.class.getDeclaredConstructor(DataInputStream.class))
+                new SimpleEntry<>("Exceptions", AttributeConstantValue.class.getDeclaredConstructor(DataInputStream.class)),
+                new SimpleEntry<>("InnerClasses", AttributeConstantValue.class.getDeclaredConstructor(DataInputStream.class)),
+                new SimpleEntry<>("EnclosingMethod", AttributeConstantValue.class.getDeclaredConstructor(DataInputStream.class)),
+                new SimpleEntry<>("Synthetic", AttributeConstantValue.class.getDeclaredConstructor(DataInputStream.class)),
+                new SimpleEntry<>("Signature", AttributeConstantValue.class.getDeclaredConstructor(DataInputStream.class)),
+                new SimpleEntry<>("SourceFile", AttributeConstantValue.class.getDeclaredConstructor(DataInputStream.class)),
+                new SimpleEntry<>("SourceDebugExtension", AttributeConstantValue.class.getDeclaredConstructor(DataInputStream.class)),
+                new SimpleEntry<>("LineNumberTable", AttributeConstantValue.class.getDeclaredConstructor(DataInputStream.class)),
+                new SimpleEntry<>("LocalVariableTable", AttributeConstantValue.class.getDeclaredConstructor(DataInputStream.class)),
+                new SimpleEntry<>("LocalVariableTypeTable", AttributeConstantValue.class.getDeclaredConstructor(DataInputStream.class)),
+                new SimpleEntry<>("Deprecated", AttributeConstantValue.class.getDeclaredConstructor(DataInputStream.class)),
+                new SimpleEntry<>("RuntimeVisibleAnnotations", AttributeConstantValue.class.getDeclaredConstructor(DataInputStream.class)),
+                new SimpleEntry<>("RuntimeInvisibleAnnotations", AttributeConstantValue.class.getDeclaredConstructor(DataInputStream.class)),
+                new SimpleEntry<>("RuntimeVisibleParameterAnnotations", AttributeConstantValue.class.getDeclaredConstructor(DataInputStream.class)),
+                new SimpleEntry<>("RuntimeInvisibleParameterAnnotations", AttributeConstantValue.class.getDeclaredConstructor(DataInputStream.class)),
+                new SimpleEntry<>("RuntimeVisibleTypeAnnotations", AttributeConstantValue.class.getDeclaredConstructor(DataInputStream.class)),
+                new SimpleEntry<>("RuntimeInvisibleTypeAnnotations", AttributeConstantValue.class.getDeclaredConstructor(DataInputStream.class)),
+                new SimpleEntry<>("AnnotationDefault", AttributeConstantValue.class.getDeclaredConstructor(DataInputStream.class)),
+                new SimpleEntry<>("BootstrapMethods", AttributeConstantValue.class.getDeclaredConstructor(DataInputStream.class)),
+                new SimpleEntry<>("MethodParameters", AttributeConstantValue.class.getDeclaredConstructor(DataInputStream.class))
             ).collect(Collectors.toMap(SimpleEntry::getKey, SimpleEntry::getValue));
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         }
     }
 
-    protected int attributeLength;
+    protected int nameIndex /* u2 */,
+                  attributeLength /* u4 */;
 
     /**
+     * @param nameIndex is a entry into the {@link ConstantPool} and represents the
+     *                  {@link AttributeInfo}'s identifier
      * @param in the {@link DataInputStream} from which the {@link AttributeInfo}'s
      *           length should be read.
      */
-    public AttributeInfo(DataInputStream in) throws IOException {
+    public AttributeInfo(int nameIndex, DataInputStream in) throws IOException {
+        this.nameIndex = nameIndex;
         attributeLength = in.readInt();
     }
 
-    public void write(DataOutputStream os) throws IOException {
-        //TODO: impl
+    /**
+     * @param attributeLength the size of the {@link AttributeInfo} written to disc.
+     */
+    public AttributeInfo(int nameIndex, int attributeLength) {
+        this.attributeLength = attributeLength;
+    }
+
+    /**
+     * @param os the {@link DataOutputStream} to which the {@link AttributeInfo}'s
+     *           identifier index and the {@link AttributeInfo}'s size should be
+     *           written.
+     */
+    public void write(DataOutputStream os, ConstantPool constantPool) throws IOException {
+        os.writeShort(nameIndex);
+        os.writeInt(attributeLength);
     }
 
     /**
@@ -110,16 +132,21 @@ public abstract class AttributeInfo {
         final AttributeInfo attributes[] = new AttributeInfo[in.readUnsignedShort()];
         try {
             for(int i = 0; i < attributes.length; i++) {
+                final int nameIndex = in.readUnsignedShort();
                 final Constructor<? extends AttributeInfo> constructor = ATTRIBUTE_CONSTRUCTOR_MAP.get(
-                    ((ConstantUtf8) constantPool.getEntry(in.readUnsignedShort())).bytes);
+                    ((ConstantUtf8) constantPool.getEntry(nameIndex)).bytes);
                 attributes[i] = constructor.newInstance(
-                    constructor.getParameters().length == 1 ?
-                        new Object[] { in } :
-                        /* some constructors like AttributeCode's need 2 parameters. */
-                        new Object[] {
-                            in,
-                            constantPool
-                        });
+                   constructor.getParameters().length == 2 ?
+                       new Object[] {
+                           nameIndex,
+                           in
+                       } :
+                       /* some constructors like AttributeCode's need 3 parameters. */
+                       new Object[] {
+                           nameIndex,
+                           in,
+                           constantPool
+                       });
             }
         } catch (InstantiationException | IllegalAccessException e) {
             e.printStackTrace();

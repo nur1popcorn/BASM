@@ -27,14 +27,14 @@ public class AttributeCode extends AttributeInfo {
     private int maxStack /* u2 */,
                 maxLocals /* u2 */;
 
-    private byte code[] /* length: u4 \
+    private byte code[] /* length: u4
                            entries: u1 */;
 
     private ExceptionTableEntry exceptionTable[] /* length: u2 */;
     private AttributeInfo attributes[] /* length: u2 */;
 
-    public AttributeCode(DataInputStream in, ConstantPool constantPool) throws IOException {
-        super(in);
+    public AttributeCode(int nameIndex, DataInputStream in, ConstantPool constantPool) throws IOException {
+        super(nameIndex, in);
         maxStack = in.readUnsignedShort();
         maxLocals = in.readUnsignedShort();
 

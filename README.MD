@@ -1,3 +1,3 @@
 BASM
 
-because sometimes writing java isn't enough.
+Because sometimes writing java isn't enough.

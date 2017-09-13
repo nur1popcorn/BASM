@@ -42,17 +42,19 @@ public class AttributeConstantValue extends AttributeInfo {
     private int constantValueIndex /* u2 */;
 
     /**
+     * @param nameIndex is a entry into the {@link ConstantPool} and represents the
+     *                  {@link AttributeInfo}'s identifier
      * @param in the {@link DataInputStream} from which the constantValueIndex should be
      *           read.
      */
-    public AttributeConstantValue(DataInputStream in) throws IOException {
-        super(in);
+    public AttributeConstantValue(int nameIndex, DataInputStream in) throws IOException {
+        super(nameIndex, in);
         constantValueIndex = in.readUnsignedShort();
     }
 
     @Override
-    public void write(DataOutputStream os) throws IOException {
-        super.write(os);
+    public void write(DataOutputStream os, ConstantPool constantPool) throws IOException {
+        super.write(os, constantPool);
         os.writeShort(constantValueIndex);
     }
 

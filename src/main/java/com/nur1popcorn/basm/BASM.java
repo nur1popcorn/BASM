@@ -1,8 +1,6 @@
 package com.nur1popcorn.basm;
 
 import com.nur1popcorn.basm.classfile.ClassReader;
-import com.nur1popcorn.basm.classfile.ConstantPool;
-import com.nur1popcorn.basm.classfile.constants.ConstantInfo;
 import com.nur1popcorn.basm.transformers.Transformer;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;

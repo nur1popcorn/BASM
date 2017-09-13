@@ -84,14 +84,15 @@ public class FieldMethodInfo {
         );
     }
 
-    public void write(DataOutputStream os) throws IOException {
+    //TODO: desc
+    public void write(DataOutputStream os, ConstantPool constantPool) throws IOException {
         os.writeShort(access);
         os.writeShort(nameIndex);
         os.writeShort(descIndex);
         
         os.writeShort(attributes.length);
         for(AttributeInfo attributeInfo : attributes)
-            attributeInfo.write(os);
+            attributeInfo.write(os, constantPool);
     }
 
     /**
