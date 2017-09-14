@@ -253,6 +253,43 @@ public final class Opcodes {
         "enum"
     };
 
+    /* stands for no operation and does nothing. */
+    public static final byte NOP =                                 0x0;
+
+    /* puts null on the stack */
+    public static final byte ACONST_NULL =                         0x1;
+
+    /* puts int value between -1 and 5 on the stack. */
+    public static final byte ICONST_M1 =                           0x2;
+    public static final byte ICONST_0 =                            0x3;
+    public static final byte ICONST_1 =                            0x4;
+    public static final byte ICONST_2 =                            0x5;
+    public static final byte ICONST_3 =                            0x6;
+    public static final byte ICONST_4 =                            0x7;
+    public static final byte ICONST_5 =                            0x8;
+
+    /* puts long value between 0L and 1L on the stack. */
+    public static final byte LCONST_0 =                            0x9;
+    public static final byte LCONST_1 =                            0xa;
+
+    /* puts float value between 0f and 2f on the stack. */
+    public static final byte FCONST_0 =                            0xb;
+    public static final byte FCONST_1 =                            0xc;
+    public static final byte FCONST_2 =                            0xd;
+
+    /* puts double value between 0.0 and 1.0 on the stack. */
+    public static final byte DCONST_0 =                            0xe;
+    public static final byte DCONST_1 =                            0xf;
+
+    /* puts a byte on the stack. */
+    public static final byte BIPUSH =                              0x10;
+    
+    /* puts a short on the stack. */
+    public static final byte SIPUSH =                              0x11;
+
+    /* stands for load constant and pushes a constant onto the stack. */
+    public static final byte LDC =                                 0x12;
+    
     // prevent construction :/
     private Opcodes()
     {}

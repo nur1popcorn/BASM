@@ -1,6 +1,5 @@
 package com.nur1popcorn.basm;
 
-import com.nur1popcorn.basm.classfile.ClassReader;
 import com.nur1popcorn.basm.transformers.Transformer;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -27,56 +26,7 @@ public final class BASM {
         "nur1popcorn"
     };
 
-    public static byte[] encodeUtf8(String s) {
-        int strLen = 0;
-        final char chars[] = s.toCharArray();
-        // obtain size needed for buffer.
-        for(char c : chars)
-            strLen += c <= '\u007f' ? 1 : c <= '\u07ff' ? 2 : 3;
-        final byte buff[] = new byte[strLen];
-        // fill buffer.
-        int offset = 0;
-        for(int i = 0; i < s.length(); i++) {
-            final char c = s.charAt(i);
-            if(c <= '\u007f')
-                // only 1 byte needed.
-                buff[offset++] = (byte)c;
-            else if(c <= '\u07ff' /* 1 1111 11 1111‬ */) {
-                // b0 = 110? ????
-                buff[offset++] = (byte)(0xc0 | c >> 6 /* 7ff SHR 6 -> 1f */);
-                // b1 = 10?? ????
-                buff[offset++] = (byte)(0x80 | c & 0x3f);
-                /* 11 1111 1111 */
-            } else /* if(c <= '\uffff') /* 1111 11 1111 11 1111 */ {
-                // b0 = ‭1110 ????
-                buff[offset++] = (byte)(0xe0 | c >> 12 /* ffff SHR 12 -> f */);
-                // b1 = ‭10?? ????
-                buff[offset++] = (byte)(0x80 | c >> 6 & 0x3f);
-                // b2 = ‭10?? ????
-                buff[offset++] = (byte)(0x80 | c & 0x3f);
-            }
-        }
-        return buff;
-    }
-
     public static void main(String args[]) throws IOException {
-        try {
-            DataInputStream in = new DataInputStream(BASM.class.getResourceAsStream("BASM.class"));
-            ClassReader classReader = new ClassReader(in);
-            classReader.read();
-            System.out.println();
-            for(int i = 0; i < classReader.getConstantPool().getSize(); i++)
-                System.out.println(i + ":" + classReader.getConstantPool().getEntry(i));
-            System.out.println();
-            in.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        if(true)
-            return;
-
         try {
             final OptionParser optionParser = new OptionParser();
             optionParser.printHelpOn(System.out);
