@@ -287,9 +287,147 @@ public final class Opcodes {
     /* puts a short on the stack. */
     public static final byte SIPUSH =                              0x11;
 
-    /* stands for load constant and pushes a constant onto the stack. */
+    /* stands for load constant and pushes a constant onto the stack.
+       it requires 1 parameter of type u1. */
     public static final byte LDC =                                 0x12;
-    
+
+    /* requires 1 parameter of type u2. */
+    public static final byte LDC_W =                               0x13;
+
+    /* pushes longs or doubles onto the stack.
+       and requires 1 parameter of type u2. */
+    public static final byte LDC2_W =                              0x14;
+
+    /* puts value of local variable at given index of type int onto stack.
+       it requires 1 parameter of type u1. */
+    public static final byte ILOAD =                               0x15;
+    /* of type long. */
+    public static final byte LLOAD =                               0x16;
+    /* of type float. */
+    public static final byte FLOAD =                               0x17;
+    /* of type double */
+    public static final byte DLOAD =                               0x18;
+    /* puts object reference onto the stack. */
+    public static final byte ALOAD =                               0x19;
+
+    /* requires no parameters and loads the N th local variable of type int onto the stack. */
+    public static final byte ILOAD_0 =                             0x1a;
+    public static final byte ILOAD_1 =                             0x1b;
+    public static final byte ILOAD_2 =                             0x1c;
+    public static final byte ILOAD_3 =                             0x1d;
+
+    /* of type long. */
+    public static final byte LLOAD_0 =                             0x1e;
+    public static final byte LLOAD_1 =                             0x1f;
+    public static final byte LLOAD_2 =                             0x20;
+    public static final byte LLOAD_3 =                             0x21;
+
+    /* of type float. */
+    public static final byte FLOAD_0 =                             0x22;
+    public static final byte FLOAD_1 =                             0x23;
+    public static final byte FLOAD_2 =                             0x24;
+    public static final byte FLOAD_3 =                             0x25;
+
+    /* of type double. */
+    public static final byte DLOAD_0 =                             0x26;
+    public static final byte DLOAD_1 =                             0x27;
+    public static final byte DLOAD_2 =                             0x28;
+    public static final byte DLOAD_3 =                             0x29;
+
+    /* puts object reference onto the stack. */
+    public static final byte ALOAD_0 =                             0x2a;
+    public static final byte ALOAD_1 =                             0x2b;
+    public static final byte ALOAD_2 =                             0x2c;
+    public static final byte ALOAD_3 =                             0x2d;
+
+    /* loads value of type int from given array at given index. (arrayref and index should lay on the stack before execution)
+       index and arrayref will be popped of the stack after execution and the result will be pushed onto the stack.*/
+    public static final byte IALOAD =                              0x2e;
+    /* of type long. */
+    public static final byte LALOAD =                              0x2f;
+    /* of type float. */
+    public static final byte FALOAD =                              0x30;
+    /* of type double. */
+    public static final byte DALOAD =                              0x31;
+    /* puts object reference onto stack. */
+    public static final byte AALOAD =                              0x32;
+    /* of type boolean. */
+    public static final byte BALOAD =                              0x33;
+    /* of type char. */
+    public static final byte CALOAD =                              0x34;
+    /* of type short. */
+    public static final byte SALOAD =                              0x35;
+
+    public static final String OPCODE_MNEMONICS[] = new String[] {
+        "nop",
+
+        "aconst_null",
+
+        "iconst_m1",
+        "iconst_0",
+        "iconst_1",
+        "iconst_2",
+        "iconst_3",
+        "iconst_4",
+        "iconst_5",
+
+        "lconst_0",
+        "lconst_1",
+
+        "fconst_0",
+        "fconst_1",
+        "fconst_2",
+
+        "dconst_0",
+        "dconst_1",
+
+        "bipush",
+        "sipush",
+
+        "ldc",
+        "ldc_w",
+        "ldc2_w",
+
+        "iload",
+        "lload",
+        "fload",
+        "dload",
+        "aload",
+
+        "iload_0",
+        "iload_1",
+        "iload_2",
+        "iload_3",
+
+        "lload_0",
+        "lload_1",
+        "lload_2",
+        "lload_3",
+
+        "fload_0",
+        "fload_1",
+        "fload_2",
+        "fload_3",
+
+        "dload_0",
+        "dload_1",
+        "dload_2",
+        "dload_3",
+
+        "aload_0",
+        "aload_1",
+        "aload_2",
+        "aload_3",
+
+        "iaload",
+        "laload",
+        "faload",
+        "daload",
+        "baload",
+        "caload",
+        "saload",
+    };
+
     // prevent construction :/
     private Opcodes()
     {}
