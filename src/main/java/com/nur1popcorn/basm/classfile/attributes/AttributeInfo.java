@@ -73,8 +73,11 @@ public abstract class AttributeInfo {
                 new SimpleEntry<>("Signature", AttributeConstantValue.class.getDeclaredConstructor(int.class, DataInputStream.class)),
                 new SimpleEntry<>("SourceFile", AttributeConstantValue.class.getDeclaredConstructor(int.class, DataInputStream.class)),
                 new SimpleEntry<>("SourceDebugExtension", AttributeConstantValue.class.getDeclaredConstructor(int.class, DataInputStream.class)),
-                new SimpleEntry<>("LineNumberTable", AttributeConstantValue.class.getDeclaredConstructor(int.class, DataInputStream.class)),
-                new SimpleEntry<>("LocalVariableTable", AttributeConstantValue.class.getDeclaredConstructor(int.class, DataInputStream.class)),
+
+                new SimpleEntry<>("LineNumberTable", AttributeLineNumberTable.class.getDeclaredConstructor(int.class, DataInputStream.class)),
+                new SimpleEntry<>("LocalVariableTable", AttributeLocalVariableTable.class.getDeclaredConstructor(int.class, DataInputStream.class)),
+
+                //TODO: impl
                 new SimpleEntry<>("LocalVariableTypeTable", AttributeConstantValue.class.getDeclaredConstructor(int.class, DataInputStream.class)),
                 new SimpleEntry<>("Deprecated", AttributeConstantValue.class.getDeclaredConstructor(int.class, DataInputStream.class)),
                 new SimpleEntry<>("RuntimeVisibleAnnotations", AttributeConstantValue.class.getDeclaredConstructor(int.class, DataInputStream.class)),

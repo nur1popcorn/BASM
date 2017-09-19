@@ -8,7 +8,6 @@ import joptsimple.OptionSpec;
 import java.io.*;
 
 public final class BASM {
-
     /**
      * The program's name.
      */
