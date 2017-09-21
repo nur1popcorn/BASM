@@ -83,12 +83,12 @@ public class StackMapFrame {
         final int u1 = Byte.toUnsignedInt(tag);
         // cleverly placed if statements perform O(log n) which is about somewhere between 2 - 3 max branches.
         if(u1 < 248) {
-            if(u1 == 247)
+            if(u1 == 247) {
+                // same_locals_1_stack_item_frame_extended
+            } else if(u1 < 64)
                 // same_frame
                 return new StackMapFrame(tag);
-            else if(u1 < 64) {
-                // same_locals_1_stack_item_frame_extended
-            } else /* if(u1 < 127) */ {
+            else /* if(u1 < 127) */ {
                 // same_locals_1_stack_item_frame
             }
         } else if(u1 < 252) {

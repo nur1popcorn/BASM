@@ -46,6 +46,11 @@ public class AttributeLineNumberTable extends AttributeInfo {
             lineNumberTable[i] = new LineNumberTableEntry(in);
     }
 
+    public AttributeLineNumberTable(int nameIndex, LineNumberTableEntry lineNumberTable[]) {
+        super(nameIndex, 2 + /* length */ lineNumberTable.length * 4 /* 2 x u2 */);
+        this.lineNumberTable = lineNumberTable;
+    }
+
     @Override
     public void write(DataOutputStream os, ConstantPool constantPool) throws IOException {
         super.write(os, constantPool);
@@ -56,11 +61,11 @@ public class AttributeLineNumberTable extends AttributeInfo {
 
     @Override
     public String toString() {
-        final StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("LineNumberTable [");
+        final StringBuilder stringBuilder = new StringBuilder()
+                .append("LineNumberTable[");
         for(LineNumberTableEntry entry : lineNumberTable)
             stringBuilder.append(entry.toString())
-                         .append(", ");
+                         .append(",");
         return stringBuilder.append("]")
                 .toString();
     }
@@ -72,7 +77,7 @@ public class AttributeLineNumberTable extends AttributeInfo {
         return lineNumberTable;
     }
 
-    public static class LineNumberTableEntry {
+    public static final class LineNumberTableEntry {
         public int startPc /* u2 */,
                    lineNumber /* u2 */;
 
@@ -96,7 +101,7 @@ public class AttributeLineNumberTable extends AttributeInfo {
 
         @Override
         public String toString() {
-            return "[" +
+            return "LineNumberTableEntry [" +
                         startPc +
                         ", " +
                         lineNumber +

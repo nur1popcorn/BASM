@@ -358,6 +358,17 @@ public final class Opcodes {
     /* of type short. */
     public static final byte SALOAD =                              0x35;
 
+    /* stores value of type int on stack in localvariable at given offset. */
+    public static final byte ISTORE =                              0x36;
+    /* of type long. */
+    public static final byte LSTORE =                              0x37;
+    /* of type float. */
+    public static final byte FSTORE =                              0x38;
+    /* of type double. */
+    public static final byte DSTORE =                              0x39;
+    /* stores object reference. */
+    public static final byte ASTORE =                              0x3a;
+
     public static final String OPCODE_MNEMONICS[] = new String[] {
         "nop",
 
@@ -426,6 +437,12 @@ public final class Opcodes {
         "baload",
         "caload",
         "saload",
+
+        "istore",
+        "lstore",
+        "fstore",
+        "dstore",
+        "astore"
     };
 
     // prevent construction :/

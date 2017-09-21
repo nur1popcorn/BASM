@@ -1,6 +1,7 @@
 package com.nur1popcorn.basm.transformers;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 public class Disassembler implements Transformer {

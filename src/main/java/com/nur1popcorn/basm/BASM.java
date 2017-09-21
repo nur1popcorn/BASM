@@ -5,7 +5,8 @@ import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 
 public final class BASM {
     /**

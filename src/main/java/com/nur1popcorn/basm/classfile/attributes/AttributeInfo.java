@@ -26,7 +26,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.AbstractMap.*;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -76,9 +76,9 @@ public abstract class AttributeInfo {
 
                 new SimpleEntry<>("LineNumberTable", AttributeLineNumberTable.class.getDeclaredConstructor(int.class, DataInputStream.class)),
                 new SimpleEntry<>("LocalVariableTable", AttributeLocalVariableTable.class.getDeclaredConstructor(int.class, DataInputStream.class)),
+                new SimpleEntry<>("LocalVariableTypeTable", AttributeLocalVariableTypeTable.class.getDeclaredConstructor(int.class, DataInputStream.class)),
 
                 //TODO: impl
-                new SimpleEntry<>("LocalVariableTypeTable", AttributeConstantValue.class.getDeclaredConstructor(int.class, DataInputStream.class)),
                 new SimpleEntry<>("Deprecated", AttributeConstantValue.class.getDeclaredConstructor(int.class, DataInputStream.class)),
                 new SimpleEntry<>("RuntimeVisibleAnnotations", AttributeConstantValue.class.getDeclaredConstructor(int.class, DataInputStream.class)),
                 new SimpleEntry<>("RuntimeInvisibleAnnotations", AttributeConstantValue.class.getDeclaredConstructor(int.class, DataInputStream.class)),

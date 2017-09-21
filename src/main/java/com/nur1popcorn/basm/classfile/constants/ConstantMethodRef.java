@@ -64,7 +64,7 @@ public final class ConstantMethodRef extends ConstantInfo {
 
     @Override
     public final String toString() {
-        return super.toString() + " [" +
+        return super.toString() + "[" +
                     classIndex +
                     "," +
                     nameAndTypeIndex +

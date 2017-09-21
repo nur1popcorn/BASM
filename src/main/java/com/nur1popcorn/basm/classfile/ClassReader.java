@@ -21,7 +21,7 @@ package com.nur1popcorn.basm.classfile;
 import java.io.DataInputStream;
 import java.io.IOException;
 
-import static com.nur1popcorn.basm.utils.Opcodes.*;
+import static com.nur1popcorn.basm.utils.Opcodes.MAGIC;
 
 public class ClassReader {
     private DataInputStream in;

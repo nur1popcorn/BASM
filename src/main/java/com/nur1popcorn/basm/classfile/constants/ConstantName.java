@@ -78,7 +78,7 @@ public final class ConstantName extends ConstantInfo {
 
     @Override
     public final String toString() {
-        return super.toString() + " [" +
+        return super.toString() + "[" +
                     nameIndex +
                 "]";
     }

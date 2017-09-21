@@ -21,7 +21,7 @@ package com.nur1popcorn.basm.classfile.constants;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import static com.nur1popcorn.basm.utils.Opcodes.*;
+import static com.nur1popcorn.basm.utils.Opcodes.CONSTANT_UTF8;
 
 /**
  * The {@link ConstantUtf8} represents a simple string value.
@@ -103,7 +103,7 @@ public final class ConstantUtf8 extends ConstantInfo {
 
     @Override
     public final String toString() {
-        return super.toString() + " [" +
+        return super.toString() + "[" +
                     bytes +
                 "]";
     }

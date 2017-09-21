@@ -60,7 +60,7 @@ public class AttributeConstantValue extends AttributeInfo {
 
     @Override
     public String toString() {
-        return "ConstantValue [" + constantValueIndex + "]";
+        return "ConstantValue[" + constantValueIndex + "]";
     }
 
     /**

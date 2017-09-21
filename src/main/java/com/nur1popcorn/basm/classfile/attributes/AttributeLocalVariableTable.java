@@ -41,12 +41,15 @@ public class AttributeLocalVariableTable extends AttributeInfo {
 
     public AttributeLocalVariableTable(int nameIndex, DataInputStream in) throws IOException {
         super(nameIndex, in);
-        localVariableTable = new LocalVariableTableEntry[in.readUnsignedShort()];
-        for(int i = 0; i < localVariableTable.length; i++) {
-            //TODO: check
-            final LocalVariableTableEntry localVariableTableEntry = new LocalVariableTableEntry(in);
-            localVariableTable[localVariableTableEntry.index] = localVariableTableEntry;
-        }
+        int len = in.readUnsignedShort();
+        localVariableTable = new LocalVariableTableEntry[len];
+        for(int i = 0; i < localVariableTable.length; i++)
+            localVariableTable[i] = new LocalVariableTableEntry(in);
+    }
+
+    public AttributeLocalVariableTable(int nameIndex, LocalVariableTableEntry localVariableTable[]) {
+        super(nameIndex, 2 /* length */ + localVariableTable.length * 10 /* 5 x u2 */);
+        this.localVariableTable = localVariableTable;
     }
 
     @Override
@@ -59,11 +62,11 @@ public class AttributeLocalVariableTable extends AttributeInfo {
 
     @Override
     public String toString() {
-        final StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("LocalVariableTable [");
+        final StringBuilder stringBuilder = new StringBuilder()
+                .append("LocalVariableTable[");
         for(LocalVariableTableEntry entry : localVariableTable)
             stringBuilder.append(entry.toString())
-                         .append(", ");
+                         .append(",");
         return stringBuilder.append("]")
                 .toString();
     }
@@ -75,7 +78,8 @@ public class AttributeLocalVariableTable extends AttributeInfo {
         return localVariableTable;
     }
 
-    public static class LocalVariableTableEntry {
+    //TODO: add lookup funcs and desc etc.
+    public static final class LocalVariableTableEntry {
         private int startPc /* u2 */,
                     length /* u2 */,
                     nameIndex /* u2 */,
@@ -98,8 +102,27 @@ public class AttributeLocalVariableTable extends AttributeInfo {
                  in.readUnsignedShort());
         }
 
-        public void write(DataOutputStream os) {
+        public void write(DataOutputStream os) throws IOException {
+            os.writeShort(startPc);
+            os.writeShort(length);
+            os.writeShort(nameIndex);
+            os.writeShort(descIndex);
+            os.writeShort(index);
+        }
 
+        @Override
+        public String toString() {
+            return "LocalVariableTableEntry[" +
+                       startPc +
+                       "," +
+                       length +
+                       "," +
+                       nameIndex +
+                       "," +
+                       descIndex +
+                       "," +
+                       index +
+                   "]";
         }
     }
 }

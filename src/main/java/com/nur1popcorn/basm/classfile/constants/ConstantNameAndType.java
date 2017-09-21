@@ -23,7 +23,7 @@ import com.nur1popcorn.basm.classfile.ConstantPool;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import static com.nur1popcorn.basm.utils.Opcodes.*;
+import static com.nur1popcorn.basm.utils.Opcodes.CONSTANT_NAME_AND_TYPE;
 
 /**
  * The {@link ConstantNameAndType} is used to store references to either a field's or a method's
@@ -64,7 +64,7 @@ public final class ConstantNameAndType extends ConstantInfo {
 
     @Override
     public final String toString() {
-        return super.toString() + " [" +
+        return super.toString() + "[" +
                     nameIndex +
                     "," +
                     descIndex +

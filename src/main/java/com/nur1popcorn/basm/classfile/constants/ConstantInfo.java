@@ -66,11 +66,6 @@ public abstract class ConstantInfo {
         return tag;
     }
 
-    @Override
-    public String toString() {
-        return CONSTANT_POOL_ENTRY_NAMES[tag];
-    }
-
     /**
      * @param in the {@link DataInputStream} from which the {@link ConstantInfo} should be read.
      *

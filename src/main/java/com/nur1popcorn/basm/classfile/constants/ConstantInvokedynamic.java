@@ -23,7 +23,7 @@ import com.nur1popcorn.basm.classfile.ConstantPool;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import static com.nur1popcorn.basm.utils.Opcodes.*;
+import static com.nur1popcorn.basm.utils.Opcodes.CONSTANT_INVOKEDYNAMIC;
 
 /**
  * The {@link ConstantInvokedynamic} TODO: describe too.
@@ -61,7 +61,7 @@ public class ConstantInvokedynamic extends ConstantInfo {
 
     @Override
     public String toString() {
-        return super.toString() + " [" +
+        return super.toString() + "[" +
                     bootstrapMethodAttrIndex +
                     "," +
                     nameAndTypeIndex +

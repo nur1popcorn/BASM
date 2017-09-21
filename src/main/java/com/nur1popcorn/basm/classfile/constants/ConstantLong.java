@@ -21,7 +21,7 @@ package com.nur1popcorn.basm.classfile.constants;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import static com.nur1popcorn.basm.utils.Opcodes.*;
+import static com.nur1popcorn.basm.utils.Opcodes.CONSTANT_LONG;
 
 /**
  * The {@link ConstantLong} is made up of 8 bytes of data either belonging to a long or double.
@@ -54,7 +54,7 @@ public final class ConstantLong extends ConstantInfo {
 
     @Override
     public final String toString() {
-        return super.toString() + " [" + (
+        return super.toString() + "[" + (
                     getTag() == CONSTANT_LONG ?
                         Double.longBitsToDouble(bytes) :
                         bytes

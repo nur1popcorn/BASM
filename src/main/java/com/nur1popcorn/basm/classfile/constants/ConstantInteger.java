@@ -21,7 +21,7 @@ package com.nur1popcorn.basm.classfile.constants;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import static com.nur1popcorn.basm.utils.Opcodes.*;
+import static com.nur1popcorn.basm.utils.Opcodes.CONSTANT_INTEGER;
 
 /**
  * The {@link ConstantInteger} is made up of 4 bytes of data either belonging to an integer or float.
@@ -54,7 +54,7 @@ public final class ConstantInteger extends ConstantInfo {
 
     @Override
     public final String toString() {
-        return super.toString() + " [" + (
+        return super.toString() + "[" + (
                     getTag() == CONSTANT_INTEGER ?
                             bytes :
                             Float.intBitsToFloat(bytes)

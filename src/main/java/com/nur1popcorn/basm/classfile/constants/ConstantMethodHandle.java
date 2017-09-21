@@ -23,7 +23,8 @@ import com.nur1popcorn.basm.classfile.ConstantPool;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import static com.nur1popcorn.basm.utils.Opcodes.*;
+import static com.nur1popcorn.basm.utils.Opcodes.CONSTANT_METHOD_HANDLE;
+import static com.nur1popcorn.basm.utils.Opcodes.REF_NAMES;
 
 /**
  * The {@link ConstantMethodHandle} describes a CONSTANT_Fieldref's, CONSTANT_Methodref's or
@@ -65,7 +66,7 @@ public class ConstantMethodHandle extends ConstantInfo {
 
     @Override
     public String toString() {
-        return super.toString() + " [" +
+        return super.toString() + "[" +
                     REF_NAMES[refKind] +
                     "," +
                     refIndex +
