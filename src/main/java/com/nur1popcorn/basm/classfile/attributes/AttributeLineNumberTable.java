@@ -44,6 +44,8 @@ public class AttributeLineNumberTable extends AttributeInfo {
         lineNumberTable = new LineNumberTableEntry[in.readUnsignedShort()];
         for(int i = 0; i < lineNumberTable.length; i++)
             lineNumberTable[i] = new LineNumberTableEntry(in);
+        System.out.println(this);
+        System.out.println();
     }
 
     public AttributeLineNumberTable(int nameIndex, LineNumberTableEntry lineNumberTable[]) {
@@ -63,9 +65,12 @@ public class AttributeLineNumberTable extends AttributeInfo {
     public String toString() {
         final StringBuilder stringBuilder = new StringBuilder()
                 .append("LineNumberTable[");
-        for(LineNumberTableEntry entry : lineNumberTable)
-            stringBuilder.append(entry.toString())
-                         .append(",");
+        if(lineNumberTable.length != 0) {
+            stringBuilder.append(lineNumberTable[0]);
+            for(int i = 1; i < lineNumberTable.length; i++)
+                stringBuilder.append(",")
+                             .append(lineNumberTable[i]);
+        }
         return stringBuilder.append("]")
                 .toString();
     }
@@ -101,7 +106,7 @@ public class AttributeLineNumberTable extends AttributeInfo {
 
         @Override
         public String toString() {
-            return "LineNumberTableEntry [" +
+            return "LineNumberTableEntry[" +
                         startPc +
                         ", " +
                         lineNumber +

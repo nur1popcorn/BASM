@@ -25,7 +25,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 /**
- * The {@link AttributeLocalVariableTypeTable} is an optional attribute
+ * The {@link AttributeLocalVariableTypeTable} TODO: desc
  * <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.14">
  *     LocalVariableTypeTable 4.7.14
  * </a>
@@ -61,9 +61,12 @@ public class AttributeLocalVariableTypeTable extends AttributeInfo {
     public String toString() {
         final StringBuilder stringBuilder = new StringBuilder()
                 .append("LocalVariableTypeTable[");
-        for(LocalVariableTypeTableEntry entry : localVariableTypeTable)
-            stringBuilder.append(entry.toString())
-                    .append(",");
+        if(localVariableTypeTable.length != 0) {
+            stringBuilder.append(localVariableTypeTable[0]);
+            for(int i = 1; i < localVariableTypeTable.length; i++)
+                stringBuilder.append(",")
+                        .append(localVariableTypeTable[i]);
+        }
         return stringBuilder.append("]")
                 .toString();
     }

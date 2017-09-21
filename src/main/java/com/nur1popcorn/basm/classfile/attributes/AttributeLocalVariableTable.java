@@ -64,9 +64,12 @@ public class AttributeLocalVariableTable extends AttributeInfo {
     public String toString() {
         final StringBuilder stringBuilder = new StringBuilder()
                 .append("LocalVariableTable[");
-        for(LocalVariableTableEntry entry : localVariableTable)
-            stringBuilder.append(entry.toString())
-                         .append(",");
+        if(localVariableTable.length != 0) {
+            stringBuilder.append(localVariableTable[0]);
+            for(int i = 1; i < localVariableTable.length; i++)
+                stringBuilder.append(",")
+                        .append(localVariableTable[i]);
+        }
         return stringBuilder.append("]")
                 .toString();
     }

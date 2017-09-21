@@ -369,6 +369,36 @@ public final class Opcodes {
     /* stores object reference. */
     public static final byte ASTORE =                              0x3a;
 
+    /* stores value of type int in N th localvariable. */
+    public static final byte ISTORE_0 =                            0x3b;
+    public static final byte ISTORE_1 =                            0x3c;
+    public static final byte ISTORE_2 =                            0x3d;
+    public static final byte ISTORE_3 =                            0x3e;
+
+    /* of type long. */
+    public static final byte LSTORE_0 =                            0x3f;
+    public static final byte LSTORE_1 =                            0x40;
+    public static final byte LSTORE_2 =                            0x41;
+    public static final byte LSTORE_3 =                            0x42;
+
+    /* of type float. */
+    public static final byte FSTORE_0 =                            0x43;
+    public static final byte FSTORE_1 =                            0x44;
+    public static final byte FSTORE_2 =                            0x45;
+    public static final byte FSTORE_3 =                            0x46;
+
+    /* of type long. */
+    public static final byte DSTORE_0 =                            0x47;
+    public static final byte DSTORE_1 =                            0x48;
+    public static final byte DSTORE_2 =                            0x49;
+    public static final byte DSTORE_3 =                            0x4a;
+
+    /* stores object reference. */
+    public static final byte ASTORE_0 =                            0x4b;
+    public static final byte ASTORE_1 =                            0x4c;
+    public static final byte ASTORE_2 =                            0x4d;
+    public static final byte ASTORE_3 =                            0x4e;
+
     public static final String OPCODE_MNEMONICS[] = new String[] {
         "nop",
 
@@ -442,7 +472,32 @@ public final class Opcodes {
         "lstore",
         "fstore",
         "dstore",
-        "astore"
+        "astore",
+
+        "istore_0",
+        "istore_1",
+        "istore_2",
+        "istore_3",
+
+        "lstore_0",
+        "lstore_1",
+        "lstore_2",
+        "lstore_3",
+
+        "fstore_0",
+        "fstore_1",
+        "fstore_2",
+        "fstore_3",
+
+        "dstore_0",
+        "dstore_1",
+        "dstore_2",
+        "dstore_3",
+
+        "astore_0",
+        "astore_1",
+        "astore_2",
+        "astore_3",
     };
 
     // prevent construction :/
