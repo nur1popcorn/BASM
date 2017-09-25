@@ -47,13 +47,13 @@ public final class ConstantInteger extends ConstantInfo {
     }
 
     @Override
-    public final void write(DataOutputStream os) throws IOException {
+    public void write(DataOutputStream os) throws IOException {
         super.write(os);
         os.writeInt(bytes);
     }
 
     @Override
-    public final String toString() {
+    public String toString() {
         return super.toString() + "[" + (
                     getTag() == CONSTANT_INTEGER ?
                             bytes :
@@ -64,28 +64,28 @@ public final class ConstantInteger extends ConstantInfo {
     /**
      * @param bytes the value which the the integer will be set to.
      */
-    public final void setBytes(int bytes) {
+    public void setBytes(int bytes) {
         this.bytes = bytes;
     }
 
     /**
      * @param bytes the value which the the float will be set to.
      */
-    public final void setBytes(float bytes) {
+    public void setBytes(float bytes) {
         this.bytes = Float.floatToIntBits(bytes);
     }
 
     /**
      * @return the value of bytes as an integer.
      */
-    public final int asInteger() {
+    public int asInteger() {
         return bytes;
     }
 
     /**
      * @return the value of bytes as a float.
      */
-    public final float asFloat() {
+    public float asFloat() {
         return Float.intBitsToFloat(bytes);
     }
 }

@@ -47,13 +47,13 @@ public final class ConstantLong extends ConstantInfo {
     }
 
     @Override
-    public final void write(DataOutputStream os) throws IOException {
+    public void write(DataOutputStream os) throws IOException {
         super.write(os);
         os.writeLong(bytes);
     }
 
     @Override
-    public final String toString() {
+    public String toString() {
         return super.toString() + "[" + (
                     getTag() == CONSTANT_LONG ?
                         Double.longBitsToDouble(bytes) :
@@ -64,28 +64,28 @@ public final class ConstantLong extends ConstantInfo {
     /**
      * @param bytes the value which the the long will be set to.
      */
-    public final void setBytes(long bytes) {
+    public void setBytes(long bytes) {
         this.bytes = bytes;
     }
 
     /**
      * @param bytes the value which the the double will be set to.
      */
-    public final void setBytes(double bytes) {
+    public void setBytes(double bytes) {
         this.bytes = Double.doubleToLongBits(bytes);
     }
 
     /**
      * @return the value of bytes as a long.
      */
-    public final long asLong() {
+    public long asLong() {
         return bytes;
     }
 
     /**
      * @return the value of bytes as a double.
      */
-    public final double asDouble() {
+    public double asDouble() {
         return Double.longBitsToDouble(bytes);
     }
 }

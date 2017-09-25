@@ -76,7 +76,7 @@ public class ConstantMethodHandle extends ConstantInfo {
     /**
      * @return the type of reference and its behavior in bytecode.
      */
-    public final byte getRefKind() {
+    public byte getRefKind() {
         return refKind;
     }
 
@@ -86,7 +86,7 @@ public class ConstantMethodHandle extends ConstantInfo {
      * @return the referenced CONSTANT_Fieldref, CONSTANT_Methodref or CONSTANT_InterfaceMethodref
      *         inside of the {@link ConstantPool}.
      */
-    public final ConstantMethodRef indexRef(ConstantPool constantPool) {
+    public ConstantMethodRef indexRef(ConstantPool constantPool) {
         return (ConstantMethodRef) constantPool.getEntry(refIndex);
     }
 }

@@ -56,14 +56,14 @@ public final class ConstantMethodRef extends ConstantInfo {
     }
 
     @Override
-    public final void write(DataOutputStream os) throws IOException {
+    public void write(DataOutputStream os) throws IOException {
         super.write(os);
         os.writeShort(classIndex);
         os.writeShort(nameAndTypeIndex);
     }
 
     @Override
-    public final String toString() {
+    public String toString() {
         return super.toString() + "[" +
                     classIndex +
                     "," +
@@ -77,7 +77,7 @@ public final class ConstantMethodRef extends ConstantInfo {
      * @return the referenced CONSTANT_Class inside of the {@link ConstantPool} referencing the CONSTANT_Fieldref',
      *         CONSTANT_Methodref' or CONSTANT_InterfaceMethodref's class or interface.
      */
-    public final ConstantName indexClass(ConstantPool constantPool) {
+    public ConstantName indexClass(ConstantPool constantPool) {
         return (ConstantName) constantPool.getEntry(classIndex);
     }
 
@@ -87,7 +87,7 @@ public final class ConstantMethodRef extends ConstantInfo {
      * @return the referenced CONSTANT_NameAndType inside of the {@link ConstantPool}, containing the
      *         CONSTANT_Fieldref', CONSTANT_Methodref' or CONSTANT_InterfaceMethodref's name and descriptor.
      */
-    public final ConstantNameAndType indexNameAndType(ConstantPool constantPool) {
+    public ConstantNameAndType indexNameAndType(ConstantPool constantPool) {
         return (ConstantNameAndType) constantPool.getEntry(nameAndTypeIndex);
     }
 }

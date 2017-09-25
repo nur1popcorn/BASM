@@ -38,7 +38,7 @@ import static com.nur1popcorn.basm.utils.Opcodes.CONSTANT_LONG;
  * @author nur1popcorn
  * @since 1.0.0-alpha
  */
-public class ConstantPool {
+public final class ConstantPool {
     private ConstantInfo cpEntries[];
 
     /**
@@ -70,14 +70,14 @@ public class ConstantPool {
     /**
      * @return the cp entry at given index.
      */
-    public final ConstantInfo getEntry(int index) {
+    public ConstantInfo getEntry(int index) {
        return cpEntries[index];
     }
 
     /**
      * @return the cp's size.
      */
-    public final int getSize() {
+    public int getSize() {
         return cpEntries.length;
     }
 
@@ -86,7 +86,7 @@ public class ConstantPool {
      *
      * @param os the {@link DataOutputStream} the {@link ConstantPool} should be written to.
      */
-    public final void write(DataOutputStream os) throws IOException {
+    public void write(DataOutputStream os) throws IOException {
         os.writeShort(cpEntries.length);
         for(int i = 1 /* the cp's size is 1 less than given */; i < cpEntries.length; i++) {
             final ConstantInfo constantInfo = cpEntries[i];

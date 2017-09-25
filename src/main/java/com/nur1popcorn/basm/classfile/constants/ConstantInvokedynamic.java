@@ -77,7 +77,7 @@ public class ConstantInvokedynamic extends ConstantInfo {
      *
      * @return the referenced method and descriptor inside of the {@link ConstantPool}.
      */
-    public final ConstantNameAndType indexNameAndType(ConstantPool constantPool) {
+    public ConstantNameAndType indexNameAndType(ConstantPool constantPool) {
         return (ConstantNameAndType) constantPool.getEntry(nameAndTypeIndex);
     }
 }

@@ -44,7 +44,7 @@ import java.io.IOException;
  * @author nur1popcorn
  * @since 1.0.0-alpha
  */
-public class FieldMethodInfo {
+public final class FieldMethodInfo {
     public int access;
 
     private int nameIndex,
@@ -100,7 +100,7 @@ public class FieldMethodInfo {
      *
      * @return the referenced field's or method's name inside of the {@link ConstantPool}.
      */
-    public final ConstantUtf8 indexName(ConstantPool constantPool) {
+    public ConstantUtf8 indexName(ConstantPool constantPool) {
         return (ConstantUtf8) constantPool.getEntry(nameIndex);
     }
 
@@ -110,14 +110,14 @@ public class FieldMethodInfo {
      * @return the referenced field's or method's descriptor inside of the
      *         {@link ConstantPool}.
      */
-    public final ConstantUtf8 indexDesc(ConstantPool constantPool) {
+    public ConstantUtf8 indexDesc(ConstantPool constantPool) {
         return (ConstantUtf8) constantPool.getEntry(descIndex);
     }
 
     /**
      * @return the field's or method's attributes.
      */
-    public final AttributeInfo[] getAttributes() {
+    public AttributeInfo[] getAttributes() {
         return attributes;
     }
 }

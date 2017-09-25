@@ -71,13 +71,13 @@ public final class ConstantName extends ConstantInfo {
     }
 
     @Override
-    public final void write(DataOutputStream os) throws IOException {
+    public void write(DataOutputStream os) throws IOException {
         super.write(os);
         os.writeShort(nameIndex);
     }
 
     @Override
-    public final String toString() {
+    public String toString() {
         return super.toString() + "[" +
                     nameIndex +
                 "]";
@@ -88,7 +88,7 @@ public final class ConstantName extends ConstantInfo {
      *
      * @return the referenced CONSTANT_Utf8 inside of the {@link ConstantPool}.
      */
-    public final ConstantUtf8 indexName(ConstantPool constantPool) {
+    public ConstantUtf8 indexName(ConstantPool constantPool) {
         return (ConstantUtf8) constantPool.getEntry(nameIndex);
     }
 }

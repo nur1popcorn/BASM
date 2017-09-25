@@ -24,45 +24,24 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-public class StackMapFrame {
-    private byte tag /* u1 */;
+public abstract class StackMapFrame {
+    protected byte tag /* u1 */;
 
     public StackMapFrame(byte tag) {
         this.tag = tag;
     }
 
     /**
-     * @param os the {@link DataOutputStream} to which the {@link StackMapFrame}
-     *           should be written to.
+     * @param os the {@link DataOutputStream} to which the {@link StackMapFrame}'s
+     *           tag should be written to.
      */
     public void write(DataOutputStream os) throws IOException {
         os.writeByte(tag);
     }
 
-    @Override
-    public String toString() {
-        final int u1 = Byte.toUnsignedInt(tag);
-        final StringBuilder stringBuilder = new StringBuilder();
-        if(u1 < 248) {
-            if(u1 == 247)
-                stringBuilder.append("same_locals_1_stack_item_frame_extended");
-            else if(u1 < 64)
-                stringBuilder.append("same_frame");
-            else /* if(u1 < 127) */
-                stringBuilder.append("same_locals_1_stack_item_frame");
-        } else if(u1 < 252) {
-            if(u1 == 251)
-                stringBuilder.append("same_frame_extended");
-            else
-                stringBuilder.append("chop_frame");
-        } else if(u1 == 255)
-            stringBuilder.append("full_frame");
-        else
-            stringBuilder.append("appended_frame");
-        return stringBuilder.append(" [")
-                .append(u1)
-                .append("]")
-                .toString();
+    //TODO: desc
+    public final byte getTag() {
+        return tag;
     }
 
     /**
@@ -87,9 +66,15 @@ public class StackMapFrame {
                 // same_locals_1_stack_item_frame_extended
             } else if(u1 < 64)
                 // same_frame
-                return new StackMapFrame(tag);
+                return new StackMapFrame(tag) {
+                    @Override
+                    public String toString() {
+                        return "same_frame[" + Byte.toUnsignedInt(this.tag) + "]";
+                    }
+                };
             else /* if(u1 < 127) */ {
                 // same_locals_1_stack_item_frame
+                return new SameLocals1StackItemFrame(tag, in);
             }
         } else if(u1 < 252) {
             if(u1 == 251) {

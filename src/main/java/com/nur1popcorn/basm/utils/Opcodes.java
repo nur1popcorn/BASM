@@ -78,7 +78,7 @@ public final class Opcodes {
     };
 
     /**
-     *
+     * TODO: desc
      * <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-5.html#jvms-5.4.3.5">
      *     5.4.3.5 Method Type and Method Handle Resolution
      * </a>
@@ -251,6 +251,37 @@ public final class Opcodes {
         "synthetic",
         "annotation",
         "enum"
+    };
+
+    /**
+     * TODO: desc
+     * <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.4">
+     *     StackMapTable 4.7.4
+     * </a>
+     */
+    public static final int ITEM_TOP =                             0;
+    public static final int ITEM_INTEGER =                         1;
+    public static final int ITEM_FLOAT =                           2;
+    public static final int ITEM_DOUBLE =                          3;
+    public static final int ITEM_LONG =                            4;
+    public static final int ITEM_NULL =                            5;
+    public static final int ITEM_UNINITIALISED_THIS =              6;
+    public static final int ITEM_OBJECT =                          7;
+    public static final int ITEM_UNINITIALISED =                   8;
+
+    /**
+     * TODO: desc
+     */
+    public static String ITEM_INFO_NAMES[] = {
+        "Top_variable_info",
+        "Integer_variable_info",
+        "Float_variable_info",
+        "Double_variable_info",
+        "Long_variable_info",
+        "Null_variable_info",
+        "UninitializedThis_variable_info",
+        "Object_variable_info",
+        "Uninitialized_variable_info"
     };
 
     /* stands for no operation and does nothing. */
