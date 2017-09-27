@@ -21,12 +21,26 @@ package com.nur1popcorn.basm.classfile.attributes.stackmap;
 import com.nur1popcorn.basm.classfile.ConstantPool;
 import com.nur1popcorn.basm.classfile.constants.ConstantName;
 
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 public final class ObjectVariableInfo extends VariableInfo {
-    private int cpIndex;
+    private int cpIndex /* u2 */;
 
     public ObjectVariableInfo(byte tag, int cpIndex) {
         super(tag);
         this.cpIndex = cpIndex;
+    }
+
+    @Override
+    public void write(DataOutputStream os) throws IOException {
+        super.write(os);
+        os.writeShort(cpIndex);
+    }
+
+    @Override
+    public String toString() {
+        return "Object_variable_info[" + cpIndex + "]";
     }
 
     public ConstantName indexClass(ConstantPool constantPool) {

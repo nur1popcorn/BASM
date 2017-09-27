@@ -18,11 +18,25 @@
 
 package com.nur1popcorn.basm.classfile.attributes.stackmap;
 
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 public final class UninitializedVariableInfo extends VariableInfo {
-    private int offset;
+    private int offset /* u2 */;
 
     public UninitializedVariableInfo(byte tag, int offset) {
         super(tag);
+    }
+
+    @Override
+    public void write(DataOutputStream os) throws IOException {
+        super.write(os);
+        os.writeShort(offset);
+    }
+
+    @Override
+    public String toString() {
+        return "Uninitialized_variable_info[" + offset + "]";
     }
 
     public int getOffset() {

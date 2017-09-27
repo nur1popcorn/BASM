@@ -60,7 +60,6 @@ public abstract class StackMapFrame {
     public static StackMapFrame read(DataInputStream in) throws IOException {
         final byte tag = in.readByte();
         final int u1 = Byte.toUnsignedInt(tag);
-        // cleverly placed if statements perform O(log n) which is about somewhere between 2 - 3 max branches.
         if(u1 < 248) {
             if(u1 == 247) {
                 // same_locals_1_stack_item_frame_extended
@@ -72,10 +71,9 @@ public abstract class StackMapFrame {
                         return "same_frame[" + Byte.toUnsignedInt(this.tag) + "]";
                     }
                 };
-            else /* if(u1 < 127) */ {
+            else /* if(u1 < 127) */
                 // same_locals_1_stack_item_frame
-                return new SameLocals1StackItemFrame(tag, in);
-            }
+                return new SameLocals1StackItemFrame(tag, VariableInfo.read(in));
         } else if(u1 < 252) {
             if(u1 == 251) {
                 // same_frame_extended
