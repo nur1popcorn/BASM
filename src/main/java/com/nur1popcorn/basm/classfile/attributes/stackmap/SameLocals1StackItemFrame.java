@@ -37,7 +37,9 @@ public final class SameLocals1StackItemFrame extends StackMapFrame {
 
     @Override
     public String toString() {
-        return "same_locals_1_stack_item_frame[" + verificationType.toString() + "]";
+        return "same_locals_1_stack_item_frame[" +
+                   verificationType.toString() +
+               "]";
     }
 
     public VariableInfo getVerificationType() {

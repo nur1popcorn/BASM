@@ -61,9 +61,10 @@ public abstract class StackMapFrame {
         final byte tag = in.readByte();
         final int u1 = Byte.toUnsignedInt(tag);
         if(u1 < 248) {
-            if(u1 == 247) {
+            if(u1 == 247)
                 // same_locals_1_stack_item_frame_extended
-            } else if(u1 < 64)
+                return new SameLocals1StackItemFrameExtended(tag, in.readUnsignedShort(), VariableInfo.read(in));
+            else if(u1 < 64)
                 // same_frame
                 return new StackMapFrame(tag) {
                     @Override
