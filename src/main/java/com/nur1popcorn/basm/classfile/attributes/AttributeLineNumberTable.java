@@ -36,7 +36,7 @@ import java.io.IOException;
  * @author nur1popcorn
  * @since 1.0.0-alpha
  */
-public class AttributeLineNumberTable extends AttributeInfo {
+public final class AttributeLineNumberTable extends AttributeInfo {
     private LineNumberTableEntry lineNumberTable[] /* length: u2 */;
 
     public AttributeLineNumberTable(int nameIndex, DataInputStream in) throws IOException {

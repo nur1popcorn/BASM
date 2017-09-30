@@ -36,7 +36,7 @@ import java.io.IOException;
  * @author nur1popcorn
  * @since 1.0.0-alpha
  */
-public class AttributeLocalVariableTable extends AttributeInfo {
+public final class AttributeLocalVariableTable extends AttributeInfo {
     private LocalVariableTableEntry localVariableTable[] /* length: u2 */;
 
     public AttributeLocalVariableTable(int nameIndex, DataInputStream in) throws IOException {

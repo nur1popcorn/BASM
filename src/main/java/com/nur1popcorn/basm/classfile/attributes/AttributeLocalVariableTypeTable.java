@@ -35,7 +35,7 @@ import java.io.IOException;
  * @author nur1popcorn
  * @since 1.0.0-alpha
  */
-public class AttributeLocalVariableTypeTable extends AttributeInfo {
+public final class AttributeLocalVariableTypeTable extends AttributeInfo {
     private LocalVariableTypeTableEntry localVariableTypeTable[] /* length: u2 */;
 
     public AttributeLocalVariableTypeTable(int nameIndex, DataInputStream in) throws IOException {
@@ -79,7 +79,7 @@ public class AttributeLocalVariableTypeTable extends AttributeInfo {
     }
 
     //TODO: add index methods etc.
-    public static class LocalVariableTypeTableEntry {
+    public static final class LocalVariableTypeTableEntry {
         public int startPc /* u2 */,
                    length /* u2 */,
                    nameIndex /* u2 */,

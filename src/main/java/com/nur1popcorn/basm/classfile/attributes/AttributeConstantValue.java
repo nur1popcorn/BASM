@@ -38,7 +38,7 @@ import java.io.IOException;
  * @author nur1popcorn
  * @since 1.0.0-alpha
  */
-public class AttributeConstantValue extends AttributeInfo {
+public final class AttributeConstantValue extends AttributeInfo {
     private int constantValueIndex /* u2 */;
 
     /**
@@ -72,7 +72,7 @@ public class AttributeConstantValue extends AttributeInfo {
      *             Table 4.7.2-A
      *         </a>
      */
-    public final ConstantInfo indexConstantValue(ConstantPool constantPool) {
+    public ConstantInfo indexConstantValue(ConstantPool constantPool) {
         return constantPool.getEntry(constantValueIndex);
     }
 }

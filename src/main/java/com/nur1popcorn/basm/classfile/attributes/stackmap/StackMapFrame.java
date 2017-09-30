@@ -63,7 +63,9 @@ public abstract class StackMapFrame {
         if(u1 < 248) {
             if(u1 == 247)
                 // same_locals_1_stack_item_frame_extended
-                return new SameLocals1StackItemFrameExtended(tag, in.readUnsignedShort(), VariableInfo.read(in));
+                return new SameLocals1StackItemFrameExtended(tag,
+                                                             in.readUnsignedShort(),
+                                                             VariableInfo.read(in));
             else if(u1 < 64)
                 // same_frame
                 return new StackMapFrame(tag) {
@@ -76,16 +78,37 @@ public abstract class StackMapFrame {
                 // same_locals_1_stack_item_frame
                 return new SameLocals1StackItemFrame(tag, VariableInfo.read(in));
         } else if(u1 < 252) {
-            if(u1 == 251) {
+            if (u1 == 251)
                 // same_frame_extended
-            } else {
+                return new SameFrameExtended(tag, in.readUnsignedShort());
+            else
                 // chop_frame
-            }
+                return new SameFrameExtended(tag, in.readUnsignedShort()) {
+                    @Override
+                    public String toString() {
+                        return "chop_frame[" + Byte.toUnsignedInt(this.tag) + "]";
+                    }
+                };
         } else if(u1 == 255) {
             // full_frame
+            int offsetDelta = in.readUnsignedShort();
+            final VariableInfo locals[] = new VariableInfo[in.readUnsignedShort()] /* length: u2 */;
+            for(int i = 0; i < locals.length; i++)
+                locals[i] = VariableInfo.read(in);
+            final VariableInfo stack[] = new VariableInfo[in.readUnsignedShort()] /* length: u2 */;
+            for(int i = 0; i < stack.length; i++)
+                stack[i] = VariableInfo.read(in);
+            return new FullFrame(tag,
+                                 offsetDelta,
+                                 locals,
+                                 stack);
         } else {
+            final int offsetDelta = in.readUnsignedShort();
+            final VariableInfo locals[] = new VariableInfo[u1 - 0xfb];
+            for(int i = 0; i < locals.length; i++)
+                locals[i] = VariableInfo.read(in);
             // appended_frame
+            return new AppendedFrame(tag, offsetDelta, locals);
         }
-        return null;
     }
 }

@@ -53,7 +53,6 @@ public final class BASM {
             ((Transformer) Class.forName(transformer.value(optionSet)).newInstance())
                     .transform(in.values(optionSet),
                                out.value(optionSet));
-
         } catch (IOException | InstantiationException | IllegalAccessException | ClassNotFoundException e) {
             e.printStackTrace();
         }
