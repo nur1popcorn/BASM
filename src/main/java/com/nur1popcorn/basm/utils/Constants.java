@@ -18,13 +18,14 @@
 
 package com.nur1popcorn.basm.utils;
 
+//TODO: write a better description for this class.
 /**
- * The {@link Opcodes} class is a class containing lots of useful constants.
+ * The {@link Constants} a class containing a lot of useful constants.
  *
  * @author nur1popcorn
  * @since 1.0.0-alpha
  */
-public final class Opcodes {
+public final class Constants {
 
     /**
      * 4 bytes used to identify java class files.
@@ -430,6 +431,133 @@ public final class Opcodes {
     public static final byte ASTORE_2 =                            0x4d;
     public static final byte ASTORE_3 =                            0x4e;
 
+    /* stores value of type int in at given index in given array
+       (arrayref, index, value)*/
+    public static final byte IASTORE =                             0x4f;
+    /* of type long. */
+    public static final byte LASTORE =                             0x50;
+    /* of type float. */
+    public static final byte FASTORE =                             0x51;
+    /* of type double. */
+    public static final byte DASTORE =                             0x52;
+    /* stores object reference. */
+    public static final byte AASTORE =                             0x53;
+    /* of type bool. */
+    public static final byte BASTORE =                             0x54;
+    /* of type char. */
+    public static final byte CASTORE =                             0x55;
+    /* of type short. */
+    public static final byte SASTORE =                             0x56;
+
+    /* discards top value on stack. */
+    public static final byte POP =                                 0x57;
+    /* discards top 2 values or 1st if the value is of type long or double. */
+    public static final byte POP2 =                                0x58;
+
+    /* puts a copy of the top value on the stack on the stack. */
+    public static final byte DUP =                                 0x59;
+    /* a copy of the 2nd value on the stack. */
+    public static final byte DUP_X1 =                              0x5a;
+    /* a copy of the 3rd value on the stack. */
+    public static final byte DUP_X2 =                              0x5b;
+
+    /* puts a copy of the 1st and 2nd or 1st if the value of type long or double on the stack on the stack. */
+    public static final byte DUP2 =                                0x5c;
+    /* a copy of the 2nd and 3rd value on the stack. */
+    public static final byte DUP2_x1 =                             0x5d;
+    /* a copy of the 3rd and 4th value on the stack. */
+    public static final byte DUP2_x2 =                             0x5e;
+
+    /* swaps top 2 values on the stack. */
+    public static final byte SWAP =                                0x5f;
+
+    /* adds top two ints on the stack and puts result on the stack. */
+    public static final byte IADD =                                0x60;
+    /* top two longs. */
+    public static final byte LADD =                                0x61;
+    /* top two floats. */
+    public static final byte FADD =                                0x62;
+    /* top two doubles. */
+    public static final byte DADD =                                0x63;
+
+    /* subtracts top two ints on the stack and puts result on the stack. */
+    public static final byte ISUB =                                0x64;
+    /* top two longs. */
+    public static final byte LSUB =                                0x65;
+    /* top two floats. */
+    public static final byte FSUB =                                0x66;
+    /* top two doubles. */
+    public static final byte DSUB =                                0x67;
+
+    /* multiplies top two ints on the stack and puts result on the stack. */
+    public static final byte IMUL =                                0x68;
+    /* top two longs. */
+    public static final byte LMUL =                                0x69;
+    /* top two floats. */
+    public static final byte FMUL =                                0x6a;
+    /* top two doubles. */
+    public static final byte DMUL =                                0x6b;
+
+    /* divides top two ints on the stack and puts result on the stack. */
+    public static final byte IDIV =                                0x6c;
+    /* top two longs. */
+    public static final byte LDIV =                                0x6d;
+    /* top two floats. */
+    public static final byte FDIV =                                0x6e;
+    /* top two doubles. */
+    public static final byte DDIV =                                0x6f;
+
+    /* computes the remainder from division of the top two ints on the stack and puts result on the stack. */
+    public static final byte IREM =                                0x70;
+    /* top two longs. */
+    public static final byte LREM =                                0x71;
+    /* top two floats. */
+    public static final byte FREM =                                0x72;
+    /* top two doubles. */
+    public static final byte DREM =                                0x73;
+
+    /* negates the top value on the stack and puts the result on the stack. */
+    public static final byte INEG =                                0x74;
+    /* top long. */
+    public static final byte LNEG =                                0x75;
+    /* top float. */
+    public static final byte FNEG =                                0x76;
+    /* top double. */
+    public static final byte DNEG =                                0x77;
+
+    /* shifts top int left by 2nd int on the stack and puts result on the stack. */
+    public static final byte ISHL =                                0x78;
+    /* top long by 2nd long. */
+    public static final byte LSHL =                                0x79;
+
+    /* arithmetically shifts top int right by 2nd int on the stack and puts result on the stack. */
+    public static final byte ISHR =                                0x7a;
+    /* top long by 2nd long. */
+    public static final byte LSHR =                                0x7b;
+
+    /* logically shifts top int right by 2nd int on the stack and puts result on the stack. */
+    public static final byte IUSHR =                               0x7c;
+    /* top long by 2nd long. */
+    public static final byte LUSHR =                               0x7d;
+
+    /* performs bitwise and on 1st and 2nd int on the stack. */
+    public static final byte IAND =                                0x7e;
+    /* 1st and 2nd long. */
+    public static final byte LAND =                                0x7f;
+
+    /* performs bitwise or on 1st and 2nd int on the stack. */
+    public static final byte IOR =                          (byte) 0x80;
+    /* 1st and 2nd long. */
+    public static final byte LOR =                          (byte) 0x81;
+
+    /* performs bitwise xor on 1st and 2nd int on the stack. */
+    public static final byte IXOR =                         (byte) 0x82;
+    /* 1st and 2nd long. */
+    public static final byte LXOR =                         (byte) 0x83;
+
+    /* performs bitwise xor on 1st and 2nd int on the stack. */
+    public static final byte IINC =                         (byte) 0x84;
+
     public static final String OPCODE_MNEMONICS[] = new String[] {
         "nop",
 
@@ -495,6 +623,7 @@ public final class Opcodes {
         "laload",
         "faload",
         "daload",
+        "aaload",
         "baload",
         "caload",
         "saload",
@@ -529,9 +658,569 @@ public final class Opcodes {
         "astore_1",
         "astore_2",
         "astore_3",
+
+        "iastore",
+        "lastore",
+        "fastore",
+        "dastore",
+        "aastore",
+        "bastore",
+        "castore",
+        "sastore",
+
+        "pop",
+        "pop2",
+
+        "dup",
+        "dup_x1",
+        "dup_x2",
+
+        "dup2",
+        "dup2_x1",
+        "dup2_x2",
+
+        "swap",
+
+        "iadd",
+        "ladd",
+        "fadd",
+        "dadd",
+
+        "isub",
+        "lsub",
+        "fsub",
+        "dsub",
+
+        "imul",
+        "lmul",
+        "fmul",
+        "dmul",
+
+        "idiv",
+        "ldiv",
+        "fdiv",
+        "ddiv",
+
+        "irem",
+        "lrem",
+        "frem",
+        "drem",
+
+        "ineg",
+        "lneg",
+        "fneg",
+        "dneg",
+
+        "ishl",
+        "lshl",
+        "ishr",
+        "lshr",
+
+        "iushr",
+        "lushr",
+
+        "iand",
+        "land",
+
+        "ior",
+        "lor",
+
+        "ixor",
+        "lxor",
+
+        "iinc",
+
+        "i2l",
+        "i2f",
+        "i2d",
+
+        "l2i",
+        "l2f",
+        "l2d",
+
+        "f2i",
+        "f2l",
+        "f2d",
+
+        "d2i",
+        "d2l",
+        "d2f",
+
+        "i2b",
+        "i2c",
+        "i2s",
+
+        "lcmp",
+
+        "fcmpl",
+        "fcmpg",
+
+        "dcmpl",
+        "dcmpg",
+
+        "ifeq",
+        "ifne",
+        "iflt",
+        "ifge",
+        "ifgt",
+        "ifle",
+
+        "if_icmpeq",
+        "if_icmpne",
+        "if_icmplt",
+        "if_icmpge",
+        "if_icmpgt",
+        "if_icmple",
+        "if_acmpeq",
+        "if_acmpne",
+            
+        "goto",
+
+        "jsr",
+
+        "ret",
+
+        "tableswitch",
+        "lookupswitch",
+
+        "ireturn",
+        "lreturn",
+        "freturn",
+        "dreturn",
+        "areturn",
+
+        "return",
+
+        "getstatic",
+        "putstatic",
+
+        "getfield",
+        "putfield",
+
+        "invokevirtual",
+        "invokespecial",
+        "invokestatic",
+        "invokeinterface",
+        "invokedynamic",
+
+        "new",
+        "newarray",
+        "anewarray",
+
+        "arraylength",
+
+        "athrow",
+
+        "checkcast",
+
+        "instanceof",
+
+        "monitorenter",
+        "monitorexit",
+
+        "wide",
+
+        "multianewarray",
+
+        "ifnull",
+        "ifnonnull",
+
+        "goto_w",
+
+        "jsr_w",
+
+        "breakpoint",
+
+        null, // unimplemented instructions
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        
+        "impdep1",
+        "impdep2",
+    };
+
+    /**
+     * An array containing the number of parameters required for each instruction.
+     */
+    public static final byte OPCODE_PARAMETERS[] = {
+        0, // nop
+
+        0, // aconst_null
+
+        0, // iconst_m1
+        0, // iconst_0
+        0, // iconst_1
+        0, // iconst_2
+        0, // iconst_3
+        0, // iconst_4
+        0, // iconst_5
+
+        0, // lconst_0
+        0, // lconst_1
+
+        0, // fconst_0
+        0, // fconst_1
+        0, // fconst_2
+
+        0, // dconst_0
+        0, // dconst_1
+
+        1, // bipush
+        2, // sipush
+
+        1, // ldc
+        2, // ldc_w
+        2, // ldc2_w
+
+        1, // iload
+        1, // lload
+        1, // fload
+        1, // dload
+        1, // aload
+
+        0, // iload_0
+        0, // iload_1
+        0, // iload_2
+        0, // iload_3
+
+        0, // lload_0
+        0, // lload_1
+        0, // lload_2
+        0, // lload_3
+
+        0, // fload_0
+        0, // fload_1
+        0, // fload_2
+        0, // fload_3
+
+        0, // dload_0
+        0, // dload_1
+        0, // dload_2
+        0, // dload_3
+
+        0, // aload_0
+        0, // aload_1
+        0, // aload_2
+        0, // aload_3
+
+        0, // iaload
+        0, // laload
+        0, // faload
+        0, // daload
+        0, // aaload
+        0, // baload
+        0, // caload
+        0, // saload
+
+        1, // istore
+        1, // lstore
+        1, // fstore
+        1, // dstore
+        1, // astore
+
+        0, // istore_0
+        0, // istore_1
+        0, // istore_2
+        0, // istore_3
+
+        0, // lstore_0
+        0, // lstore_1
+        0, // lstore_2
+        0, // lstore_3
+
+        0, // fstore_0
+        0, // fstore_1
+        0, // fstore_2
+        0, // fstore_3
+
+        0, // dstore_0
+        0, // dstore_1
+        0, // dstore_2
+        0, // dstore_3
+
+        0, // astore_0
+        0, // astore_1
+        0, // astore_2
+        0, // astore_3
+
+        0, // iastore
+        0, // lastore
+        0, // fastore
+        0, // dastore
+        0, // aastore
+        0, // bastore
+        0, // castore
+        0, // sastore
+
+        0, // pop
+        0, // pop2
+
+        0, // dup
+        0, // dup_x1
+        0, // dup_x2
+
+        0, // dup2
+        0, // dup2_x1
+        0, // dup2_x2
+
+        0, // swap
+
+        0, // iadd
+        0, // ladd
+        0, // fadd
+        0, // dadd
+
+        0, // isub
+        0, // lsub
+        0, // fsub
+        0, // dsub
+
+        0, // imul
+        0, // lmul
+        0, // fmul
+        0, // dmul
+
+        0, // idiv
+        0, // ldiv
+        0, // fdiv
+        0, // ddiv
+
+        0, // irem
+        0, // lrem
+        0, // frem
+        0, // drem
+
+        0, // ineg
+        0, // lneg
+        0, // fneg
+        0, // dneg
+
+        0, // ishl
+        0, // lshl
+
+        0, // ishr
+        0, // lshr
+
+        0, // iushr
+        0, // lushr
+
+        0, // iand
+        0, // land
+
+        0, // ior
+        0, // lor
+
+        0, // ixor
+        0, // lxor
+
+        2, // iinc
+
+        0, // i2l
+        0, // i2f
+        0, // i2d
+
+        0, // l2i
+        0, // l2f
+        0, // l2d
+
+        0, // f2i
+        0, // f2l
+        0, // f2d
+
+        0, // d2i
+        0, // d2l
+        0, // d2f
+
+        0, // i2b
+        0, // i2c
+        0, // i2s
+
+        0, // lcmp
+
+        0, // fcmpl
+        0, // fcmpg
+
+        0, // dcmpl
+        0, // dcmpg
+
+        2, // ifeq
+        2, // ifne
+        2, // iflt
+        2, // ifge
+        2, // ifgt
+        2, // ifle
+
+        2, // if_icmpeq
+        2, // if_icmpne
+        2, // if_icmplt
+        2, // if_icmpge
+        2, // if_icmpgt
+        2, // if_icmple
+        2, // if_acmpeq
+        2, // if_acmpne
+
+        2, // goto
+
+        2, // jsr
+
+        1, // ret
+
+        0, // tableswitch //TODO: no clue.
+        0, // lookupswitch //TODO: no clue.
+
+        0, // ireturn
+        0, // lreturn
+        0, // freturn
+        0, // dreturn
+        0, // areturn
+
+        0, // return
+
+        2, // getstatic
+        2, // putstatic
+
+        2, // getfield
+        2, // putfield
+
+        2, // invokevirtual
+        2, // invokespecial
+        2, // invokestatic
+        4, // invokeinterface
+        4, // invokedynamic
+
+        2, // new
+        1, // newarray
+        2, // anewarray
+
+        0, // arraylength
+
+        0, // athrow
+
+        2, // checkcast
+
+        2, // instanceof
+
+        0, // monitorenter
+        0, // monitorexit
+
+        0, // wide //TODO: no idea i will figure it out later.
+
+        3, // multianewarray
+
+        2, // ifnull
+        2, // ifnonnull
+
+        4, // goto_w
+
+        4, // jsr_w
+
+        0, // breakpoint
+
+        0, // unimplemented instructions
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+
+        0, // impdep1
+        0, // impdep2
     };
 
     // prevent construction :/
-    private Opcodes()
+    private Constants()
     {}
 }

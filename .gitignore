@@ -1,13 +1,33 @@
-.idea/*
-target/*
-*.iml
-dependency-reduced-pom.xml
+#
+# Copyright (C) Keanu Poeschko - All Rights Reserved
+# Unauthorized copying of this file is strictly prohibited
+#
+# Created by Keanu Poeschko <nur1popcorn@gmail.com>, August
+# This file is part of {BASM}.
+#
+# Do not copy or distribute files of {BASM} without permiss
+#
+# Permission to use, copy, modify, and distribute my softwa
+# educational, and research purposes, without a signed lice
+# and for free, is hereby granted, provided that the above
+# and this paragraph appear in all copies, modifications, a
+#
+# {BASM} is based on this document: https://docs.oracle.com
+#
 
+# Java
+
+*.class
 *.jar
-*.war
-*.ear
-*.zip
-*.tar.gz
-*.rar
 
 hs_err_pid*
+
+# Maven
+
+.target/
+dependency-reduced-pom.xml
+
+# Intellij
+
+.idea/
+*.iml

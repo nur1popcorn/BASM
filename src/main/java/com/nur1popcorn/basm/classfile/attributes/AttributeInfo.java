@@ -19,6 +19,7 @@
 package com.nur1popcorn.basm.classfile.attributes;
 
 import com.nur1popcorn.basm.classfile.ConstantPool;
+import com.nur1popcorn.basm.classfile.constants.ConstantName;
 import com.nur1popcorn.basm.classfile.constants.ConstantUtf8;
 
 import java.io.DataInputStream;
@@ -49,24 +50,30 @@ public abstract class AttributeInfo {
             ATTRIBUTE_CONSTRUCTOR_MAP = Stream.of(
                 /*
                  * <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.2">
-                 *     ConstantValue 4.7.2
+                 *     Attribute ConstantValue 4.7.2
                  * </a>
                  */
                 new SimpleEntry<>("ConstantValue", AttributeConstantValue.class.getDeclaredConstructor(int.class, DataInputStream.class)),
                 /*
                  * <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.3">
-                 *     Code 4.7.3
+                 *     Attribute Code 4.7.3
                  * </a>
                  */
                 new SimpleEntry<>("Code", AttributeCode.class.getDeclaredConstructor(int.class, DataInputStream.class, ConstantPool.class)),
                 /*
                  * <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.4">
-                 *     StackMapTable 4.7.4
+                 *     Attribute StackMapTable 4.7.4
                  * </a>
                  */
                 new SimpleEntry<>("StackMapTable", AttributeStackMapTable.class.getDeclaredConstructor(int.class, DataInputStream.class)),
+                /*
+                 * <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.5">
+                 *     Attribute Exceptions 4.7.5
+                 * </a>
+                 */
+                new SimpleEntry<>("Exceptions", AttributeExceptions.class.getDeclaredConstructor(int.class, DataInputStream.class)),
+
                 //TODO: impl
-                new SimpleEntry<>("Exceptions", AttributeConstantValue.class.getDeclaredConstructor(int.class, DataInputStream.class)),
                 new SimpleEntry<>("InnerClasses", AttributeConstantValue.class.getDeclaredConstructor(int.class, DataInputStream.class)),
                 new SimpleEntry<>("EnclosingMethod", AttributeConstantValue.class.getDeclaredConstructor(int.class, DataInputStream.class)),
                 new SimpleEntry<>("Synthetic", AttributeConstantValue.class.getDeclaredConstructor(int.class, DataInputStream.class)),
@@ -128,6 +135,15 @@ public abstract class AttributeInfo {
     }
 
     /**
+     * @param constantPool the {@link ConstantPool} which should be indexed.
+     *
+     * @return the referenced CONSTANT_Utf8 inside of the {@link ConstantPool}.
+     */
+    public ConstantUtf8 indexName(ConstantPool constantPool) {
+        return (ConstantUtf8) constantPool.getEntry(nameIndex);
+    }
+
+    /**
      * @param in the {@link DataInputStream} from which the {@link AttributeInfo}s
      *           should be read.
      * @param constantPool the {@link ConstantPool} is used to index the attribute's
@@ -142,7 +158,7 @@ public abstract class AttributeInfo {
                 final Constructor<? extends AttributeInfo> constructor = ATTRIBUTE_CONSTRUCTOR_MAP.get(
                     ((ConstantUtf8) constantPool.getEntry(nameIndex)).bytes);
                 attributes[i] = constructor.newInstance(
-                   constructor.getParameters().length == 2 ?
+                   constructor.getParameterCount() == 2 ?
                        new Object[] {
                            nameIndex,
                            in

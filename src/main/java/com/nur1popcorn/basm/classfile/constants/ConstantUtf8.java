@@ -21,7 +21,7 @@ package com.nur1popcorn.basm.classfile.constants;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import static com.nur1popcorn.basm.utils.Opcodes.CONSTANT_UTF8;
+import static com.nur1popcorn.basm.utils.Constants.CONSTANT_UTF8;
 
 /**
  * The {@link ConstantUtf8} represents a simple string value.
@@ -36,7 +36,7 @@ import static com.nur1popcorn.basm.utils.Opcodes.CONSTANT_UTF8;
  *         <p>Unlike 2 and 3 byte characters 1 byte characters will hence never set the last bit to 1.</p>
  *         <table summary="A binary representation of a valid 1 byte character.
  *                         ?s are either 1 or 0 every thing else is fixed.
- *                         Since they range from 1 to 7f there is no way for all the bytes to be 0 at once."
+ *                         Since they range from 1 to 7f there is no way for all the bits to be 0 at once."
  *                border="1">
  *             <tbody>
  *                 <tr>

@@ -23,7 +23,7 @@ import com.nur1popcorn.basm.classfile.ConstantPool;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import static com.nur1popcorn.basm.utils.Opcodes.CONSTANT_INVOKEDYNAMIC;
+import static com.nur1popcorn.basm.utils.Constants.CONSTANT_INVOKEDYNAMIC;
 
 /**
  * The {@link ConstantInvokedynamic} TODO: describe too.

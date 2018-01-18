@@ -24,8 +24,8 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import static com.nur1popcorn.basm.utils.Opcodes.CONSTANT_DOUBLE;
-import static com.nur1popcorn.basm.utils.Opcodes.CONSTANT_LONG;
+import static com.nur1popcorn.basm.utils.Constants.CONSTANT_DOUBLE;
+import static com.nur1popcorn.basm.utils.Constants.CONSTANT_LONG;
 
 /**
  * The {@link ConstantPool} stores all kind of constants embedded into the classfile.
@@ -59,7 +59,7 @@ public final class ConstantPool {
         for(int i = 1 /* the cp's size is 1 less than given */; i < cpSize; i++) {
             final ConstantInfo constantInfo = ConstantInfo.read(in);
             cpEntries[i] = constantInfo;
-            //longs and doubles take up 2 spaces in the constant pool.
+            // longs and doubles take up 2 spaces in the constant pool.
             final int tag = constantInfo.getTag();
             if(tag == CONSTANT_LONG ||
                tag == CONSTANT_DOUBLE)
@@ -91,12 +91,26 @@ public final class ConstantPool {
         for(int i = 1 /* the cp's size is 1 less than given */; i < cpEntries.length; i++) {
             final ConstantInfo constantInfo = cpEntries[i];
             constantInfo.write(os);
-            //longs and doubles take up 2 spaces in the constant pool.
+            // longs and doubles take up 2 spaces in the constant pool.
             final int tag = constantInfo.getTag();
             if(tag == CONSTANT_LONG ||
                tag == CONSTANT_DOUBLE)
                 i++ /* padding */;
         }
         os.flush();
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder stringBuilder = new StringBuilder()
+                .append("ConstantPool[");
+        if(cpEntries.length != 0) {
+            stringBuilder.append(cpEntries[0]);
+            for(int i = 1; i < cpEntries.length; i++)
+                stringBuilder.append(", ")
+                             .append(cpEntries[i]);
+        }
+        return stringBuilder.append("]")
+                .toString();
     }
 }

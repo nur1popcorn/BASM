@@ -1,8 +1,6 @@
 package com.nur1popcorn.basm.utils;
 
-/**
- * BASM developed by nur1popcorn.
- */
+//TODO: remove class
 public class StringUtils {
 
     private static final char HEX_CHARS[] = "0123456789abcdef".toCharArray();

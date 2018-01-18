@@ -8,6 +8,10 @@
     <artifactId>basm</artifactId>
     <version>1.0.0-alpha</version>
 
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
@@ -24,20 +28,7 @@
     </dependencies>
 
     <build>
-        <defaultGoal>clean install</defaultGoal>
         <finalName>BASM</finalName>
-        <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
-
-        <resources>
-            <resource>
-                <targetPath>.</targetPath>
-                <filtering>true</filtering>
-                <directory>${basedir}/src/main/resources</directory>
-                <includes>
-                    <include>**/*</include>
-                </includes>
-            </resource>
-        </resources>
 
         <plugins>
             <plugin>
@@ -69,33 +60,21 @@
                             <include>net.sf.jopt-simple</include>
                         </includes>
                     </artifactSet>
-                    <filters>
-                        <filter>
-                            <artifact>org.ow2.asm:*</artifact>
-                            <excludes>
-                                <exclude>META-INF/license/**</exclude>
-                                <exclude>META-INF/*</exclude>
-                                <exclude>META-INF/maven/**</exclude>
-                                <exclude>LICENSE</exclude>
-                                <exclude>NOTICE</exclude>
-                                <exclude>/*.txt</exclude>
-                                <exclude>build.properties</exclude>
-                            </excludes>
-                        </filter>
-                    </filters>
                 </configuration>
             </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
+                <version>2.4</version>
                 <configuration>
                     <archive>
-                        <manifestFile>src/main/resources/META-INF/MANIFEST.MF</manifestFile>
+                        <manifest>
+                            <mainClass>com.nur1popcorn.basm.BASM</mainClass>
+                        </manifest>
                     </archive>
                 </configuration>
             </plugin>
         </plugins>
     </build>
-
 </project>

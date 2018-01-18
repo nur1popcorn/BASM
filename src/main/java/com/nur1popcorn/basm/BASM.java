@@ -29,7 +29,6 @@ public final class BASM {
     public static void main(String args[]) throws IOException {
         try {
             final OptionParser optionParser = new OptionParser();
-            optionParser.printHelpOn(System.out);
             optionParser.accepts("help")
                         .forHelp();
             final OptionSpec<File> in = optionParser.accepts("in", "The files which should be converted.")
@@ -47,8 +46,10 @@ public final class BASM {
 
             final OptionSet optionSet = optionParser.parse(args);
 
-            if(optionSet.has("help"))
+            if(optionSet.has("help")){
+                optionParser.printHelpOn(System.out);
                 return;
+            }
 
             ((Transformer) Class.forName(transformer.value(optionSet)).newInstance())
                     .transform(in.values(optionSet),

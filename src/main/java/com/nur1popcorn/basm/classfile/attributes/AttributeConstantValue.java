@@ -52,6 +52,7 @@ public final class AttributeConstantValue extends AttributeInfo {
         constantValueIndex = in.readUnsignedShort();
     }
 
+
     @Override
     public void write(DataOutputStream os, ConstantPool constantPool) throws IOException {
         super.write(os, constantPool);

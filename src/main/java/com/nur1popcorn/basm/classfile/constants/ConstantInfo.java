@@ -22,7 +22,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import static com.nur1popcorn.basm.utils.Opcodes.*;
+import static com.nur1popcorn.basm.utils.Constants.*;
 
 /**
  * The {@link ConstantInfo} is an abstract class containing a tag used to identify what

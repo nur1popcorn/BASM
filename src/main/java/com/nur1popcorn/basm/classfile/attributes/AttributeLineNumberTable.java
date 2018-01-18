@@ -25,8 +25,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 /**
- * The {@link AttributeLineNumberTable} is an optional attribute and is useful to see
- * what line number corresponds with which instructions.
+ * The {@link AttributeLineNumberTable} is an optional attribute and is used to show
+ * which line number corresponds with which instructions.
  * <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.12">
  *     LineNumberTable 4.7.12
  * </a>
@@ -44,8 +44,6 @@ public final class AttributeLineNumberTable extends AttributeInfo {
         lineNumberTable = new LineNumberTableEntry[in.readUnsignedShort()];
         for(int i = 0; i < lineNumberTable.length; i++)
             lineNumberTable[i] = new LineNumberTableEntry(in);
-        System.out.println(this);
-        System.out.println();
     }
 
     public AttributeLineNumberTable(int nameIndex, LineNumberTableEntry lineNumberTable[]) {
@@ -68,7 +66,7 @@ public final class AttributeLineNumberTable extends AttributeInfo {
         if(lineNumberTable.length != 0) {
             stringBuilder.append(lineNumberTable[0]);
             for(int i = 1; i < lineNumberTable.length; i++)
-                stringBuilder.append(",")
+                stringBuilder.append(", ")
                              .append(lineNumberTable[i]);
         }
         return stringBuilder.append("]")

@@ -43,8 +43,6 @@ public final class AttributeLocalVariableTypeTable extends AttributeInfo {
         localVariableTypeTable = new LocalVariableTypeTableEntry[in.readUnsignedShort()];
         for(int i = 0; i < localVariableTypeTable.length; i++)
             localVariableTypeTable[i] = new LocalVariableTypeTableEntry(in);
-        System.out.println(toString());
-        System.out.println();
     }
 
     public AttributeLocalVariableTypeTable(int nameIndex, LocalVariableTypeTableEntry localVariableTypeTable[]) {
@@ -65,7 +63,7 @@ public final class AttributeLocalVariableTypeTable extends AttributeInfo {
             stringBuilder.append(localVariableTypeTable[0]);
             for(int i = 1; i < localVariableTypeTable.length; i++)
                 stringBuilder.append(",")
-                        .append(localVariableTypeTable[i]);
+                             .append(localVariableTypeTable[i]);
         }
         return stringBuilder.append("]")
                 .toString();

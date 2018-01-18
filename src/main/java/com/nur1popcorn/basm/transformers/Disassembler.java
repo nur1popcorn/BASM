@@ -60,7 +60,7 @@ public class Disassembler implements Transformer {
                             }
                         writer.print(info.indexName(constantPool).bytes);
                         writer.print(info.indexDesc(constantPool).bytes);
-                        writer.print(" {\n\t\t");
+                        writer.println(" {");
                         AttributeCode attributeCode = null;
                         for(AttributeInfo attribute : info.getAttributes())
                             if(attribute.indexName(constantPool).bytes.equals("Code")) {
