@@ -16,7 +16,6 @@
  *
  */
 
-
 package com.nur1popcorn.basm.classfile;
 
 import com.nur1popcorn.basm.classfile.attributes.AttributeInfo;
