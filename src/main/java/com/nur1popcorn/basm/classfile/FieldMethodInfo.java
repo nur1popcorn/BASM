@@ -44,7 +44,7 @@ import java.io.IOException;
  * @since 1.0.0-alpha
  */
 public final class FieldMethodInfo {
-    public int access;
+    private int access;
 
     private int nameIndex,
                 descIndex;
@@ -118,5 +118,10 @@ public final class FieldMethodInfo {
      */
     public AttributeInfo[] getAttributes() {
         return attributes;
+    }
+
+    //TODO: desc.
+    public int getAccess() {
+        return access;
     }
 }

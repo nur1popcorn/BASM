@@ -44,7 +44,7 @@ public class ClassFile {
 
     private ConstantPool constantPool;
 
-    public int access;
+    private int access;
 
     private int thisClass,
                 superClass;
@@ -116,6 +116,10 @@ public class ClassFile {
 
     public ConstantPool getConstantPool() {
         return constantPool;
+    }
+
+    public int getAccess() {
+        return access;
     }
 
     public ConstantName getThisClass() {

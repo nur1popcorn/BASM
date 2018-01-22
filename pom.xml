@@ -25,6 +25,12 @@
             <artifactId>jopt-simple</artifactId>
             <version>5.0.3</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>1.11.2</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -58,6 +64,7 @@
                     <artifactSet>
                         <includes>
                             <include>net.sf.jopt-simple</include>
+                            <include>org.jsoup</include>
                         </includes>
                     </artifactSet>
                 </configuration>

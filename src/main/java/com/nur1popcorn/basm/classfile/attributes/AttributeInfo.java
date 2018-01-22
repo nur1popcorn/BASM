@@ -19,7 +19,6 @@
 package com.nur1popcorn.basm.classfile.attributes;
 
 import com.nur1popcorn.basm.classfile.ConstantPool;
-import com.nur1popcorn.basm.classfile.constants.ConstantName;
 import com.nur1popcorn.basm.classfile.constants.ConstantUtf8;
 
 import java.io.DataInputStream;
