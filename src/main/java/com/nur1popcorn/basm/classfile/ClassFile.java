@@ -21,6 +21,7 @@ package com.nur1popcorn.basm.classfile;
 import com.nur1popcorn.basm.classfile.constants.ConstantName;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 
 import static com.nur1popcorn.basm.utils.Constants.MAGIC;
@@ -38,7 +39,7 @@ import static com.nur1popcorn.basm.utils.Constants.MAGIC;
  * @author nur1popcorn
  * @since 1.0.0-alpha
  */
-public class ClassFile {
+public final class ClassFile {
     private int minorVersion,
                 majorVersion;
 
@@ -104,6 +105,36 @@ public class ClassFile {
 
         this.fields = fields;
         this.methods = methods;
+
+        //TODO: write/read attributes table.
+    }
+
+    public void write(DataOutputStream out) throws IOException {
+        out.writeInt(MAGIC);
+
+        out.writeShort(minorVersion);
+        out.writeShort(majorVersion);
+
+        constantPool.write(out);
+
+        out.writeShort(access);
+        out.writeShort(thisClass);
+        out.writeShort(superClass);
+
+        out.writeShort(interfaces.length);
+        for(int i : interfaces)
+            out.writeShort(i);
+
+
+        out.writeShort(fields.length);
+        for(FieldMethodInfo info : fields)
+            info.write(out, constantPool);
+
+        out.writeShort(methods.length);
+        for(FieldMethodInfo info : methods)
+            info.write(out, constantPool);
+
+        out.writeShort(0); //TODO: write/read attributes table.
     }
 
     public int getMinorVersion() {

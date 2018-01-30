@@ -35,7 +35,7 @@ import java.io.IOException;
  * @author nur1popcorn
  * @since 1.0.0-alpha
  */
-public class AttributeExceptions extends AttributeInfo {
+public final class AttributeExceptions extends AttributeInfo {
     private int exceptionIndexTable[] /* length: u2
                                          entries: u2 */;
 
@@ -49,7 +49,10 @@ public class AttributeExceptions extends AttributeInfo {
 
     @Override
     public void write(DataOutputStream os, ConstantPool constantPool) throws IOException {
-        throw new IOException();
+        super.write(os, constantPool);
+        os.writeShort(exceptionIndexTable.length);
+        for(int i : exceptionIndexTable)
+            os.writeShort(i);
     }
 
     public int[] getExceptionIndexTable() {

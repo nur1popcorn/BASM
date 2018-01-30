@@ -54,6 +54,20 @@ public class AttributeCode extends AttributeInfo {
     @Override
     public void write(DataOutputStream os, ConstantPool constantPool) throws IOException {
         super.write(os, constantPool);
+        os.writeShort(maxStack);
+        os.writeShort(maxLocals);
+
+        os.writeInt(code.length);
+        for(byte b : code)
+            os.writeByte(b);
+
+        os.writeShort(exceptionTable.length);
+        for(ExceptionTableEntry entry : exceptionTable)
+            entry.write(os);
+
+        os.writeShort(attributes.length);
+        for(AttributeInfo info : attributes)
+            info.write(os, constantPool);
     }
 
     @Override
@@ -76,6 +90,13 @@ public class AttributeCode extends AttributeInfo {
             endPc = in.readUnsignedShort();
             handlerPc = in.readUnsignedShort();
             catchType = in.readUnsignedShort();
+        }
+
+        public void write(DataOutputStream os) throws IOException {
+            os.writeShort(startPc);
+            os.writeShort(endPc);
+            os.writeShort(handlerPc);
+            os.writeShort(catchType);
         }
     }
 }

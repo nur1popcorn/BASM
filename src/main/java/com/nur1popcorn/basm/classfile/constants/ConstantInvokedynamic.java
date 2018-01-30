@@ -38,7 +38,7 @@ import static com.nur1popcorn.basm.utils.Constants.CONSTANT_INVOKEDYNAMIC;
  * @author nur1popcorn
  * @since 1.0.0-alpha
  */
-public class ConstantInvokedynamic extends ConstantInfo {
+public final class ConstantInvokedynamic extends ConstantInfo {
     private int bootstrapMethodAttrIndex /* u2 */,
                 nameAndTypeIndex /* u2 */;
 

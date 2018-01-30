@@ -18,14 +18,15 @@
 
 package com.nur1popcorn.basm.transformers;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import com.nur1popcorn.basm.classfile.ClassFile;
+
+import java.io.*;
 import java.util.List;
 
-public class Assembler implements Transformer {
+public final class Assembler implements Transformer {
     @Override
-    public void transform(List<InputStream> in, OutputStream out) throws IOException {
-        throw new RuntimeException("Not implemented.");
+    public void transform(InputStream in, OutputStream out) throws IOException {
+        new ClassFile(new DataInputStream(in)).write(new DataOutputStream(out));
+        //throw new RuntimeException("Not implemented.");
     }
 }

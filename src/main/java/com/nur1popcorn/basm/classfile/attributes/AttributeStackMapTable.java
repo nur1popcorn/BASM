@@ -23,7 +23,7 @@ import com.nur1popcorn.basm.classfile.attributes.stackmap.StackMapFrame;
 import java.io.DataInputStream;
 import java.io.IOException;
 
-public class AttributeStackMapTable extends AttributeInfo {
+public final class AttributeStackMapTable extends AttributeInfo {
     private StackMapFrame entries[] /* length: u2 */;
 
     public AttributeStackMapTable(int nameIndex, DataInputStream in) throws IOException {

@@ -40,7 +40,7 @@ import static com.nur1popcorn.basm.utils.Constants.REF_NAMES;
  * @author nur1popcorn
  * @since 1.0.0-alpha
  */
-public class ConstantMethodHandle extends ConstantInfo {
+public final class ConstantMethodHandle extends ConstantInfo {
     private byte refKind /* u1 */;
     private int refIndex /* u2 */;
 

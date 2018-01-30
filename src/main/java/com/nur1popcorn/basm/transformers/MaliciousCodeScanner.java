@@ -26,7 +26,7 @@ public final class MaliciousCodeScanner implements Transformer {
         "java/lang/reflect",
         "java/net"
     };
-    
+
     private final Map<String, RootDoc> DOC_MAP = new HashMap<>();
 
     private static final com.sun.tools.javac.util.List<?> EMPTY_LIST = new ListBuffer<>().toList();
@@ -45,29 +45,16 @@ public final class MaliciousCodeScanner implements Transformer {
         tool = JavadocTool.make0(context);
         if(tool == null) {
             System.out.println("shit.");
-            throw new RuntimeException();
+            System.exit(1);
         }
     }
 
     private RootDoc getRootDoc(String clazz) throws IOException {
         RootDoc doc = DOC_MAP.get(clazz);
-        if(doc != null)
-            return doc;
-        doc = tool.getRootDocImpl(
-                "",
-                null,
-                new ModifierFilter(0),
-                ListBuffer.of(clazz).toList(),
-                (com.sun.tools.javac.util.List<String[]>) EMPTY_LIST,
-                (com.sun.tools.javac.util.List<JavaFileObject>) EMPTY_LIST,
-                false,
-                (com.sun.tools.javac.util.List<String>) EMPTY_LIST,
-                (com.sun.tools.javac.util.List<String>) EMPTY_LIST,
-                false,
-                false,
-                true
-        );
-        DOC_MAP.put(clazz, doc);
+        if(doc == null) {
+            doc = tool.getRootDocImpl("", null, new ModifierFilter(0), ListBuffer.of(clazz).toList(), (com.sun.tools.javac.util.List<String[]>) EMPTY_LIST, (com.sun.tools.javac.util.List<JavaFileObject>) EMPTY_LIST, false, (com.sun.tools.javac.util.List<String>) EMPTY_LIST, (com.sun.tools.javac.util.List<String>) EMPTY_LIST, false, false, true);
+            DOC_MAP.put(clazz, doc);
+        }
         return doc;
     }
 
@@ -116,61 +103,53 @@ public final class MaliciousCodeScanner implements Transformer {
     }
 
     @Override
-    public void transform(List<InputStream> in, OutputStream out) throws IOException {
+    public void transform(InputStream in, OutputStream out) throws IOException {
         final PrintWriter writer = new PrintWriter(out);
-        in.forEach(inputStream -> {
-            try {
-                DataInputStream din = new DataInputStream(inputStream);
-                final int magic = din.readInt();
-                if(magic != MAGIC)
-                    throw new IOException("The class provided has an invalid file header: " + magic);
-                din.skipBytes(4);
+        DataInputStream din = new DataInputStream(in);
+        final int magic = din.readInt();
+        if(magic != MAGIC)
+            throw new IOException("The class provided has an invalid file header: " + magic);
+        din.skipBytes(4);
 
-                {
-                    final ConstantPool constantPool = new ConstantPool(din);
-                    for(int i = 1 /* the cp's size is 1 less than given */; i < constantPool.getSize(); i++) {
-                        final ConstantInfo constantInfo = constantPool.getEntry(i);
-                        if(constantInfo != null)
-                            if(constantInfo.getTag() == CONSTANT_METHOD_REF) {
-                                final ConstantMethodRef methodRef = ((ConstantMethodRef) constantInfo);
-                                final String path = methodRef.indexClass(constantPool)
-                                                             .indexName(constantPool)
-                                                             .bytes;
-                                for(String malicious : MALICIOUS_PATHS)
-                                    if(path.startsWith(malicious)) {
-                                        writer.print(path);
-                                        writer.print("#");
-                                        final ConstantNameAndType nameAndType = methodRef.indexNameAndType(constantPool);
-                                        final String name = nameAndType.indexName(constantPool).bytes;
-                                        String desc = nameAndType.indexDesc(constantPool).bytes;
-                                        writer.print(name);
-                                        writer.println(desc);
+        final ConstantPool constantPool = new ConstantPool(din);
+        for(int i = 1 /* the cp's size is 1 less than given */; i < constantPool.getSize(); i++) {
+            final ConstantInfo constantInfo = constantPool.getEntry(i);
+            if(constantInfo != null)
+                if(constantInfo.getTag() == CONSTANT_METHOD_REF) {
+                    final ConstantMethodRef methodRef = (ConstantMethodRef) constantInfo;
+                    final String path = methodRef.indexClass(constantPool)
+                                                 .indexName(constantPool)
+                                                 .bytes;
+                    for(String malicious : MALICIOUS_PATHS)
+                        if(path.startsWith(malicious)) {
+                            writer.print(path);
+                            writer.print("#");
+                            final ConstantNameAndType nameAndType = methodRef.indexNameAndType(constantPool);
+                            final String name = nameAndType.indexName(constantPool).bytes;
+                            String desc = nameAndType.indexDesc(constantPool).bytes;
+                            writer.print(name);
+                            writer.println(desc);
 
-                                        final ClassDoc docs[] = getRootDoc("src/" + path + ".java").classes();
-                                        if(docs.length != 0) {
-                                            desc = desc.substring(0, desc.indexOf(')') + 1);
-                                            if(name.equals("<init>")) {
-                                                for(ConstructorDoc constructor : docs[0].constructors())
-                                                    if(getMethodDesc(constructor).equals(desc)) {
-                                                        writer.println(constructor.getRawCommentText());
-                                                        break;
-                                                    }
-                                            } else
-                                                for(MethodDoc method : docs[0].methods())
-                                                    if(method.name().equals(name) &&
-                                                       getMethodDesc(method).equals(desc)) {
-                                                        writer.println(method.getRawCommentText());
-                                                        break;
-                                                    }
+                            final ClassDoc docs[] = getRootDoc("src/" + path + ".java").classes();
+                            if(docs.length != 0) {
+                                desc = desc.substring(0, desc.indexOf(')') + 1);
+                                if(name.equals("<init>")) {
+                                    for(ConstructorDoc constructor : docs[0].constructors())
+                                        if(getMethodDesc(constructor).equals(desc)) {
+                                            writer.println(constructor.getRawCommentText());
+                                            break;
                                         }
-                                    }
+                                } else
+                                    for(MethodDoc method : docs[0].methods())
+                                        if(method.name().equals(name) &&
+                                           getMethodDesc(method).equals(desc)) {
+                                            writer.println(method.getRawCommentText());
+                                            break;
+                                        }
                             }
-                    }
+                        }
                 }
-                writer.flush();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
+        }
+        writer.flush();
     }
 }
