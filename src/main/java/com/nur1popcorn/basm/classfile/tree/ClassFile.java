@@ -18,21 +18,40 @@
 
 package com.nur1popcorn.basm.classfile.tree;
 
+import com.nur1popcorn.basm.classfile.ClassReader;
 import com.nur1popcorn.basm.classfile.ConstantPool;
-import com.nur1popcorn.basm.classfile.FieldMethodInfo;
+import com.nur1popcorn.basm.classfile.IClassReaderVisitor;
+import com.nur1popcorn.basm.classfile.constants.ConstantUtf8;
+
+import java.io.DataInputStream;
+import java.io.IOException;
+
+import static com.nur1popcorn.basm.classfile.ClassReader.*;
 
 /**
- * The {@link ClassFile}
- * <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4">
- *     ConstantPool 4.4.
- * </a>
+ * The {@link ClassFile} TODO: desc
+ *
+ * @see IClassReaderVisitor
  *
  * @see ConstantPool
- * @see FieldMethodInfo
  *
  * @author nur1popcorn
  * @since 1.0.0-alpha
  */
-public final class ClassFile {
+public final class ClassFile implements IClassReaderVisitor {
 
+    public int access;
+
+    public ClassFile(DataInputStream in) throws IOException {
+        new ClassReader(in).accept(this, READ_HEAD |
+                                         READ_BODY |
+                                         READ_METHODS |
+                                         READ_FIELDS);
+    }
+
+    @Override
+    public void visit(int access, ConstantUtf8 thisClass, ConstantUtf8 superClass, ConstantUtf8[] interfaces) {
+        this.access = access;
+        //TODO: ..
+    }
 }
