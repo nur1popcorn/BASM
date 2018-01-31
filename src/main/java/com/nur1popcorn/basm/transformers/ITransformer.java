@@ -22,6 +22,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public interface Transformer {
+public interface ITransformer {
     public void transform(InputStream in, OutputStream out) throws IOException;
 }

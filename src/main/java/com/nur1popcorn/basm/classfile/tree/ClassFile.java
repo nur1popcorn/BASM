@@ -16,17 +16,23 @@
  *
  */
 
-package com.nur1popcorn.basm.transformers;
+package com.nur1popcorn.basm.classfile.tree;
 
-import com.nur1popcorn.basm.classfile.tree.ClassFile;
+import com.nur1popcorn.basm.classfile.ConstantPool;
+import com.nur1popcorn.basm.classfile.FieldMethodInfo;
 
-import java.io.*;
+/**
+ * The {@link ClassFile}
+ * <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4">
+ *     ConstantPool 4.4.
+ * </a>
+ *
+ * @see ConstantPool
+ * @see FieldMethodInfo
+ *
+ * @author nur1popcorn
+ * @since 1.0.0-alpha
+ */
+public final class ClassFile {
 
-public final class Assembler implements ITransformer {
-    @Override
-    public void transform(InputStream in, OutputStream out) throws IOException {
-        final ClassFile classFile = new ClassFile(new DataInputStream(in));
-        classFile.write(new DataOutputStream(out));
-        //throw new RuntimeException("Not implemented.");
-    }
 }

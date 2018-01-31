@@ -7,19 +7,21 @@ import com.nur1popcorn.basm.classfile.constants.ConstantNameAndType;
 import com.sun.javadoc.*;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.ListBuffer;
-import com.sun.tools.javadoc.*;
+import com.sun.tools.javadoc.JavadocTool;
+import com.sun.tools.javadoc.Messager;
+import com.sun.tools.javadoc.ModifierFilter;
 
 import javax.tools.JavaFileObject;
 import java.io.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import static com.nur1popcorn.basm.utils.Constants.*;
+import static com.nur1popcorn.basm.utils.Constants.CONSTANT_METHOD_REF;
+import static com.nur1popcorn.basm.utils.Constants.MAGIC;
 
-public final class MaliciousCodeScanner implements Transformer {
+public final class MaliciousCodeScanner implements ITransformer {
 
     private static final String MALICIOUS_PATHS[] = {
         "java/io",

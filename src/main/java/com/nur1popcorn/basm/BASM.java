@@ -1,6 +1,6 @@
 package com.nur1popcorn.basm;
 
-import com.nur1popcorn.basm.transformers.Transformer;
+import com.nur1popcorn.basm.transformers.ITransformer;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
@@ -48,7 +48,7 @@ public final class BASM {
                 return;
             }
 
-            final Transformer transformer = ((Transformer) Class.forName(transformerArg.value(optionSet)).newInstance());
+            final ITransformer transformer = ((ITransformer) Class.forName(transformerArg.value(optionSet)).newInstance());
             final File outFile = outArg.value(optionSet);
 
             final InputStream in = new FileInputStream(inArg.value(optionSet));

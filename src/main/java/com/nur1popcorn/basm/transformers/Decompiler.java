@@ -1,6 +1,6 @@
 package com.nur1popcorn.basm.transformers;
 
-import com.nur1popcorn.basm.classfile.ClassFile;
+import com.nur1popcorn.basm.classfile.tree.ClassFile;
 import com.nur1popcorn.basm.classfile.ConstantPool;
 import com.nur1popcorn.basm.classfile.FieldMethodInfo;
 import com.nur1popcorn.basm.classfile.constants.ConstantInfo;
@@ -12,7 +12,7 @@ import java.util.Set;
 
 import static com.nur1popcorn.basm.utils.Constants.*;
 
-public final class Decompiler implements Transformer {
+public final class Decompiler implements ITransformer {
     @Override
     public void transform(InputStream in, OutputStream out) throws IOException {
         final PrintWriter writer = new PrintWriter(out);

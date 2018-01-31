@@ -18,18 +18,17 @@
 
 package com.nur1popcorn.basm.transformers;
 
-import com.nur1popcorn.basm.classfile.ClassFile;
+import com.nur1popcorn.basm.classfile.tree.ClassFile;
 import com.nur1popcorn.basm.classfile.ConstantPool;
 import com.nur1popcorn.basm.classfile.FieldMethodInfo;
 import com.nur1popcorn.basm.classfile.attributes.AttributeCode;
 import com.nur1popcorn.basm.classfile.attributes.AttributeInfo;
 
 import java.io.*;
-import java.util.List;
 
 import static com.nur1popcorn.basm.utils.Constants.*;
 
-public final class Disassembler implements Transformer {
+public final class Disassembler implements ITransformer {
     @Override
     public void transform(InputStream in, OutputStream out) throws IOException {
         final PrintWriter writer = new PrintWriter(out);
