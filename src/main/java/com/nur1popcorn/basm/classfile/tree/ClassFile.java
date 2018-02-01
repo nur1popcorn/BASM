@@ -54,4 +54,8 @@ public final class ClassFile implements IClassReaderVisitor {
         this.access = access;
         //TODO: ..
     }
+
+    public void accept(IClassFileVisitor visitor) {
+
+    }
 }

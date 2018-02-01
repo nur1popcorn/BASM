@@ -21,15 +21,20 @@ package com.nur1popcorn.basm.classfile;
 import com.nur1popcorn.basm.classfile.constants.ConstantUtf8;
 
 public interface IClassReaderVisitor {
-    default void visit(ConstantPool constantPool)
+
+    /**
+     * Visits the head part of the class.
+     */
+    default void visitHead(ConstantPool constantPool)
     {}
 
     /**
+     * Visits the body part of the class.
+     *
      * @param access The read-class's access flag mask.
      *               <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.1-200-E">
      *                   AccessFlags 4.1-200-E
      *               </a>
-     *
      * @param thisClass a pointer into the the {@link ConstantPool}, pointing to an instance of a
      *                  CONSTANT_Class representing the class read.
      *                  <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.1-200-F">
@@ -46,6 +51,12 @@ public interface IClassReaderVisitor {
      *                      Interfaces 4.1-200-I
      *                   </a>
      */
-    default void visit(int access, ConstantUtf8 thisClass, ConstantUtf8 superClass, ConstantUtf8 interfaces[])
+    default void visitBody(int access, ConstantUtf8 thisClass, ConstantUtf8 superClass, ConstantUtf8 interfaces[])
+    {}
+
+    default void visitMethods(FieldMethodInfo fields[])
+    {}
+
+    default void visitFields(FieldMethodInfo methods[])
     {}
 }

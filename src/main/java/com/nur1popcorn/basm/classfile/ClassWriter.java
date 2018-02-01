@@ -18,5 +18,8 @@
 
 package com.nur1popcorn.basm.classfile;
 
-public final class ClassWriter {
+import com.nur1popcorn.basm.classfile.tree.IClassFileVisitor;
+
+public final class ClassWriter implements IClassFileVisitor {
+
 }
