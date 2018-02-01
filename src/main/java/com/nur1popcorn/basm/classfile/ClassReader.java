@@ -27,7 +27,7 @@ import java.io.IOException;
 import static com.nur1popcorn.basm.utils.Constants.*;
 
 /**
- * The {@link ClassReader} is used for reading the full or parts of the class provided.
+ * The {@link ClassReader} is used for reading the full or parts of the JavaClass provided.
  * <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.1">
  *     ClassFile 4.1.
  * </a>
@@ -36,14 +36,14 @@ import static com.nur1popcorn.basm.utils.Constants.*;
  * @see FieldMethodInfo
  * @see IClassReaderVisitor
  *
+ * @see #accept(IClassReaderVisitor, int)
+ *
  * @author nur1popcorn
  * @since 1.0.0-alpha
  */
 public final class ClassReader {
-
     /**
      * <b>Read head</b>
-     *
      * <p>This flag enables reading the head part of the JavaClass.</p>
      * <p>These are considered part of the head:</p>
      * <ul>
@@ -51,14 +51,66 @@ public final class ClassReader {
      *     <li>major version</li>
      *     <li>constantpool</li>
      * </ul>
+     *
+     * @see #readHead()
+     * @see #accept(IClassReaderVisitor, int)
      */
     public static final int READ_HEAD = 0x1;
 
     /**
      * <b>Read body</b>
+     * <ul>
+     *     <li>
+     *         <p>AccessFlags</p>
+     *         <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.1-200-E">
+     *             AccessFlags 4.1-200-E
+     *         </a>
+     *     </li>
+     *     <li>
+     *         <p>ThisClass</p>
+     *         <p>A pointer into the the {@link ConstantPool}, pointing to an instance of a
+     *            CONSTANT_Class representing the class read. </p>
+     *         <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.1-200-F">
+     *             ThisClass 4.1-200-I
+     *         </a>
+     *     </li>
+     *     <li>
+     *         <p>SuperClass</p>
+     *         <p>A pointer into the the {@link ConstantPool}, pointing to an instance of a
+     *            CONSTANT_Class representing the class-read's super class.</p>
+     *         <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.1-200-G">
+     *             SuperClass 4.1-200-G
+     *         </a>
+     *     </li>
+     *     <li>
+     *         <p>Interfaces</p>
+     *         <p>A table of pointers pointing into the {@link ConstantPool}, to instances of
+     *            CONSTANT_Classes representing the classes-read's implemented interfaces.</p>
+     *         <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.1-200-I">
+     *             Interfaces 4.1-200-I
+     *         </a>
+     *     </li>
+     * </ul>
+     *
+     * @see #readBody()
+     * @see #accept(IClassReaderVisitor, int)
      */
     public static final int READ_BODY = 0x2;
+
+    /**
+     * <b>Read fields</b>
+     *
+     * @see #readFields()
+     * @see #accept(IClassReaderVisitor, int)
+     */
     public static final int READ_FIELDS = 0x4;
+
+    /**
+     * <b>Read methods</b>
+     *
+     * @see #readMethods()
+     * @see #accept(IClassReaderVisitor, int)
+     */
     public static final int READ_METHODS = 0x8;
 
     /**
@@ -108,6 +160,18 @@ public final class ClassReader {
             throw new IOException("The class provided has an invalid file header: " + magic);
     }
 
+    /**
+     * <p>Reads the head part of the JavaClass which contains:</p>
+     * <ul>
+     *     <li>minor version</li>
+     *     <li>major version</li>
+     *     <li>constantpool</li>
+     * </ul>
+     *
+     * @throws IOException if an error occurs during the process of reading from the {@link DataInputStream}.
+     *
+     * @see #accept(IClassReaderVisitor, int)
+     */
     private void readHead() throws IOException {
         minorVersion = in.readUnsignedShort();
         majorVersion = in.readUnsignedShort();
@@ -115,6 +179,42 @@ public final class ClassReader {
         constantPool = new ConstantPool(in);
     }
 
+    /**
+     * <p>Reads the body part of the JavaClass which contains:</p>
+     * <ul>
+     *     <li>
+     *         AccessFlags
+     *     </li>
+     *     <li>
+     *         <p>ThisClass</p>
+     *         <p>A pointer into the the {@link ConstantPool}, pointing to an instance of a
+     *            CONSTANT_Class representing the class read. </p>
+     *         <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.1-200-F">
+     *             ThisClass 4.1-200-I
+     *         </a>
+     *     </li>
+     *     <li>
+     *         <p>SuperClass</p>
+     *         <p>A pointer into the the {@link ConstantPool}, pointing to an instance of a
+     *            CONSTANT_Class representing the class-read's super class.</p>
+     *         <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.1-200-G">
+     *             SuperClass 4.1-200-G
+     *         </a>
+     *     </li>
+     *     <li>
+     *         <p>Interfaces</p>
+     *         <p>A table of pointers pointing into the {@link ConstantPool}, to instances of
+     *            CONSTANT_Classes representing the classes-read's implemented interfaces.</p>
+     *         <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.1-200-I">
+     *             Interfaces 4.1-200-I
+     *         </a>
+     *     </li>
+     * </ul>
+     *
+     * @throws IOException if an error occurs during the process of reading from the {@link DataInputStream}.
+     *
+     * @see #accept(IClassReaderVisitor, int)
+     */
     private void readBody() throws IOException {
         access = in.readUnsignedShort();
         thisClass = in.readUnsignedShort();
@@ -125,18 +225,43 @@ public final class ClassReader {
             interfaces[i] = in.readUnsignedShort();
     }
 
+    /**
+     * @throws IOException if an error occurs during the process of reading from the {@link DataInputStream}.
+     *
+     * @see #accept(IClassReaderVisitor, int)
+     */
     private void readFields() throws IOException {
         fields = new FieldMethodInfo[in.readUnsignedShort()];
         for(int i = 0; i < fields.length; i++)
             fields[i] = new FieldMethodInfo(in, constantPool);
     }
 
+    /**
+     * @throws IOException if an error occurs during the process of reading from the {@link DataInputStream}.
+     *
+     * @see #accept(IClassReaderVisitor, int)
+     */
     private void readMethods() throws IOException {
         methods = new FieldMethodInfo[in.readUnsignedShort()];
         for(int i = 0; i < methods.length; i++)
             methods[i] = new FieldMethodInfo(in, constantPool);
     }
 
+    /**
+     * Greats the visitor politely at the door and then 'accepts' him in. Cooks up some nice tea
+     * and then sits down for a nice chat. I honestly hope nobody ever reads this.
+     *
+     * @param visitor the visitor for whom the for which the class is read.
+     * @param read the flags used to determine what parts of the class should be read.
+     *
+     * @throws IOException if an error occurs during the process of reading from the {@link DataInputStream}.
+     *
+     * @see IClassReaderVisitor
+     * @see #READ_HEAD
+     * @see #READ_BODY
+     * @see #READ_FIELDS
+     * @see #READ_METHODS
+     */
     public void accept(IClassReaderVisitor visitor, int read) throws IOException {
         assert(read & READ_HEAD) != 0 &&
                ((read & READ_BODY) == 0 ||
@@ -144,7 +269,7 @@ public final class ClassReader {
                 (read & READ_METHODS) == 0);
         if((read & READ_HEAD) != 0) {
             readHead();
-            visitor.visit(constantPool);
+            visitor.visitHead(constantPool);
         } else {
             // skip minor/major version
             in.skipBytes(4);
@@ -176,15 +301,17 @@ public final class ClassReader {
             for(int i = 0; i < interfaces.length; i++)
                 interfaces[i] = ((ConstantName)constantPool.getEntry(this.interfaces[i]))
                                         .indexName(constantPool);
-            visitor.visit(access,
-                          ((ConstantName)constantPool.getEntry(thisClass))
+            visitor.visitBody(access,
+                              ((ConstantName)constantPool.getEntry(thisClass))
                                   .indexName(constantPool),
-                          ((ConstantName)constantPool.getEntry(superClass))
+                              ((ConstantName)constantPool.getEntry(superClass))
                                   .indexName(constantPool),
-                          interfaces);
+                              interfaces);
         } else {
+            // https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.1-200-E
             // skip accessFlags, thisClass and superClass.
             in.skipBytes(6);
+            // https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.1-200-H
             // skip interfaces.
             in.skipBytes(in.readUnsignedShort());
         }
@@ -195,14 +322,30 @@ public final class ClassReader {
         }
 
         if((read & (READ_FIELDS)) != 0) {
-
+            readFields();
+            visitor.visitFields(fields);
         } else {
-
+            final int fieldCount = in.readUnsignedShort();
+            for(int i = 0; i < fieldCount; i++) {
+                // https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.5
+                // skip access flags, name index and desc index.
+                in.skipBytes(6);
+                final int attributeCount = in.readUnsignedShort();
+                for(int j = 0; j < attributeCount; j++) {
+                    // https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.6
+                    // skip attribute name index.
+                    in.skipBytes(2);
+                    // read and skip attribute length.
+                    in.skipBytes(in.readInt());
+                }
+            }
         }
 
         if((read & READ_METHODS) != 0) {
-
+            readMethods();
+            visitor.visitMethods(methods);
         }
+
         in.close();
     }
 }
