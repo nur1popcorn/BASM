@@ -26,7 +26,6 @@ package com.nur1popcorn.basm.utils;
  * @since 1.0.0-alpha
  */
 public final class Constants {
-
     /**
      * 4 bytes used to identify java class files.
      */
