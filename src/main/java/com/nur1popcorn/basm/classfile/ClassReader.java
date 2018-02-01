@@ -43,13 +43,40 @@ import static com.nur1popcorn.basm.utils.Constants.*;
  */
 public final class ClassReader {
     /**
-     * <b>Read head</b>
-     * <p>This flag enables reading the head part of the JavaClass.</p>
-     * <p>These are considered part of the head:</p>
+     * <p>Enables reading the head part of the JavaClass which contains:</p>
      * <ul>
-     *     <li>minor version</li>
-     *     <li>major version</li>
-     *     <li>constantpool</li>
+     *     <li>
+     *         <p>MinorVersion, MajorVersion</p>
+     *         <p>Minor and major version describe the version of the Jdk used to compile the class. </p>
+     *         <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.1-200-B">
+     *             MinorVersion, MajorVersion 4.1-200-B
+     *         </a>
+     *     </li>
+     *     <li>
+     *         <p>ConstantPool</p>
+     *         <p>The ConstantPool is made up of various constants including: </p>
+     *         <ul>
+     *             <li>CONSTANT_Utf8</li>
+     *             <li>CONSTANT_Integer</li>
+     *             <li>CONSTANT_Float</li>
+     *             <li>CONSTANT_Long</li>
+     *             <li>CONSTANT_Double</li>
+     *             <li>CONSTANT_Class</li>
+     *             <li>CONSTANT_String</li>
+     *             <li>CONSTANT_Fieldref</li>
+     *             <li>CONSTANT_Methodref</li>
+     *             <li>CONSTANT_InterfaceMethodref</li>
+     *             <li>CONSTANT_NameAndType</li>
+     *             <li>CONSTANT_MethodHandle</li>
+     *             <li>CONSTANT_MethodType</li>
+     *             <li>CONSTANT_Invokedynamic</li>
+     *         </ul>
+     *         <p>These constants are used to describe any non changing value and are frequently
+     *            referenced by the rest of the JavaClass.</p>
+     *         <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.1-200-C">
+     *             ConstantPool 4.1-200-C
+     *         </a>
+     *     </li>
      * </ul>
      *
      * @see #readHead()
@@ -58,7 +85,7 @@ public final class ClassReader {
     public static final int READ_HEAD = 0x1;
 
     /**
-     * <b>Read body</b>
+     * <p>Enables reading the body part of the JavaClass which contains:</p>
      * <ul>
      *     <li>
      *         <p>AccessFlags</p>
@@ -98,7 +125,10 @@ public final class ClassReader {
     public static final int READ_BODY = 0x2;
 
     /**
-     * <b>Read fields</b>
+     * <p>Enables reading the fields of the JavaClass.</p>
+     * <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.1-200-J">
+     *     Fields 4.1-200-J
+     * </a>
      *
      * @see #readFields()
      * @see #accept(IClassReaderVisitor, int)
@@ -106,7 +136,10 @@ public final class ClassReader {
     public static final int READ_FIELDS = 0x4;
 
     /**
-     * <b>Read methods</b>
+     * <p>Enables reading the methods of the JavaClass.</p>
+     * <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.1-200-L">
+     *     Methods 4.1-200-L
+     * </a>
      *
      * @see #readMethods()
      * @see #accept(IClassReaderVisitor, int)
@@ -163,9 +196,38 @@ public final class ClassReader {
     /**
      * <p>Reads the head part of the JavaClass which contains:</p>
      * <ul>
-     *     <li>minor version</li>
-     *     <li>major version</li>
-     *     <li>constantpool</li>
+     *     <li>
+     *         <p>MinorVersion, MajorVersion</p>
+     *         <p>Minor and major version describe the version of the Jdk used to compile the class. </p>
+     *         <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.1-200-B">
+     *             MinorVersion, MajorVersion 4.1-200-B
+     *         </a>
+     *     </li>
+     *     <li>
+     *         <p>ConstantPool</p>
+     *         <p>The ConstantPool is made up of various constants including: </p>
+     *         <ul>
+     *             <li>CONSTANT_Utf8</li>
+     *             <li>CONSTANT_Integer</li>
+     *             <li>CONSTANT_Float</li>
+     *             <li>CONSTANT_Long</li>
+     *             <li>CONSTANT_Double</li>
+     *             <li>CONSTANT_Class</li>
+     *             <li>CONSTANT_String</li>
+     *             <li>CONSTANT_Fieldref</li>
+     *             <li>CONSTANT_Methodref</li>
+     *             <li>CONSTANT_InterfaceMethodref</li>
+     *             <li>CONSTANT_NameAndType</li>
+     *             <li>CONSTANT_MethodHandle</li>
+     *             <li>CONSTANT_MethodType</li>
+     *             <li>CONSTANT_Invokedynamic</li>
+     *         </ul>
+     *         <p>These constants are used to describe any non changing value and are frequently
+     *            referenced by the rest of the JavaClass.</p>
+     *         <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.1-200-C">
+     *             ConstantPool 4.1-200-C
+     *         </a>
+     *     </li>
      * </ul>
      *
      * @throws IOException if an error occurs during the process of reading from the {@link DataInputStream}.
@@ -226,6 +288,11 @@ public final class ClassReader {
     }
 
     /**
+     * <p>Reads the fields of the JavaClass.</p>
+     * <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.1-200-J">
+     *     Fields 4.1-200-J
+     * </a>
+     *
      * @throws IOException if an error occurs during the process of reading from the {@link DataInputStream}.
      *
      * @see #accept(IClassReaderVisitor, int)
@@ -237,6 +304,11 @@ public final class ClassReader {
     }
 
     /**
+     * <p>Reads the methods of the JavaClass.</p>
+     * <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.1-200-L">
+     *     Methods 4.1-200-L
+     * </a>
+     *
      * @throws IOException if an error occurs during the process of reading from the {@link DataInputStream}.
      *
      * @see #accept(IClassReaderVisitor, int)
@@ -249,7 +321,7 @@ public final class ClassReader {
 
     /**
      * Greats the visitor politely at the door and then 'accepts' him in. Cooks up some nice tea
-     * and then sits down for a nice chat. I honestly hope nobody ever reads this.
+     * and then sits down with him for a nice chat. I honestly hope nobody ever has to read this.
      *
      * @param visitor the visitor for whom the for which the class is read.
      * @param read the flags used to determine what parts of the class should be read.
