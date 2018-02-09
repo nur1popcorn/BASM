@@ -54,9 +54,9 @@ public interface IClassReaderVisitor {
     default void visitBody(int access, ConstantUtf8 thisClass, ConstantUtf8 superClass, ConstantUtf8 interfaces[])
     {}
 
-    default void visitMethods(FieldMethodInfo fields[])
+    default void visitMethods(FieldMethodInfo methods[])
     {}
 
-    default void visitFields(FieldMethodInfo methods[])
+    default void visitFields(FieldMethodInfo fields[])
     {}
 }

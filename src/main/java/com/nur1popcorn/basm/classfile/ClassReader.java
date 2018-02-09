@@ -188,6 +188,7 @@ public final class ClassReader {
     private FieldMethodInfo methods[];
 
     public ClassReader(DataInputStream in) throws IOException {
+        this.in = in;
         final int magic = in.readInt();
         if(magic != MAGIC)
             throw new IOException("The class provided has an invalid file header: " + magic);
@@ -320,10 +321,11 @@ public final class ClassReader {
     }
 
     /**
-     * Greats the visitor politely at the door and then 'accepts' him in. Cooks up some nice tea
-     * and then sits down with him for a nice chat. I honestly hope nobody ever has to read this.
+     * Visitor? I barely know her!
      *
-     * @param visitor the visitor for whom the for which the class is read.
+     * - b.k.
+     *
+     * @param visitor the visitor for whom the class partially or fully read.
      * @param read the flags used to determine what parts of the class should be read.
      *
      * @throws IOException if an error occurs during the process of reading from the {@link DataInputStream}.

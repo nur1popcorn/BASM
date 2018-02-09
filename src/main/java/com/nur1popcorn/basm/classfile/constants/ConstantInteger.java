@@ -56,8 +56,8 @@ public final class ConstantInteger extends ConstantInfo {
     public String toString() {
         return super.toString() + "[" + (
                     getTag() == CONSTANT_INTEGER ?
-                            bytes :
-                            Float.intBitsToFloat(bytes)
+                        bytes :
+                        Float.intBitsToFloat(bytes)
                 ) + "]";
     }
 

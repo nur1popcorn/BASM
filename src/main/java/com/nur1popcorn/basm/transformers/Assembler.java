@@ -18,15 +18,13 @@
 
 package com.nur1popcorn.basm.transformers;
 
-import com.nur1popcorn.basm.classfile.tree.ClassFile;
-
 import java.io.*;
 
 public final class Assembler implements ITransformer {
     @Override
     public void transform(InputStream in, OutputStream out) throws IOException {
-        final ClassFile classFile = new ClassFile(new DataInputStream(in));
-        classFile.write(new DataOutputStream(out));
+        //final ClassFile classFile = new ClassFile(new DataInputStream(in));
+        //classFile.write(new DataOutputStream(out));
         //throw new RuntimeException("Not implemented.");
     }
 }

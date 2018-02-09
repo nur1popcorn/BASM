@@ -93,7 +93,14 @@ public abstract class AttributeInfo {
                 new SimpleEntry<>("RuntimeVisibleTypeAnnotations", AttributeConstantValue.class.getDeclaredConstructor(int.class, DataInputStream.class)),
                 new SimpleEntry<>("RuntimeInvisibleTypeAnnotations", AttributeConstantValue.class.getDeclaredConstructor(int.class, DataInputStream.class)),
                 new SimpleEntry<>("AnnotationDefault", AttributeConstantValue.class.getDeclaredConstructor(int.class, DataInputStream.class)),
-                new SimpleEntry<>("BootstrapMethods", AttributeConstantValue.class.getDeclaredConstructor(int.class, DataInputStream.class)),
+                /*
+                 * <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.23">
+                 *     Bootstrap Methods 4.7.23
+                 * </a>
+                 */
+                new SimpleEntry<>("BootstrapMethods", AttributeBootstrapMethods.class.getDeclaredConstructor(int.class, DataInputStream.class)),
+
+                //TODO: impl
                 new SimpleEntry<>("MethodParameters", AttributeConstantValue.class.getDeclaredConstructor(int.class, DataInputStream.class))
             ).collect(Collectors.toMap(SimpleEntry::getKey, SimpleEntry::getValue));
         } catch (NoSuchMethodException e) {

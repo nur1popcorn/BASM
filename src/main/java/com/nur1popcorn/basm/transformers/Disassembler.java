@@ -31,10 +31,15 @@ import static com.nur1popcorn.basm.utils.Constants.*;
 public final class Disassembler implements ITransformer {
     @Override
     public void transform(InputStream in, OutputStream out) throws IOException {
-        final PrintWriter writer = new PrintWriter(out);
+        /*final PrintWriter writer = new PrintWriter(out);
         final ClassFile classFile = new ClassFile(new DataInputStream(in));
+        for(int i = 0; i < classFile.getConstantPool().getSize(); i++) { //TODO: remove
+            if(classFile.getConstantPool().getEntry(i) != null)
+            writer.println(i + ":\t" + classFile.getConstantPool().getEntry(i));
+        }
+
         {
-            final int access = classFile.getAccess();
+            final int access = classFile.access;
             for(int mask = 0x1, i = 0; mask != ACC_MANDATED; mask <<= 1, i++)
                 if(ACC_CLASS_NAMES[i] != null && (access & mask) != 0) {
                     writer.print(ACC_CLASS_NAMES[i]);
@@ -44,7 +49,7 @@ public final class Disassembler implements ITransformer {
 
         writer.print("class extends ");
         final ConstantPool constantPool = classFile.getConstantPool();
-        writer.print(classFile.getSuperClass().indexName(constantPool).bytes);
+        writer.print(classFile.getSuperClass().bytes);
 
         writer.println(" {");
 
@@ -76,7 +81,6 @@ public final class Disassembler implements ITransformer {
             for(AttributeInfo attribute : info.getAttributes())
                 if(attribute.indexName(constantPool).bytes.equals("Code")) {
                     attributeCode = (AttributeCode) attribute;
-                    break;
                 }
             if(attributeCode != null) {
                 final byte opcodes[] = attributeCode.getByteCode();
@@ -101,6 +105,6 @@ public final class Disassembler implements ITransformer {
 
         writer.println("}");
         writer.println();
-        writer.flush();
+        writer.flush();*/
     }
 }

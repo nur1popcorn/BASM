@@ -4,9 +4,20 @@
 
 ## Index
 * Quick Start
+    * Build instructions
+    * Usage examples
 * Example Outputs
-
+    * BinarySearch
 ## Quick Start
+
+#### Build instructions
+
+```
+sudo apt install maven
+mvn package
+```
+
+#### Usage examples
 
 `java -jar BASM.jar -in BinarySearch.class -out BinarySearch.basm`
 

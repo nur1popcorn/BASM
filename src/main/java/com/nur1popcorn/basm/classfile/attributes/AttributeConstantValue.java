@@ -25,6 +25,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
+//TODO: improve desc
 /**
  * The {@link AttributeConstantValue} represents a value inside of the {@link ConstantPool}
  * and is only used by Field_Infos.
