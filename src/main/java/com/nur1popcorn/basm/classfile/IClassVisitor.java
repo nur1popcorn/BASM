@@ -20,12 +20,12 @@ package com.nur1popcorn.basm.classfile;
 
 import com.nur1popcorn.basm.classfile.constants.ConstantUtf8;
 
-public interface IClassReaderVisitor {
+public interface IClassVisitor {
 
     /**
      * Visits the head part of the class.
      */
-    default void visitHead(ConstantPool constantPool)
+    default void visitHead(int minorVersion, int majorVersion, ConstantPool constantPool)
     {}
 
     /**

@@ -21,41 +21,49 @@ package com.nur1popcorn.basm.classfile.tree;
 import com.nur1popcorn.basm.classfile.ClassReader;
 import com.nur1popcorn.basm.classfile.ConstantPool;
 import com.nur1popcorn.basm.classfile.FieldMethodInfo;
-import com.nur1popcorn.basm.classfile.IClassReaderVisitor;
-import com.nur1popcorn.basm.classfile.attributes.AttributeInfo;
+import com.nur1popcorn.basm.classfile.IClassVisitor;
 import com.nur1popcorn.basm.classfile.constants.ConstantUtf8;
+import com.nur1popcorn.basm.classfile.tree.fields.FieldNode;
+import com.nur1popcorn.basm.classfile.tree.methods.MethodNode;
 
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.nur1popcorn.basm.classfile.ClassReader.*;
-import static com.nur1popcorn.basm.utils.Constants.*;
 
 /**
- * The {@link ClassFile} TODO: desc
+ * The {@link ClassFile} provides an abstraction layer between bytecode and user.
  *
- * @see IClassReaderVisitor
+ * @see IClassVisitor
  * @see ConstantPool
  *
  * @author nur1popcorn
  * @since 1.0.0-alpha
  */
-public final class ClassFile implements IClassReaderVisitor {
-
-    public int access;
+public final class ClassFile implements IClassVisitor {
 
     private ConstantPool constantPool;
+
+    public int access;
+    public String thisClass,
+                  superClass,
+                  interfaces[];
+
+    private List<FieldNode> fieldNodes = new ArrayList<>();
+    private List<MethodNode> methodNodes = new ArrayList<>();
 
     // prevent construction :/
     private ClassFile()
     {}
 
-    public ClassFile(InputStream in) throws IOException {
-        new ClassReader(new DataInputStream(in)).accept(this, READ_HEAD |
-                                                              READ_BODY |
-                                                              READ_METHODS |
-                                                              READ_FIELDS);
+    public ClassFile(DataInputStream din) throws IOException {
+        new ClassReader(din)
+                .accept(this, READ_HEAD |
+                              READ_BODY |
+                              READ_METHODS |
+                              READ_FIELDS);
     }
 
     public static ClassFileBuilder builder() {
@@ -63,31 +71,40 @@ public final class ClassFile implements IClassReaderVisitor {
     }
 
     @Override
-    public void visitHead(ConstantPool constantPool) {
+    public void visitHead(int minorVersion, int majorVersion, ConstantPool constantPool) {
         this.constantPool = constantPool;
     }
 
     @Override
     public void visitBody(int access, ConstantUtf8 thisClass, ConstantUtf8 superClass, ConstantUtf8[] interfaces) {
         this.access = access;
+        this.thisClass = thisClass.bytes;
+        this.superClass = superClass.bytes;
+        this.interfaces = new String[interfaces.length];
+        for(int i = 0; i < interfaces.length; i++)
+            this.interfaces[i] = interfaces[i].bytes;
     }
 
     @Override
     public void visitFields(FieldMethodInfo[] fields) {
+        for(FieldMethodInfo fieldInfo : fields)
+            fieldNodes.add(new FieldNode(fieldInfo, constantPool));
     }
 
     @Override
     public void visitMethods(FieldMethodInfo[] methods) {
+        //for(FieldMethodInfo methodInfo : methods)
+        //    methodNodes.add(new MethodNode(methodInfo, constantPool));
     }
 
-    public void accept(IClassFileVisitor visitor) {
-
+    public void accept(IClassVisitor visitor) {
+        visitor.visitBody(access, null, null, null);
     }
 
     /**
      * @see #builder()
      */
-    public static class ClassFileBuilder {
+    public static final class ClassFileBuilder {
         private ClassFile classFile;
 
         // prevent construction :/

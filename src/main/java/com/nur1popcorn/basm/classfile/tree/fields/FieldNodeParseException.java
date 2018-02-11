@@ -16,8 +16,7 @@
  *
  */
 
-package com.nur1popcorn.basm.classfile;
+package com.nur1popcorn.basm.classfile.tree.fields;
 
-public final class ClassWriter implements IClassVisitor {
-
+public class FieldNodeParseException {
 }

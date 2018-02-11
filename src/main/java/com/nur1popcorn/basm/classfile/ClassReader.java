@@ -34,9 +34,9 @@ import static com.nur1popcorn.basm.utils.Constants.*;
  *
  * @see ConstantPool
  * @see FieldMethodInfo
- * @see IClassReaderVisitor
+ * @see IClassVisitor
  *
- * @see #accept(IClassReaderVisitor, int)
+ * @see #accept(IClassVisitor, int)
  *
  * @author nur1popcorn
  * @since 1.0.0-alpha
@@ -80,7 +80,7 @@ public final class ClassReader {
      * </ul>
      *
      * @see #readHead()
-     * @see #accept(IClassReaderVisitor, int)
+     * @see #accept(IClassVisitor, int)
      */
     public static final int READ_HEAD = 0x1;
 
@@ -120,7 +120,7 @@ public final class ClassReader {
      * </ul>
      *
      * @see #readBody()
-     * @see #accept(IClassReaderVisitor, int)
+     * @see #accept(IClassVisitor, int)
      */
     public static final int READ_BODY = 0x2;
 
@@ -131,7 +131,7 @@ public final class ClassReader {
      * </a>
      *
      * @see #readFields()
-     * @see #accept(IClassReaderVisitor, int)
+     * @see #accept(IClassVisitor, int)
      */
     public static final int READ_FIELDS = 0x4;
 
@@ -142,7 +142,7 @@ public final class ClassReader {
      * </a>
      *
      * @see #readMethods()
-     * @see #accept(IClassReaderVisitor, int)
+     * @see #accept(IClassVisitor, int)
      */
     public static final int READ_METHODS = 0x8;
 
@@ -233,7 +233,7 @@ public final class ClassReader {
      *
      * @throws IOException if an error occurs during the process of reading from the {@link DataInputStream}.
      *
-     * @see #accept(IClassReaderVisitor, int)
+     * @see #accept(IClassVisitor, int)
      */
     private void readHead() throws IOException {
         minorVersion = in.readUnsignedShort();
@@ -276,7 +276,7 @@ public final class ClassReader {
      *
      * @throws IOException if an error occurs during the process of reading from the {@link DataInputStream}.
      *
-     * @see #accept(IClassReaderVisitor, int)
+     * @see #accept(IClassVisitor, int)
      */
     private void readBody() throws IOException {
         access = in.readUnsignedShort();
@@ -296,7 +296,7 @@ public final class ClassReader {
      *
      * @throws IOException if an error occurs during the process of reading from the {@link DataInputStream}.
      *
-     * @see #accept(IClassReaderVisitor, int)
+     * @see #accept(IClassVisitor, int)
      */
     private void readFields() throws IOException {
         fields = new FieldMethodInfo[in.readUnsignedShort()];
@@ -312,7 +312,7 @@ public final class ClassReader {
      *
      * @throws IOException if an error occurs during the process of reading from the {@link DataInputStream}.
      *
-     * @see #accept(IClassReaderVisitor, int)
+     * @see #accept(IClassVisitor, int)
      */
     private void readMethods() throws IOException {
         methods = new FieldMethodInfo[in.readUnsignedShort()];
@@ -330,20 +330,20 @@ public final class ClassReader {
      *
      * @throws IOException if an error occurs during the process of reading from the {@link DataInputStream}.
      *
-     * @see IClassReaderVisitor
+     * @see IClassVisitor
      * @see #READ_HEAD
      * @see #READ_BODY
      * @see #READ_FIELDS
      * @see #READ_METHODS
      */
-    public void accept(IClassReaderVisitor visitor, int read) throws IOException {
+    public void accept(IClassVisitor visitor, int read) throws IOException {
         assert(read & READ_HEAD) != 0 &&
                ((read & READ_BODY) == 0 ||
                 (read & READ_FIELDS) == 0 ||
                 (read & READ_METHODS) == 0);
         if((read & READ_HEAD) != 0) {
             readHead();
-            visitor.visitHead(constantPool);
+            visitor.visitHead(minorVersion, majorVersion, constantPool);
         } else {
             // skip minor/major version
             in.skipBytes(4);
@@ -419,6 +419,8 @@ public final class ClassReader {
             readMethods();
             visitor.visitMethods(methods);
         }
+
+        //TODO: read class footer
 
         in.close();
     }

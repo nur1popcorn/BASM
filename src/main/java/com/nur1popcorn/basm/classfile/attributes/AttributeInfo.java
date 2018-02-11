@@ -123,6 +123,8 @@ public abstract class AttributeInfo {
     }
 
     /**
+     * @param nameIndex is a entry into the {@link ConstantPool} and represents the
+     *                  {@link AttributeInfo}'s identifier
      * @param attributeLength the size of the {@link AttributeInfo} written to disc.
      */
     public AttributeInfo(int nameIndex, int attributeLength) {
