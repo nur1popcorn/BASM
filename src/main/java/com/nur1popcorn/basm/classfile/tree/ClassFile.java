@@ -22,6 +22,8 @@ import com.nur1popcorn.basm.classfile.ClassReader;
 import com.nur1popcorn.basm.classfile.ConstantPool;
 import com.nur1popcorn.basm.classfile.FieldMethodInfo;
 import com.nur1popcorn.basm.classfile.IClassVisitor;
+import com.nur1popcorn.basm.classfile.constants.ConstantInfo;
+import com.nur1popcorn.basm.classfile.constants.ConstantName;
 import com.nur1popcorn.basm.classfile.constants.ConstantUtf8;
 import com.nur1popcorn.basm.classfile.tree.fields.FieldNode;
 import com.nur1popcorn.basm.classfile.tree.methods.MethodNode;
@@ -47,9 +49,14 @@ public final class ClassFile implements IClassVisitor {
     private ConstantPool constantPool;
 
     public int access;
+
+    private int minorVersion,
+                majorVersion;
+
     public String thisClass,
-                  superClass,
-                  interfaces[];
+                  superClass;
+
+    private List<String> interfaces = new ArrayList<>();
 
     private List<FieldNode> fieldNodes = new ArrayList<>();
     private List<MethodNode> methodNodes = new ArrayList<>();
@@ -72,17 +79,24 @@ public final class ClassFile implements IClassVisitor {
 
     @Override
     public void visitHead(int minorVersion, int majorVersion, ConstantPool constantPool) {
+        this.minorVersion = minorVersion;
+        this.majorVersion = majorVersion;
         this.constantPool = constantPool;
     }
 
     @Override
-    public void visitBody(int access, ConstantUtf8 thisClass, ConstantUtf8 superClass, ConstantUtf8[] interfaces) {
+    public void visitBody(int access, int thisClass, int superClass, int interfaces[]) {
         this.access = access;
-        this.thisClass = thisClass.bytes;
-        this.superClass = superClass.bytes;
-        this.interfaces = new String[interfaces.length];
-        for(int i = 0; i < interfaces.length; i++)
-            this.interfaces[i] = interfaces[i].bytes;
+        this.thisClass = ((ConstantName)constantPool.getEntry(thisClass))
+                .indexName(constantPool).bytes;
+        this.superClass = ((ConstantName)constantPool.getEntry(superClass))
+                .indexName(constantPool).bytes;
+        this.interfaces = new ArrayList<>(interfaces.length);
+        for (int anInterface : interfaces)
+            this.interfaces.add(
+                ((ConstantName)constantPool.getEntry(anInterface))
+                    .indexName(constantPool).bytes
+            );
     }
 
     @Override
@@ -98,7 +112,51 @@ public final class ClassFile implements IClassVisitor {
     }
 
     public void accept(IClassVisitor visitor) {
-        visitor.visitBody(access, null, null, null);
+        final List<ConstantInfo> constantInfos = new ArrayList<>();
+
+        constantInfos.add(null);
+
+        constantInfos.add(new ConstantUtf8(this.thisClass)); //TODO: wrong type.
+        constantInfos.add(new ConstantUtf8(this.superClass));
+
+        final int interfaces[] = new int[this.interfaces.size()];
+        for(int i = 0; i < interfaces.length; i++) {
+            interfaces[i] = constantInfos.size();
+            constantInfos.add(new ConstantUtf8(this.interfaces.get(i)));
+        }
+
+        final FieldMethodInfo fields[] = new FieldMethodInfo[fieldNodes.size()];
+        for(int i = 0; i < fields.length; i++) {
+            final FieldNode fieldNode = fieldNodes.get(i);
+            int size = constantInfos.size();
+            fields[i] = new FieldMethodInfo(
+                fieldNode.access,
+                size++,
+                size,
+                null
+            );
+        }
+
+        visitor.visitHead(
+            minorVersion,
+            majorVersion,
+            new ConstantPool((ConstantInfo[]) constantInfos.toArray())
+        );
+
+        visitor.visitBody(
+            access,
+            1, // skip 1st entry.
+            2,
+            interfaces
+        );
+
+        visitor.visitFields(
+            null
+        );
+
+        visitor.visitMethods(
+            null
+        );
     }
 
     /**
