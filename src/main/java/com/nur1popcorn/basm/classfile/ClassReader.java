@@ -371,16 +371,12 @@ public final class ClassReader {
 
         if((read & READ_BODY) != 0) {
             readBody();
-            final ConstantUtf8 interfaces[] = new ConstantUtf8[this.interfaces.length];
-            for(int i = 0; i < interfaces.length; i++)
-                interfaces[i] = ((ConstantName)constantPool.getEntry(this.interfaces[i]))
-                                        .indexName(constantPool);
-            visitor.visitBody(access,
-                              ((ConstantName)constantPool.getEntry(thisClass))
-                                  .indexName(constantPool),
-                              ((ConstantName)constantPool.getEntry(superClass))
-                                  .indexName(constantPool),
-                              interfaces);
+            visitor.visitBody(
+                access,
+                thisClass,
+                superClass,
+                interfaces
+            );
         } else {
             // https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.1-200-E
             // skip accessFlags, thisClass and superClass.

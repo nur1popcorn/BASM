@@ -20,6 +20,14 @@ package com.nur1popcorn.basm.classfile.tree.fields;
 
 import com.nur1popcorn.basm.classfile.ConstantPool;
 import com.nur1popcorn.basm.classfile.FieldMethodInfo;
+import com.nur1popcorn.basm.classfile.attributes.AttributeConstantValue;
+import com.nur1popcorn.basm.classfile.attributes.AttributeInfo;
+import com.nur1popcorn.basm.classfile.constants.ConstantInfo;
+import com.nur1popcorn.basm.classfile.constants.ConstantInteger;
+import com.nur1popcorn.basm.classfile.constants.ConstantLong;
+import com.nur1popcorn.basm.classfile.constants.ConstantUtf8;
+
+import static com.nur1popcorn.basm.utils.Constants.*;
 
 /**
  * The {@link FieldNode} provides an abstraction layer between the bytecode representation of a
@@ -39,8 +47,91 @@ public class FieldNode {
 
     public String name,
                   desc;
-    
-    public FieldNode(FieldMethodInfo fieldInfo, ConstantPool constantPool) {
 
+    private int valueTag;
+    private Object value;
+
+    public FieldNode(FieldMethodInfo fieldInfo, ConstantPool constantPool) throws FieldNodeParseException {
+        access = fieldInfo.getAccess();
+
+        name = fieldInfo.indexName(constantPool).bytes;
+        desc = fieldInfo.indexName(constantPool).bytes;
+
+        final AttributeInfo attributeInfos[] = fieldInfo.getAttributes();
+        for(AttributeInfo attributeInfo : attributeInfos)
+            switch(attributeInfo.indexName(constantPool).bytes) {
+                // https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.2
+                case "ConstantValue":
+                    final ConstantInfo constantInfo = ((AttributeConstantValue) attributeInfo)
+                            .indexConstantValue(constantPool);
+                    // https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.2-300-C.1
+                    switch(valueTag = constantInfo.getTag()) {
+                        case CONSTANT_LONG:
+                            value = ((ConstantLong) constantInfo).asLong();
+                            break;
+                        case CONSTANT_FLOAT:
+                            value = ((ConstantInteger) constantInfo).asFloat();
+                            break;
+                        case CONSTANT_DOUBLE:
+                            value = ((ConstantLong) constantInfo).asDouble();
+                            break;
+                        case CONSTANT_INTEGER: {
+                            // https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.3.2
+                            final int value = ((ConstantInteger) constantInfo).asInteger();
+                            switch (desc) {
+                                case "I":
+                                    this.value = value;
+                                    break;
+                                case "S":
+                                    this.value = (short) value;
+                                    break;
+                                case "C":
+                                    this.value = (char) value;
+                                    break;
+                                case "B":
+                                    this.value = (byte) value;
+                                    break;
+                                case "Z":
+                                    this.value = value != 0;
+                                    break;
+                                default:
+                                    throw new FieldNodeParseException(); //TODO: desc
+                            }
+                            break;
+                        }
+                        case CONSTANT_STRING:
+                            value = ((ConstantUtf8) constantInfo).bytes;
+                            break;
+                    }
+                    break;
+                case "Synthetic":
+                    break;
+                case "Deprecated":
+                    break;
+                case "Signature":
+                    break;
+                case "RuntimeVisibleAnnotations":
+                    break;
+                case "RuntimeInvisibleAnnotations":
+                    break;
+                case "RuntimeVisibleTypeAnnotations":
+                    break;
+                case "RuntimeInvisibleTypeAnnotations":
+                    break;
+                default:
+                    throw new FieldNodeParseException(); //TODO: add info.
+            }
+    }
+
+    public void setValue(int tag, Object value) {
+
+    }
+
+    public int getValueTag() {
+        return valueTag;
+    }
+
+    public Object getValue() {
+        return value;
     }
 }

@@ -18,5 +18,7 @@
 
 package com.nur1popcorn.basm.classfile.tree.fields;
 
-public class FieldNodeParseException {
+import java.io.IOException;
+
+public class FieldNodeParseException extends IOException {
 }

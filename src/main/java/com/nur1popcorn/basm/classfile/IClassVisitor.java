@@ -18,8 +18,6 @@
 
 package com.nur1popcorn.basm.classfile;
 
-import com.nur1popcorn.basm.classfile.constants.ConstantUtf8;
-
 public interface IClassVisitor {
 
     /**
@@ -51,7 +49,7 @@ public interface IClassVisitor {
      *                      Interfaces 4.1-200-I
      *                   </a>
      */
-    default void visitBody(int access, ConstantUtf8 thisClass, ConstantUtf8 superClass, ConstantUtf8 interfaces[])
+    default void visitBody(int access, int thisClass, int superClass, int interfaces[])
     {}
 
     default void visitMethods(FieldMethodInfo methods[])
