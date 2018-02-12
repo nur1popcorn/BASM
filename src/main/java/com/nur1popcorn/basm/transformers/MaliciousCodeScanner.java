@@ -36,8 +36,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.nur1popcorn.basm.utils.Constants.CONSTANT_METHOD_REF;
-import static com.nur1popcorn.basm.utils.Constants.MAGIC;
+import static com.nur1popcorn.basm.utils.Constants.*;
 
 public final class MaliciousCodeScanner implements ITransformer {
 
@@ -60,7 +59,7 @@ public final class MaliciousCodeScanner implements ITransformer {
             constructor.newInstance(context, "MaliciousCodeScanner"); // instance is used by JavadocTool.
         } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
             e.printStackTrace();
-            throw new RuntimeException();
+            System.exit(1);
         }
         tool = JavadocTool.make0(context);
         if(tool == null) {

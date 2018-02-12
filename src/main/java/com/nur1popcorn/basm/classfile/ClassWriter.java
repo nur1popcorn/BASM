@@ -18,6 +18,57 @@
 
 package com.nur1popcorn.basm.classfile;
 
-public final class ClassWriter implements IClassVisitor {
+import java.io.DataOutputStream;
+import java.io.IOException;
 
+import static com.nur1popcorn.basm.utils.Constants.*;
+
+public final class ClassWriter implements IClassVisitor {
+    private final DataOutputStream out;
+
+    private ConstantPool constantPool;
+
+    public ClassWriter(DataOutputStream out) {
+        this.out = out;
+    }
+
+    @Override
+    public void visitHead(int minorVersion, int majorVersion, ConstantPool constantPool) throws IOException {
+        // write out file header 0xcafebabe.
+        out.writeInt(MAGIC);
+
+        out.writeShort(minorVersion);
+        out.writeShort(majorVersion);
+
+        (this.constantPool = constantPool).write(out);
+    }
+
+    @Override
+    public void visitBody(int access, int thisClass, int superClass, int[] interfaces) throws IOException {
+        out.writeShort(access);
+
+        out.writeShort(thisClass);
+        out.writeShort(superClass);
+
+        out.writeShort(interfaces.length);
+        for(int i : interfaces)
+            out.writeShort(i);
+    }
+
+    @Override
+    public void visitFields(FieldMethodInfo[] fields) throws IOException {
+        out.writeShort(fields.length);
+        for(FieldMethodInfo fieldInfo : fields)
+            fieldInfo.write(out, constantPool);
+    }
+
+    @Override
+    public void visitMethods(FieldMethodInfo[] methods) throws IOException {
+        out.writeShort(methods.length);
+        for(FieldMethodInfo methodInfo : methods)
+            methodInfo.write(out, constantPool);
+
+        // TODO: visit footer and remove.
+        out.writeShort(0);
+    }
 }

@@ -30,6 +30,8 @@ import java.io.IOException;
  *     CONSTANT_Methodref 4.4.2
  * </a>
  *
+ * TODO: add types of methodref into desc.
+ *
  * @see ConstantInfo
  * @see ConstantPool
  * @see ConstantName

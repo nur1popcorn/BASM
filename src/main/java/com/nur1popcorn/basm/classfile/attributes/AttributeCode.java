@@ -51,6 +51,27 @@ public class AttributeCode extends AttributeInfo {
         attributes = AttributeInfo.read(in, constantPool);
     }
 
+
+    public AttributeCode(int nameIndex, int maxStack, int maxLocals, byte code[], ExceptionTableEntry exceptionTable[], AttributeInfo attributes[]) {
+        super(nameIndex, 0); // TODO: new constructor ?
+        this.maxStack = maxStack;
+        this.maxLocals = maxLocals;
+        this.code = code;
+        this.exceptionTable = exceptionTable;
+        this.attributes = attributes;
+        computeLength();
+    }
+
+    public void computeLength() {
+        // TODO: make part of AttributeInfo.
+        int attributeLength = 12 + code.length;
+        for(ExceptionTableEntry entry : exceptionTable)
+            attributeLength += 8;
+        for(AttributeInfo attributeInfo : attributes)
+            attributeLength += attributeInfo.attributeLength;
+        this.attributeLength = attributeLength;
+    }
+
     @Override
     public void write(DataOutputStream os, ConstantPool constantPool) throws IOException {
         super.write(os, constantPool);

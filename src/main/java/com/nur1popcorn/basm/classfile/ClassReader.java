@@ -18,9 +18,6 @@
 
 package com.nur1popcorn.basm.classfile;
 
-import com.nur1popcorn.basm.classfile.constants.ConstantName;
-import com.nur1popcorn.basm.classfile.constants.ConstantUtf8;
-
 import java.io.DataInputStream;
 import java.io.IOException;
 
@@ -337,10 +334,9 @@ public final class ClassReader {
      * @see #READ_METHODS
      */
     public void accept(IClassVisitor visitor, int read) throws IOException {
-        assert(read & READ_HEAD) != 0 &&
-               ((read & READ_BODY) == 0 ||
-                (read & READ_FIELDS) == 0 ||
-                (read & READ_METHODS) == 0);
+        assert((read & READ_HEAD) != 0 ||
+                ((read & READ_FIELDS) == 0 &&
+                 (read & READ_METHODS) == 0));
         if((read & READ_HEAD) != 0) {
             readHead();
             visitor.visitHead(minorVersion, majorVersion, constantPool);

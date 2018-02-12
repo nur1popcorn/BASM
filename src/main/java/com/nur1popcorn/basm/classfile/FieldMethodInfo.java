@@ -53,7 +53,7 @@ public final class FieldMethodInfo {
 
     /**
      * @param access the fields access modifiers.
-     * @param nameIndex a index into the {@link ConstantPool} representing the field'
+     * @param nameIndex a index into the {@link ConstantPool} representing the field' TODO: add type of index
      *                  or method's name.
      * @param descIndex a index into the {@link ConstantPool} representing the field's
      *                  or method's descriptor.

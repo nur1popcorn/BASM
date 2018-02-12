@@ -18,12 +18,14 @@
 
 package com.nur1popcorn.basm.classfile;
 
+import java.io.IOException;
+
 public interface IClassVisitor {
 
     /**
      * Visits the head part of the class.
      */
-    default void visitHead(int minorVersion, int majorVersion, ConstantPool constantPool)
+    default void visitHead(int minorVersion, int majorVersion, ConstantPool constantPool) throws IOException
     {}
 
     /**
@@ -49,12 +51,12 @@ public interface IClassVisitor {
      *                      Interfaces 4.1-200-I
      *                   </a>
      */
-    default void visitBody(int access, int thisClass, int superClass, int interfaces[])
+    default void visitBody(int access, int thisClass, int superClass, int interfaces[]) throws IOException
     {}
 
-    default void visitMethods(FieldMethodInfo methods[])
+    default void visitMethods(FieldMethodInfo methods[]) throws IOException
     {}
 
-    default void visitFields(FieldMethodInfo fields[])
+    default void visitFields(FieldMethodInfo fields[]) throws IOException
     {}
 }

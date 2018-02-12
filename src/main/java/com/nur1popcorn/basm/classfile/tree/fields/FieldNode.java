@@ -55,7 +55,7 @@ public class FieldNode {
         access = fieldInfo.getAccess();
 
         name = fieldInfo.indexName(constantPool).bytes;
-        desc = fieldInfo.indexName(constantPool).bytes;
+        desc = fieldInfo.indexDesc(constantPool).bytes;
 
         final AttributeInfo attributeInfos[] = fieldInfo.getAttributes();
         for(AttributeInfo attributeInfo : attributeInfos)
@@ -124,7 +124,6 @@ public class FieldNode {
     }
 
     public void setValue(int tag, Object value) {
-
     }
 
     public int getValueTag() {

@@ -22,10 +22,11 @@ import com.nur1popcorn.basm.classfile.ClassReader;
 import com.nur1popcorn.basm.classfile.ConstantPool;
 import com.nur1popcorn.basm.classfile.FieldMethodInfo;
 import com.nur1popcorn.basm.classfile.IClassVisitor;
-import com.nur1popcorn.basm.classfile.constants.ConstantInfo;
-import com.nur1popcorn.basm.classfile.constants.ConstantName;
-import com.nur1popcorn.basm.classfile.constants.ConstantUtf8;
+import com.nur1popcorn.basm.classfile.attributes.AttributeCode;
+import com.nur1popcorn.basm.classfile.attributes.AttributeInfo;
+import com.nur1popcorn.basm.classfile.constants.*;
 import com.nur1popcorn.basm.classfile.tree.fields.FieldNode;
+import com.nur1popcorn.basm.classfile.tree.fields.FieldNodeParseException;
 import com.nur1popcorn.basm.classfile.tree.methods.MethodNode;
 
 import java.io.DataInputStream;
@@ -34,6 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.nur1popcorn.basm.classfile.ClassReader.*;
+import static com.nur1popcorn.basm.utils.Constants.*;
 
 /**
  * The {@link ClassFile} provides an abstraction layer between bytecode and user.
@@ -102,7 +104,11 @@ public final class ClassFile implements IClassVisitor {
     @Override
     public void visitFields(FieldMethodInfo[] fields) {
         for(FieldMethodInfo fieldInfo : fields)
-            fieldNodes.add(new FieldNode(fieldInfo, constantPool));
+            try {
+                fieldNodes.add(new FieldNode(fieldInfo, constantPool)); // TODO: improve ?
+            } catch (FieldNodeParseException e) {
+                e.printStackTrace();
+            }
     }
 
     @Override
@@ -111,13 +117,15 @@ public final class ClassFile implements IClassVisitor {
         //    methodNodes.add(new MethodNode(methodInfo, constantPool));
     }
 
-    public void accept(IClassVisitor visitor) {
+    public void accept(IClassVisitor visitor) throws IOException {
         final List<ConstantInfo> constantInfos = new ArrayList<>();
 
         constantInfos.add(null);
 
-        constantInfos.add(new ConstantUtf8(this.thisClass)); //TODO: wrong type.
+        constantInfos.add(new ConstantUtf8(this.thisClass));
+        constantInfos.add(new ConstantName(CONSTANT_CLASS, 1));
         constantInfos.add(new ConstantUtf8(this.superClass));
+        constantInfos.add(new ConstantName(CONSTANT_CLASS, 3));
 
         final int interfaces[] = new int[this.interfaces.size()];
         for(int i = 0; i < interfaces.length; i++) {
@@ -133,29 +141,60 @@ public final class ClassFile implements IClassVisitor {
                 fieldNode.access,
                 size++,
                 size,
-                null
+                new AttributeInfo[0] //TODO: remove
             );
+            constantInfos.add(new ConstantUtf8(fieldNode.name));
+            constantInfos.add(new ConstantUtf8(fieldNode.desc));
         }
 
+        //TODO: remove
+        final FieldMethodInfo methods[] = new FieldMethodInfo[1]; // TODO: impl
+        int size = constantInfos.size();
+        AttributeInfo attributeInfos[] = new AttributeInfo[] {
+            new AttributeCode(size++, 1, 0,
+            new byte[] {
+                ALOAD_0,
+                (byte) 0xb7, 0, (byte) size++, // invokespecial
+                (byte) 0xb1 // return
+            },
+            new AttributeCode.ExceptionTableEntry[0],
+            new AttributeInfo[0])
+        };
+
+
+        constantInfos.add(new ConstantUtf8("Code"));
+        constantInfos.add(new ConstantMethodRef(CONSTANT_METHOD_REF, size++, size++));
+
+        constantInfos.add(new ConstantName(CONSTANT_CLASS, 3));
+        constantInfos.add(new ConstantNameAndType(size++, size++));
+
+        constantInfos.add(new ConstantUtf8("<init>"));
+        constantInfos.add(new ConstantUtf8("()V"));
+
+        methods[0] = new FieldMethodInfo(0, size++, size++, attributeInfos);
+        constantInfos.add(new ConstantUtf8("<init>"));
+        constantInfos.add(new ConstantUtf8("()V"));
+
+        final ConstantInfo constantPool[] = new ConstantInfo[constantInfos.size()];
         visitor.visitHead(
             minorVersion,
             majorVersion,
-            new ConstantPool((ConstantInfo[]) constantInfos.toArray())
+            new ConstantPool(constantInfos.toArray(constantPool))
         );
 
         visitor.visitBody(
             access,
-            1, // skip 1st entry.
             2,
+            4,
             interfaces
         );
 
         visitor.visitFields(
-            null
+            fields
         );
 
         visitor.visitMethods(
-            null
+            methods
         );
     }
 
