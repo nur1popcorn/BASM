@@ -557,6 +557,41 @@ public final class Constants {
     /* performs bitwise xor on 1st and 2nd int on the stack. */
     public static final byte IINC =                         (byte) 0x84;
 
+    /* converts the int on top of the stack to a long */
+    public static final byte I2L =                          (byte) 0x85;
+    /* to a float */
+    public static final byte I2F =                          (byte) 0x86;
+    /* to a double */
+    public static final byte I2D =                          (byte) 0x87;
+
+    /* converts the long on top of the stack to an int */
+    public static final byte L2I =                          (byte) 0x88;
+    /* to a float */
+    public static final byte L2F =                          (byte) 0x89;
+    /* to a double */
+    public static final byte L2D =                          (byte) 0x8a;
+
+    /* converts the float on top of the stack to an int */
+    public static final byte F2I =                          (byte) 0x8b;
+    /* to a long */
+    public static final byte F2L =                          (byte) 0x8c;
+    /* to a double */
+    public static final byte F2D =                          (byte) 0x8d;
+
+    /* converts the double on top of the stack to an int */
+    public static final byte D2I =                          (byte) 0x8e;
+    /* to a long */
+    public static final byte D2L =                          (byte) 0x8f;
+    /* to a float */
+    public static final byte D2F =                          (byte) 0x90;
+
+    /* converts the int on top of the stack to a byte */
+    public static final byte I2B =                          (byte) 0x91;
+    /* to a char */
+    public static final byte I2C =                          (byte) 0x92;
+    /* to a short */
+    public static final byte I2S =                          (byte) 0x93;
+
     public static final String OPCODE_MNEMONICS[] = new String[] {
         "nop",
 

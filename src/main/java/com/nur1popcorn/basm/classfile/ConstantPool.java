@@ -24,8 +24,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import static com.nur1popcorn.basm.utils.Constants.CONSTANT_DOUBLE;
-import static com.nur1popcorn.basm.utils.Constants.CONSTANT_LONG;
+import static com.nur1popcorn.basm.utils.Constants.*;
 
 /**
  * The {@link ConstantPool} stores all kind of constants embedded into the classfile.
