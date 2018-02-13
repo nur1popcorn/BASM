@@ -151,7 +151,7 @@ public final class ClassFile implements IClassVisitor {
         final FieldMethodInfo methods[] = new FieldMethodInfo[1]; // TODO: impl
         int size = constantInfos.size();
         AttributeInfo attributeInfos[] = new AttributeInfo[] {
-            new AttributeCode(size++, 1, 0,
+            new AttributeCode(size++, 1, 1,
             new byte[] {
                 ALOAD_0,
                 (byte) 0xb7, 0, (byte) size++, // invokespecial
@@ -171,7 +171,7 @@ public final class ClassFile implements IClassVisitor {
         constantInfos.add(new ConstantUtf8("<init>"));
         constantInfos.add(new ConstantUtf8("()V"));
 
-        methods[0] = new FieldMethodInfo(0, size++, size++, attributeInfos);
+        methods[0] = new FieldMethodInfo(ACC_PUBLIC, size++, size++, attributeInfos);
         constantInfos.add(new ConstantUtf8("<init>"));
         constantInfos.add(new ConstantUtf8("()V"));
 
