@@ -21,7 +21,7 @@ package com.nur1popcorn.basm.classfile.constants;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import static com.nur1popcorn.basm.utils.Constants.CONSTANT_UTF8;
+import static com.nur1popcorn.basm.Constants.CONSTANT_UTF8;
 
 /**
  * The {@link ConstantUtf8} represents a simple string value.

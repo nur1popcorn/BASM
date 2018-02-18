@@ -23,8 +23,8 @@ import com.nur1popcorn.basm.classfile.ConstantPool;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import static com.nur1popcorn.basm.utils.Constants.CONSTANT_METHOD_HANDLE;
-import static com.nur1popcorn.basm.utils.Constants.REF_NAMES;
+import static com.nur1popcorn.basm.Constants.CONSTANT_METHOD_HANDLE;
+import static com.nur1popcorn.basm.Constants.REF_NAMES;
 
 /**
  * The {@link ConstantMethodHandle} describes a CONSTANT_Fieldref's, CONSTANT_Methodref's or

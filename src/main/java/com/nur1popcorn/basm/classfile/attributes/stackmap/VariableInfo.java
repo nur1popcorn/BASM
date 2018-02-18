@@ -22,7 +22,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import static com.nur1popcorn.basm.utils.Constants.*;
+import static com.nur1popcorn.basm.Constants.*;
 
 public class VariableInfo {
     protected byte tag /* u1 */;

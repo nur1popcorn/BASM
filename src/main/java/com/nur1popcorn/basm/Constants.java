@@ -16,7 +16,7 @@
  *
  */
 
-package com.nur1popcorn.basm.utils;
+package com.nur1popcorn.basm;
 
 //TODO: write a better description for this class.
 /**
@@ -557,41 +557,137 @@ public final class Constants {
     /* performs bitwise xor on 1st and 2nd int on the stack. */
     public static final byte IINC =                         (byte) 0x84;
 
-    /* converts the int on top of the stack to a long */
+    /* converts the int on top of the stack to a long. */
     public static final byte I2L =                          (byte) 0x85;
     /* to a float */
     public static final byte I2F =                          (byte) 0x86;
     /* to a double */
     public static final byte I2D =                          (byte) 0x87;
 
-    /* converts the long on top of the stack to an int */
+    /* converts the long on top of the stack to an int. */
     public static final byte L2I =                          (byte) 0x88;
     /* to a float */
     public static final byte L2F =                          (byte) 0x89;
     /* to a double */
     public static final byte L2D =                          (byte) 0x8a;
 
-    /* converts the float on top of the stack to an int */
+    /* converts the float on top of the stack to an int. */
     public static final byte F2I =                          (byte) 0x8b;
     /* to a long */
     public static final byte F2L =                          (byte) 0x8c;
     /* to a double */
     public static final byte F2D =                          (byte) 0x8d;
 
-    /* converts the double on top of the stack to an int */
+    /* converts the double on top of the stack to an int. */
     public static final byte D2I =                          (byte) 0x8e;
     /* to a long */
     public static final byte D2L =                          (byte) 0x8f;
     /* to a float */
     public static final byte D2F =                          (byte) 0x90;
 
-    /* converts the int on top of the stack to a byte */
+    /* converts the int on top of the stack to a byte. */
     public static final byte I2B =                          (byte) 0x91;
     /* to a char */
     public static final byte I2C =                          (byte) 0x92;
     /* to a short */
     public static final byte I2S =                          (byte) 0x93;
 
+    /* pushes 0 on the stack if both longs on are equal, 1 if the 2nd on is greater than the top one and -1 otherwise.  */
+    public static final byte LCMP =                         (byte) 0x94;
+
+    /* pushes 0 on the stack if both floats on are equal, 1 if the 2nd on is greater than the top one, -1 if either of them are equal to NaN and -1 otherwise.  */
+    public static final byte FCMPL =                        (byte) 0x95;
+    /* pushes 0 on the stack if both floats on are equal, 1 if the 2nd on is greater than the top one, -1 if either of them are equal to NaN and 1 otherwise.  */
+    public static final byte FCMPG =                        (byte) 0x96;
+
+    /* pushes 0 on the stack if both doubles on are equal, 1 if the 2nd on is greater than the top one, -1 if either of them are equal to NaN and -1 otherwise.  */
+    public static final byte DCMPL =                        (byte) 0x97;
+    /* pushes 0 on the stack if both doubles on are equal, 1 if the 2nd on is greater than the top one, -1 if either of them are equal to NaN and 1 otherwise.  */
+    public static final byte DCMPG =                        (byte) 0x98;
+
+    /* if the value on the stack is equal to 0 goto the instruction at instruction offset provided. */
+    public static final byte IFEQ =                         (byte) 0x99;
+    /* is not equal to 0 */
+    public static final byte IFNE =                         (byte) 0x9a;
+    /* is less than 0 */
+    public static final byte IFLT =                         (byte) 0x9b;
+    /* is greater than or equal to 0 */
+    public static final byte IFGE =                         (byte) 0x9c;
+    /* is greater than 0 */
+    public static final byte IFGT =                         (byte) 0x9d;
+    /* is less than or equal to 0 */
+    public static final byte IFLE =                         (byte) 0x9e;
+
+    /* if the two ints on the stack are equal continue execution at the instruction offset provided. */
+    public static final byte IF_ICMPEQ =                    (byte) 0x9f;
+    /* are not equal */
+    public static final byte IF_ICMPNE =                    (byte) 0xa0;
+    /* if the 2nd int on the stack is less than the 1st one */
+    public static final byte IF_ICMPLT =                    (byte) 0xa1;
+    /* if the 1st value is greater than or equal to the 2nd one */
+    public static final byte IF_ICMPGE =                    (byte) 0xa2;
+    /* if the 1st value is greater than the 2nd one */
+    public static final byte IF_ICMPGT =                    (byte) 0xa3;
+    /* if the 1st value is less than or equal to the 2nd value */
+    public static final byte IF_ICMPLE =                    (byte) 0xa4;
+
+    /* if the two objects on the stack are equal continue execution at the instruction offset provided. */
+    public static final byte IF_ACMPEQ =                    (byte) 0xa5;
+    /* are not equal */
+    public static final byte IF_ACMPNQ =                    (byte) 0xa6;
+
+    /* continue execution at the instruction offset provided. */
+    public static final byte GOTO =                         (byte) 0xa7;
+
+    /* jumps to subroutine and pushes return address onto the stack. */
+    public static final byte JSR =                          (byte) 0xa8;
+    /* continue execution at the address on top of the stack. */
+    public static final byte RET =                          (byte) 0xa9;
+
+    /* access a jump table at the index provided and then continues execution from the indexed location. */
+    public static final byte TABLESWITCH =                  (byte) 0xaa;
+    /* looks up jump address using the key on top of the stack then continues execution from the indexed location. */
+    public static final byte LOOKUPSWITCH =                 (byte) 0xab;
+
+    /* returns an int from the method. */
+    public static final byte IRETURN =                      (byte) 0xac;
+    /* a long */
+    public static final byte LRETURN =                      (byte) 0xad;
+    /* a float */
+    public static final byte FRETURN =                      (byte) 0xae;
+    /* a double */
+    public static final byte DRETURN =                      (byte) 0xaf;
+    /* an object */
+    public static final byte ARETURN =                      (byte) 0xb0;
+    /* returns from the method. */
+    public static final byte RETURN =                       (byte) 0xb1;
+
+    /* puts the value of static field on top of the stack using the index into the constantpool provided. */
+    public static final byte GETSTATIC =                    (byte) 0xb2;
+    /* sets a static field's value using the index into the constantpool provided and the value on top of the stack. */
+    public static final byte PUTSTATIC =                    (byte) 0xb3;
+
+    /* puts the value of field on top of the stack using the index into the constantpool provided and the object instance on top of the stack. */
+    public static final byte GETFIELD =                     (byte) 0xb4;
+    /* sets a field's value using the index into the constantpool provided, the instance of the object on top of the stack and the value 2nd on the stack. */
+    public static final byte PUTFIELD =                     (byte) 0xb5;
+
+    /* calls a virtual method using the parameters on the stack and the object instance on top of the stack. */
+    public static final byte INVOKEVIRTUAL =                (byte) 0xb6;
+    /* calls either a private method or a method located in the superclass using the parameters on the stack and the object instance on top of the stack. */
+    public static final byte INVOKESPECIAL =                (byte) 0xb7;
+    /* calls a static method using the parameters on the stack. */
+    public static final byte INVOKESTATIC =                 (byte) 0xb8;
+    /* calls an interface-method using the parameters on the stack and the object instance on top of the stack. */
+    public static final byte INVOKEINTERFACE =              (byte) 0xb9;
+    //TODO: desc.
+    public static final byte INVOKEDYNAMIC =                (byte) 0xba;
+
+    public static final byte NEW =                          (byte) 0xbb;
+
+    public static final byte NEWARRAY =                     (byte) 0xbc;
+
+    //TODO: desc.
     public static final String OPCODE_MNEMONICS[] = new String[] {
         "nop",
 

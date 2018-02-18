@@ -16,23 +16,17 @@
  *
  */
 
-package com.nur1popcorn.basm.gui;
+package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
-import com.nur1popcorn.basm.BASM;
-import javafx.application.Application;
-import javafx.stage.Stage;
+import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
 
-import java.util.Arrays;
+import static com.nur1popcorn.basm.Constants.*;
 
-public class App extends Application {
+public class BIPushInstruction extends Instruction {
+    public byte data;
 
-    public static void main(String args[]) {
-        launch(args);
-    }
-
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        primaryStage.setTitle(BASM.NAME + " - " + BASM.VERSION + " developed by " + Arrays.toString(BASM.AUTHORS));
-        primaryStage.show();
+    public BIPushInstruction(byte data) {
+        super(BIPUSH);
+        this.data = data;
     }
 }

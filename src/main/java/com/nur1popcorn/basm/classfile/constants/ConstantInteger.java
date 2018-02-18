@@ -21,7 +21,7 @@ package com.nur1popcorn.basm.classfile.constants;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import static com.nur1popcorn.basm.utils.Constants.CONSTANT_INTEGER;
+import static com.nur1popcorn.basm.Constants.CONSTANT_INTEGER;
 
 /**
  * The {@link ConstantInteger} is made up of 4 bytes of data either belonging to an integer or float.

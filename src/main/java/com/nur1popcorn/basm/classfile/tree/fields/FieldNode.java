@@ -27,7 +27,7 @@ import com.nur1popcorn.basm.classfile.constants.ConstantInteger;
 import com.nur1popcorn.basm.classfile.constants.ConstantLong;
 import com.nur1popcorn.basm.classfile.constants.ConstantUtf8;
 
-import static com.nur1popcorn.basm.utils.Constants.*;
+import static com.nur1popcorn.basm.Constants.*;
 
 /**
  * The {@link FieldNode} provides an abstraction layer between the bytecode representation of a

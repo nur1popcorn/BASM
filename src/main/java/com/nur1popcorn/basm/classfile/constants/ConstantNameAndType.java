@@ -23,7 +23,7 @@ import com.nur1popcorn.basm.classfile.ConstantPool;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import static com.nur1popcorn.basm.utils.Constants.CONSTANT_NAME_AND_TYPE;
+import static com.nur1popcorn.basm.Constants.CONSTANT_NAME_AND_TYPE;
 
 /**
  * The {@link ConstantNameAndType} is used to store references to either a field's or a method's

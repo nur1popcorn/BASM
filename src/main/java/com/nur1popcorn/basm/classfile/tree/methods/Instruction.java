@@ -16,23 +16,19 @@
  *
  */
 
-package com.nur1popcorn.basm.gui;
+package com.nur1popcorn.basm.classfile.tree.methods;
 
-import com.nur1popcorn.basm.BASM;
-import javafx.application.Application;
-import javafx.stage.Stage;
+public abstract class Instruction {
+    private byte opcode;
 
-import java.util.Arrays;
+    Instruction next,
+                prev;
 
-public class App extends Application {
-
-    public static void main(String args[]) {
-        launch(args);
+    public Instruction(byte opcode) {
+        this.opcode = opcode;
     }
 
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        primaryStage.setTitle(BASM.NAME + " - " + BASM.VERSION + " developed by " + Arrays.toString(BASM.AUTHORS));
-        primaryStage.show();
+    public byte getOpcode() {
+        return opcode;
     }
 }

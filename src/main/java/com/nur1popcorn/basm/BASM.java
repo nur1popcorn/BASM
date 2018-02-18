@@ -1,5 +1,6 @@
 package com.nur1popcorn.basm;
 
+import com.nur1popcorn.basm.classfile.tree.methods.instructions.NewArrayInstruction;
 import com.nur1popcorn.basm.transformers.ITransformer;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;

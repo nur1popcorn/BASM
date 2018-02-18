@@ -21,13 +21,15 @@ package com.nur1popcorn.basm.classfile;
 import java.io.DataInputStream;
 import java.io.IOException;
 
-import static com.nur1popcorn.basm.utils.Constants.*;
+import static com.nur1popcorn.basm.Constants.*;
 
 /**
  * The {@link ClassReader} is used for reading the full or parts of the JavaClass provided.
  * <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.1">
  *     ClassFile 4.1.
  * </a>
+ *
+ * TODO: describe structure, what the class file is made of: magic minor major..
  *
  * @see ConstantPool
  * @see FieldMethodInfo

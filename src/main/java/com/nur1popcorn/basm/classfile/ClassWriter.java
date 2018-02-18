@@ -21,7 +21,7 @@ package com.nur1popcorn.basm.classfile;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import static com.nur1popcorn.basm.utils.Constants.*;
+import static com.nur1popcorn.basm.Constants.*;
 
 public final class ClassWriter implements IClassVisitor {
     private final DataOutputStream out;

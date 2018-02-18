@@ -28,6 +28,7 @@ import com.nur1popcorn.basm.classfile.constants.*;
 import com.nur1popcorn.basm.classfile.tree.fields.FieldNode;
 import com.nur1popcorn.basm.classfile.tree.fields.FieldNodeParseException;
 import com.nur1popcorn.basm.classfile.tree.methods.MethodNode;
+import com.nur1popcorn.basm.classfile.tree.methods.MethodNodeParseException;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -35,7 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.nur1popcorn.basm.classfile.ClassReader.*;
-import static com.nur1popcorn.basm.utils.Constants.*;
+import static com.nur1popcorn.basm.Constants.*;
 
 /**
  * The {@link ClassFile} provides an abstraction layer between bytecode and user.
@@ -102,19 +103,15 @@ public final class ClassFile implements IClassVisitor {
     }
 
     @Override
-    public void visitFields(FieldMethodInfo[] fields) {
+    public void visitFields(FieldMethodInfo[] fields) throws FieldNodeParseException {
         for(FieldMethodInfo fieldInfo : fields)
-            try {
-                fieldNodes.add(new FieldNode(fieldInfo, constantPool)); // TODO: improve ?
-            } catch (FieldNodeParseException e) {
-                e.printStackTrace();
-            }
+            fieldNodes.add(new FieldNode(fieldInfo, constantPool));
     }
 
     @Override
-    public void visitMethods(FieldMethodInfo[] methods) {
-        //for(FieldMethodInfo methodInfo : methods)
-        //    methodNodes.add(new MethodNode(methodInfo, constantPool));
+    public void visitMethods(FieldMethodInfo[] methods) throws MethodNodeParseException {
+        for(FieldMethodInfo methodInfo : methods)
+            methodNodes.add(new MethodNode(methodInfo, constantPool));
     }
 
     public void accept(IClassVisitor visitor) throws IOException {
