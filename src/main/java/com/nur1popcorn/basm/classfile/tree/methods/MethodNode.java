@@ -20,6 +20,7 @@ package com.nur1popcorn.basm.classfile.tree.methods;
 
 import com.nur1popcorn.basm.classfile.ConstantPool;
 import com.nur1popcorn.basm.classfile.FieldMethodInfo;
+import com.nur1popcorn.basm.classfile.attributes.AttributeCode;
 import com.nur1popcorn.basm.classfile.attributes.AttributeInfo;
 
 public class MethodNode {
@@ -33,7 +34,6 @@ public class MethodNode {
 
     private Code code;
 
-    // TODO: maybe empty constructor with visitor ?
     public MethodNode(FieldMethodInfo methodInfo, ConstantPool constantPool) throws MethodNodeParseException {
         this.access = methodInfo.getAccess();
 
@@ -45,7 +45,7 @@ public class MethodNode {
             switch(attributeInfo.indexName(constantPool).bytes) {
                 // https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.3
                 case "Code":
-
+                    code = new Code((AttributeCode)attributeInfo, constantPool);
                     break;
                 default:
                     throw new MethodNodeParseException(); //TODO: make useful.

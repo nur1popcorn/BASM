@@ -16,17 +16,18 @@
  *
  */
 
-package com.nur1popcorn.basm.classfile.tree.methods.instructions;
+package com.nur1popcorn.basm.classfile.tree.methods;
 
-import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
+public final class MethodHandle {
+    public int refKind;
+    public String clazz,
+                  name,
+                  type;
 
-import static com.nur1popcorn.basm.Constants.*;
-
-public final class BIPushInstruction extends Instruction {
-    public byte data;
-
-    public BIPushInstruction(byte data) {
-        super(BIPUSH);
-        this.data = data;
+    public MethodHandle(int refKind, String clazz, String name, String type) {
+        this.refKind = refKind;
+        this.clazz = clazz;
+        this.name = name;
+        this.type = type;
     }
 }

@@ -20,42 +20,11 @@ package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
 import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
 
-import static com.nur1popcorn.basm.Constants.*;
+public final class JumpInstruction extends Instruction {
+    public Instruction instruction;
 
-public final class LDCInstruction extends Instruction {
-    private byte tag;
-    private Object constant;
-
-    public LDCInstruction(Object constant, byte tag) {
-        super(LDC);
-        switch(tag) {
-
-        }
-    }
-
-    public void setConstant(int i) {
-        tag = CONSTANT_INTEGER;
-        this.constant = i;
-    }
-
-    public void setConstant(float f) {
-        tag = CONSTANT_FLOAT;
-        this.constant = f;
-    }
-
-    public void setConstant(String s, byte tag) {
-        assert(tag == CONSTANT_STRING ||
-               tag == CONSTANT_CLASS ||
-               tag == CONSTANT_METHOD_TYPE);
-        this.tag = tag;
-        this.constant = s;
-    }
-
-    public byte getTag() {
-        return tag;
-    }
-
-    public Object getConstant() {
-        return constant;
+    public JumpInstruction(byte opcode, Instruction instruction) {
+        super(opcode);
+        this.instruction = instruction;
     }
 }
