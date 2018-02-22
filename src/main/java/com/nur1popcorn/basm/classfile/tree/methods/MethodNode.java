@@ -29,9 +29,6 @@ public class MethodNode {
     public String name,
                   desc;
 
-    public int maxStack,
-               maxLocals;
-
     private Code code;
 
     public MethodNode(FieldMethodInfo methodInfo, ConstantPool constantPool) throws MethodNodeParseException {

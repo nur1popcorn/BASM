@@ -19,6 +19,7 @@
 package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
 import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
+import com.nur1popcorn.basm.classfile.tree.methods.MethodHandle;
 
 import static com.nur1popcorn.basm.Constants.*;
 
@@ -28,9 +29,8 @@ public final class LDCInstruction extends Instruction {
 
     public LDCInstruction(Object constant, byte tag) {
         super(LDC);
-        switch(tag) {
-
-        }
+        this.constant = constant;
+        this.tag = tag;
     }
 
     public void setConstant(int i) {
@@ -49,6 +49,11 @@ public final class LDCInstruction extends Instruction {
                tag == CONSTANT_METHOD_TYPE);
         this.tag = tag;
         this.constant = s;
+    }
+
+    public void setConstant(MethodHandle methodHandle) {
+        this.tag = CONSTANT_METHOD_HANDLE;
+        this.constant = methodHandle;
     }
 
     public byte getTag() {
