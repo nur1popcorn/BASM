@@ -100,6 +100,14 @@ public class AttributeCode extends AttributeInfo {
         return code;
     }
 
+    public int getMaxStack() {
+        return maxStack;
+    }
+
+    public int getMaxLocals() {
+        return maxLocals;
+    }
+
     public static class ExceptionTableEntry {
         private int startPc /* u2 */,
                     endPc /* u2 */,

@@ -24,15 +24,18 @@ import com.nur1popcorn.basm.classfile.tree.methods.MethodHandle;
 import static com.nur1popcorn.basm.Constants.*;
 
 public final class LDCInstruction extends Instruction {
+    public static final byte LDC_INSTRUCTION = 4;
+
     private byte tag;
     private Object constant;
 
-    public LDCInstruction(Object constant, byte tag) {
-        super(LDC);
+    public LDCInstruction(byte opcode, Object constant, byte tag) {
+        super(opcode);
         this.constant = constant;
         this.tag = tag;
     }
 
+    //TODO: ldc2_W
     public void setConstant(int i) {
         tag = CONSTANT_INTEGER;
         this.constant = i;

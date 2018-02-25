@@ -21,6 +21,9 @@ package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
 
 public final class JumpInstruction extends Instruction {
+    public static final byte JUMP_INSTRUCTION = 6;
+
+    // TODO: make sure instructions fit into a 2 byte index. (jsr_w, ..)
     public Instruction instruction;
 
     public JumpInstruction(byte opcode, Instruction instruction) {

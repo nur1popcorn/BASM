@@ -20,11 +20,11 @@ package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
 import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
 
-public final class InvokeInstruction extends Instruction {
-    public static final byte INVOKE_INSTRUCTION = 10;
+public class WideInstruction extends Instruction {
+    public static final byte WIDE_INSTRUCTION = 12;
 
-    public InvokeInstruction(byte opcode) {
-        // TODO: impl
+    public WideInstruction(byte opcode) {
+        //TODO: impl
         super(opcode);
     }
 }

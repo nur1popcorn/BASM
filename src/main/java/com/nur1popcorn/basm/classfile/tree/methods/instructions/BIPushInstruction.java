@@ -23,6 +23,8 @@ import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
 import static com.nur1popcorn.basm.Constants.*;
 
 public final class BIPushInstruction extends Instruction {
+    public static final byte BIPUSH_INSTRUCTION = 3;
+
     public byte data;
 
     public BIPushInstruction(byte data) {
