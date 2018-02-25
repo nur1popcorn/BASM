@@ -27,6 +27,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.nur1popcorn.basm.Constants.*;
+import static com.nur1popcorn.basm.classfile.tree.methods.Instruction.INSTRUCTION_TYPE_TABLE;
+import static com.nur1popcorn.basm.classfile.tree.methods.instructions.BIPushInstruction.BIPUSH_INSTRUCTION;
+import static com.nur1popcorn.basm.classfile.tree.methods.instructions.IIncInstruction.IINC_INSTRUCTION;
+import static com.nur1popcorn.basm.classfile.tree.methods.instructions.JumpInstruction.JUMP_INSTRUCTION;
+import static com.nur1popcorn.basm.classfile.tree.methods.instructions.LDCInstruction.LDC_INSTRUCTION;
+import static com.nur1popcorn.basm.classfile.tree.methods.instructions.LocalVariableInstructtion.LOCAL_VARIABLE_INSTRUCTION;
+import static com.nur1popcorn.basm.classfile.tree.methods.instructions.LookupSwitchInstruction.LOOKUPSWITCH_INSTRUCTION;
+import static com.nur1popcorn.basm.classfile.tree.methods.instructions.TableSwitchInstruction.TABLESWITCH_INSTRUCTION;
 
 public final class Code {
 
@@ -109,58 +117,91 @@ public final class Code {
 
     public Code(AttributeCode attributeCode, ConstantPool constantPool) {
         final byte byteCode[] = attributeCode.getByteCode();
-        final Instruction labels[] = new Instruction[byteCode.length];
+
+        final Label labels[] = new Label[byteCode.length];
         for(int i = 0; i < byteCode.length; i++) {
             final byte opcode = byteCode[i];
-            switch(opcode) {
-                case IFEQ:
-                case IFNE:
-                case IFLT:
-                case IFGE:
-                case IFGT:
-                case IFLE:
+            switch(INSTRUCTION_TYPE_TABLE[opcode & 0xff]) {
+                case JUMP_INSTRUCTION:
+                    int jumpIndex;
+                    switch(opcode) {
+                        // a 4 byte index must be constructed for the goto_w & jsr_w opcodes.
+                        // https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.goto_w
+                        // https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.jsr_w
+                        case GOTO_W:
+                        case JSR_W:
+                            jumpIndex = (byteCode[++i] & 0xff) << 24 |
+                                        (byteCode[++i] & 0xff) << 16 |
+                                        (byteCode[++i] & 0xff) << 8  |
+                                        (byteCode[++i] & 0xff);
+                            break;
+                        default:
+                            jumpIndex = (byteCode[++i] & 0xff) << 8 |
+                                        (byteCode[++i] & 0xff);
+                            break;
+                    }
+                    labels[jumpIndex] = new Label();
 
-                case IF_ICMPEQ:
-                case IF_ICMPNE:
-                case IF_ICMPLT:
-                case IF_ICMPGE:
-                case IF_ICMPGT:
-                case IF_ICMPLE:
-
-                case IF_ACMPEQ:
-                case IF_ACMPNQ:
-
-                case GOTO:
-
-                case JSR:
-
-                case IFNULL:
-                case IFNONNULL:
-
-                    break;
-
-                case GOTO_W:
-                case JSR_W:
-
-                    break;
-
+                    // fallthrough.
                 default:
-                    //TODO: unknown opcodes. (tableswitch)
+                    // TODO: throw exception ? if valid to verify jump. unknown opcodes. (tableswitch)
                     i += OPCODE_PARAMETERS[opcode & 0xff];
                     break;
             }
         }
 
         for(int i = 0; i < byteCode.length; i++) {
+
+            {
+                final Label label = labels[i];
+                if(label != null)
+                    code.add(label);
+            }
+
             final byte opcode = byteCode[i];
-            switch(opcode) {
-                case BIPUSH:
+            switch(INSTRUCTION_TYPE_TABLE[opcode & 0xff]) {
+                // https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.bipush
+                case BIPUSH_INSTRUCTION:
                     code.add(new BIPushInstruction(byteCode[++i]));
                     break;
-                case LDC: {
+                // https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.sipush
+                case SIPUSH:
+                    code.add(
+                        new SIPushInstruction((short) ((byteCode[++i] & 0xff) << 8 |
+                                                       (byteCode[++i] & 0xff))
+                    ));
+                    break;
+                // https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.ldc
+                // https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.ldc_w
+                // https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.ldc2_w
+                case LDC_INSTRUCTION: outer: {
                     Object data = null;
-
-                    final ConstantInfo constantInfo = constantPool.getEntry(byteCode[++i] & 0xff);
+                    ConstantInfo constantInfo;
+                    switch(opcode) {
+                        default:
+                        case LDC:
+                            constantInfo = constantPool.getEntry(byteCode[++i] & 0xff);
+                            break;
+                        case LDC_W:
+                            constantInfo = constantPool.getEntry((byteCode[++i] & 0xff) << 8 |
+                                                                 (byteCode[++i] & 0xff));
+                            break;
+                        case LDC2_W: {
+                            // https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.ldc2_w
+                            final ConstantLong constantLong = (ConstantLong) constantPool.getEntry((byteCode[++i] & 0xff) << 8 |
+                                                                                                   (byteCode[++i] & 0xff));
+                            final byte tag = constantLong.getTag();
+                            code.add(
+                                new LDCInstruction(
+                                    opcode,
+                                    tag == CONSTANT_LONG ?
+                                        constantLong.asLong() :
+                                        constantLong.asDouble(),
+                                    tag
+                                )
+                            );
+                        }   break outer;
+                    }
                     final byte tag = constantInfo.getTag();
                     switch (tag) {
                         case CONSTANT_INTEGER:
@@ -192,56 +233,40 @@ public final class Code {
                     }
                     code.add(new LDCInstruction(opcode, data, tag));
                 }   break;
-                case ILOAD:
-                case LLOAD:
-                case FLOAD:
-                case DLOAD:
-                case ALOAD:
-
-                case ISTORE:
-                case LSTORE:
-                case FSTORE:
-                case DSTORE:
-                case ASTORE:
-
-                case RET:
+                case LOCAL_VARIABLE_INSTRUCTION:
                     code.add(new LocalVariableInstructtion(opcode, byteCode[++i]));
                     break;
-
-                case IFEQ:
-                case IFNE:
-                case IFLT:
-                case IFGE:
-                case IFGT:
-                case IFLE:
-
-                case IF_ICMPEQ:
-                case IF_ICMPNE:
-                case IF_ICMPLT:
-                case IF_ICMPGE:
-                case IF_ICMPGT:
-                case IF_ICMPLE:
-
-                case IF_ACMPEQ:
-                case IF_ACMPNQ:
-
-                case GOTO:
-
-                case JSR:
-
-                case IFNULL:
-                case IFNONNULL:
-
+                case IINC_INSTRUCTION:
+                    code.add(new IIncInstruction(byteCode[++i], byteCode[++i]));
                     break;
-
-                case GOTO_W:
-                case JSR_W:
-
+                case JUMP_INSTRUCTION: {
+                    int jumpIndex;
+                    switch (opcode) {
+                        case GOTO_W:
+                        case JSR_W:
+                            jumpIndex = (byteCode[++i] & 0xff) << 24 |
+                                        (byteCode[++i] & 0xff) << 16 |
+                                        (byteCode[++i] & 0xff) << 8 |
+                                        (byteCode[++i] & 0xff);
+                            break;
+                        default:
+                            jumpIndex = (byteCode[++i] & 0xff) << 8 |
+                                        (byteCode[++i] & 0xff);
+                            break;
+                    }
+                    code.add(new JumpInstruction(opcode, labels[jumpIndex]));
+                }   break;
+                case TABLESWITCH_INSTRUCTION:
+                    // TODO: impl
+                    break;
+                case LOOKUPSWITCH_INSTRUCTION:
+                    // TODO: impl
                     break;
                 default:
                     code.add(new NoParameterInstruction(opcode));
             }
         }
+
         this.maxStack = attributeCode.getMaxStack();
         this.maxLocals = attributeCode.getMaxLocals();
     }
