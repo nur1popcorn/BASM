@@ -20,6 +20,7 @@ package com.nur1popcorn.basm.classfile.tree.methods;
 
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.NoParameterInstruction.NO_PARAMETER_INSTRUCTION;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.BIPushInstruction.BIPUSH_INSTRUCTION;
+import static com.nur1popcorn.basm.classfile.tree.methods.instructions.RefInstruction.REF_INSTRUCTION;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.SIPushInstruction.SIPUSH_INSTRUCTION;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.LDCInstruction.LDC_INSTRUCTION;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.LocalVariableInstructtion.LOCAL_VARIABLE_INSTRUCTION;
@@ -27,8 +28,6 @@ import static com.nur1popcorn.basm.classfile.tree.methods.instructions.IIncInstr
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.JumpInstruction.JUMP_INSTRUCTION;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.TableSwitchInstruction.TABLESWITCH_INSTRUCTION;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.LookupSwitchInstruction.LOOKUPSWITCH_INSTRUCTION;
-import static com.nur1popcorn.basm.classfile.tree.methods.instructions.FieldInstruction.FIELD_INSTRUCTION;
-import static com.nur1popcorn.basm.classfile.tree.methods.instructions.InvokeInstruction.INVOKE_INSTRUCTION;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.InvokeInterfaceInstruction.INVOKEINTERFACE_INSTRUCTION;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.InvokeDynamicInstruction.INVOKEDYNAMIC_INSTRUCTION;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.ClassInstruction.CLASS_INSTRUCTION;
@@ -100,9 +99,9 @@ public abstract class Instruction {
         JUMP_INSTRUCTION, /* jsr */                    LOCAL_VARIABLE_INSTRUCTION, /* ret */       TABLESWITCH_INSTRUCTION, /* tableswitch */
         LOOKUPSWITCH_INSTRUCTION, /* lookupswitch */   NO_PARAMETER_INSTRUCTION, /* ireturn */     NO_PARAMETER_INSTRUCTION, /* lreturn */
         NO_PARAMETER_INSTRUCTION, /* freturn */        NO_PARAMETER_INSTRUCTION, /* dreturn */     NO_PARAMETER_INSTRUCTION, /* areturn */
-        NO_PARAMETER_INSTRUCTION, /* return */         FIELD_INSTRUCTION, /* getstatic */          FIELD_INSTRUCTION, /* putstatic */
-        FIELD_INSTRUCTION, /* getfield */              FIELD_INSTRUCTION, /* putfield */           INVOKE_INSTRUCTION, /* invokevirtual */
-        INVOKE_INSTRUCTION, /* invokespecial */        INVOKE_INSTRUCTION, /* invokestatic */      INVOKEINTERFACE_INSTRUCTION, /* invokeinterface */
+        NO_PARAMETER_INSTRUCTION, /* return */         REF_INSTRUCTION, /* getstatic */            REF_INSTRUCTION, /* putstatic */
+        REF_INSTRUCTION, /* getfield */                REF_INSTRUCTION, /* putfield */             REF_INSTRUCTION, /* invokevirtual */
+        REF_INSTRUCTION, /* invokespecial */           REF_INSTRUCTION, /* invokestatic */         INVOKEINTERFACE_INSTRUCTION, /* invokeinterface */
         INVOKEDYNAMIC_INSTRUCTION, /* invokedynamic */ CLASS_INSTRUCTION, /* new */                NEWARRAY_INSTRUCTION, /* newarray */
         CLASS_INSTRUCTION, /* anewarray */             NO_PARAMETER_INSTRUCTION, /* arraylength */ NO_PARAMETER_INSTRUCTION, /* athrow */
         CLASS_INSTRUCTION, /* checkcast */             CLASS_INSTRUCTION, /* instanceof */         NO_PARAMETER_INSTRUCTION, /* monitorenter */

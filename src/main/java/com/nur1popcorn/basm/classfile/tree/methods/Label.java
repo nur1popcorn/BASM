@@ -6,4 +6,9 @@ public final class Label extends Instruction {
     public Label() {
         super((byte)0);
     }
+
+    @Override
+    public byte getType() {
+        return LABEL_INSTRUCTION;
+    }
 }

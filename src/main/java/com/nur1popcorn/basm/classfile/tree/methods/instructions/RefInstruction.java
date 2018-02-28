@@ -20,11 +20,17 @@ package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
 import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
 
-public final class InvokeInstruction extends Instruction {
-    public static final byte INVOKE_INSTRUCTION = 10;
+public class RefInstruction extends Instruction {
+    public static final int REF_INSTRUCTION = 9;
 
-    public InvokeInstruction(byte opcode) {
-        // TODO: impl
+    public String clazz,
+                  name,
+                  desc;
+
+    public RefInstruction(byte opcode, String clazz, String name, String desc) {
         super(opcode);
+        this.clazz = clazz;
+        this.name = name;
+        this.desc = desc;
     }
 }

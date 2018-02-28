@@ -21,7 +21,7 @@ package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
 
 public class ClassInstruction extends Instruction {
-    public static final byte CLASS_INSTRUCTION = 11;
+    public static final byte CLASS_INSTRUCTION = 10;
 
     public ClassInstruction(byte opcode) {
         //TODO: impl

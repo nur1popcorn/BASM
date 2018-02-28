@@ -21,7 +21,7 @@ package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
 
 public class WideInstruction extends Instruction {
-    public static final byte WIDE_INSTRUCTION = 12;
+    public static final byte WIDE_INSTRUCTION = 11;
 
     public WideInstruction(byte opcode) {
         //TODO: impl

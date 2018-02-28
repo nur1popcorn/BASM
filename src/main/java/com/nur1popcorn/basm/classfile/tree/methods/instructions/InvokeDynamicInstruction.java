@@ -21,7 +21,7 @@ package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
 
 public final class InvokeDynamicInstruction extends Instruction {
-    public static final byte INVOKEDYNAMIC_INSTRUCTION = 15;
+    public static final byte INVOKEDYNAMIC_INSTRUCTION = 14;
 
     public InvokeDynamicInstruction(byte opcode) {
         //TODO: impl

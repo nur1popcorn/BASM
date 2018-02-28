@@ -71,7 +71,7 @@ public abstract class StackMapFrame {
                 return new StackMapFrame(tag) {
                     @Override
                     public String toString() {
-                        return "same_frame[" + Byte.toUnsignedInt(this.tag) + "]";
+                        return "same_frame[" + (this.tag & 0xff) + "]";
                     }
                 };
             else /* if(u1 < 127) */
@@ -86,7 +86,7 @@ public abstract class StackMapFrame {
                 return new SameFrameExtended(tag, in.readUnsignedShort()) {
                     @Override
                     public String toString() {
-                        return "chop_frame[" + Byte.toUnsignedInt(this.tag) + "]";
+                        return "chop_frame[" + (this.tag & 0xff) + "]";
                     }
                 };
         } else if(u1 == 255) {

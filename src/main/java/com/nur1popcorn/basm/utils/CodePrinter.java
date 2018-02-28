@@ -16,14 +16,7 @@
  *
  */
 
-package com.nur1popcorn.basm.classfile.tree.methods.instructions;
+package com.nur1popcorn.basm.utils;
 
-import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
-
-public final class FieldInstruction extends Instruction {
-    public static final byte FIELD_INSTRUCTION = 9;
-
-    public FieldInstruction(byte opcode) {
-        super(opcode);
-    }
+public class CodePrinter {
 }

@@ -172,11 +172,10 @@ public final class ClassFile implements IClassVisitor {
         constantInfos.add(new ConstantUtf8("<init>"));
         constantInfos.add(new ConstantUtf8("()V"));
 
-        final ConstantInfo constantPool[] = new ConstantInfo[constantInfos.size()];
         visitor.visitHead(
             minorVersion,
             majorVersion,
-            new ConstantPool(constantInfos.toArray(constantPool))
+            new ConstantPool(constantInfos.toArray(new ConstantInfo[constantInfos.size()]))
         );
 
         visitor.visitBody(
@@ -193,6 +192,10 @@ public final class ClassFile implements IClassVisitor {
         visitor.visitMethods(
             methods
         );
+    }
+
+    public List<MethodNode> getMethodNodes() {
+        return methodNodes;
     }
 
     /**

@@ -24,16 +24,19 @@ import com.nur1popcorn.basm.classfile.constants.*;
 import com.nur1popcorn.basm.classfile.tree.methods.instructions.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static com.nur1popcorn.basm.Constants.*;
 import static com.nur1popcorn.basm.classfile.tree.methods.Instruction.INSTRUCTION_TYPE_TABLE;
+import static com.nur1popcorn.basm.classfile.tree.methods.Label.LABEL_INSTRUCTION;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.BIPushInstruction.BIPUSH_INSTRUCTION;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.IIncInstruction.IINC_INSTRUCTION;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.JumpInstruction.JUMP_INSTRUCTION;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.LDCInstruction.LDC_INSTRUCTION;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.LocalVariableInstructtion.LOCAL_VARIABLE_INSTRUCTION;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.LookupSwitchInstruction.LOOKUPSWITCH_INSTRUCTION;
+import static com.nur1popcorn.basm.classfile.tree.methods.instructions.RefInstruction.REF_INSTRUCTION;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.TableSwitchInstruction.TABLESWITCH_INSTRUCTION;
 
 public final class Code {
@@ -205,17 +208,23 @@ public final class Code {
                     final byte tag = constantInfo.getTag();
                     switch (tag) {
                         case CONSTANT_INTEGER:
-                            data = ((ConstantInteger) constantInfo).asInteger();
+                            data = ((ConstantInteger) constantInfo)
+                                    .asInteger();
                             break;
                         case CONSTANT_FLOAT:
-                            data = ((ConstantInteger) constantInfo).asFloat();
+                            data = ((ConstantInteger) constantInfo)
+                                    .asFloat();
                             break;
                         case CONSTANT_STRING:
-                            data = ((ConstantUtf8) constantInfo).bytes;
+                            data = ((ConstantName) constantInfo)
+                                    .indexName(constantPool)
+                                    .bytes;
                             break;
                         case CONSTANT_METHOD_TYPE:
                         case CONSTANT_CLASS:
-                            data = ((ConstantName) constantInfo).indexName(constantPool);
+                            data = ((ConstantName) constantInfo)
+                                    .indexName(constantPool)
+                                    .bytes;
                             break;
                         case CONSTANT_METHOD_HANDLE:
                             final ConstantMethodHandle methodHandle = (ConstantMethodHandle) constantInfo;
@@ -262,6 +271,19 @@ public final class Code {
                 case LOOKUPSWITCH_INSTRUCTION:
                     // TODO: impl
                     break;
+                case REF_INSTRUCTION: {
+                    final ConstantMethodRef ref = ((ConstantMethodRef)constantPool.getEntry((byteCode[++i] & 0xff) << 8 |
+                                                                                            (byteCode[++i] & 0xff)));
+                    final ConstantNameAndType nameAndType = ref.indexNameAndType(constantPool);
+                    code.add(new RefInstruction(opcode,
+                                                ref.indexClass(constantPool)
+                                                   .indexName(constantPool)
+                                                   .bytes,
+                                                nameAndType.indexName(constantPool)
+                                                           .bytes,
+                                                nameAndType.indexDesc(constantPool)
+                                                           .bytes));
+                }   break;
                 default:
                     code.add(new NoParameterInstruction(opcode));
             }
@@ -287,5 +309,29 @@ public final class Code {
 
     public List<Instruction> getCode() {
         return code;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder stringBuilder = new StringBuilder();
+        final HashMap<Label, Integer> labelIndexMap = new HashMap<>();
+        for(int i = 0; i < code.size(); i++) {
+            final Instruction instruction = code.get(i);
+            if(instruction.getType() == LABEL_INSTRUCTION &&
+               !labelIndexMap.containsKey(instruction)) {
+                labelIndexMap.put((Label) instruction, labelIndexMap.size());
+            }
+        }
+
+        for(Instruction instruction : code) {
+            if(instruction.getType() == LABEL_INSTRUCTION)
+                stringBuilder.append("L")
+                             .append(labelIndexMap.get(instruction));
+            else
+                stringBuilder.append(OPCODE_MNEMONICS[instruction.getOpcode() & 0xff]);
+            stringBuilder.append("\n");
+        }
+
+        return stringBuilder.toString();
     }
 }
