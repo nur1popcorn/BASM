@@ -23,6 +23,7 @@ import com.nur1popcorn.basm.classfile.attributes.AttributeCode;
 import com.nur1popcorn.basm.classfile.constants.*;
 import com.nur1popcorn.basm.classfile.tree.methods.instructions.*;
 
+import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,12 +40,14 @@ import static com.nur1popcorn.basm.classfile.tree.methods.instructions.LookupSwi
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.RefInstruction.REF_INSTRUCTION;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.TableSwitchInstruction.TABLESWITCH_INSTRUCTION;
 
-public final class Code {
+public final class Code extends AbstractList implements ICodeVisitor {
 
     private static final byte UNKNOWN_VALUE = 0x7f;
 
     /**
      * A table mapping each opcode to their predicted effect on the stack size.
+     *
+     * @see #visitMaxes()
      */
     public static final byte STACK_SIZE_MODIFIER_TABLE[] = {
          0, /* nop */                       1, /* aconst_null */                  1, /* iconst_m1 */                  1, /* iconst_0 */
@@ -117,6 +120,8 @@ public final class Code {
                maxLocals;
 
     private List<Instruction> code = new ArrayList<>();
+
+    private int visitorInstructionIndex = -1;
 
     public Code(AttributeCode attributeCode, ConstantPool constantPool) {
         final byte byteCode[] = attributeCode.getByteCode();
@@ -293,7 +298,52 @@ public final class Code {
         this.maxLocals = attributeCode.getMaxLocals();
     }
 
-    public void computeMaxes() {
+    @Override
+    public int size() {
+        return 0;
+    }
+
+    @Override
+    public Object get(int index) {
+        return null;
+    }
+
+    @Override
+    public boolean visitCodeAt(int index) {
+        if(index < code.size()) {
+            visitorInstructionIndex = index;
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void visitCodeAtEnd() {
+    }
+
+    @Override
+    public int visitIndex() {
+        return 0;
+    }
+
+    @Override
+    public boolean visitNextInstruction() {
+        return false;
+    }
+
+    @Override
+    public Instruction visitInstructionAtIndex() {
+        return null;
+    }
+
+    @Override
+    public void visitMaxes(int maxStack, int maxLocals) {
+        this.maxStack = maxStack;
+        this.maxLocals = maxLocals;
+    }
+
+    @Override
+    public void visitMaxes() {
         int stack = 0,
             locals = 0;
         for(Instruction instruction : code) {
@@ -307,8 +357,96 @@ public final class Code {
         }
     }
 
-    public List<Instruction> getCode() {
-        return code;
+    @Override
+    public void visitBiPushInstruction(byte data) {
+        if(visitorInstructionIndex == -1)
+            code.add(new BIPushInstruction(data));
+        else
+            code.add(visitorInstructionIndex++,
+                     new BIPushInstruction(data));
+    }
+
+    @Override
+    public void visitClassInstruction(byte opcode, String clazz) {
+        if(visitorInstructionIndex == -1)
+            code.add(new ClassInstruction(opcode, clazz));
+        else
+            code.add(visitorInstructionIndex++,
+                     new ClassInstruction(opcode, clazz));
+    }
+
+    @Override
+    public void visitIIncInstruction(byte index, byte constant) {
+        if(visitorInstructionIndex == -1)
+            code.add(new IIncInstruction(index, constant));
+        else
+            code.add(visitorInstructionIndex++,
+                     new IIncInstruction(index, constant));
+    }
+
+    @Override
+    public void visitInvokeDynamicInstruction() {
+
+    }
+
+    @Override
+    public void visitInvokeInterfaceInstruction() {
+
+    }
+
+    @Override
+    public void visitJumpInstruction() {
+
+    }
+
+    @Override
+    public void visitLDCInstruction() {
+
+    }
+
+    @Override
+    public void visitLocalVariableInstruction() {
+
+    }
+
+    @Override
+    public void visitLookupSwitchInstruction() {
+
+    }
+
+    @Override
+    public void visitMultiNewArrayInstruction() {
+
+    }
+
+    @Override
+    public void visitNewArrayInstruction() {
+
+    }
+
+    @Override
+    public void visitNoParameterInstruction() {
+
+    }
+
+    @Override
+    public void visitRefInstruction() {
+
+    }
+
+    @Override
+    public void visitSiPushInstruction() {
+
+    }
+
+    @Override
+    public void visitTableSwitchInstruction() {
+
+    }
+
+    @Override
+    public void visitWideInstruction() {
+
     }
 
     @Override

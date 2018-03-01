@@ -18,5 +18,11 @@
 
 package com.nur1popcorn.basm.utils;
 
+import com.nur1popcorn.basm.classfile.tree.methods.ICodeVisitor;
+
 public class CodePrinter {
+
+    public void accept(ICodeVisitor codeVisitor) {
+
+    }
 }

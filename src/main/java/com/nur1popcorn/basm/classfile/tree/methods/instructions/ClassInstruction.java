@@ -23,8 +23,10 @@ import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
 public class ClassInstruction extends Instruction {
     public static final byte CLASS_INSTRUCTION = 10;
 
-    public ClassInstruction(byte opcode) {
-        //TODO: impl
+    public String clazz;
+
+    public ClassInstruction(byte opcode, String clazz) {
         super(opcode);
+        this.clazz = clazz;
     }
 }
