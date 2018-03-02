@@ -19,15 +19,16 @@
 package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
 import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
+import com.nur1popcorn.basm.classfile.tree.methods.Label;
 
 public final class JumpInstruction extends Instruction {
     public static final byte JUMP_INSTRUCTION = 6;
 
     // TODO: make sure instructions fit into a 2 byte index. (jsr_w, ..)
-    public Instruction instruction;
+    public Label label;
 
-    public JumpInstruction(byte opcode, Instruction instruction) {
+    public JumpInstruction(byte opcode, Label label) {
         super(opcode);
-        this.instruction = instruction;
+        this.label = label;
     }
 }

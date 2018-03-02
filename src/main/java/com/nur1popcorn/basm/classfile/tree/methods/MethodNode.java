@@ -67,8 +67,8 @@ public class MethodNode implements IMethodVisitor {
     }
 
     @Override
-    public int visitIndex() {
-        return 0;
+    public boolean visitPrevInstruction() {
+        return false;
     }
 
     @Override
@@ -77,7 +77,7 @@ public class MethodNode implements IMethodVisitor {
     }
 
     @Override
-    public Instruction visitInstructionAtIndex() {
+    public Instruction visitCurrentInstruction() {
         return null;
     }
 

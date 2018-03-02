@@ -22,11 +22,12 @@ import com.nur1popcorn.basm.classfile.ConstantPool;
 import com.nur1popcorn.basm.classfile.attributes.AttributeCode;
 import com.nur1popcorn.basm.classfile.constants.*;
 import com.nur1popcorn.basm.classfile.tree.methods.instructions.*;
+import com.nur1popcorn.basm.utils.CodePrinter;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.AbstractList;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.Arrays;
 
 import static com.nur1popcorn.basm.Constants.*;
 import static com.nur1popcorn.basm.classfile.tree.methods.Instruction.INSTRUCTION_TYPE_TABLE;
@@ -40,7 +41,7 @@ import static com.nur1popcorn.basm.classfile.tree.methods.instructions.LookupSwi
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.RefInstruction.REF_INSTRUCTION;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.TableSwitchInstruction.TABLESWITCH_INSTRUCTION;
 
-public final class Code extends AbstractList implements ICodeVisitor {
+public final class Code extends AbstractList<Instruction> implements ICodeVisitor {
 
     private static final byte UNKNOWN_VALUE = 0x7f;
 
@@ -115,17 +116,35 @@ public final class Code extends AbstractList implements ICodeVisitor {
          UNKNOWN_VALUE,                     UNKNOWN_VALUE,                        UNKNOWN_VALUE,                      UNKNOWN_VALUE,
          UNKNOWN_VALUE,                     UNKNOWN_VALUE,                        0, /* impdep1 */                    0, /* impdep2 */
     };
-    
+
+    private static final Instruction EMPTY_INSTRUCTIONS[] = {};
+
+    /**
+     * @see #grow(int)
+     */
+    private static final float SIZE_GROW_MODIFIER = 2f;
+
+    private int size;
+    private Instruction instructions[];
+
+    private Instruction first,
+                        last;
+
     public int maxStack,
                maxLocals;
 
-    private List<Instruction> code = new ArrayList<>();
+    private Instruction currentInstruction = null;
 
-    private int visitorInstructionIndex = -1;
+    public Code(int size) {
+        instructions = size > 0 ?
+            new Instruction[size] :
+            EMPTY_INSTRUCTIONS;
+    }
 
     public Code(AttributeCode attributeCode, ConstantPool constantPool) {
-        final byte byteCode[] = attributeCode.getByteCode();
+        this(attributeCode.getByteCode().length);
 
+        final byte byteCode[] = attributeCode.getByteCode();
         final Label labels[] = new Label[byteCode.length];
         for(int i = 0; i < byteCode.length; i++) {
             final byte opcode = byteCode[i];
@@ -163,18 +182,18 @@ public final class Code extends AbstractList implements ICodeVisitor {
             {
                 final Label label = labels[i];
                 if(label != null)
-                    code.add(label);
+                    add(label);
             }
 
             final byte opcode = byteCode[i];
             switch(INSTRUCTION_TYPE_TABLE[opcode & 0xff]) {
                 // https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.bipush
                 case BIPUSH_INSTRUCTION:
-                    code.add(new BIPushInstruction(byteCode[++i]));
+                    add(new BIPushInstruction(byteCode[++i]));
                     break;
                 // https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.sipush
                 case SIPUSH:
-                    code.add(
+                    add(
                         new SIPushInstruction((short) ((byteCode[++i] & 0xff) << 8 |
                                                        (byteCode[++i] & 0xff))
                     ));
@@ -199,7 +218,7 @@ public final class Code extends AbstractList implements ICodeVisitor {
                             final ConstantLong constantLong = (ConstantLong) constantPool.getEntry((byteCode[++i] & 0xff) << 8 |
                                                                                                    (byteCode[++i] & 0xff));
                             final byte tag = constantLong.getTag();
-                            code.add(
+                            add(
                                 new LDCInstruction(
                                     opcode,
                                     tag == CONSTANT_LONG ?
@@ -245,13 +264,13 @@ public final class Code extends AbstractList implements ICodeVisitor {
                                                .bytes);
                             break;
                     }
-                    code.add(new LDCInstruction(opcode, data, tag));
+                    add(new LDCInstruction(opcode, data, tag));
                 }   break;
                 case LOCAL_VARIABLE_INSTRUCTION:
-                    code.add(new LocalVariableInstructtion(opcode, byteCode[++i]));
+                    add(new LocalVariableInstructtion(opcode, byteCode[++i]));
                     break;
                 case IINC_INSTRUCTION:
-                    code.add(new IIncInstruction(byteCode[++i], byteCode[++i]));
+                    add(new IIncInstruction(byteCode[++i], byteCode[++i]));
                     break;
                 case JUMP_INSTRUCTION: {
                     int jumpIndex;
@@ -268,7 +287,7 @@ public final class Code extends AbstractList implements ICodeVisitor {
                                         (byteCode[++i] & 0xff);
                             break;
                     }
-                    code.add(new JumpInstruction(opcode, labels[jumpIndex]));
+                    add(new JumpInstruction(opcode, labels[jumpIndex]));
                 }   break;
                 case TABLESWITCH_INSTRUCTION:
                     // TODO: impl
@@ -280,17 +299,17 @@ public final class Code extends AbstractList implements ICodeVisitor {
                     final ConstantMethodRef ref = ((ConstantMethodRef)constantPool.getEntry((byteCode[++i] & 0xff) << 8 |
                                                                                             (byteCode[++i] & 0xff)));
                     final ConstantNameAndType nameAndType = ref.indexNameAndType(constantPool);
-                    code.add(new RefInstruction(opcode,
-                                                ref.indexClass(constantPool)
-                                                   .indexName(constantPool)
-                                                   .bytes,
-                                                nameAndType.indexName(constantPool)
-                                                           .bytes,
-                                                nameAndType.indexDesc(constantPool)
-                                                           .bytes));
+                    add(new RefInstruction(opcode,
+                                           ref.indexClass(constantPool)
+                                              .indexName(constantPool)
+                                              .bytes,
+                                           nameAndType.indexName(constantPool)
+                                                      .bytes,
+                                           nameAndType.indexDesc(constantPool)
+                                                      .bytes));
                 }   break;
                 default:
-                    code.add(new NoParameterInstruction(opcode));
+                    add(new NoParameterInstruction(opcode));
             }
         }
 
@@ -298,20 +317,128 @@ public final class Code extends AbstractList implements ICodeVisitor {
         this.maxLocals = attributeCode.getMaxLocals();
     }
 
-    @Override
-    public int size() {
-        return 0;
+    /**
+     * Increments the modCount.
+     */
+    private void grow(int size) {
+        modCount++;
+        final Instruction old[] = instructions;
+        if(old.length < size)
+            instructions = Arrays.copyOf(
+                old,
+                old.length <= 0 ?
+                    1 :
+                    (int) (old.length * SIZE_GROW_MODIFIER)
+            );
     }
 
     @Override
-    public Object get(int index) {
-        return null;
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public Instruction set(int index, Instruction instruction) {
+        rangeCheck(index);
+        final Instruction old = instructions[index];
+        instructions[index] = instruction;
+        instruction.prev = old.prev;
+        instruction.next = old.next;
+        if(index == 0)
+            first = instruction;
+        else if(index == size - 1)
+            last = instruction;
+        return old;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void add(int index, Instruction instruction) {
+        rangeCheckAdd(index);
+        grow(size + 1);
+        System.arraycopy(
+            instructions, index,
+            instructions, index + 1, size - index
+        );
+        instructions[index] = instruction;
+        size++;
+
+        if(index == 0) {
+            first = instruction;
+            if(size != 1)
+                instruction.next = instructions[1];
+            first = instruction;
+        } else if(index == size - 1) {
+            last = instruction;
+            if(size != 1) {
+                final Instruction prev = instructions[index - 1];
+                instruction.prev = prev;
+                prev.next = instruction;
+            }
+            last = instruction;
+        } else {
+            instruction.prev = instructions[index - 1];
+            instruction.next = instructions[index + 1];
+        }
+    }
+
+    @Override
+    public Instruction remove(int index) {
+        rangeCheck(index);
+        modCount++;
+        final Instruction old = instructions[index];
+        if(index != size - 1) {
+            System.arraycopy(
+                instructions,
+                index + 1,
+                instructions,
+                index,
+                size - index - 1
+            );
+            instructions[--size] = null;
+            if(index == 0) {
+                first = instructions[0];
+                first.prev = null;
+                if(size != 1)
+                    first.next = instructions[1];
+            } else {
+                final Instruction replacement = instructions[index];
+                final Instruction oldPrev = old.prev;
+                replacement.prev = oldPrev;
+                oldPrev.next = replacement;
+            }
+        } else {
+            instructions[--size] = null;
+            if(size != 0) {
+                last = instructions[size - 1];
+                last.next = null;
+            }
+        }
+        return old;
+    }
+
+    @Override
+    public Instruction get(int index) {
+        rangeCheck(index);
+        return instructions[index];
+    }
+
+    private void rangeCheckAdd(int index) {
+        if(index < 0 || index > size)
+            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+    }
+
+    private void rangeCheck(int index) {
+        if(index < 0 || index >= size)
+            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
     }
 
     @Override
     public boolean visitCodeAt(int index) {
-        if(index < code.size()) {
-            visitorInstructionIndex = index;
+        if(index >= 0 && index < size) {
+            currentInstruction = instructions[index];
             return true;
         }
         return false;
@@ -319,21 +446,30 @@ public final class Code extends AbstractList implements ICodeVisitor {
 
     @Override
     public void visitCodeAtEnd() {
+        currentInstruction = null;
     }
 
     @Override
-    public int visitIndex() {
-        return 0;
-    }
-
-    @Override
-    public boolean visitNextInstruction() {
+    public boolean visitPrevInstruction() {
+        if(currentInstruction != null && currentInstruction.prev != null) {
+            currentInstruction = currentInstruction.prev;
+            return true;
+        }
         return false;
     }
 
     @Override
-    public Instruction visitInstructionAtIndex() {
-        return null;
+    public boolean visitNextInstruction() {
+        if(currentInstruction != null && currentInstruction.next != null) {
+            currentInstruction = currentInstruction.next;
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public Instruction visitCurrentInstruction() {
+        return currentInstruction;
     }
 
     @Override
@@ -346,7 +482,7 @@ public final class Code extends AbstractList implements ICodeVisitor {
     public void visitMaxes() {
         int stack = 0,
             locals = 0;
-        for(Instruction instruction : code) {
+        for(Instruction instruction : this) {
             final byte opcode = instruction.getOpcode();
             switch(opcode) {
                 default:
@@ -359,29 +495,14 @@ public final class Code extends AbstractList implements ICodeVisitor {
 
     @Override
     public void visitBiPushInstruction(byte data) {
-        if(visitorInstructionIndex == -1)
-            code.add(new BIPushInstruction(data));
-        else
-            code.add(visitorInstructionIndex++,
-                     new BIPushInstruction(data));
     }
 
     @Override
     public void visitClassInstruction(byte opcode, String clazz) {
-        if(visitorInstructionIndex == -1)
-            code.add(new ClassInstruction(opcode, clazz));
-        else
-            code.add(visitorInstructionIndex++,
-                     new ClassInstruction(opcode, clazz));
     }
 
     @Override
     public void visitIIncInstruction(byte index, byte constant) {
-        if(visitorInstructionIndex == -1)
-            code.add(new IIncInstruction(index, constant));
-        else
-            code.add(visitorInstructionIndex++,
-                     new IIncInstruction(index, constant));
     }
 
     @Override
@@ -451,25 +572,9 @@ public final class Code extends AbstractList implements ICodeVisitor {
 
     @Override
     public String toString() {
-        final StringBuilder stringBuilder = new StringBuilder();
-        final HashMap<Label, Integer> labelIndexMap = new HashMap<>();
-        for(int i = 0; i < code.size(); i++) {
-            final Instruction instruction = code.get(i);
-            if(instruction.getType() == LABEL_INSTRUCTION &&
-               !labelIndexMap.containsKey(instruction)) {
-                labelIndexMap.put((Label) instruction, labelIndexMap.size());
-            }
-        }
-
-        for(Instruction instruction : code) {
-            if(instruction.getType() == LABEL_INSTRUCTION)
-                stringBuilder.append("L")
-                             .append(labelIndexMap.get(instruction));
-            else
-                stringBuilder.append(OPCODE_MNEMONICS[instruction.getOpcode() & 0xff]);
-            stringBuilder.append("\n");
-        }
-
-        return stringBuilder.toString();
+        final StringWriter stringWriter = new StringWriter();
+        new CodePrinter(new PrintWriter(stringWriter))
+                .accept(this);
+        return stringWriter.toString();
     }
 }

@@ -22,10 +22,9 @@ public interface ICodeVisitor {
     boolean visitCodeAt(int index);
     void visitCodeAtEnd();
 
-    int visitIndex();
-    //TODO: visitFollowInstruction(); -> requires me to impl
+    boolean visitPrevInstruction();
     boolean visitNextInstruction();
-    Instruction visitInstructionAtIndex();
+    Instruction visitCurrentInstruction();
 
     void visitMaxes(int maxStack, int maxLocals);
     void visitMaxes();
