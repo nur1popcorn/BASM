@@ -36,6 +36,12 @@ public final class NewArrayInstruction extends Instruction {
     public static final byte T_INT = 10;
     public static final byte T_LONG = 11;
 
+    public static final String T_MNEMONICS[] = {
+        null,        null,      null,      null,
+        "t_boolean", "t_char",  "t_float", "t_double",
+        "t_byte",    "t_short", "t_int",   "t_long"
+    };
+
     public byte atype;
 
     public NewArrayInstruction(byte atype) {

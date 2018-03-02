@@ -21,10 +21,7 @@ package com.nur1popcorn.basm.utils;
 import com.nur1popcorn.basm.classfile.tree.methods.ICodeVisitor;
 import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
 import com.nur1popcorn.basm.classfile.tree.methods.Label;
-import com.nur1popcorn.basm.classfile.tree.methods.instructions.BIPushInstruction;
-import com.nur1popcorn.basm.classfile.tree.methods.instructions.ClassInstruction;
-import com.nur1popcorn.basm.classfile.tree.methods.instructions.IIncInstruction;
-import com.nur1popcorn.basm.classfile.tree.methods.instructions.JumpInstruction;
+import com.nur1popcorn.basm.classfile.tree.methods.instructions.*;
 
 import static com.nur1popcorn.basm.Constants.*;
 import static com.nur1popcorn.basm.classfile.tree.methods.Instruction.NOT_AN_INSTRUCTION;
@@ -35,7 +32,14 @@ import static com.nur1popcorn.basm.classfile.tree.methods.instructions.IIncInstr
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.InvokeDynamicInstruction.INVOKEDYNAMIC_INSTRUCTION;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.InvokeInterfaceInstruction.INVOKEINTERFACE_INSTRUCTION;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.JumpInstruction.JUMP_INSTRUCTION;
+import static com.nur1popcorn.basm.classfile.tree.methods.instructions.LDCInstruction.LDC_INSTRUCTION;
+import static com.nur1popcorn.basm.classfile.tree.methods.instructions.LocalVariableInstructtion.LOCAL_VARIABLE_INSTRUCTION;
+import static com.nur1popcorn.basm.classfile.tree.methods.instructions.LookupSwitchInstruction.LOOKUPSWITCH_INSTRUCTION;
+import static com.nur1popcorn.basm.classfile.tree.methods.instructions.MultiANewArrayInstruction.MULTIANEWARRAY_INSTRUCTION;
+import static com.nur1popcorn.basm.classfile.tree.methods.instructions.NewArrayInstruction.NEWARRAY_INSTRUCTION;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.NoParameterInstruction.NO_PARAMETER_INSTRUCTION;
+import static com.nur1popcorn.basm.classfile.tree.methods.instructions.NewArrayInstruction.T_MNEMONICS;
+import static com.nur1popcorn.basm.classfile.tree.methods.instructions.RefInstruction.REF_INSTRUCTION;
 
 import java.io.PrintWriter;
 import java.util.HashMap;
@@ -89,6 +93,33 @@ public class CodePrinter {
                         pw.print(" L");
                         pw.println(Integer.toHexString(labelIndex));
                     }   break;
+                    case LDC_INSTRUCTION:
+                        pw.print(OPCODE_MNEMONICS[instruction.getOpcode() & 0xff]);
+                        pw.print(" ");
+                        // TODO: print every type different string -> "", ..
+                        pw.println(((LDCInstruction)instruction).getConstant());
+                        break;
+                    case LOCAL_VARIABLE_INSTRUCTION:
+                        pw.print(OPCODE_MNEMONICS[instruction.getOpcode() & 0xff]);
+                        pw.print(" ");
+                        pw.println(Integer.toHexString(((LocalVariableInstructtion)instruction).index & 0xff));
+                        break;
+                    case LOOKUPSWITCH_INSTRUCTION:
+                        // TODO: impl
+                        break;
+                    case MULTIANEWARRAY_INSTRUCTION: {
+                        pw.print(OPCODE_MNEMONICS[MUTLIANEWARRAY & 0xff]);
+                        pw.print(" ");
+                        final MultiANewArrayInstruction multiANewArrayInstruction = (MultiANewArrayInstruction) instruction;
+                        pw.print(multiANewArrayInstruction.clazz);
+                        pw.print(" ");
+                        pw.println(multiANewArrayInstruction.dimensions);
+                    }   break;
+                    case NEWARRAY_INSTRUCTION:
+                        pw.print(OPCODE_MNEMONICS[NEWARRAY & 0xff]);
+                        pw.print(" ");
+                        pw.println(T_MNEMONICS[((NewArrayInstruction)instruction).atype]);
+                        break;
                     case LABEL_INSTRUCTION: {
                         pw.print("L");
                         final Label label = (Label) instruction;
@@ -100,6 +131,16 @@ public class CodePrinter {
                     case NO_PARAMETER_INSTRUCTION:
                         pw.println(OPCODE_MNEMONICS[instruction.getOpcode() & 0xff]);
                         break;
+                    case REF_INSTRUCTION: {
+                        pw.print(OPCODE_MNEMONICS[instruction.getOpcode() & 0xff]);
+                        pw.print(" ");
+                        final RefInstruction refInstruction = (RefInstruction) instruction;
+                        pw.print(refInstruction.clazz);
+                        pw.print(" ");
+                        pw.print(refInstruction.name);
+                        pw.print(" ");
+                        pw.println(refInstruction.desc);
+                    }   break;
                     default:
                     case NOT_AN_INSTRUCTION:
                         pw.print("#");

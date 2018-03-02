@@ -18,6 +18,7 @@
 
 package com.nur1popcorn.basm.classfile.tree.methods;
 
+import static com.nur1popcorn.basm.classfile.tree.methods.instructions.MultiANewArrayInstruction.MULTIANEWARRAY_INSTRUCTION;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.NoParameterInstruction.NO_PARAMETER_INSTRUCTION;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.BIPushInstruction.BIPUSH_INSTRUCTION;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.RefInstruction.REF_INSTRUCTION;
@@ -32,7 +33,6 @@ import static com.nur1popcorn.basm.classfile.tree.methods.instructions.InvokeInt
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.InvokeDynamicInstruction.INVOKEDYNAMIC_INSTRUCTION;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.ClassInstruction.CLASS_INSTRUCTION;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.NewArrayInstruction.NEWARRAY_INSTRUCTION;
-import static com.nur1popcorn.basm.classfile.tree.methods.instructions.MultiNewArrayInstruction.MULTIANEWARRAY_INSTRUCTION;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.WideInstruction.WIDE_INSTRUCTION;
 
 public abstract class Instruction {
