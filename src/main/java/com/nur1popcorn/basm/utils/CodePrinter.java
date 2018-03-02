@@ -23,6 +23,10 @@ import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
 import com.nur1popcorn.basm.classfile.tree.methods.Label;
 import com.nur1popcorn.basm.classfile.tree.methods.instructions.*;
 
+import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
+
 import static com.nur1popcorn.basm.Constants.*;
 import static com.nur1popcorn.basm.classfile.tree.methods.Instruction.NOT_AN_INSTRUCTION;
 import static com.nur1popcorn.basm.classfile.tree.methods.Label.LABEL_INSTRUCTION;
@@ -37,13 +41,9 @@ import static com.nur1popcorn.basm.classfile.tree.methods.instructions.LocalVari
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.LookupSwitchInstruction.LOOKUPSWITCH_INSTRUCTION;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.MultiANewArrayInstruction.MULTIANEWARRAY_INSTRUCTION;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.NewArrayInstruction.NEWARRAY_INSTRUCTION;
-import static com.nur1popcorn.basm.classfile.tree.methods.instructions.NoParameterInstruction.NO_PARAMETER_INSTRUCTION;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.NewArrayInstruction.T_MNEMONICS;
+import static com.nur1popcorn.basm.classfile.tree.methods.instructions.NoParameterInstruction.NO_PARAMETER_INSTRUCTION;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.RefInstruction.REF_INSTRUCTION;
-
-import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.Map;
 
 public class CodePrinter {
     private PrintWriter pw;

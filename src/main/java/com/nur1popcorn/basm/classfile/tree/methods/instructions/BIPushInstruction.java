@@ -20,7 +20,7 @@ package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
 import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
 
-import static com.nur1popcorn.basm.Constants.*;
+import static com.nur1popcorn.basm.Constants.BIPUSH;
 
 public final class BIPushInstruction extends Instruction {
     public static final byte BIPUSH_INSTRUCTION = 3;

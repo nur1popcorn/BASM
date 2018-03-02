@@ -35,8 +35,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.nur1popcorn.basm.classfile.ClassReader.*;
 import static com.nur1popcorn.basm.Constants.*;
+import static com.nur1popcorn.basm.classfile.ClassReader.*;
 
 /**
  * The {@link ClassFile} provides an abstraction layer between bytecode and user.

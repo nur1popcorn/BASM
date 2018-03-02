@@ -36,7 +36,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.nur1popcorn.basm.Constants.*;
+import static com.nur1popcorn.basm.Constants.CONSTANT_METHOD_REF;
+import static com.nur1popcorn.basm.Constants.MAGIC;
 
 public final class MaliciousCodeScanner implements ITransformer {
 

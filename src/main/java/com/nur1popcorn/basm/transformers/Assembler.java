@@ -18,7 +18,9 @@
 
 package com.nur1popcorn.basm.transformers;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 public final class Assembler implements ITransformer {
     @Override
