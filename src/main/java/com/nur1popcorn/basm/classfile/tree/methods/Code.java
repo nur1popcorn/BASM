@@ -35,7 +35,7 @@ import static com.nur1popcorn.basm.classfile.tree.methods.instructions.BIPushIns
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.IIncInstruction.IINC_INSTRUCTION;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.JumpInstruction.JUMP_INSTRUCTION;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.LDCInstruction.LDC_INSTRUCTION;
-import static com.nur1popcorn.basm.classfile.tree.methods.instructions.LocalVariableInstructtion.LOCAL_VARIABLE_INSTRUCTION;
+import static com.nur1popcorn.basm.classfile.tree.methods.instructions.LocalVariableInstruction.LOCAL_VARIABLE_INSTRUCTION;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.LookupSwitchInstruction.LOOKUPSWITCH_INSTRUCTION;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.RefInstruction.REF_INSTRUCTION;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.TableSwitchInstruction.TABLESWITCH_INSTRUCTION;
@@ -164,9 +164,11 @@ public final class Code extends AbstractList<Instruction> implements ICodeVisito
                         default:
                             jumpIndex = (byteCode[++i] & 0xff) << 8 |
                                         (byteCode[++i] & 0xff);
+                            if((jumpIndex & 0x8000) != 0)
+                                jumpIndex |= 0xffff0000;
                             break;
                     }
-                    labels[jumpIndex] = new Label();
+                    labels[i + jumpIndex - 2] = new Label();
 
                     // fallthrough.
                 default:
@@ -218,13 +220,17 @@ public final class Code extends AbstractList<Instruction> implements ICodeVisito
                                                                                                    (byteCode[++i] & 0xff));
                             final byte tag = constantLong.getTag();
                             add(
-                                new LDCInstruction(
-                                    opcode,
-                                    tag == CONSTANT_LONG ?
-                                        constantLong.asLong() :
+                                tag == CONSTANT_LONG ?
+                                    new LDCInstruction(
+                                        opcode,
+                                        constantLong.asLong(),
+                                        tag
+                                    ) :
+                                    new LDCInstruction(
+                                        opcode,
                                         constantLong.asDouble(),
-                                    tag
-                                )
+                                        tag
+                                    )
                             );
                         }   break outer;
                     }
@@ -266,7 +272,7 @@ public final class Code extends AbstractList<Instruction> implements ICodeVisito
                     add(new LDCInstruction(opcode, data, tag));
                 }   break;
                 case LOCAL_VARIABLE_INSTRUCTION:
-                    add(new LocalVariableInstructtion(opcode, byteCode[++i]));
+                    add(new LocalVariableInstruction(opcode, byteCode[++i]));
                     break;
                 case IINC_INSTRUCTION:
                     add(new IIncInstruction(byteCode[++i], byteCode[++i]));
@@ -284,9 +290,11 @@ public final class Code extends AbstractList<Instruction> implements ICodeVisito
                         default:
                             jumpIndex = (byteCode[++i] & 0xff) << 8 |
                                         (byteCode[++i] & 0xff);
+                            if((jumpIndex & 0x8000) != 0)
+                                jumpIndex |= 0xffff0000;
                             break;
                     }
-                    add(new JumpInstruction(opcode, labels[jumpIndex]));
+                    add(new JumpInstruction(opcode, labels[i + jumpIndex - 2]));
                 }   break;
                 case TABLESWITCH_INSTRUCTION:
                     // TODO: impl

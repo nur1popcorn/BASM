@@ -21,7 +21,7 @@ package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
 
 /**
- * The {@link LocalVariableInstructtion} is an {@link Instruction} with 1 parameter indicating the
+ * The {@link LocalVariableInstruction} is an {@link Instruction} with 1 parameter indicating the
  *                                       localvariable which should be read or manipulated.
  * <p>The list provided lists all opcodes with a localvariable index as a parameter:</p>
  * <ul>
@@ -45,13 +45,13 @@ import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
  * @author nur1popcorn
  * @since 1.0.0-alpha
  */
-public final class LocalVariableInstructtion extends Instruction {
+public final class LocalVariableInstruction extends Instruction {
     public static final byte LOCAL_VARIABLE_INSTRUCTION = 5;
 
     public byte index;
 
     // TODO: desc constructor.
-    public LocalVariableInstructtion(byte opcode, byte index) {
+    public LocalVariableInstruction(byte opcode, byte index) {
         super(opcode);
         this.index = index;
     }

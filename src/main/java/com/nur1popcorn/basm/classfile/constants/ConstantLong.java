@@ -56,8 +56,8 @@ public final class ConstantLong extends ConstantInfo {
     public String toString() {
         return super.toString() + "[" + (
                     getTag() == CONSTANT_LONG ?
-                        Double.longBitsToDouble(bytes) :
-                        bytes
+                        bytes :
+                        Double.longBitsToDouble(bytes)
                ) + "]";
     }
 
