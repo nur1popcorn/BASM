@@ -32,17 +32,17 @@ public interface ICodeVisitor {
     void visitBiPushInstruction(byte data);
     void visitClassInstruction(byte opcode, String clazz);
     void visitIIncInstruction(byte index, byte constant);
-    void visitInvokeDynamicInstruction();
-    void visitInvokeInterfaceInstruction();
-    void visitJumpInstruction();
-    void visitLDCInstruction();
-    void visitLocalVariableInstruction();
-    void visitLookupSwitchInstruction();
-    void visitMultiNewArrayInstruction();
-    void visitNewArrayInstruction();
-    void visitNoParameterInstruction();
-    void visitRefInstruction();
-    void visitSiPushInstruction();
-    void visitTableSwitchInstruction();
-    void visitWideInstruction();
+    void visitInvokeDynamicInstruction(); // TODO: impl
+    void visitInvokeInterfaceInstruction(); // TODO: impl
+    void visitJumpInstruction(byte opcode, Label label);
+    void visitLDCInstruction(byte opcode, Object constant, byte tag);
+    void visitLocalVariableInstruction(byte opcode, byte index);
+    void visitLookupSwitchInstruction(); // TODO: impl
+    void visitMultiNewArrayInstruction(String clazz, int dimensions);
+    void visitNewArrayInstruction(byte atype);
+    void visitNoParameterInstruction(byte opcode);
+    void visitRefInstruction(byte opcode, String clazz, String name, String desc);
+    void visitSiPushInstruction(short data);
+    void visitTableSwitchInstruction(); //TODO: impl
+    void visitWideInstruction(); //TODO: impl
 }

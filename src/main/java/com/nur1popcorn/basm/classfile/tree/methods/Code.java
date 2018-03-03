@@ -502,79 +502,150 @@ public final class Code extends AbstractList<Instruction> implements ICodeVisito
 
     @Override
     public void visitBiPushInstruction(byte data) {
+        if(currentInstruction != null) {
+            final Instruction instruction = new BIPushInstruction(data);
+            add(indexOf(currentInstruction), instruction);
+            currentInstruction = instruction;
+        }
     }
 
     @Override
     public void visitClassInstruction(byte opcode, String clazz) {
+        if(currentInstruction != null) {
+            final Instruction instruction = new ClassInstruction(
+                opcode,
+                clazz
+            );
+            add(indexOf(currentInstruction), instruction);
+            currentInstruction = instruction;
+        }
     }
 
     @Override
     public void visitIIncInstruction(byte index, byte constant) {
+        if(currentInstruction != null) {
+            final Instruction instruction = new IIncInstruction(
+                index,
+                constant
+            );
+            add(indexOf(currentInstruction), instruction);
+            currentInstruction = instruction;
+        }
     }
 
     @Override
     public void visitInvokeDynamicInstruction() {
-
+        // TODO: impl
     }
 
     @Override
     public void visitInvokeInterfaceInstruction() {
-
+        // TODO: impl
     }
 
     @Override
-    public void visitJumpInstruction() {
-
+    public void visitJumpInstruction(byte opcode, Label label) {
+        if(currentInstruction != null) {
+            final Instruction instruction = new JumpInstruction(
+                opcode,
+                label
+            );
+            add(indexOf(currentInstruction), instruction);
+            currentInstruction = instruction;
+        }
     }
 
     @Override
-    public void visitLDCInstruction() {
-
+    public void visitLDCInstruction(byte opcode, Object constant, byte tag) {
+        if(currentInstruction != null) {
+            final Instruction instruction = new LDCInstruction(
+                opcode,
+                constant,
+                tag
+            );
+            add(indexOf(currentInstruction), instruction);
+            currentInstruction = instruction;
+        }
     }
 
     @Override
-    public void visitLocalVariableInstruction() {
-
+    public void visitLocalVariableInstruction(byte opcode, byte index) {
+        if(currentInstruction != null) {
+            final Instruction instruction = new LocalVariableInstruction(
+                opcode,
+                index
+            );
+            add(indexOf(currentInstruction), instruction);
+            currentInstruction = instruction;
+        }
     }
 
     @Override
     public void visitLookupSwitchInstruction() {
-
+        // TODO: impl
     }
 
     @Override
-    public void visitMultiNewArrayInstruction() {
-
+    public void visitMultiNewArrayInstruction(String clazz, int dimensions) {
+        if(currentInstruction != null) {
+            final Instruction instruction = new MultiANewArrayInstruction(
+                clazz,
+                dimensions
+            );
+            add(indexOf(currentInstruction), instruction);
+            currentInstruction = instruction;
+        }
     }
 
     @Override
-    public void visitNewArrayInstruction() {
-
+    public void visitNewArrayInstruction(byte atype) {
+        if(currentInstruction != null) {
+            final Instruction instruction = new NewArrayInstruction(atype);
+            add(indexOf(currentInstruction), instruction);
+            currentInstruction = instruction;
+        }
     }
 
     @Override
-    public void visitNoParameterInstruction() {
-
+    public void visitNoParameterInstruction(byte opcode) {
+        if(currentInstruction != null) {
+            final Instruction instruction = new NoParameterInstruction(opcode);
+            add(indexOf(currentInstruction), instruction);
+            currentInstruction = instruction;
+        }
     }
 
     @Override
-    public void visitRefInstruction() {
-
+    public void visitRefInstruction(byte opcode, String clazz, String name, String desc) {
+        if(currentInstruction != null) {
+            final Instruction instruction = new RefInstruction(
+                opcode,
+                clazz,
+                name,
+                desc
+            );
+            add(indexOf(currentInstruction), instruction);
+            currentInstruction = instruction;
+        }
     }
 
     @Override
-    public void visitSiPushInstruction() {
-
+    public void visitSiPushInstruction(short data) {
+        if(currentInstruction != null) {
+            final Instruction instruction = new SIPushInstruction(data);
+            add(indexOf(currentInstruction), instruction);
+            currentInstruction = instruction;
+        }
     }
 
     @Override
     public void visitTableSwitchInstruction() {
-
+        //TODO: impl
     }
 
     @Override
     public void visitWideInstruction() {
-
+        //TODO: impl
     }
 
     @Override
