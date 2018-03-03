@@ -25,8 +25,6 @@ import java.io.OutputStream;
 public final class Assembler implements ITransformer {
     @Override
     public void transform(InputStream in, OutputStream out) throws IOException {
-        //final ClassFile classFile = new ClassFile(new DataInputStream(in));
-        //classFile.write(new DataOutputStream(out));
-        //throw new RuntimeException("Not implemented.");
+        throw new RuntimeException("Not implemented.");
     }
 }

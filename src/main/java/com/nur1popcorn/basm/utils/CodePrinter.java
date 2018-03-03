@@ -49,6 +49,8 @@ import static com.nur1popcorn.basm.classfile.tree.methods.instructions.TableSwit
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.WideInstruction.WIDE_INSTRUCTION;
 
 public class CodePrinter {
+    private static final String TAB = "  ";
+    
     private PrintWriter pw;
 
     public CodePrinter(PrintWriter pw) {
@@ -62,19 +64,19 @@ public class CodePrinter {
                 final Instruction instruction = cv.visitCurrentInstruction();
                 switch(instruction.getType()) {
                     case BIPUSH_INSTRUCTION:
-                        pw.print("  ");
+                        pw.print(TAB);
                         pw.print(OPCODE_MNEMONICS[BIPUSH]);
                         pw.print(" ");
                         pw.println(Integer.toHexString(((BIPushInstruction)instruction).data & 0xff));
                         break;
                     case CLASS_INSTRUCTION:
-                        pw.print("  ");
+                        pw.print(TAB);
                         pw.print(OPCODE_MNEMONICS[instruction.getOpcode() & 0xff]);
                         pw.print(" ");
                         pw.println(((ClassInstruction)instruction).clazz);
                         break;
                     case IINC_INSTRUCTION: {
-                        pw.print("  ");
+                        pw.print(TAB);
                         pw.print(OPCODE_MNEMONICS[IINC & 0xff]);
                         pw.print(" ");
                         final IIncInstruction iincInstruction = (IIncInstruction) instruction;
@@ -83,17 +85,17 @@ public class CodePrinter {
                         pw.println(Integer.toHexString(iincInstruction.constant & 0xff));
                     }   break;
                     case INVOKEDYNAMIC_INSTRUCTION:
-                        pw.print("  ");
+                        pw.print(TAB);
                         // TODO: impl
                         pw.println();
                         break;
                     case INVOKEINTERFACE_INSTRUCTION:
-                        pw.print("  ");
+                        pw.print(TAB);
                         // TODO: impl
                         pw.println();
                         break;
                     case JUMP_INSTRUCTION: {
-                        pw.print("  ");
+                        pw.print(TAB);
                         pw.print(OPCODE_MNEMONICS[instruction.getOpcode() & 0xff]);
                         final Label label = ((JumpInstruction)instruction).label;
                         Integer labelIndex = labelMap.get(label);
@@ -103,7 +105,7 @@ public class CodePrinter {
                         pw.println(Integer.toHexString(labelIndex));
                     }   break;
                     case LDC_INSTRUCTION:
-                        pw.print("  ");
+                        pw.print(TAB);
                         pw.print(OPCODE_MNEMONICS[instruction.getOpcode() & 0xff]);
                         pw.print(" ");
                         LDCInstruction ldcInstruction = (LDCInstruction) instruction;
@@ -133,17 +135,17 @@ public class CodePrinter {
                         }
                         break;
                     case LOCAL_VARIABLE_INSTRUCTION:
-                        pw.print("  ");
+                        pw.print(TAB);
                         pw.print(OPCODE_MNEMONICS[instruction.getOpcode() & 0xff]);
                         pw.print(" ");
                         pw.println(Integer.toHexString(((LocalVariableInstruction)instruction).index & 0xff));
                         break;
                     case LOOKUPSWITCH_INSTRUCTION:
-                        pw.print("  ");
+                        pw.print(TAB);
                         // TODO: impl
                         break;
                     case MULTIANEWARRAY_INSTRUCTION: {
-                        pw.print("  ");
+                        pw.print(TAB);
                         pw.print(OPCODE_MNEMONICS[MUTLIANEWARRAY & 0xff]);
                         pw.print(" ");
                         final MultiANewArrayInstruction multiANewArrayInstruction = (MultiANewArrayInstruction) instruction;
@@ -152,7 +154,7 @@ public class CodePrinter {
                         pw.println(multiANewArrayInstruction.dimensions);
                     }   break;
                     case NEWARRAY_INSTRUCTION:
-                        pw.print("  ");
+                        pw.print(TAB);
                         pw.print(OPCODE_MNEMONICS[NEWARRAY & 0xff]);
                         pw.print(" ");
                         pw.println(T_MNEMONICS[((NewArrayInstruction)instruction).atype]);
@@ -166,11 +168,11 @@ public class CodePrinter {
                         pw.println(Integer.toHexString(labelIndex));
                     }   break;
                     case NO_PARAMETER_INSTRUCTION:
-                        pw.print("  ");
+                        pw.print(TAB);
                         pw.println(OPCODE_MNEMONICS[instruction.getOpcode() & 0xff]);
                         break;
                     case REF_INSTRUCTION: {
-                        pw.print("  ");
+                        pw.print(TAB);
                         pw.print(OPCODE_MNEMONICS[instruction.getOpcode() & 0xff]);
                         pw.print(" ");
                         final RefInstruction refInstruction = (RefInstruction) instruction;
@@ -182,18 +184,18 @@ public class CodePrinter {
                     }   break;
                     default:
                     case SIPUSH_INSTRUCTION:
-                        pw.print("  ");
+                        pw.print(TAB);
                         pw.print(OPCODE_MNEMONICS[BIPUSH]);
                         pw.print(" ");
                         pw.println(Integer.toHexString(((SIPushInstruction)instruction).data));
                         break;
                     case TABLESWITCH_INSTRUCTION:
-                        pw.print("  ");
+                        pw.print(TAB);
                         // TODO: impl
                         pw.println();
                         break;
                     case WIDE_INSTRUCTION:
-                        pw.print("  ");
+                        pw.print(TAB);
                         // TODO: impl
                         pw.println();
                         break;

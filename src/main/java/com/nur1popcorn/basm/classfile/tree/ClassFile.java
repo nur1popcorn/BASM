@@ -194,6 +194,10 @@ public final class ClassFile implements IClassVisitor {
         );
     }
 
+    public List<FieldNode> getFieldNodes() {
+        return fieldNodes;
+    }
+
     public List<MethodNode> getMethodNodes() {
         return methodNodes;
     }

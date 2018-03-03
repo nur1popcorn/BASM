@@ -25,6 +25,7 @@ import java.io.OutputStream;
 public final class Decompiler implements ITransformer {
     @Override
     public void transform(InputStream in, OutputStream out) throws IOException {
+        throw new RuntimeException("Not implemented.");
         /*final PrintWriter writer = new PrintWriter(out);
         final ClassFile classFile = new ClassFile(new DataInputStream(in));
 
