@@ -116,17 +116,17 @@ public class MethodNode implements IMethodVisitor {
     }
 
     @Override
-    public void visitJumpInstruction() {
+    public void visitJumpInstruction(byte opcode, Label label) {
 
     }
 
     @Override
-    public void visitLDCInstruction() {
+    public void visitLDCInstruction(byte opcode, Object constant, byte tag) {
 
     }
 
     @Override
-    public void visitLocalVariableInstruction() {
+    public void visitLocalVariableInstruction(byte opcode, byte index) {
 
     }
 
@@ -136,27 +136,27 @@ public class MethodNode implements IMethodVisitor {
     }
 
     @Override
-    public void visitMultiNewArrayInstruction() {
+    public void visitMultiNewArrayInstruction(String clazz, int dimensions) {
 
     }
 
     @Override
-    public void visitNewArrayInstruction() {
+    public void visitNewArrayInstruction(byte atype) {
 
     }
 
     @Override
-    public void visitNoParameterInstruction() {
+    public void visitNoParameterInstruction(byte opcode) {
 
     }
 
     @Override
-    public void visitRefInstruction() {
+    public void visitRefInstruction(byte opcode, String clazz, String name, String desc) {
 
     }
 
     @Override
-    public void visitSiPushInstruction() {
+    public void visitSiPushInstruction(short data) {
 
     }
 
