@@ -5,7 +5,8 @@
 ## Index
 * Quick Start
     * Build instructions
-    * Usage examples
+    * Usage example
+    * Transformers
 * Example Outputs
     * BinarySearch
 ## Quick Start
@@ -17,9 +18,18 @@ sudo apt install maven
 mvn package
 ```
 
-#### Usage examples
+#### Usage example
 
-`java -jar BASM.jar -in BinarySearch.class -out BinarySearch.basm`
+`java -jar BASM.jar -in {CLASS} -out {OUT FILE} -transformer {TRANSFORMER}`
+
+#### Transformers
+
+|     Transformer    |                       Description                          |                     Class                    |
+|:-------------------|:-----------------------------------------------------------|:---------------------------------------------|
+|Assembler           |Not Implemented                                             |com.nur1popcorn.basm.transformers.Assembler   |
+|Decompiler          |Not Implemented                                             |com.nur1popcorn.basm.transformers.Decompiler  |
+|Disassembler        |Turns the given class file into it's bytecode representation.|com.nur1popcorn.basm.transformers.Disassembler|
+|MaliciousCodeScanner|Kinda works but not really well.|com.nur1popcorn.basm.transformers.MaliciousCodeScanner|
 
 ## Example Outputs
 
