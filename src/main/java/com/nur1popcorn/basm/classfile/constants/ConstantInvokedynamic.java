@@ -68,6 +68,21 @@ public final class ConstantInvokedynamic extends ConstantInfo {
                 "]";
     }
 
+    @Override
+    public int hashCode() {
+        return bootstrapMethodAttrIndex * nameAndTypeIndex * 33 ^ getTag();
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if(other instanceof ConstantInvokedynamic) {
+            final ConstantInvokedynamic invokedynamic = (ConstantInvokedynamic) other;
+            return invokedynamic.bootstrapMethodAttrIndex == bootstrapMethodAttrIndex &&
+                   invokedynamic.nameAndTypeIndex == nameAndTypeIndex;
+        }
+        return false;
+    }
+
     /*
      * TODO: index bootstrapMethodAttr
      */

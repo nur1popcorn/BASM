@@ -61,6 +61,17 @@ public final class ConstantInteger extends ConstantInfo {
                 ) + "]";
     }
 
+    @Override
+    public int hashCode() {
+        return bytes * 33 ^ getTag();
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        return other instanceof ConstantInteger &&
+               ((ConstantInteger) other).bytes == bytes;
+    }
+
     /**
      * @param bytes the value which the the integer will be set to.
      */

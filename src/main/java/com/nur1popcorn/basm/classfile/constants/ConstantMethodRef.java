@@ -73,6 +73,22 @@ public final class ConstantMethodRef extends ConstantInfo {
                 "]";
     }
 
+    @Override
+    public int hashCode() {
+        return classIndex * nameAndTypeIndex * 33 ^ getTag();
+    }
+
+
+    @Override
+    public boolean equals(Object other) {
+        if(other instanceof ConstantMethodRef) {
+            final ConstantMethodRef constantMethodRef = (ConstantMethodRef) other;
+            return constantMethodRef.classIndex == classIndex &&
+                   constantMethodRef.nameAndTypeIndex == nameAndTypeIndex;
+        }
+        return false;
+    }
+
     /**
      * @param constantPool the {@link ConstantPool} which should be indexed.
      *

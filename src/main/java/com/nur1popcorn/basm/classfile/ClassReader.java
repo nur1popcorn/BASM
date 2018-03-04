@@ -29,8 +29,6 @@ import static com.nur1popcorn.basm.Constants.*;
  *     ClassFile 4.1.
  * </a>
  *
- * TODO: describe structure, what the class file is made of: magic minor major..
- *
  * @see ConstantPool
  * @see FieldMethodInfo
  * @see IClassVisitor

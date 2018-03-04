@@ -73,6 +73,21 @@ public final class ConstantMethodHandle extends ConstantInfo {
                 "]";
     }
 
+    @Override
+    public int hashCode() {
+        return refKind * refIndex * 33 ^ getTag();
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if(other instanceof ConstantMethodHandle) {
+            final ConstantMethodHandle constantMethodHandle = (ConstantMethodHandle) other;
+            return constantMethodHandle.refKind == refKind &&
+                   constantMethodHandle.refIndex == refIndex;
+        }
+        return false;
+    }
+
     /**
      * @return the type of reference and its behavior in bytecode.
      */

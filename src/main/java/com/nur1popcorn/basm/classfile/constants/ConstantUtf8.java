@@ -107,4 +107,19 @@ public final class ConstantUtf8 extends ConstantInfo {
                     bytes +
                 "]";
     }
+
+    @Override
+    public int hashCode() {
+        return bytes.hashCode() * 33 ^ getTag();
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if(other instanceof ConstantUtf8) {
+            final ConstantUtf8 constantUtf8 = (ConstantUtf8) other;
+            return (constantUtf8.bytes == null && bytes == null) ||
+                    bytes.equals(constantUtf8.bytes);
+        }
+        return false;
+    }
 }

@@ -61,6 +61,17 @@ public final class ConstantLong extends ConstantInfo {
                ) + "]";
     }
 
+    @Override
+    public int hashCode() {
+        return ((int) bytes) * 33 ^ getTag();
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        return other instanceof ConstantLong &&
+               ((ConstantLong)other).bytes == bytes;
+    }
+
     /**
      * @param bytes the value which the the long will be set to.
      */

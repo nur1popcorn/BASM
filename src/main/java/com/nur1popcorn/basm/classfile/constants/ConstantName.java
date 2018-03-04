@@ -83,6 +83,17 @@ public final class ConstantName extends ConstantInfo {
                 "]";
     }
 
+    @Override
+    public int hashCode() {
+        return nameIndex * 33 ^ getTag();
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        return other instanceof ConstantName &&
+               ((ConstantName)other).nameIndex == nameIndex;
+    }
+
     /**
      * @param constantPool the {@link ConstantPool} which should be indexed.
      *
