@@ -83,7 +83,8 @@ public final class ConstantMethodRef extends ConstantInfo {
     public boolean equals(Object other) {
         if(other instanceof ConstantMethodRef) {
             final ConstantMethodRef constantMethodRef = (ConstantMethodRef) other;
-            return constantMethodRef.classIndex == classIndex &&
+            return constantMethodRef.getTag() == getTag() &&
+                   constantMethodRef.classIndex == classIndex &&
                    constantMethodRef.nameAndTypeIndex == nameAndTypeIndex;
         }
         return false;

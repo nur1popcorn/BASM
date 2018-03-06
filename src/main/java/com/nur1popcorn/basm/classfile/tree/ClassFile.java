@@ -24,9 +24,11 @@ import com.nur1popcorn.basm.classfile.FieldMethodInfo;
 import com.nur1popcorn.basm.classfile.IClassVisitor;
 import com.nur1popcorn.basm.classfile.attributes.AttributeCode;
 import com.nur1popcorn.basm.classfile.attributes.AttributeInfo;
-import com.nur1popcorn.basm.classfile.constants.*;
+import com.nur1popcorn.basm.classfile.constants.ConstantName;
 import com.nur1popcorn.basm.classfile.tree.fields.FieldNode;
 import com.nur1popcorn.basm.classfile.tree.fields.FieldNodeParseException;
+import com.nur1popcorn.basm.classfile.tree.methods.Code;
+import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
 import com.nur1popcorn.basm.classfile.tree.methods.MethodNode;
 import com.nur1popcorn.basm.classfile.tree.methods.MethodNodeParseException;
 
@@ -35,8 +37,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.nur1popcorn.basm.Constants.*;
 import static com.nur1popcorn.basm.classfile.ClassReader.*;
+import static com.nur1popcorn.basm.classfile.tree.methods.Instruction.NOT_AN_INSTRUCTION;
+import static com.nur1popcorn.basm.classfile.tree.methods.instructions.NoParameterInstruction.NO_PARAMETER_INSTRUCTION;
 
 /**
  * The {@link ClassFile} provides an abstraction layer between bytecode and user.
@@ -115,73 +118,68 @@ public final class ClassFile implements IClassVisitor {
     }
 
     public void accept(IClassVisitor visitor) throws IOException {
-        final List<ConstantInfo> constantInfos = new ArrayList<>();
+        final ConstantPool.ConstantPoolBuilder builder = ConstantPool.builder();
 
-        constantInfos.add(null);
-
-        constantInfos.add(new ConstantUtf8(this.thisClass));
-        constantInfos.add(new ConstantName(CONSTANT_CLASS, 1));
-        constantInfos.add(new ConstantUtf8(this.superClass));
-        constantInfos.add(new ConstantName(CONSTANT_CLASS, 3));
+        final int thisClass = builder.addConstantClass(this.thisClass);
+        final int superClass = builder.addConstantClass(this.superClass);
 
         final int interfaces[] = new int[this.interfaces.size()];
-        for(int i = 0; i < interfaces.length; i++) {
-            interfaces[i] = constantInfos.size();
-            constantInfos.add(new ConstantUtf8(this.interfaces.get(i)));
-        }
+        for(int i = 0; i < interfaces.length; i++)
+            interfaces[i] = builder.addConstantUtf8(this.interfaces.get(i));
 
         final FieldMethodInfo fields[] = new FieldMethodInfo[fieldNodes.size()];
-        for(int i = 0; i < fields.length; i++) {
+        for(int i = 0; i < fieldNodes.size(); i++) {
             final FieldNode fieldNode = fieldNodes.get(i);
-            int size = constantInfos.size();
             fields[i] = new FieldMethodInfo(
                 fieldNode.access,
-                size++,
-                size,
-                new AttributeInfo[0] //TODO: remove
+                builder.addConstantUtf8(fieldNode.name),
+                builder.addConstantUtf8(fieldNode.desc),
+                new AttributeInfo[0] // TODO: add to FieldNode.
             );
-            constantInfos.add(new ConstantUtf8(fieldNode.name));
-            constantInfos.add(new ConstantUtf8(fieldNode.desc));
         }
 
-        //TODO: remove
-        final FieldMethodInfo methods[] = new FieldMethodInfo[1]; // TODO: impl
-        int size = constantInfos.size();
-        AttributeInfo attributeInfos[] = new AttributeInfo[] {
-            new AttributeCode(size++, 1, 1,
-            new byte[] {
-                ALOAD_0,
-                (byte) 0xb7, 0, (byte) size++, // invokespecial
-                (byte) 0xb1 // return
-            },
-            new AttributeCode.ExceptionTableEntry[0],
-            new AttributeInfo[0])
-        };
-
-
-        constantInfos.add(new ConstantUtf8("Code"));
-        constantInfos.add(new ConstantMethodRef(CONSTANT_METHOD_REF, size++, size++));
-
-        constantInfos.add(new ConstantName(CONSTANT_CLASS, 3));
-        constantInfos.add(new ConstantNameAndType(size++, size++));
-
-        constantInfos.add(new ConstantUtf8("<init>"));
-        constantInfos.add(new ConstantUtf8("()V"));
-
-        methods[0] = new FieldMethodInfo(ACC_PUBLIC, size++, size++, attributeInfos);
-        constantInfos.add(new ConstantUtf8("<init>"));
-        constantInfos.add(new ConstantUtf8("()V"));
+        final int codeIndex = builder.addConstantUtf8("Code");
+        final FieldMethodInfo methods[] = new FieldMethodInfo[methodNodes.size()];
+        for(int i = 0; i < methodNodes.size(); i++) {
+            final MethodNode methodNode = methodNodes.get(i);
+            byte byteCode[] = new byte[0];
+            if(methodNode.visitCodeAt(0))
+                do {
+                    final Instruction instruction = methodNode.visitCurrentInstruction();
+                    switch(instruction.getType()) {
+                        case NOT_AN_INSTRUCTION:
+                        case NO_PARAMETER_INSTRUCTION:
+                            
+                            break;
+                    }
+                } while(methodNode.visitNextInstruction());
+            final Code code = methodNode.getCode();
+            methods[i] = new FieldMethodInfo(
+                methodNode.access,
+                builder.addConstantUtf8(methodNode.name),
+                builder.addConstantUtf8(methodNode.desc),
+                new AttributeInfo[] {
+                    new AttributeCode(
+                        codeIndex,
+                        code.maxStack,
+                        code.maxLocals,
+                        byteCode,
+                        new AttributeCode.ExceptionTableEntry[0], // TODO: add to MethodNode.
+                        new AttributeInfo[0]
+                    )
+                });
+        }
 
         visitor.visitHead(
             minorVersion,
             majorVersion,
-            new ConstantPool(constantInfos.toArray(new ConstantInfo[constantInfos.size()]))
+            builder.build()
         );
 
         visitor.visitBody(
             access,
-            2,
-            4,
+            thisClass,
+            superClass,
             interfaces
         );
 

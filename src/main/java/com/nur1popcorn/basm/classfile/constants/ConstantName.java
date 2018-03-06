@@ -90,8 +90,12 @@ public final class ConstantName extends ConstantInfo {
 
     @Override
     public boolean equals(Object other) {
-        return other instanceof ConstantName &&
-               ((ConstantName)other).nameIndex == nameIndex;
+        if(other instanceof ConstantName) {
+            final ConstantName constantName = (ConstantName) other;
+            return constantName.getTag() == getTag() &&
+                   constantName.nameIndex == nameIndex;
+        }
+        return false;
     }
 
     /**

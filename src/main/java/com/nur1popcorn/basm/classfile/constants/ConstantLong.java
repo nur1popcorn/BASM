@@ -46,6 +46,12 @@ public final class ConstantLong extends ConstantInfo {
         this.bytes = bytes;
     }
 
+    // TODO: desc
+    public ConstantLong(byte tag, double bytes) {
+        super(tag);
+        this.bytes = Double.doubleToLongBits(bytes);
+    }
+
     @Override
     public void write(DataOutputStream os) throws IOException {
         super.write(os);
@@ -68,8 +74,12 @@ public final class ConstantLong extends ConstantInfo {
 
     @Override
     public boolean equals(Object other) {
-        return other instanceof ConstantLong &&
-               ((ConstantLong)other).bytes == bytes;
+        if(other instanceof ConstantLong) {
+            final ConstantLong constantLong = (ConstantLong) other;
+            return constantLong.getTag() == getTag() &&
+                   constantLong.bytes == bytes;
+        }
+        return false;
     }
 
     /**

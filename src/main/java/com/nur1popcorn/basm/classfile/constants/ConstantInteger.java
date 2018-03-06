@@ -46,6 +46,12 @@ public final class ConstantInteger extends ConstantInfo {
         this.bytes = bytes;
     }
 
+    // TODO: desc
+    public ConstantInteger(byte tag, float bytes) {
+        super(tag);
+        this.bytes = Float.floatToIntBits(bytes);
+    }
+
     @Override
     public void write(DataOutputStream os) throws IOException {
         super.write(os);
@@ -68,8 +74,12 @@ public final class ConstantInteger extends ConstantInfo {
 
     @Override
     public boolean equals(Object other) {
-        return other instanceof ConstantInteger &&
-               ((ConstantInteger) other).bytes == bytes;
+        if(other instanceof ConstantInteger) {
+            final ConstantInteger constantInteger = (ConstantInteger) other;
+            return constantInteger.getTag() == getTag() &&
+                   constantInteger.bytes == bytes;
+        }
+        return false;
     }
 
     /**
