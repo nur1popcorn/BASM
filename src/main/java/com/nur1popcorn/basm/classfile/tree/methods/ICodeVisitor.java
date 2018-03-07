@@ -38,7 +38,7 @@ public interface ICodeVisitor {
     void visitLDCInstruction(byte opcode, Object constant, byte tag);
     void visitLocalVariableInstruction(byte opcode, byte index);
     void visitLookupSwitchInstruction(); // TODO: impl
-    void visitMultiNewArrayInstruction(String clazz, int dimensions);
+    void visitMultiNewArrayInstruction(String clazz, byte dimensions);
     void visitNewArrayInstruction(byte atype);
     void visitNoParameterInstruction(byte opcode);
     void visitRefInstruction(byte opcode, String clazz, String name, String desc);

@@ -259,7 +259,8 @@ public final class Code extends AbstractList<Instruction> implements ICodeVisito
                             final ConstantMethodHandle methodHandle = (ConstantMethodHandle) constantInfo;
                             final ConstantMethodRef methodRef = methodHandle.indexRef(constantPool);
                             final ConstantNameAndType nameAndType = methodRef.indexNameAndType(constantPool);
-                            data = new MethodHandle(methodHandle.getRefKind(),
+                            data = new MethodHandle(
+                                    methodHandle.getRefKind(),
                                     methodRef.indexClass(constantPool)
                                              .indexName(constantPool)
                                              .bytes,
@@ -497,6 +498,7 @@ public final class Code extends AbstractList<Instruction> implements ICodeVisito
                     break;
             }
             maxStack = Math.max(stack, maxStack);
+            maxLocals = Math.max(locals, maxLocals);
         }
     }
 
@@ -586,7 +588,7 @@ public final class Code extends AbstractList<Instruction> implements ICodeVisito
     }
 
     @Override
-    public void visitMultiNewArrayInstruction(String clazz, int dimensions) {
+    public void visitMultiNewArrayInstruction(String clazz, byte dimensions) {
         if(currentInstruction != null) {
             final Instruction instruction = new MultiANewArrayInstruction(
                 clazz,

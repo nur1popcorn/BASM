@@ -23,6 +23,7 @@ import com.nur1popcorn.basm.classfile.tree.methods.MethodHandle;
 
 import static com.nur1popcorn.basm.Constants.*;
 
+// TODO: consider rewriting this class.. and removing MethodHandle.
 public final class LDCInstruction extends Instruction {
     public static final byte LDC_INSTRUCTION = 4;
 
@@ -35,23 +36,32 @@ public final class LDCInstruction extends Instruction {
         this.tag = tag;
     }
 
-    //TODO: ldc2_W
-    public void setConstant(int i) {
+    public void setConstant(int constant) {
         tag = CONSTANT_INTEGER;
-        this.constant = i;
+        this.constant = constant;
     }
 
-    public void setConstant(float f) {
+    public void setConstant(float constant) {
         tag = CONSTANT_FLOAT;
-        this.constant = f;
+        this.constant = constant;
     }
 
-    public void setConstant(String s, byte tag) {
+    public void setConstant(double constant) {
+        tag = CONSTANT_DOUBLE;
+        this.constant = constant;
+    }
+
+    public void setConstant(long constant) {
+        tag = CONSTANT_LONG;
+        this.constant = constant;
+    }
+
+    public void setConstant(String constant, byte tag) {
         assert(tag == CONSTANT_STRING ||
                tag == CONSTANT_CLASS ||
                tag == CONSTANT_METHOD_TYPE);
         this.tag = tag;
-        this.constant = s;
+        this.constant = constant;
     }
 
     public void setConstant(MethodHandle methodHandle) {

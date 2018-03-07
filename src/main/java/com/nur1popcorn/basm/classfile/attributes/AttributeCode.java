@@ -39,8 +39,7 @@ public class AttributeCode extends AttributeInfo {
         maxStack = in.readUnsignedShort();
         maxLocals = in.readUnsignedShort();
 
-        int len = in.readInt();
-        code = new byte[len];
+        code = new byte[in.readInt()];
         for(int i = 0; i < code.length; i++)
             code[i] = in.readByte();
 

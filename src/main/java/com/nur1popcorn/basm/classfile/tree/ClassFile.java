@@ -27,18 +27,29 @@ import com.nur1popcorn.basm.classfile.attributes.AttributeInfo;
 import com.nur1popcorn.basm.classfile.constants.ConstantName;
 import com.nur1popcorn.basm.classfile.tree.fields.FieldNode;
 import com.nur1popcorn.basm.classfile.tree.fields.FieldNodeParseException;
-import com.nur1popcorn.basm.classfile.tree.methods.Code;
-import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
-import com.nur1popcorn.basm.classfile.tree.methods.MethodNode;
-import com.nur1popcorn.basm.classfile.tree.methods.MethodNodeParseException;
+import com.nur1popcorn.basm.classfile.tree.methods.*;
+import com.nur1popcorn.basm.classfile.tree.methods.instructions.*;
 
+import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.nur1popcorn.basm.Constants.*;
 import static com.nur1popcorn.basm.classfile.ClassReader.*;
 import static com.nur1popcorn.basm.classfile.tree.methods.Instruction.NOT_AN_INSTRUCTION;
+import static com.nur1popcorn.basm.classfile.tree.methods.instructions.BIPushInstruction.BIPUSH_INSTRUCTION;
+import static com.nur1popcorn.basm.classfile.tree.methods.instructions.ClassInstruction.CLASS_INSTRUCTION;
+import static com.nur1popcorn.basm.classfile.tree.methods.instructions.IIncInstruction.IINC_INSTRUCTION;
+import static com.nur1popcorn.basm.classfile.tree.methods.instructions.InvokeDynamicInstruction.INVOKEDYNAMIC_INSTRUCTION;
+import static com.nur1popcorn.basm.classfile.tree.methods.instructions.InvokeInterfaceInstruction.INVOKEINTERFACE_INSTRUCTION;
+import static com.nur1popcorn.basm.classfile.tree.methods.instructions.JumpInstruction.JUMP_INSTRUCTION;
+import static com.nur1popcorn.basm.classfile.tree.methods.instructions.LDCInstruction.LDC_INSTRUCTION;
+import static com.nur1popcorn.basm.classfile.tree.methods.instructions.LocalVariableInstruction.LOCAL_VARIABLE_INSTRUCTION;
+import static com.nur1popcorn.basm.classfile.tree.methods.instructions.LookupSwitchInstruction.LOOKUPSWITCH_INSTRUCTION;
+import static com.nur1popcorn.basm.classfile.tree.methods.instructions.MultiANewArrayInstruction.MULTIANEWARRAY_INSTRUCTION;
+import static com.nur1popcorn.basm.classfile.tree.methods.instructions.NewArrayInstruction.NEWARRAY_INSTRUCTION;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.NoParameterInstruction.NO_PARAMETER_INSTRUCTION;
 
 /**
@@ -73,10 +84,10 @@ public final class ClassFile implements IClassVisitor {
 
     public ClassFile(DataInputStream din) throws IOException {
         new ClassReader(din)
-                .accept(this, READ_HEAD |
-                              READ_BODY |
-                              READ_METHODS |
-                              READ_FIELDS);
+            .accept(this, READ_HEAD |
+                          READ_BODY |
+                          READ_METHODS |
+                          READ_FIELDS);
     }
 
     public static ClassFileBuilder builder() {
@@ -94,9 +105,9 @@ public final class ClassFile implements IClassVisitor {
     public void visitBody(int access, int thisClass, int superClass, int interfaces[]) {
         this.access = access;
         this.thisClass = ((ConstantName)constantPool.getEntry(thisClass))
-                .indexName(constantPool).bytes;
+            .indexName(constantPool).bytes;
         this.superClass = ((ConstantName)constantPool.getEntry(superClass))
-                .indexName(constantPool).bytes;
+            .indexName(constantPool).bytes;
         this.interfaces = new ArrayList<>(interfaces.length);
         for (int anInterface : interfaces)
             this.interfaces.add(
@@ -120,6 +131,50 @@ public final class ClassFile implements IClassVisitor {
     public void accept(IClassVisitor visitor) throws IOException {
         final ConstantPool.ConstantPoolBuilder builder = ConstantPool.builder();
 
+        // the first 254 entries of the constantpool are reserved for entries to whom an ldc instruction points.
+        methodNodes.forEach(methodNode -> {
+            if(methodNode.visitCodeAt(0))
+                do {
+                    final Instruction instruction = methodNode.visitCurrentInstruction();
+                    if(instruction.getOpcode() == LDC) {
+                        final LDCInstruction ldcInstruction = (LDCInstruction) instruction;
+                        switch (ldcInstruction.getTag()) {
+                            default:
+                            case CONSTANT_STRING:
+                                builder.addConstantString((String) ldcInstruction.getConstant());
+                                break;
+                            case CONSTANT_INTEGER:
+                                builder.addConstantInteger((int) ldcInstruction.getConstant());
+                                break;
+                            case CONSTANT_FLOAT:
+                                builder.addConstantFloat((float) ldcInstruction.getConstant());
+                                break;
+                            case CONSTANT_CLASS:
+                                builder.addConstantClass((String) ldcInstruction.getConstant());
+                                break;
+                            case CONSTANT_METHOD_TYPE:
+                                builder.addConstantMethodType((String) ldcInstruction.getConstant());
+                                break;
+                            case CONSTANT_METHOD_HANDLE: {
+                                final MethodHandle methodHandle = (MethodHandle) ldcInstruction.getConstant();
+                                builder.addConstantMethodHandle(
+                                        methodHandle.refKind,
+                                        methodHandle.clazz,
+                                        methodHandle.name,
+                                        methodHandle.type);
+                            }
+                            break;
+                            case CONSTANT_LONG:
+                                builder.addConstantLong((long) ldcInstruction.getConstant());
+                                break;
+                            case CONSTANT_DOUBLE:
+                                builder.addConstantDouble((double) ldcInstruction.getConstant());
+                                break;
+                        }
+                    }
+                } while(methodNode.visitNextInstruction());
+        });
+
         final int thisClass = builder.addConstantClass(this.thisClass);
         final int superClass = builder.addConstantClass(this.superClass);
 
@@ -142,17 +197,130 @@ public final class ClassFile implements IClassVisitor {
         final FieldMethodInfo methods[] = new FieldMethodInfo[methodNodes.size()];
         for(int i = 0; i < methodNodes.size(); i++) {
             final MethodNode methodNode = methodNodes.get(i);
-            byte byteCode[] = new byte[0];
+            final ByteArrayOutputStream bos = new ByteArrayOutputStream();
             if(methodNode.visitCodeAt(0))
                 do {
                     final Instruction instruction = methodNode.visitCurrentInstruction();
                     switch(instruction.getType()) {
                         case NOT_AN_INSTRUCTION:
                         case NO_PARAMETER_INSTRUCTION:
-                            
+                            bos.write(instruction.getOpcode());
                             break;
+                        case BIPUSH_INSTRUCTION:
+                            bos.write(BIPUSH);
+                            bos.write(((BIPushInstruction) instruction).data);
+                            break;
+                        case CLASS_INSTRUCTION: {
+                            bos.write(instruction.getOpcode());
+                            final ClassInstruction classInstruction = (ClassInstruction) instruction;
+                            final int index = builder.addConstantClass(classInstruction.clazz);
+                            bos.write(index >> 8);
+                            bos.write(index);
+                        }   break;
+                        case IINC_INSTRUCTION: {
+                            bos.write(IINC);
+                            final IIncInstruction iincInstruction = (IIncInstruction) instruction;
+                            bos.write(iincInstruction.index);
+                            bos.write(iincInstruction.constant);
+                        }   break;
+                        case INVOKEDYNAMIC_INSTRUCTION:
+                            // TODO: impl
+                            break;
+                        case INVOKEINTERFACE_INSTRUCTION:
+                            // TODO: impl
+                            break;
+                        case JUMP_INSTRUCTION: {
+                            final JumpInstruction jumpInstruction = (JumpInstruction) instruction;
+                            final byte opcode = jumpInstruction.getOpcode();
+                            bos.write(opcode);
+                            final int jumpOffset =
+                                methodNode.getCode()
+                                          .indexOf(jumpInstruction) - bos.size() + 2;
+                            switch(opcode) {
+                                case GOTO_W:
+                                case JSR_W:
+                                    bos.write(jumpOffset >> 24);
+                                    bos.write(jumpOffset >> 16);
+                                    bos.write(jumpOffset >> 8);
+                                    bos.write(jumpOffset);
+                                    break;
+                                default:
+                                    bos.write(jumpOffset >> 8);
+                                    bos.write(jumpOffset);
+                                    break;
+                            }
+                        }   break;
+                        case LDC_INSTRUCTION: {
+                            int index;
+                            final LDCInstruction ldcInstruction = (LDCInstruction) instruction;
+                            switch(ldcInstruction.getTag()) {
+                                default:
+                                case CONSTANT_STRING:
+                                    index = builder.addConstantString((String) ldcInstruction.getConstant());
+                                    break;
+                                case CONSTANT_INTEGER:
+                                    index = builder.addConstantInteger((int) ldcInstruction.getConstant());
+                                    break;
+                                case CONSTANT_FLOAT:
+                                    index = builder.addConstantFloat((float) ldcInstruction.getConstant());
+                                    break;
+                                case CONSTANT_CLASS:
+                                    index = builder.addConstantClass((String) ldcInstruction.getConstant());
+                                    break;
+                                case CONSTANT_METHOD_TYPE:
+                                    index = builder.addConstantMethodType((String) ldcInstruction.getConstant());
+                                    break;
+                                case CONSTANT_METHOD_HANDLE: {
+                                    final MethodHandle methodHandle = (MethodHandle) ldcInstruction.getConstant();
+                                    index = builder.addConstantMethodHandle(
+                                        methodHandle.refKind,
+                                        methodHandle.clazz,
+                                        methodHandle.name,
+                                        methodHandle.type);
+                                }   break;
+                                case CONSTANT_LONG:
+                                    index = builder.addConstantLong((long) ldcInstruction.getConstant());
+                                    break;
+                                case CONSTANT_DOUBLE:
+                                    index = builder.addConstantDouble((double) ldcInstruction.getConstant());
+                                    break;
+                            }
+
+                            switch(ldcInstruction.getOpcode()) {
+                                default:
+                                case LDC:
+                                    bos.write(index);
+                                    break;
+                                case LDC_W:
+                                case LDC2_W:
+                                    bos.write(index >> 8);
+                                    bos.write(index);
+                                    break;
+                            }
+                        }   break;
+                        case LOCAL_VARIABLE_INSTRUCTION:
+                            bos.write(instruction.getOpcode());
+                            bos.write(((LocalVariableInstruction) instruction).index);
+                            break;
+                        case LOOKUPSWITCH_INSTRUCTION:
+                            // TODO: impl
+                            break;
+                        case MULTIANEWARRAY_INSTRUCTION: {
+                            bos.write(MULTIANEWARRAY);
+                            final MultiANewArrayInstruction multiANewArrayInstruction = (MultiANewArrayInstruction) instruction;
+                            final int index = builder.addConstantClass(multiANewArrayInstruction.clazz);
+                            bos.write(index >> 8);
+                            bos.write(index);
+                            bos.write(multiANewArrayInstruction.dimensions);
+                        }   break;
+                        case NEWARRAY_INSTRUCTION:
+                            bos.write(NEWARRAY);
+                            bos.write(((NewArrayInstruction) instruction).atype);
+                            break;
+
                     }
                 } while(methodNode.visitNextInstruction());
+
             final Code code = methodNode.getCode();
             methods[i] = new FieldMethodInfo(
                 methodNode.access,
@@ -163,7 +331,7 @@ public final class ClassFile implements IClassVisitor {
                         codeIndex,
                         code.maxStack,
                         code.maxLocals,
-                        byteCode,
+                        bos.toByteArray(),
                         new AttributeCode.ExceptionTableEntry[0], // TODO: add to MethodNode.
                         new AttributeInfo[0]
                     )

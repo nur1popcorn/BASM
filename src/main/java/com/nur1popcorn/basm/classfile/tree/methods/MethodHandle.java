@@ -19,12 +19,12 @@
 package com.nur1popcorn.basm.classfile.tree.methods;
 
 public final class MethodHandle {
-    public int refKind;
+    public byte refKind;
     public String clazz,
                   name,
                   type;
 
-    public MethodHandle(int refKind, String clazz, String name, String type) {
+    public MethodHandle(byte refKind, String clazz, String name, String type) {
         this.refKind = refKind;
         this.clazz = clazz;
         this.name = name;

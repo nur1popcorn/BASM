@@ -146,7 +146,7 @@ public class CodePrinter {
                         break;
                     case MULTIANEWARRAY_INSTRUCTION: {
                         pw.print(TAB);
-                        pw.print(OPCODE_MNEMONICS[MUTLIANEWARRAY & 0xff]);
+                        pw.print(OPCODE_MNEMONICS[MULTIANEWARRAY & 0xff]);
                         pw.print(" ");
                         final MultiANewArrayInstruction multiANewArrayInstruction = (MultiANewArrayInstruction) instruction;
                         pw.print(multiANewArrayInstruction.clazz);

@@ -688,7 +688,7 @@ public final class Constants {
     public static final byte NEWARRAY =                     (byte) 0xbc;
 
     // TODO: move, desc
-    public static final byte MUTLIANEWARRAY =               (byte) 0xc5;
+    public static final byte MULTIANEWARRAY =               (byte) 0xc5;
 
     public static final byte IFNULL =                       (byte) 0xc6;
     public static final byte IFNONNULL =                    (byte) 0xc7;
