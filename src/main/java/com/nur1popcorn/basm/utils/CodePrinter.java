@@ -34,7 +34,6 @@ import static com.nur1popcorn.basm.classfile.tree.methods.instructions.BIPushIns
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.ClassInstruction.CLASS_INSTRUCTION;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.IIncInstruction.IINC_INSTRUCTION;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.InvokeDynamicInstruction.INVOKEDYNAMIC_INSTRUCTION;
-import static com.nur1popcorn.basm.classfile.tree.methods.instructions.InvokeInterfaceInstruction.INVOKEINTERFACE_INSTRUCTION;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.JumpInstruction.JUMP_INSTRUCTION;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.LDCInstruction.LDC_INSTRUCTION;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.LocalVariableInstruction.LOCAL_VARIABLE_INSTRUCTION;
@@ -85,11 +84,6 @@ public class CodePrinter {
                         pw.println(Integer.toHexString(iincInstruction.constant & 0xff));
                     }   break;
                     case INVOKEDYNAMIC_INSTRUCTION:
-                        pw.print(TAB);
-                        // TODO: impl
-                        pw.println();
-                        break;
-                    case INVOKEINTERFACE_INSTRUCTION:
                         pw.print(TAB);
                         // TODO: impl
                         pw.println();

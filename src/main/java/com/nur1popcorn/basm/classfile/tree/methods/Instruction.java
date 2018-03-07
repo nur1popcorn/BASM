@@ -22,7 +22,6 @@ import static com.nur1popcorn.basm.classfile.tree.methods.instructions.BIPushIns
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.ClassInstruction.CLASS_INSTRUCTION;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.IIncInstruction.IINC_INSTRUCTION;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.InvokeDynamicInstruction.INVOKEDYNAMIC_INSTRUCTION;
-import static com.nur1popcorn.basm.classfile.tree.methods.instructions.InvokeInterfaceInstruction.INVOKEINTERFACE_INSTRUCTION;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.JumpInstruction.JUMP_INSTRUCTION;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.LDCInstruction.LDC_INSTRUCTION;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.LocalVariableInstruction.LOCAL_VARIABLE_INSTRUCTION;
@@ -101,7 +100,7 @@ public abstract class Instruction {
         NO_PARAMETER_INSTRUCTION, /* freturn */        NO_PARAMETER_INSTRUCTION, /* dreturn */     NO_PARAMETER_INSTRUCTION, /* areturn */
         NO_PARAMETER_INSTRUCTION, /* return */         REF_INSTRUCTION, /* getstatic */            REF_INSTRUCTION, /* putstatic */
         REF_INSTRUCTION, /* getfield */                REF_INSTRUCTION, /* putfield */             REF_INSTRUCTION, /* invokevirtual */
-        REF_INSTRUCTION, /* invokespecial */           REF_INSTRUCTION, /* invokestatic */         INVOKEINTERFACE_INSTRUCTION, /* invokeinterface */
+        REF_INSTRUCTION, /* invokespecial */           REF_INSTRUCTION, /* invokestatic */         REF_INSTRUCTION, /* invokeinterface */
         INVOKEDYNAMIC_INSTRUCTION, /* invokedynamic */ CLASS_INSTRUCTION, /* new */                NEWARRAY_INSTRUCTION, /* newarray */
         CLASS_INSTRUCTION, /* anewarray */             NO_PARAMETER_INSTRUCTION, /* arraylength */ NO_PARAMETER_INSTRUCTION, /* athrow */
         CLASS_INSTRUCTION, /* checkcast */             CLASS_INSTRUCTION, /* instanceof */         NO_PARAMETER_INSTRUCTION, /* monitorenter */

@@ -304,17 +304,19 @@ public final class Code extends AbstractList<Instruction> implements ICodeVisito
                     // TODO: impl
                     break;
                 case REF_INSTRUCTION: {
-                    final ConstantMethodRef ref = ((ConstantMethodRef)constantPool.getEntry((byteCode[++i] & 0xff) << 8 |
-                                                                                            (byteCode[++i] & 0xff)));
+                    final ConstantMethodRef ref = ((ConstantMethodRef) constantPool.getEntry((byteCode[++i] & 0xff) << 8 |
+                                                                                             (byteCode[++i] & 0xff)));
                     final ConstantNameAndType nameAndType = ref.indexNameAndType(constantPool);
                     add(new RefInstruction(opcode,
                                            ref.indexClass(constantPool)
                                               .indexName(constantPool)
                                               .bytes,
                                            nameAndType.indexName(constantPool)
-                                                      .bytes,
+                                               .bytes,
                                            nameAndType.indexDesc(constantPool)
-                                                      .bytes));
+                                               .bytes));
+                    if(opcode == INVOKEINTERFACE)
+                        i += 2;
                 }   break;
                 default:
                     add(new NoParameterInstruction(opcode));

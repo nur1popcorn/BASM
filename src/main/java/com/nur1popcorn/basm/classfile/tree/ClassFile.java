@@ -43,7 +43,6 @@ import static com.nur1popcorn.basm.classfile.tree.methods.instructions.BIPushIns
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.ClassInstruction.CLASS_INSTRUCTION;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.IIncInstruction.IINC_INSTRUCTION;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.InvokeDynamicInstruction.INVOKEDYNAMIC_INSTRUCTION;
-import static com.nur1popcorn.basm.classfile.tree.methods.instructions.InvokeInterfaceInstruction.INVOKEINTERFACE_INSTRUCTION;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.JumpInstruction.JUMP_INSTRUCTION;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.LDCInstruction.LDC_INSTRUCTION;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.LocalVariableInstruction.LOCAL_VARIABLE_INSTRUCTION;
@@ -51,6 +50,10 @@ import static com.nur1popcorn.basm.classfile.tree.methods.instructions.LookupSwi
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.MultiANewArrayInstruction.MULTIANEWARRAY_INSTRUCTION;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.NewArrayInstruction.NEWARRAY_INSTRUCTION;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.NoParameterInstruction.NO_PARAMETER_INSTRUCTION;
+import static com.nur1popcorn.basm.classfile.tree.methods.instructions.RefInstruction.REF_INSTRUCTION;
+import static com.nur1popcorn.basm.classfile.tree.methods.instructions.SIPushInstruction.SIPUSH_INSTRUCTION;
+import static com.nur1popcorn.basm.classfile.tree.methods.instructions.TableSwitchInstruction.TABLESWITCH_INSTRUCTION;
+import static com.nur1popcorn.basm.classfile.tree.methods.instructions.WideInstruction.WIDE_INSTRUCTION;
 
 /**
  * The {@link ClassFile} provides an abstraction layer between bytecode and user.
@@ -202,10 +205,6 @@ public final class ClassFile implements IClassVisitor {
                 do {
                     final Instruction instruction = methodNode.visitCurrentInstruction();
                     switch(instruction.getType()) {
-                        case NOT_AN_INSTRUCTION:
-                        case NO_PARAMETER_INSTRUCTION:
-                            bos.write(instruction.getOpcode());
-                            break;
                         case BIPUSH_INSTRUCTION:
                             bos.write(BIPUSH);
                             bos.write(((BIPushInstruction) instruction).data);
@@ -224,9 +223,6 @@ public final class ClassFile implements IClassVisitor {
                             bos.write(iincInstruction.constant);
                         }   break;
                         case INVOKEDYNAMIC_INSTRUCTION:
-                            // TODO: impl
-                            break;
-                        case INVOKEINTERFACE_INSTRUCTION:
                             // TODO: impl
                             break;
                         case JUMP_INSTRUCTION: {
@@ -286,6 +282,7 @@ public final class ClassFile implements IClassVisitor {
                                     break;
                             }
 
+                            bos.write(ldcInstruction.getOpcode());
                             switch(ldcInstruction.getOpcode()) {
                                 default:
                                 case LDC:
@@ -317,7 +314,52 @@ public final class ClassFile implements IClassVisitor {
                             bos.write(NEWARRAY);
                             bos.write(((NewArrayInstruction) instruction).atype);
                             break;
-
+                        case NOT_AN_INSTRUCTION:
+                        case NO_PARAMETER_INSTRUCTION:
+                            bos.write(instruction.getOpcode());
+                            break;
+                        case REF_INSTRUCTION: {
+                            final RefInstruction refInstruction = (RefInstruction) instruction;
+                            bos.write(refInstruction.getOpcode());
+                            switch(refInstruction.getOpcode()) {
+                                case GETSTATIC:
+                                case PUTSTATIC:
+                                case GETFIELD:
+                                case PUTFIELD: {
+                                    final int index = builder.addConstantFieldRef(
+                                        refInstruction.clazz,
+                                        refInstruction.name,
+                                        refInstruction.desc);
+                                    bos.write(index >> 8);
+                                    bos.write(index);
+                                }   break;
+                                case INVOKEVIRTUAL:
+                                case INVOKESPECIAL:
+                                case INVOKESTATIC:{
+                                    final int index = builder.addConstantMethodRef(
+                                        refInstruction.clazz,
+                                        refInstruction.name,
+                                        refInstruction.desc);
+                                    bos.write(index >> 8);
+                                    bos.write(index);
+                                }   break;
+                                case INVOKEINTERFACE:
+                                    // TODO: impl
+                                    break;
+                            }
+                        }   break;
+                        case SIPUSH_INSTRUCTION: {
+                            bos.write(SIPUSH);
+                            final short value = ((SIPushInstruction) instruction).data;
+                            bos.write(value >> 8);
+                            bos.write(value);
+                        }   break;
+                        case TABLESWITCH_INSTRUCTION:
+                            // TODO: impl
+                            break;
+                        case WIDE_INSTRUCTION:
+                            // TODO: impl
+                            break;
                     }
                 } while(methodNode.visitNextInstruction());
 
