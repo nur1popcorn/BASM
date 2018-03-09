@@ -54,8 +54,8 @@ public final class Code extends AbstractList<Instruction> implements ICodeVisito
          1, /* iconst_1 */                  1, /* iconst_2 */                     1, /* iconst_3 */                   1, /* iconst_4 */
          1, /* iconst_5 */                  2, /* lconst_0 */                     2, /* lconst_1 */                   1, /* fconst_0 */
          1, /* fconst_1 */                  1, /* fconst_2 */                     2, /* dconst_0 */                   2, /* dconst_1 */
-         1, /* bipush */                    1, /* sipush */                       UNKNOWN_VALUE, /* ldc */            UNKNOWN_VALUE, /* ldc_w */
-         UNKNOWN_VALUE, /* ldc2_w */        1, /* iload */                        2, /* lload */                      1, /* fload */
+         1, /* bipush */                    1, /* sipush */                       1, /* ldc */                        1, /* ldc_w */
+         2, /* ldc2_w */                    1, /* iload */                        2, /* lload */                      1, /* fload */
          2, /* dload */                     1, /* aload */                        1, /* iload_0 */                    1, /* iload_1 */
          1, /* iload_2 */                   1, /* iload_3 */                      2, /* lload_0 */                    2, /* lload_1 */
          2, /* lload_2 */                   2, /* lload_3 */                      1, /* fload_0 */                    1, /* fload_1 */
@@ -92,7 +92,7 @@ public final class Code extends AbstractList<Instruction> implements ICodeVisito
         -1, /* ifge */                     -1, /* ifgt */                        -1, /* ifle */                      -2, /* if_icmpeq */
         -2, /* if_icmpne */                -2, /* if_icmplt */                   -2, /* if_icmpge */                 -2, /* if_icmpgt */
         -2, /* if_icmple */                -2, /* if_acmpeq */                   -2, /* if_acmpne */                  0, /* goto */
-         1, /* jsr */                       0, /* ret */                          UNKNOWN_VALUE, /* tableswitch */    UNKNOWN_VALUE, /* lookupswitch */
+         1, /* jsr */                       0, /* ret */                         -1, /* tableswitch */               -1, /* lookupswitch */
          UNKNOWN_VALUE, /* ireturn */       UNKNOWN_VALUE, /* lreturn */          UNKNOWN_VALUE, /* freturn */        UNKNOWN_VALUE, /* dreturn */
          UNKNOWN_VALUE, /* areturn */       UNKNOWN_VALUE, /* return */           UNKNOWN_VALUE, /* getstatic */      UNKNOWN_VALUE, /* putstatic */
          UNKNOWN_VALUE, /* getfield */      UNKNOWN_VALUE, /* putfield */         UNKNOWN_VALUE, /* invokevirtual */  UNKNOWN_VALUE, /* invokespecial */
@@ -389,8 +389,10 @@ public final class Code extends AbstractList<Instruction> implements ICodeVisito
             }
             last = instruction;
         } else {
-            instruction.prev = instructions[index - 1];
-            instruction.next = instructions[index + 1];
+            final Instruction prev = instructions[index - 1];
+            instruction.prev = prev;
+            instruction.next = prev.next;
+            prev.next = instruction;
         }
     }
 
@@ -495,6 +497,8 @@ public final class Code extends AbstractList<Instruction> implements ICodeVisito
         for(Instruction instruction : this) {
             final byte opcode = instruction.getOpcode();
             switch(opcode) {
+                case LDC2_W:
+                    break;
                 default:
                     stack += STACK_SIZE_MODIFIER_TABLE[opcode & 0xff];
                     break;
@@ -508,7 +512,7 @@ public final class Code extends AbstractList<Instruction> implements ICodeVisito
     public void visitBiPushInstruction(byte data) {
         if(currentInstruction != null) {
             final Instruction instruction = new BIPushInstruction(data);
-            add(indexOf(currentInstruction), instruction);
+            add(indexOf(currentInstruction) + 1, instruction);
             currentInstruction = instruction;
         }
     }
@@ -520,7 +524,7 @@ public final class Code extends AbstractList<Instruction> implements ICodeVisito
                 opcode,
                 clazz
             );
-            add(indexOf(currentInstruction), instruction);
+            add(indexOf(currentInstruction) + 1, instruction);
             currentInstruction = instruction;
         }
     }
@@ -532,7 +536,7 @@ public final class Code extends AbstractList<Instruction> implements ICodeVisito
                 index,
                 constant
             );
-            add(indexOf(currentInstruction), instruction);
+            add(indexOf(currentInstruction) + 1, instruction);
             currentInstruction = instruction;
         }
     }
@@ -554,7 +558,7 @@ public final class Code extends AbstractList<Instruction> implements ICodeVisito
                 opcode,
                 label
             );
-            add(indexOf(currentInstruction), instruction);
+            add(indexOf(currentInstruction) + 1, instruction);
             currentInstruction = instruction;
         }
     }
@@ -567,7 +571,7 @@ public final class Code extends AbstractList<Instruction> implements ICodeVisito
                 constant,
                 tag
             );
-            add(indexOf(currentInstruction), instruction);
+            add(indexOf(currentInstruction) + 1, instruction);
             currentInstruction = instruction;
         }
     }
@@ -579,7 +583,7 @@ public final class Code extends AbstractList<Instruction> implements ICodeVisito
                 opcode,
                 index
             );
-            add(indexOf(currentInstruction), instruction);
+            add(indexOf(currentInstruction) + 1, instruction);
             currentInstruction = instruction;
         }
     }
@@ -596,7 +600,7 @@ public final class Code extends AbstractList<Instruction> implements ICodeVisito
                 clazz,
                 dimensions
             );
-            add(indexOf(currentInstruction), instruction);
+            add(indexOf(currentInstruction) + 1, instruction);
             currentInstruction = instruction;
         }
     }
@@ -605,7 +609,7 @@ public final class Code extends AbstractList<Instruction> implements ICodeVisito
     public void visitNewArrayInstruction(byte atype) {
         if(currentInstruction != null) {
             final Instruction instruction = new NewArrayInstruction(atype);
-            add(indexOf(currentInstruction), instruction);
+            add(indexOf(currentInstruction) + 1, instruction);
             currentInstruction = instruction;
         }
     }
@@ -614,7 +618,7 @@ public final class Code extends AbstractList<Instruction> implements ICodeVisito
     public void visitNoParameterInstruction(byte opcode) {
         if(currentInstruction != null) {
             final Instruction instruction = new NoParameterInstruction(opcode);
-            add(indexOf(currentInstruction), instruction);
+            add(indexOf(currentInstruction) + 1, instruction);
             currentInstruction = instruction;
         }
     }
@@ -628,7 +632,7 @@ public final class Code extends AbstractList<Instruction> implements ICodeVisito
                 name,
                 desc
             );
-            add(indexOf(currentInstruction), instruction);
+            add(indexOf(currentInstruction) + 1, instruction);
             currentInstruction = instruction;
         }
     }
@@ -637,7 +641,7 @@ public final class Code extends AbstractList<Instruction> implements ICodeVisito
     public void visitSiPushInstruction(short data) {
         if(currentInstruction != null) {
             final Instruction instruction = new SIPushInstruction(data);
-            add(indexOf(currentInstruction), instruction);
+            add(indexOf(currentInstruction) + 1, instruction);
             currentInstruction = instruction;
         }
     }
