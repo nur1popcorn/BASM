@@ -199,6 +199,7 @@ public class CodePrinter {
                         break;
                 }
             } while(cv.visitNextInstruction());
+            pw.flush();
         }
     }
 }

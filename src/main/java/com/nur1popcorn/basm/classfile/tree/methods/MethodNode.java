@@ -31,8 +31,6 @@ public class MethodNode implements IMethodVisitor {
 
     private Code code;
 
-    private int visitorInstructionIndex = -1;
-
     public MethodNode(FieldMethodInfo methodInfo, ConstantPool constantPool) throws MethodNodeParseException {
         this.access = methodInfo.getAccess();
 
