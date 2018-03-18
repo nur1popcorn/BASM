@@ -20,7 +20,6 @@ package com.nur1popcorn.basm.transformers;
 
 import com.nur1popcorn.basm.classfile.tree.ClassFile;
 import com.nur1popcorn.basm.classfile.tree.fields.FieldNode;
-import com.nur1popcorn.basm.classfile.tree.methods.MethodNode;
 import com.nur1popcorn.basm.utils.CodePrinter;
 
 import java.io.*;
@@ -44,7 +43,6 @@ public final class Disassembler implements ITransformer {
 
         writer.print("class extends ");
         writer.print(classFile.superClass);
-
         writer.println(":");
 
         for(FieldNode node : classFile.getFieldNodes()) {
@@ -69,21 +67,22 @@ public final class Disassembler implements ITransformer {
             }
         });
 
-        for(MethodNode node : classFile.getMethodNodes()) {
+        classFile.getMethodNodes().forEach(methodNode -> {
             writer.print("  ");
-            final int access = node.access;
+            final int access = methodNode.access;
             for(int mask = 0x1, i = 0; mask != ACC_ANNOTATION; mask <<= 1, i++)
                 if(ACC_METHOD_NAMES[i] != null && (access & mask) != 0) {
                     writer.print(ACC_METHOD_NAMES[i]);
                     writer.print(" ");
                 }
-            writer.print(node.name);
-            writer.print(node.desc);
+            writer.print(methodNode.name);
+            writer.print(" ");
+            writer.print(methodNode.desc);
             writer.println(":");
             writer.print("    ");
-            codePrinter.accept(node.getCode());
+            codePrinter.accept(methodNode.getCode());
             writer.println();
-        }
+        });
 
         writer.println();
         writer.flush();

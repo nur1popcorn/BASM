@@ -144,6 +144,26 @@ public final class ClassReader {
     public static final int READ_METHODS = 0x8;
 
     /**
+     * <p>Enables reading the footer part of the JavaClass.</p>
+     * <p>The footer is made up of various attributes describing the ClassFile including:</p>
+     * <ul>
+     *     <li>SourceFile</li>
+     *     <li>InnerClasses</li>
+     *     <li>EnclosingMethod</li>
+     *     <li>SourceDebugExtension</li>
+     *     <li>RuntimeVisibleTypeAnnotations</li>
+     *     <li>RuntimeInvisibleTypeAnnotations</li>
+     * </ul>
+     * <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.1-200-N">
+     *     Attributes 4.1-200-N
+     * </a>
+     * <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7-320">
+     *     Attributes Table 4.7-320
+     * </a>
+     */
+    public static final int READ_FOOTER = 0x10;
+
+    /**
      * A table which can be indexed to obtain the expected size of any {@link ConstantPool} entry.
      */
     private static final int CONSTANT_INFO_SKIP_TABLE[] = {

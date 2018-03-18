@@ -18,13 +18,41 @@
 
 package com.nur1popcorn.basm.transformers;
 
+import com.nur1popcorn.basm.classfile.ClassWriter;
+import com.nur1popcorn.basm.classfile.tree.ClassFile;
+
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.nur1popcorn.basm.Constants.*;
 
 public final class Assembler implements ITransformer {
+
+    private static final Map<String, Byte> MNEMONIC_OPCODE_MAP = new HashMap<>(); static {
+        for(int i = 0; i < OPCODE_MNEMONICS.length; i++) {
+            final String mnemonic = OPCODE_MNEMONICS[i];
+            if(mnemonic != null)
+                MNEMONIC_OPCODE_MAP.put(mnemonic, (byte) i);
+        }
+    }
+
     @Override
     public void transform(InputStream in, OutputStream out) throws IOException {
-        throw new RuntimeException("Not implemented.");
+        final ClassFile.ClassFileBuilder builder = ClassFile.builder();
+
+        for(int i = 0; i < ACC_CLASS_NAMES.length; i++) {
+            final String accName = ACC_CLASS_NAMES[i];
+            //if(accName.equals())
+        }
+
+        builder.build()
+               .accept(
+            new ClassWriter(
+                new DataOutputStream(out)
+            ));
     }
 }

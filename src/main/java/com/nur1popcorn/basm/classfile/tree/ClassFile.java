@@ -425,5 +425,34 @@ public final class ClassFile implements IClassVisitor {
             classFile.access = access;
             return this;
         }
+
+        public ClassFileBuilder setThisClass(String thisClass) {
+            classFile.thisClass = thisClass;
+            return this;
+        }
+
+        public ClassFileBuilder setSuperClass(String superClass) {
+            classFile.superClass = superClass;
+            return this;
+        }
+
+        public ClassFileBuilder addInterface(String itf) {
+            classFile.interfaces.add(itf);
+            return this;
+        }
+
+        public ClassFileBuilder addFieldNode(FieldNode fieldNode) {
+            classFile.fieldNodes.add(fieldNode);
+            return this;
+        }
+
+        public ClassFileBuilder addMethodNode(MethodNode methodNode) {
+            classFile.methodNodes.add(methodNode);
+            return this;
+        }
+
+        public ClassFile build() {
+            return classFile;
+        }
     }
 }

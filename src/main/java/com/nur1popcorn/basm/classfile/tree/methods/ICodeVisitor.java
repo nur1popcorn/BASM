@@ -31,7 +31,7 @@ public interface ICodeVisitor {
 
     void visitBiPushInstruction(byte data);
     void visitClassInstruction(byte opcode, String clazz);
-    void visitIIncInstruction(byte index, byte constant);
+    void visitIIncInstruction(byte localIndex, byte constant);
     void visitInvokeDynamicInstruction(); // TODO: impl
     void visitInvokeInterfaceInstruction(); // TODO: impl
     void visitJumpInstruction(byte opcode, Label label);

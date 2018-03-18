@@ -99,8 +99,8 @@ public class MethodNode implements IMethodVisitor {
     }
 
     @Override
-    public void visitIIncInstruction(byte index, byte constant) {
-        code.visitIIncInstruction(index, constant);
+    public void visitIIncInstruction(byte localIndex, byte constant) {
+        code.visitIIncInstruction(localIndex, constant);
     }
 
     @Override

@@ -428,6 +428,8 @@ public final class Code extends AbstractList<Instruction> implements ICodeVisito
                 last.next = null;
             }
         }
+        if(old == currentInstruction)
+            currentInstruction = null;
         return old;
     }
 
