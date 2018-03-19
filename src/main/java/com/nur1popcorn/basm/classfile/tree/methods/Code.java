@@ -32,12 +32,14 @@ import java.util.Arrays;
 import static com.nur1popcorn.basm.Constants.*;
 import static com.nur1popcorn.basm.classfile.tree.methods.Instruction.INSTRUCTION_TYPE_TABLE;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.BIPushInstruction.BIPUSH_INSTRUCTION;
+import static com.nur1popcorn.basm.classfile.tree.methods.instructions.ClassInstruction.CLASS_INSTRUCTION;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.IIncInstruction.IINC_INSTRUCTION;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.JumpInstruction.JUMP_INSTRUCTION;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.LDCInstruction.LDC_INSTRUCTION;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.LocalVariableInstruction.LOCAL_VARIABLE_INSTRUCTION;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.LookupSwitchInstruction.LOOKUPSWITCH_INSTRUCTION;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.RefInstruction.REF_INSTRUCTION;
+import static com.nur1popcorn.basm.classfile.tree.methods.instructions.SIPushInstruction.SIPUSH_INSTRUCTION;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.TableSwitchInstruction.TABLESWITCH_INSTRUCTION;
 
 public final class Code extends AbstractList<Instruction> implements ICodeVisitor {
@@ -192,12 +194,18 @@ public final class Code extends AbstractList<Instruction> implements ICodeVisito
                 case BIPUSH_INSTRUCTION:
                     add(new BIPushInstruction(byteCode[++i]));
                     break;
+                case CLASS_INSTRUCTION:
+                    add(new ClassInstruction(
+                        opcode,
+                        ((ConstantName) constantPool.getEntry((byteCode[++i] & 0xff) << 8 |
+                                                              (byteCode[++i] & 0xff)))
+                            .indexName(constantPool)
+                            .bytes));
+                    break;
                 // https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.sipush
-                case SIPUSH:
-                    add(
-                        new SIPushInstruction((short) ((byteCode[++i] & 0xff) << 8 |
-                                                       (byteCode[++i] & 0xff))
-                    ));
+                case SIPUSH_INSTRUCTION:
+                    add(new SIPushInstruction((short) ((byteCode[++i] & 0xff) << 8 |
+                                                       (byteCode[++i] & 0xff))));
                     break;
                 // https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.ldc
                 // https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.ldc_w

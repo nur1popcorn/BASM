@@ -46,17 +46,7 @@ public final class Tokenizer {
         for(int i = 0; i < token.length(); i++) {
 
         }
-                        /*switch()
-                        B byte 	signed byte
-                        C 	char 	Unicode character code point in the Basic Multilingual Plane, encoded with UTF-16
-                        D 	double 	double-precision floating-point value
-                        F 	float 	single-precision floating-point value
-                        I 	int 	integer
-                        J 	long 	long integer
-                        L ClassName ; 	reference 	an instance of class ClassName
-                                S 	short 	signed short
-                        Z 	boolean 	true or false
-                                [*/
+        return false;
     }
 
     public void tokenize() throws IOException {
