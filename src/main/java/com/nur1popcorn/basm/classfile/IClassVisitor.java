@@ -18,6 +18,8 @@
 
 package com.nur1popcorn.basm.classfile;
 
+import com.nur1popcorn.basm.classfile.attributes.AttributeInfo;
+
 import java.io.IOException;
 
 public interface IClassVisitor {
@@ -58,5 +60,8 @@ public interface IClassVisitor {
     {}
 
     default void visitFields(FieldMethodInfo fields[]) throws IOException
+    {}
+
+    default void visitFooter(AttributeInfo attributes[]) throws IOException
     {}
 }

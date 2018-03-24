@@ -5,8 +5,6 @@ import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
 import static com.nur1popcorn.basm.Constants.MULTIANEWARRAY;
 
 public class MultiANewArrayInstruction extends Instruction {
-    public static final byte MULTIANEWARRAY_INSTRUCTION = 12;
-
     public String clazz;
     public byte dimensions;
 

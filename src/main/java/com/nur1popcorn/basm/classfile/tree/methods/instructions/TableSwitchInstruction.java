@@ -21,7 +21,6 @@ package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
 
 public class TableSwitchInstruction extends Instruction {
-    public static final byte TABLESWITCH_INSTRUCTION = 0;
 
     public TableSwitchInstruction(byte opcode) {
         //TODO: impl

@@ -23,8 +23,6 @@ import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
 import static com.nur1popcorn.basm.Constants.IINC;
 
 public final class IIncInstruction extends Instruction {
-    public static final byte IINC_INSTRUCTION = 8;
-
     public byte index;
     public byte constant;
 

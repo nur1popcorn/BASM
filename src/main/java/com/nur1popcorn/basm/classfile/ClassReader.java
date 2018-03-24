@@ -18,6 +18,8 @@
 
 package com.nur1popcorn.basm.classfile;
 
+import com.nur1popcorn.basm.classfile.attributes.AttributeInfo;
+
 import java.io.DataInputStream;
 import java.io.IOException;
 
@@ -164,6 +166,17 @@ public final class ClassReader {
     public static final int READ_FOOTER = 0x10;
 
     /**
+     * Enables reading all parts of the JavaClass.
+     *
+     * @see #accept(IClassVisitor, int)
+     */
+    public static final int READ_ALL = READ_HEAD    |
+                                       READ_BODY    |
+                                       READ_FIELDS  |
+                                       READ_METHODS |
+                                       READ_FOOTER;
+
+    /**
      * A table which can be indexed to obtain the expected size of any {@link ConstantPool} entry.
      */
     private static final int CONSTANT_INFO_SKIP_TABLE[] = {
@@ -203,6 +216,8 @@ public final class ClassReader {
     private int interfaces[];
     private FieldMethodInfo fields[];
     private FieldMethodInfo methods[];
+
+    private AttributeInfo attributes[];
 
     public ClassReader(DataInputStream in) throws IOException {
         this.in = in;
@@ -338,6 +353,56 @@ public final class ClassReader {
     }
 
     /**
+     * <p>Reads the footer part of the JavaClass which is made up of various attributes describing
+     *    the ClassFile including:</p>
+     * <ul>
+     *     <li>SourceFile</li>
+     *     <li>InnerClasses</li>
+     *     <li>EnclosingMethod</li>
+     *     <li>SourceDebugExtension</li>
+     *     <li>RuntimeVisibleTypeAnnotations</li>
+     *     <li>RuntimeInvisibleTypeAnnotations</li>
+     * </ul>
+     * <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.1-200-N">
+     *     Attributes 4.1-200-N
+     * </a>
+     * <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7-320">
+     *     Attributes Table 4.7-320
+     * </a>
+     *
+     * @throws IOException if an error occurs during the process of reading from the {@link DataInputStream}.
+     *
+     * @see #accept(IClassVisitor, int)
+     */
+    private void readFooter() throws IOException {
+        attributes = AttributeInfo.read(in, constantPool);
+    }
+
+    /**
+     * Skips either the methods or the fields of the JavaClass which is currently being read.
+     *
+     * @throws IOException if an error occurs during the process of skipping bytes.
+     *
+     * @see #accept(IClassVisitor, int)
+     */
+    private void skipFieldMethods() throws IOException {
+        final int fieldCount = in.readUnsignedShort();
+        for(int i = 0; i < fieldCount; i++) {
+            // https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.5
+            // skip access flags, name index and desc index.
+            in.skipBytes(6);
+            final int attributeCount = in.readUnsignedShort();
+            for(int j = 0; j < attributeCount; j++) {
+                // https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.6
+                // skip attribute name index.
+                in.skipBytes(2);
+                // read and skip attribute length.
+                in.skipBytes(in.readInt());
+            }
+        }
+    }
+
+    /**
      * Visitor? I barely know her!
      *
      * - b.k.
@@ -402,7 +467,7 @@ public final class ClassReader {
             in.skipBytes(in.readUnsignedShort());
         }
 
-        if((read & (READ_FIELDS | READ_METHODS)) == 0) {
+        if((read & (READ_FIELDS | READ_METHODS | READ_FOOTER)) == 0) {
             in.close();
             return;
         }
@@ -410,29 +475,24 @@ public final class ClassReader {
         if((read & (READ_FIELDS)) != 0) {
             readFields();
             visitor.visitFields(fields);
-        } else {
-            final int fieldCount = in.readUnsignedShort();
-            for(int i = 0; i < fieldCount; i++) {
-                // https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.5
-                // skip access flags, name index and desc index.
-                in.skipBytes(6);
-                final int attributeCount = in.readUnsignedShort();
-                for(int j = 0; j < attributeCount; j++) {
-                    // https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.6
-                    // skip attribute name index.
-                    in.skipBytes(2);
-                    // read and skip attribute length.
-                    in.skipBytes(in.readInt());
-                }
-            }
+        } else
+            skipFieldMethods();
+
+        if((read & (READ_METHODS | READ_FOOTER)) == 0) {
+            in.close();
+            return;
         }
 
         if((read & READ_METHODS) != 0) {
             readMethods();
             visitor.visitMethods(methods);
-        }
+        } else
+            skipFieldMethods();
 
-        //TODO: read class footer
+        if((read & READ_FOOTER) != 0) {
+            readFooter();
+            visitor.visitFooter(attributes);
+        }
 
         in.close();
     }

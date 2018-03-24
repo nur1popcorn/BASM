@@ -29,6 +29,7 @@ import com.nur1popcorn.basm.classfile.tree.fields.FieldNode;
 import com.nur1popcorn.basm.classfile.tree.fields.FieldNodeParseException;
 import com.nur1popcorn.basm.classfile.tree.methods.*;
 import com.nur1popcorn.basm.classfile.tree.methods.instructions.*;
+import com.nur1popcorn.basm.utils.ConstantPoolBuilder;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
@@ -38,22 +39,7 @@ import java.util.List;
 
 import static com.nur1popcorn.basm.Constants.*;
 import static com.nur1popcorn.basm.classfile.ClassReader.*;
-import static com.nur1popcorn.basm.classfile.tree.methods.Instruction.NOT_AN_INSTRUCTION;
-import static com.nur1popcorn.basm.classfile.tree.methods.instructions.BIPushInstruction.BIPUSH_INSTRUCTION;
-import static com.nur1popcorn.basm.classfile.tree.methods.instructions.ClassInstruction.CLASS_INSTRUCTION;
-import static com.nur1popcorn.basm.classfile.tree.methods.instructions.IIncInstruction.IINC_INSTRUCTION;
-import static com.nur1popcorn.basm.classfile.tree.methods.instructions.InvokeDynamicInstruction.INVOKEDYNAMIC_INSTRUCTION;
-import static com.nur1popcorn.basm.classfile.tree.methods.instructions.JumpInstruction.JUMP_INSTRUCTION;
-import static com.nur1popcorn.basm.classfile.tree.methods.instructions.LDCInstruction.LDC_INSTRUCTION;
-import static com.nur1popcorn.basm.classfile.tree.methods.instructions.LocalVariableInstruction.LOCAL_VARIABLE_INSTRUCTION;
-import static com.nur1popcorn.basm.classfile.tree.methods.instructions.LookupSwitchInstruction.LOOKUPSWITCH_INSTRUCTION;
-import static com.nur1popcorn.basm.classfile.tree.methods.instructions.MultiANewArrayInstruction.MULTIANEWARRAY_INSTRUCTION;
-import static com.nur1popcorn.basm.classfile.tree.methods.instructions.NewArrayInstruction.NEWARRAY_INSTRUCTION;
-import static com.nur1popcorn.basm.classfile.tree.methods.instructions.NoParameterInstruction.NO_PARAMETER_INSTRUCTION;
-import static com.nur1popcorn.basm.classfile.tree.methods.instructions.RefInstruction.REF_INSTRUCTION;
-import static com.nur1popcorn.basm.classfile.tree.methods.instructions.SIPushInstruction.SIPUSH_INSTRUCTION;
-import static com.nur1popcorn.basm.classfile.tree.methods.instructions.TableSwitchInstruction.TABLESWITCH_INSTRUCTION;
-import static com.nur1popcorn.basm.classfile.tree.methods.instructions.WideInstruction.WIDE_INSTRUCTION;
+import static com.nur1popcorn.basm.classfile.tree.methods.Instruction.*;
 
 /**
  * The {@link ClassFile} provides an abstraction layer between bytecode and user.
@@ -87,10 +73,7 @@ public final class ClassFile implements IClassVisitor {
 
     public ClassFile(DataInputStream din) throws IOException {
         new ClassReader(din)
-            .accept(this, READ_HEAD |
-                          READ_BODY |
-                          READ_METHODS |
-                          READ_FIELDS);
+            .accept(this, READ_ALL);
     }
 
     public static ClassFileBuilder builder() {
@@ -132,7 +115,7 @@ public final class ClassFile implements IClassVisitor {
     }
 
     public void accept(IClassVisitor visitor) throws IOException {
-        final ConstantPool.ConstantPoolBuilder builder = ConstantPool.builder();
+        final ConstantPoolBuilder builder = new ConstantPoolBuilder();
 
         // the first 254 entries of the constantpool are reserved for entries to whom an ldc instruction points.
         methodNodes.forEach(methodNode -> {
@@ -299,9 +282,6 @@ public final class ClassFile implements IClassVisitor {
                             bos.write(instruction.getOpcode());
                             bos.write(((LocalVariableInstruction) instruction).index);
                             break;
-                        case LOOKUPSWITCH_INSTRUCTION:
-                            // TODO: impl
-                            break;
                         case MULTIANEWARRAY_INSTRUCTION: {
                             bos.write(MULTIANEWARRAY);
                             final MultiANewArrayInstruction multiANewArrayInstruction = (MultiANewArrayInstruction) instruction;
@@ -354,7 +334,7 @@ public final class ClassFile implements IClassVisitor {
                             bos.write(value >> 8);
                             bos.write(value);
                         }   break;
-                        case TABLESWITCH_INSTRUCTION:
+                        case SWITCH_INSTRUCTION:
                             // TODO: impl
                             break;
                         case WIDE_INSTRUCTION:
@@ -400,6 +380,16 @@ public final class ClassFile implements IClassVisitor {
         visitor.visitMethods(
             methods
         );
+
+        // TODO: impl.
+        visitor.visitFooter(
+            new AttributeInfo[0]
+        );
+    }
+
+    @Override
+    public void visitFooter(AttributeInfo[] attributes) throws IOException {
+        // TODO: impl.
     }
 
     public List<FieldNode> getFieldNodes() {

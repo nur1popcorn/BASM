@@ -22,6 +22,7 @@ import com.nur1popcorn.basm.classfile.ConstantPool;
 import com.nur1popcorn.basm.classfile.FieldMethodInfo;
 import com.nur1popcorn.basm.classfile.attributes.AttributeCode;
 import com.nur1popcorn.basm.classfile.attributes.AttributeInfo;
+import com.nur1popcorn.basm.classfile.tree.methods.instructions.Label;
 
 public class MethodNode implements IMethodVisitor {
     public int access;

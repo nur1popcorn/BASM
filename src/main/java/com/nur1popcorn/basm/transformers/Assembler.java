@@ -28,7 +28,8 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.nur1popcorn.basm.Constants.*;
+import static com.nur1popcorn.basm.Constants.ACC_CLASS_NAMES;
+import static com.nur1popcorn.basm.Constants.OPCODE_MNEMONICS;
 
 public final class Assembler implements ITransformer {
 

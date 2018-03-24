@@ -30,17 +30,7 @@ import java.util.AbstractList;
 import java.util.Arrays;
 
 import static com.nur1popcorn.basm.Constants.*;
-import static com.nur1popcorn.basm.classfile.tree.methods.Instruction.INSTRUCTION_TYPE_TABLE;
-import static com.nur1popcorn.basm.classfile.tree.methods.instructions.BIPushInstruction.BIPUSH_INSTRUCTION;
-import static com.nur1popcorn.basm.classfile.tree.methods.instructions.ClassInstruction.CLASS_INSTRUCTION;
-import static com.nur1popcorn.basm.classfile.tree.methods.instructions.IIncInstruction.IINC_INSTRUCTION;
-import static com.nur1popcorn.basm.classfile.tree.methods.instructions.JumpInstruction.JUMP_INSTRUCTION;
-import static com.nur1popcorn.basm.classfile.tree.methods.instructions.LDCInstruction.LDC_INSTRUCTION;
-import static com.nur1popcorn.basm.classfile.tree.methods.instructions.LocalVariableInstruction.LOCAL_VARIABLE_INSTRUCTION;
-import static com.nur1popcorn.basm.classfile.tree.methods.instructions.LookupSwitchInstruction.LOOKUPSWITCH_INSTRUCTION;
-import static com.nur1popcorn.basm.classfile.tree.methods.instructions.RefInstruction.REF_INSTRUCTION;
-import static com.nur1popcorn.basm.classfile.tree.methods.instructions.SIPushInstruction.SIPUSH_INSTRUCTION;
-import static com.nur1popcorn.basm.classfile.tree.methods.instructions.TableSwitchInstruction.TABLESWITCH_INSTRUCTION;
+import static com.nur1popcorn.basm.classfile.tree.methods.Instruction.*;
 
 public final class Code extends AbstractList<Instruction> implements ICodeVisitor {
 
@@ -305,10 +295,7 @@ public final class Code extends AbstractList<Instruction> implements ICodeVisito
                     }
                     add(new JumpInstruction(opcode, labels[i + jumpIndex - 2]));
                 }   break;
-                case TABLESWITCH_INSTRUCTION:
-                    // TODO: impl
-                    break;
-                case LOOKUPSWITCH_INSTRUCTION:
+                case SWITCH_INSTRUCTION:
                     // TODO: impl
                     break;
                 case REF_INSTRUCTION: {

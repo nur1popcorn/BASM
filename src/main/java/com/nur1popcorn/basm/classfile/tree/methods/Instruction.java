@@ -18,26 +18,134 @@
 
 package com.nur1popcorn.basm.classfile.tree.methods;
 
-import static com.nur1popcorn.basm.classfile.tree.methods.instructions.BIPushInstruction.BIPUSH_INSTRUCTION;
-import static com.nur1popcorn.basm.classfile.tree.methods.instructions.ClassInstruction.CLASS_INSTRUCTION;
-import static com.nur1popcorn.basm.classfile.tree.methods.instructions.IIncInstruction.IINC_INSTRUCTION;
-import static com.nur1popcorn.basm.classfile.tree.methods.instructions.InvokeDynamicInstruction.INVOKEDYNAMIC_INSTRUCTION;
-import static com.nur1popcorn.basm.classfile.tree.methods.instructions.JumpInstruction.JUMP_INSTRUCTION;
-import static com.nur1popcorn.basm.classfile.tree.methods.instructions.LDCInstruction.LDC_INSTRUCTION;
-import static com.nur1popcorn.basm.classfile.tree.methods.instructions.LocalVariableInstruction.LOCAL_VARIABLE_INSTRUCTION;
-import static com.nur1popcorn.basm.classfile.tree.methods.instructions.LookupSwitchInstruction.LOOKUPSWITCH_INSTRUCTION;
-import static com.nur1popcorn.basm.classfile.tree.methods.instructions.MultiANewArrayInstruction.MULTIANEWARRAY_INSTRUCTION;
-import static com.nur1popcorn.basm.classfile.tree.methods.instructions.NewArrayInstruction.NEWARRAY_INSTRUCTION;
-import static com.nur1popcorn.basm.classfile.tree.methods.instructions.NoParameterInstruction.NO_PARAMETER_INSTRUCTION;
-import static com.nur1popcorn.basm.classfile.tree.methods.instructions.RefInstruction.REF_INSTRUCTION;
-import static com.nur1popcorn.basm.classfile.tree.methods.instructions.SIPushInstruction.SIPUSH_INSTRUCTION;
-import static com.nur1popcorn.basm.classfile.tree.methods.instructions.TableSwitchInstruction.TABLESWITCH_INSTRUCTION;
-import static com.nur1popcorn.basm.classfile.tree.methods.instructions.WideInstruction.WIDE_INSTRUCTION;
-
+/**
+ *
+ */
 public abstract class Instruction {
 
+    /**
+     * A constant indicating that the given opcode is not implemented by the jvm.
+     *
+     * @see #INSTRUCTION_TYPE_TABLE
+     */
     public static final byte NOT_AN_INSTRUCTION = -1;
 
+    /**
+     * A constant used to identify the 'TABLESWITCH' and 'LOOKUPSWITCH' instructions.
+     * { https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.lookupswitch }
+     * { https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.tableswitch }
+     *
+     * @see #INSTRUCTION_TYPE_TABLE
+     */
+    public static final byte SWITCH_INSTRUCTION = 0;
+
+    /**
+     * A constant grouping together instructions which do not require any additional parameters.
+     *
+     * @see #INSTRUCTION_TYPE_TABLE
+     */
+    public static final byte NO_PARAMETER_INSTRUCTION = 1;
+
+    /**
+     * A constant used to identify the 'NEWARRAY' instruction.
+     * { https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.newarray }
+     *
+     * @see #INSTRUCTION_TYPE_TABLE
+     */
+    public static final byte NEWARRAY_INSTRUCTION = 2;
+
+    /**
+     * A constant used to identify the 'BIPUSH' instruction.
+     * { https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.bipush }
+     *
+     * @see #INSTRUCTION_TYPE_TABLE
+     */
+    public static final byte BIPUSH_INSTRUCTION = 3;
+
+    /**
+     * A constant used to identify the 'LDC', 'LDC_W' and 'LDC2_W' instructions.
+     * { https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.ldc }
+     * { https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.ldc_w }
+     * { https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.ldc2_w }
+     *
+     * @see #INSTRUCTION_TYPE_TABLE
+     */
+    public static final byte LDC_INSTRUCTION = 4;
+
+    /**
+     * A constant used to identify instructions which require a localvariable index to be passed as a parameter.
+     *
+     * @see #INSTRUCTION_TYPE_TABLE
+     */
+    public static final byte LOCAL_VARIABLE_INSTRUCTION = 5;
+
+    /**
+     * A constant used to identify instruction which manipulate the pc.
+     *
+     * @see #INSTRUCTION_TYPE_TABLE
+     */
+    public static final byte JUMP_INSTRUCTION = 6;
+
+    /**
+     * A constant used to identify the 'SIPUSH' instruction.
+     *
+     * @see #INSTRUCTION_TYPE_TABLE
+     */
+    public static final byte SIPUSH_INSTRUCTION = 7;
+
+    /**
+     * A constant used to identify the 'IINC' instruction.
+     *
+     * @see #INSTRUCTION_TYPE_TABLE
+     */
+    public static final byte IINC_INSTRUCTION = 8;
+
+    /**
+     * A constant grouping together instructions which access fields or call methods.
+     *
+     * @see #INSTRUCTION_TYPE_TABLE
+     */
+    public static final int REF_INSTRUCTION = 9;
+
+    /**
+     * A constant used to identify instructions which require a index into the constantpool pointing
+     * to a 'CONSTANT_Class' as a parameter.
+     *
+     * @see #INSTRUCTION_TYPE_TABLE
+     */
+    public static final byte CLASS_INSTRUCTION = 10;
+
+    /**
+     * A constant used to identify the 'WIDE' instruction.
+     *
+     * @see #INSTRUCTION_TYPE_TABLE
+     */
+    public static final byte WIDE_INSTRUCTION = 11;
+
+    /**
+     * A constant used to identify the 'MULTINEWARRAY' instruction.
+     *
+     * @see #INSTRUCTION_TYPE_TABLE
+     */
+    public static final byte MULTIANEWARRAY_INSTRUCTION = 12;
+
+    /**
+     * A constant used to indentify the 'INVOKEDYNAMIC' instruction.
+     *
+     * @see #INSTRUCTION_TYPE_TABLE
+     */
+    public static final byte INVOKEDYNAMIC_INSTRUCTION = 13;
+
+    /**
+     * A constant used to identify a label.
+     *
+     * @see #INSTRUCTION_TYPE_TABLE
+     */
+    public static final byte LABEL_INSTRUCTION = 14;
+
+    /**
+     * A table mapping each instruction to their designated abstract type.
+     */
     public static final byte INSTRUCTION_TYPE_TABLE[] = {
         NO_PARAMETER_INSTRUCTION, /* nop */            NO_PARAMETER_INSTRUCTION, /* aconst_null */ NO_PARAMETER_INSTRUCTION, /* iconst_m1 */
         NO_PARAMETER_INSTRUCTION, /* iconst_0 */       NO_PARAMETER_INSTRUCTION, /* iconst_1 */    NO_PARAMETER_INSTRUCTION, /* iconst_2 */
@@ -95,8 +203,8 @@ public abstract class Instruction {
         JUMP_INSTRUCTION, /* if_icmpeq */              JUMP_INSTRUCTION, /* if_icmpne */           JUMP_INSTRUCTION, /* if_icmplt */
         JUMP_INSTRUCTION, /* if_icmpge */              JUMP_INSTRUCTION, /* if_icmpgt */           JUMP_INSTRUCTION, /* if_icmple */
         JUMP_INSTRUCTION, /* if_acmpeq */              JUMP_INSTRUCTION, /* if_acmpne */           JUMP_INSTRUCTION, /* goto */
-        JUMP_INSTRUCTION, /* jsr */                    LOCAL_VARIABLE_INSTRUCTION, /* ret */       TABLESWITCH_INSTRUCTION, /* tableswitch */
-        LOOKUPSWITCH_INSTRUCTION, /* lookupswitch */   NO_PARAMETER_INSTRUCTION, /* ireturn */     NO_PARAMETER_INSTRUCTION, /* lreturn */
+        JUMP_INSTRUCTION, /* jsr */                    LOCAL_VARIABLE_INSTRUCTION, /* ret */       SWITCH_INSTRUCTION, /* tableswitch */
+        SWITCH_INSTRUCTION, /* lookupswitch */         NO_PARAMETER_INSTRUCTION, /* ireturn */     NO_PARAMETER_INSTRUCTION, /* lreturn */
         NO_PARAMETER_INSTRUCTION, /* freturn */        NO_PARAMETER_INSTRUCTION, /* dreturn */     NO_PARAMETER_INSTRUCTION, /* areturn */
         NO_PARAMETER_INSTRUCTION, /* return */         REF_INSTRUCTION, /* getstatic */            REF_INSTRUCTION, /* putstatic */
         REF_INSTRUCTION, /* getfield */                REF_INSTRUCTION, /* putfield */             REF_INSTRUCTION, /* invokevirtual */
@@ -131,6 +239,11 @@ public abstract class Instruction {
 
     Instruction next,
                 prev;
+
+    /**
+     * Empty constructor required by Label.
+     */
+    protected Instruction() {}
 
     public Instruction(byte opcode) {
         this.opcode = opcode;

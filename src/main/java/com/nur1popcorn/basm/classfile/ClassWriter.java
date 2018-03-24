@@ -18,6 +18,8 @@
 
 package com.nur1popcorn.basm.classfile;
 
+import com.nur1popcorn.basm.classfile.attributes.AttributeInfo;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
 
@@ -67,8 +69,12 @@ public final class ClassWriter implements IClassVisitor {
         out.writeShort(methods.length);
         for(FieldMethodInfo methodInfo : methods)
             methodInfo.write(out, constantPool);
+    }
 
-        // TODO: visit footer and remove.
-        out.writeShort(0);
+    @Override
+    public void visitFooter(AttributeInfo[] attributes) throws IOException {
+        out.writeShort(attributes.length);
+        for(int i = 0; i < attributes.length; i++)
+            attributes[i].write(out, constantPool);
     }
 }

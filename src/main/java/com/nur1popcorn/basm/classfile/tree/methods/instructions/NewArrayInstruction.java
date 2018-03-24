@@ -23,9 +23,6 @@ import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
 import static com.nur1popcorn.basm.Constants.NEWARRAY;
 
 public final class NewArrayInstruction extends Instruction {
-
-    public static final byte NEWARRAY_INSTRUCTION = 2;
-
     // https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.newarray.desc-120
     public static final byte T_BOOLEAN = 4;
     public static final byte T_CHAR = 5;

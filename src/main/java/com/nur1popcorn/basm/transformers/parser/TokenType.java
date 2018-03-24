@@ -16,16 +16,9 @@
  *
  */
 
-package com.nur1popcorn.basm.classfile.tree.methods.instructions;
+package com.nur1popcorn.basm.transformers.parser;
 
-import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
-
-public final class JumpInstruction extends Instruction {
-    // TODO: make sure instructions fit into a 2 byte index. (jsr_w, ..)
-    public Label label;
-
-    public JumpInstruction(byte opcode, Label label) {
-        super(opcode);
-        this.label = label;
-    }
+public enum TokenType {
+    ACC_FLAG_TOKEN,
+    EOF
 }

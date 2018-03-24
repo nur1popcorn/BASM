@@ -18,6 +18,8 @@
 
 package com.nur1popcorn.basm.classfile.tree.methods;
 
+import com.nur1popcorn.basm.classfile.tree.methods.instructions.Label;
+
 public interface ICodeVisitor {
     boolean visitCodeAt(int index);
     void visitCodeAtEnd();

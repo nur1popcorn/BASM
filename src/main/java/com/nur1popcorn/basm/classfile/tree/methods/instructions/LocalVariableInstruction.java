@@ -46,8 +46,6 @@ import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
  * @since 1.0.0-alpha
  */
 public final class LocalVariableInstruction extends Instruction {
-    public static final byte LOCAL_VARIABLE_INSTRUCTION = 5;
-
     public byte index;
 
     // TODO: desc constructor.

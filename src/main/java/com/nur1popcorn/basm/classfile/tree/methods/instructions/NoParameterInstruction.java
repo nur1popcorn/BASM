@@ -225,8 +225,6 @@ import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
  * @since 1.0.0-alpha
  */
 public final class NoParameterInstruction extends Instruction {
-    public static final byte NO_PARAMETER_INSTRUCTION = 1;
-
     // TODO: desc constructor.
     public NoParameterInstruction(byte opcode) {
         super(opcode);

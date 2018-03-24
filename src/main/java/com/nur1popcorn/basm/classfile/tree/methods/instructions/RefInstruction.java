@@ -21,8 +21,6 @@ package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
 
 public class RefInstruction extends Instruction {
-    public static final int REF_INSTRUCTION = 9;
-
     public String clazz,
                   name,
                   desc;

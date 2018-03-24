@@ -25,8 +25,6 @@ import static com.nur1popcorn.basm.Constants.*;
 
 // TODO: consider rewriting this class.. and removing MethodHandle.
 public final class LDCInstruction extends Instruction {
-    public static final byte LDC_INSTRUCTION = 4;
-
     private byte tag;
     private Object constant;
 
