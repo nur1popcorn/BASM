@@ -18,6 +18,7 @@
 
 package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
+import com.nur1popcorn.basm.classfile.tree.methods.ICodeVisitor;
 import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
 
 import static com.nur1popcorn.basm.Constants.IINC;
@@ -30,5 +31,10 @@ public final class IIncInstruction extends Instruction {
         super(IINC);
         this.index = index;
         this.constant = constant;
+    }
+
+    @Override
+    public void accept(ICodeVisitor visitor) {
+        visitor.visitIIncInstruction(this);
     }
 }

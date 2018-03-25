@@ -18,6 +18,7 @@
 
 package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
+import com.nur1popcorn.basm.classfile.tree.methods.ICodeVisitor;
 import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
 
 /**
@@ -52,5 +53,10 @@ public final class LocalVariableInstruction extends Instruction {
     public LocalVariableInstruction(byte opcode, byte index) {
         super(opcode);
         this.index = index;
+    }
+
+    @Override
+    public void accept(ICodeVisitor visitor) {
+        visitor.visitLocalVariableInstruction(this);
     }
 }

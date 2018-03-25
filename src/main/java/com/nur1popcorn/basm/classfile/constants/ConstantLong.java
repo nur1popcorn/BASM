@@ -69,7 +69,7 @@ public final class ConstantLong extends ConstantInfo {
 
     @Override
     public int hashCode() {
-        return ((int) bytes) * 33 ^ getTag();
+        return (int)(bytes * 33 ^ getTag());
     }
 
     @Override

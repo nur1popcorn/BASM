@@ -22,7 +22,6 @@ import com.nur1popcorn.basm.classfile.ConstantPool;
 import com.nur1popcorn.basm.classfile.FieldMethodInfo;
 import com.nur1popcorn.basm.classfile.attributes.AttributeCode;
 import com.nur1popcorn.basm.classfile.attributes.AttributeInfo;
-import com.nur1popcorn.basm.classfile.tree.methods.instructions.Label;
 
 public class MethodNode implements IMethodVisitor {
     public int access;
@@ -52,120 +51,5 @@ public class MethodNode implements IMethodVisitor {
 
     public Code getCode() {
         return code;
-    }
-
-    @Override
-    public boolean visitCodeAt(int index) {
-        return code.visitCodeAt(index);
-    }
-
-    @Override
-    public void visitCodeAtEnd() {
-        code.visitCodeAtEnd();
-    }
-
-    @Override
-    public boolean visitPrevInstruction() {
-        return code.visitPrevInstruction();
-    }
-
-    @Override
-    public boolean visitNextInstruction() {
-        return code.visitNextInstruction();
-    }
-
-    @Override
-    public Instruction visitCurrentInstruction() {
-        return code.visitCurrentInstruction();
-    }
-
-    @Override
-    public void visitMaxes(int maxStack, int maxLocals) {
-        code.visitMaxes(maxStack, maxLocals);
-    }
-
-    @Override
-    public void visitMaxes() {
-        code.visitMaxes();
-    }
-
-    @Override
-    public void visitBiPushInstruction(byte data) {
-        code.visitBiPushInstruction(data);
-    }
-
-    @Override
-    public void visitClassInstruction(byte opcode, String clazz) {
-        code.visitClassInstruction(opcode, clazz);
-    }
-
-    @Override
-    public void visitIIncInstruction(byte localIndex, byte constant) {
-        code.visitIIncInstruction(localIndex, constant);
-    }
-
-    @Override
-    public void visitInvokeDynamicInstruction() {
-        code.visitInvokeDynamicInstruction();
-    }
-
-    @Override
-    public void visitInvokeInterfaceInstruction() {
-        code.visitInvokeInterfaceInstruction();
-    }
-
-    @Override
-    public void visitJumpInstruction(byte opcode, Label label) {
-        code.visitJumpInstruction(opcode, label);
-    }
-
-    @Override
-    public void visitLDCInstruction(byte opcode, Object constant, byte tag) {
-        code.visitLDCInstruction(opcode, constant, tag);
-    }
-
-    @Override
-    public void visitLocalVariableInstruction(byte opcode, byte index) {
-        code.visitLocalVariableInstruction(opcode, index);
-    }
-
-    @Override
-    public void visitLookupSwitchInstruction() {
-        code.visitLookupSwitchInstruction();
-    }
-
-    @Override
-    public void visitMultiNewArrayInstruction(String clazz, byte dimensions) {
-        code.visitMultiNewArrayInstruction(clazz, dimensions);
-    }
-
-    @Override
-    public void visitNewArrayInstruction(byte atype) {
-        code.visitNewArrayInstruction(atype);
-    }
-
-    @Override
-    public void visitNoParameterInstruction(byte opcode) {
-        code.visitNoParameterInstruction(opcode);
-    }
-
-    @Override
-    public void visitRefInstruction(byte opcode, String clazz, String name, String desc) {
-        code.visitRefInstruction(opcode, clazz, name, desc);
-    }
-
-    @Override
-    public void visitSiPushInstruction(short data) {
-        code.visitSiPushInstruction(data);
-    }
-
-    @Override
-    public void visitTableSwitchInstruction() {
-        code.visitTableSwitchInstruction();
-    }
-
-    @Override
-    public void visitWideInstruction() {
-        code.visitWideInstruction();
     }
 }

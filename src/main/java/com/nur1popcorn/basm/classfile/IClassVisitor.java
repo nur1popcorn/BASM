@@ -22,46 +22,89 @@ import com.nur1popcorn.basm.classfile.attributes.AttributeInfo;
 
 import java.io.IOException;
 
+/**
+ * The {@link IClassVisitor} TODO: desc.
+ *
+ * @see ClassReader
+ * @see ConstantPool
+ * @see FieldMethodInfo
+ * @see AttributeInfo
+ *
+ * @author nur1popcorn
+ * @since 1.0.0-alpha
+ */
 public interface IClassVisitor {
 
     /**
-     * Visits the head part of the class.
+     * <p>Visits the head part of the class.</p>
+     *
+     * @param minorVersion The read-class's
+     *                     <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.1-200-B">
+     *                         MinorVersion 4.1-200-B
+     *                     </a>
+     * @param majorVersion
+     * @param constantPool
+     *
+     * @throws IOException if an error occurs while reading the JavaClass.
      */
     default void visitHead(int minorVersion, int majorVersion, ConstantPool constantPool) throws IOException
     {}
 
     /**
-     * Visits the body part of the class.
+     * <p>Visits the body part of the class.</p>
      *
-     * @param access The read-class's access flag mask.
+     * @param access <p>The read-class's access flags.</p>
      *               <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.1-200-E">
      *                   AccessFlags 4.1-200-E
      *               </a>
-     * @param thisClass a pointer into the the {@link ConstantPool}, pointing to an instance of a
-     *                  CONSTANT_Class representing the class read.
+     * @param thisClass <p>a pointer into the the {@link ConstantPool}, pointing to an instance of a
+     *                     CONSTANT_Class representing the class read.</p>
      *                  <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.1-200-F">
      *                      ThisClass 4.1-200-I
      *                  </a>
      * @param superClass a pointer into the the {@link ConstantPool}, pointing to an instance of a
      *                   CONSTANT_Class representing the class-read's super class.
      *                   <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.1-200-G">
-     *                      SuperClass 4.1-200-G
+     *                       SuperClass 4.1-200-G
      *                   </a>
-     * @param interfaces a table of pointers pointing into the {@link ConstantPool}, to instances of
-     *                   CONSTANT_Classes representing the classes-read's implemented interfaces.
+     * @param interfaces <p>a table of pointers pointing into the {@link ConstantPool}, to instances of
+     *                      CONSTANT_Classes representing the classes-read's implemented interfaces.</p>
      *                   <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.1-200-I">
-     *                      Interfaces 4.1-200-I
+     *                       Interfaces 4.1-200-I
      *                   </a>
+     *
+     * @throws IOException if an error occurs while reading the JavaClass.
      */
     default void visitBody(int access, int thisClass, int superClass, int interfaces[]) throws IOException
     {}
 
+    /**
+     * Visits the methods of the JavaClass.
+     *
+     * @param methods
+     *
+     * @throws IOException if an error occurs while reading the JavaClass.
+     */
     default void visitMethods(FieldMethodInfo methods[]) throws IOException
     {}
 
+    /**
+     * Visits the fields of the JavaClass.
+     *
+     * @param fields
+     *
+     * @throws IOException if an error occurs while reading the JavaClass.
+     */
     default void visitFields(FieldMethodInfo fields[]) throws IOException
     {}
 
+    /**
+     * Visits the footer part of the JavaClass.
+     *
+     * @param attributes
+     *
+     * @throws IOException if an error occurs while reading the JavaClass.
+     */
     default void visitFooter(AttributeInfo attributes[]) throws IOException
     {}
 }

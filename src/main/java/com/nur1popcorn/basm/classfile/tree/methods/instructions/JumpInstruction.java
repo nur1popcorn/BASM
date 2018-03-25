@@ -18,6 +18,7 @@
 
 package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
+import com.nur1popcorn.basm.classfile.tree.methods.ICodeVisitor;
 import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
 
 public final class JumpInstruction extends Instruction {
@@ -27,5 +28,10 @@ public final class JumpInstruction extends Instruction {
     public JumpInstruction(byte opcode, Label label) {
         super(opcode);
         this.label = label;
+    }
+
+    @Override
+    public void accept(ICodeVisitor visitor) {
+        visitor.visitJumpInstruction(this);
     }
 }

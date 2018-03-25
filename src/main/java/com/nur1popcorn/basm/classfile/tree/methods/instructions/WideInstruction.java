@@ -18,11 +18,17 @@
 
 package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
+import com.nur1popcorn.basm.classfile.tree.methods.ICodeVisitor;
 import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
 
 public class WideInstruction extends Instruction {
     public WideInstruction(byte opcode) {
         //TODO: impl
         super(opcode);
+    }
+
+    @Override
+    public void accept(ICodeVisitor visitor) {
+        visitor.visitWideInstruction(this);
     }
 }

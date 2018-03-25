@@ -18,6 +18,7 @@
 
 package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
+import com.nur1popcorn.basm.classfile.tree.methods.ICodeVisitor;
 import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
 
 import static com.nur1popcorn.basm.Constants.NEWARRAY;
@@ -52,5 +53,10 @@ public final class NewArrayInstruction extends Instruction {
                atype == T_INT ||
                atype == T_LONG);
         this.atype = atype;
+    }
+
+    @Override
+    public void accept(ICodeVisitor visitor) {
+        visitor.visitNewArrayInstruction(this);
     }
 }

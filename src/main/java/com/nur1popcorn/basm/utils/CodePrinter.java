@@ -19,8 +19,6 @@
 package com.nur1popcorn.basm.utils;
 
 import com.nur1popcorn.basm.classfile.tree.methods.ICodeVisitor;
-import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
-import com.nur1popcorn.basm.classfile.tree.methods.instructions.Label;
 import com.nur1popcorn.basm.classfile.tree.methods.instructions.*;
 
 import java.io.PrintWriter;
@@ -28,158 +26,166 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.nur1popcorn.basm.Constants.*;
-import static com.nur1popcorn.basm.classfile.tree.methods.Instruction.*;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.NewArrayInstruction.T_MNEMONICS;
 
-public class CodePrinter {
+public final class CodePrinter implements ICodeVisitor {
     private static final String TAB = "  ";
     
     private PrintWriter pw;
+    private Map<Label, String> labelNameMap = new HashMap<>();
 
     public CodePrinter(PrintWriter pw) {
         this.pw = pw;
     }
 
-    public void accept(ICodeVisitor cv) {
-        if(cv.visitCodeAt(0)) {
-            final Map<Label, Integer> labelMap = new HashMap<>();
-            do {
-                final Instruction instruction = cv.visitCurrentInstruction();
-                switch(instruction.getType()) {
-                    case BIPUSH_INSTRUCTION:
-                        pw.print(TAB);
-                        pw.print(OPCODE_MNEMONICS[BIPUSH]);
-                        pw.print(" ");
-                        pw.println(Integer.toHexString(((BIPushInstruction)instruction).data & 0xff));
-                        break;
-                    case CLASS_INSTRUCTION:
-                        pw.print(TAB);
-                        pw.print(OPCODE_MNEMONICS[instruction.getOpcode() & 0xff]);
-                        pw.print(" ");
-                        pw.println(((ClassInstruction)instruction).clazz);
-                        break;
-                    case IINC_INSTRUCTION: {
-                        pw.print(TAB);
-                        pw.print(OPCODE_MNEMONICS[IINC & 0xff]);
-                        pw.print(" ");
-                        final IIncInstruction iincInstruction = (IIncInstruction) instruction;
-                        pw.print(Integer.toHexString(iincInstruction.index & 0xff));
-                        pw.print(" ");
-                        pw.println(Integer.toHexString(iincInstruction.constant & 0xff));
-                    }   break;
-                    case INVOKEDYNAMIC_INSTRUCTION:
-                        pw.print(TAB);
-                        // TODO: impl
-                        pw.println();
-                        break;
-                    case JUMP_INSTRUCTION: {
-                        pw.print(TAB);
-                        pw.print(OPCODE_MNEMONICS[instruction.getOpcode() & 0xff]);
-                        final Label label = ((JumpInstruction)instruction).label;
-                        Integer labelIndex = labelMap.get(label);
-                        if(labelIndex == null)
-                            labelMap.put(label, labelIndex = labelMap.size());
-                        pw.print(" L");
-                        pw.println(Integer.toHexString(labelIndex));
-                    }   break;
-                    case LDC_INSTRUCTION:
-                        pw.print(TAB);
-                        pw.print(OPCODE_MNEMONICS[instruction.getOpcode() & 0xff]);
-                        pw.print(" ");
-                        LDCInstruction ldcInstruction = (LDCInstruction) instruction;
-                        switch(ldcInstruction.getTag()) {
-                            case CONSTANT_CLASS:
-                            case CONSTANT_METHOD_TYPE:
-                            case CONSTANT_INTEGER:
-                                pw.println(ldcInstruction.getConstant());
-                                break;
-                            case CONSTANT_STRING:
-                                pw.print("\"");
-                                pw.print(ldcInstruction.getConstant());
-                                pw.println("\"");
-                                break;
-                            case CONSTANT_FLOAT:
-                                pw.print(ldcInstruction.getConstant());
-                                pw.println("f");
-                                break;
-                            case CONSTANT_DOUBLE:
-                                pw.print(ldcInstruction.getConstant());
-                                pw.println("d");
-                                break;
-                            case CONSTANT_LONG:
-                                pw.print(ldcInstruction.getConstant());
-                                pw.println("L");
-                                break;
-                        }
-                        break;
-                    case LOCAL_VARIABLE_INSTRUCTION:
-                        pw.print(TAB);
-                        pw.print(OPCODE_MNEMONICS[instruction.getOpcode() & 0xff]);
-                        pw.print(" ");
-                        pw.println(Integer.toHexString(((LocalVariableInstruction)instruction).index & 0xff));
-                        break;
-                    case MULTIANEWARRAY_INSTRUCTION: {
-                        pw.print(TAB);
-                        pw.print(OPCODE_MNEMONICS[MULTIANEWARRAY & 0xff]);
-                        pw.print(" ");
-                        final MultiANewArrayInstruction multiANewArrayInstruction = (MultiANewArrayInstruction) instruction;
-                        pw.print(multiANewArrayInstruction.clazz);
-                        pw.print(" ");
-                        pw.println(multiANewArrayInstruction.dimensions);
-                    }   break;
-                    case NEWARRAY_INSTRUCTION:
-                        pw.print(TAB);
-                        pw.print(OPCODE_MNEMONICS[NEWARRAY & 0xff]);
-                        pw.print(" ");
-                        pw.println(T_MNEMONICS[((NewArrayInstruction)instruction).atype]);
-                        break;
-                    case LABEL_INSTRUCTION: {
-                        pw.print("L");
-                        final Label label = (Label) instruction;
-                        Integer labelIndex = labelMap.get(label);
-                        if(labelIndex == null)
-                            labelMap.put(label, labelIndex = labelMap.size());
-                        pw.println(Integer.toHexString(labelIndex));
-                    }   break;
-                    case NO_PARAMETER_INSTRUCTION:
-                        pw.print(TAB);
-                        pw.println(OPCODE_MNEMONICS[instruction.getOpcode() & 0xff]);
-                        break;
-                    case REF_INSTRUCTION: {
-                        pw.print(TAB);
-                        pw.print(OPCODE_MNEMONICS[instruction.getOpcode() & 0xff]);
-                        pw.print(" ");
-                        final RefInstruction refInstruction = (RefInstruction) instruction;
-                        pw.print(refInstruction.clazz);
-                        pw.print(" ");
-                        pw.print(refInstruction.name);
-                        pw.print(" ");
-                        pw.println(refInstruction.desc);
-                    }   break;
-                    default:
-                    case SIPUSH_INSTRUCTION:
-                        pw.print(TAB);
-                        pw.print(OPCODE_MNEMONICS[BIPUSH]);
-                        pw.print(" ");
-                        pw.println(Integer.toHexString(((SIPushInstruction)instruction).data));
-                        break;
-                    case SWITCH_INSTRUCTION:
-                        pw.print(TAB);
-                        // TODO: impl
-                        pw.println();
-                        break;
-                    case WIDE_INSTRUCTION:
-                        pw.print(TAB);
-                        // TODO: impl
-                        pw.println();
-                        break;
-                    case NOT_AN_INSTRUCTION:
-                        pw.print("#");
-                        pw.println(Integer.toHexString(instruction.getOpcode() & 0xff));
-                        break;
-                }
-            } while(cv.visitNextInstruction());
-            pw.flush();
+    @Override
+    public void visitBIPushInstruction(BIPushInstruction instruction) {
+        pw.print(TAB);
+        pw.print(OPCODE_MNEMONICS[BIPUSH]);
+        pw.print(" ");
+        pw.println(Integer.toHexString(instruction.data & 0xff));
+    }
+
+    @Override
+    public void visitClassInstruction(ClassInstruction instruction) {
+        pw.print(TAB);
+        pw.print(OPCODE_MNEMONICS[instruction.getOpcode() & 0xff]);
+        pw.print(" ");
+        pw.println(instruction.clazz);
+    }
+
+    @Override
+    public void visitIIncInstruction(IIncInstruction instruction) {
+        pw.print(TAB);
+        pw.print(OPCODE_MNEMONICS[IINC & 0xff]);
+        pw.print(" ");
+        pw.print(Integer.toHexString(instruction.index & 0xff));
+        pw.print(" ");
+        pw.println(Integer.toHexString(instruction.constant & 0xff));
+    }
+
+    @Override
+    public void visitInvokeDynamicInstruction(InvokeDynamicInstruction instruction) {
+        pw.print(TAB);
+        // TODO: impl
+        pw.println();
+    }
+
+    @Override
+    public void visitJumpInstruction(JumpInstruction instruction) {
+        pw.print(TAB);
+        pw.print(OPCODE_MNEMONICS[instruction.getOpcode() & 0xff]);
+        final Label label = instruction.label;
+        String name = labelNameMap.get(label);
+        if(name == null)
+            labelNameMap.put(label, Integer.toHexString(labelNameMap.size()));
+        pw.print(" L");
+        pw.println(name);
+    }
+
+    @Override
+    public void visitLabel(Label instruction) {
+        pw.print("L");
+        String name = labelNameMap.get(instruction);
+        if(name == null)
+            labelNameMap.put(instruction, Integer.toHexString(labelNameMap.size()));
+        pw.println(name);
+    }
+
+    @Override
+    public void visitLDCInstruction(LDCInstruction instruction) {
+        pw.print(TAB);
+        pw.print(OPCODE_MNEMONICS[instruction.getOpcode() & 0xff]);
+        pw.print(" ");
+        switch(instruction.getTag()) {
+            case CONSTANT_CLASS:
+            case CONSTANT_METHOD_TYPE:
+            case CONSTANT_INTEGER:
+                pw.println(instruction.getConstant());
+                break;
+            case CONSTANT_STRING:
+                pw.print("\"");
+                pw.print(instruction.getConstant());
+                pw.println("\"");
+                break;
+            case CONSTANT_FLOAT:
+                pw.print(instruction.getConstant());
+                pw.println("f");
+                break;
+            case CONSTANT_DOUBLE:
+                pw.print(instruction.getConstant());
+                pw.println("d");
+                break;
+            case CONSTANT_LONG:
+                pw.print(instruction.getConstant());
+                pw.println("L");
+                break;
         }
+    }
+
+    @Override
+    public void visitLocalVariableInstruction(LocalVariableInstruction instruction) {
+        pw.print(TAB);
+        pw.print(OPCODE_MNEMONICS[instruction.getOpcode() & 0xff]);
+        pw.print(" ");
+        pw.println(Integer.toHexString(instruction.index & 0xff));
+    }
+
+    @Override
+    public void visitMultiNewArrayInstruction(MultiANewArrayInstruction instruction) {
+        pw.print(TAB);
+        pw.print(OPCODE_MNEMONICS[MULTIANEWARRAY & 0xff]);
+        pw.print(" ");
+        pw.print(instruction.clazz);
+        pw.print(" ");
+        pw.println(instruction.dimensions);
+    }
+
+    @Override
+    public void visitNewArrayInstruction(NewArrayInstruction instruction) {
+        pw.print(TAB);
+        pw.print(OPCODE_MNEMONICS[NEWARRAY & 0xff]);
+        pw.print(" ");
+        pw.println(T_MNEMONICS[instruction.atype]);
+    }
+
+    @Override
+    public void visitNoParameterInstruction(NoParameterInstruction instruction) {
+        pw.print(TAB);
+        pw.println(OPCODE_MNEMONICS[instruction.getOpcode() & 0xff]);
+    }
+
+    @Override
+    public void visitRefInstruction(RefInstruction instruction) {
+        pw.print(TAB);
+        pw.print(OPCODE_MNEMONICS[instruction.getOpcode() & 0xff]);
+        pw.print(" ");
+        pw.print(instruction.clazz);
+        pw.print(" ");
+        pw.print(instruction.name);
+        pw.print(" ");
+        pw.println(instruction.desc);
+    }
+
+    @Override
+    public void visitSIPushInstruction(SIPushInstruction instruction) {
+        pw.print(TAB);
+        pw.print(OPCODE_MNEMONICS[BIPUSH]);
+        pw.print(" ");
+        pw.println(Integer.toHexString(instruction.data));
+    }
+
+    @Override
+    public void visitSwitchInstruction(SwitchInstruction instruction) {
+        pw.print(TAB);
+        // TODO: impl
+        pw.println();
+    }
+
+    @Override
+    public void visitWideInstruction(WideInstruction instruction) {
+        pw.print(TAB);
+        // TODO: impl
+        pw.println();
     }
 }

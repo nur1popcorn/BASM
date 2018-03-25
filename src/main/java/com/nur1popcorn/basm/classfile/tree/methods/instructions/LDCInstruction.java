@@ -18,6 +18,7 @@
 
 package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
+import com.nur1popcorn.basm.classfile.tree.methods.ICodeVisitor;
 import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
 import com.nur1popcorn.basm.classfile.tree.methods.MethodHandle;
 
@@ -73,5 +74,10 @@ public final class LDCInstruction extends Instruction {
 
     public Object getConstant() {
         return constant;
+    }
+
+    @Override
+    public void accept(ICodeVisitor visitor) {
+        visitor.visitLDCInstruction(this);
     }
 }

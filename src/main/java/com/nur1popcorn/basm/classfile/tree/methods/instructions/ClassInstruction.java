@@ -18,6 +18,7 @@
 
 package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
+import com.nur1popcorn.basm.classfile.tree.methods.ICodeVisitor;
 import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
 
 public class ClassInstruction extends Instruction {
@@ -26,5 +27,10 @@ public class ClassInstruction extends Instruction {
     public ClassInstruction(byte opcode, String clazz) {
         super(opcode);
         this.clazz = clazz;
+    }
+
+    @Override
+    public void accept(ICodeVisitor visitor) {
+        visitor.visitClassInstruction(this);
     }
 }

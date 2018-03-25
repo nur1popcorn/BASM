@@ -80,7 +80,8 @@ public final class Disassembler implements ITransformer {
             writer.print(methodNode.desc);
             writer.println(":");
             writer.print("    ");
-            codePrinter.accept(methodNode.getCode());
+            methodNode.getCode()
+                .accept(codePrinter);
             writer.println();
         });
 

@@ -1,5 +1,6 @@
 package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
+import com.nur1popcorn.basm.classfile.tree.methods.ICodeVisitor;
 import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
 
 import static com.nur1popcorn.basm.Constants.MULTIANEWARRAY;
@@ -12,5 +13,10 @@ public class MultiANewArrayInstruction extends Instruction {
         super(MULTIANEWARRAY);
         this.clazz = clazz;
         this.dimensions = dimensions;
+    }
+
+    @Override
+    public void accept(ICodeVisitor visitor) {
+        visitor.visitMultiNewArrayInstruction(this);
     }
 }

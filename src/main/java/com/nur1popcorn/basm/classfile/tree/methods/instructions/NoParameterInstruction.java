@@ -18,6 +18,7 @@
 
 package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
+import com.nur1popcorn.basm.classfile.tree.methods.ICodeVisitor;
 import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
 
 /**
@@ -228,5 +229,10 @@ public final class NoParameterInstruction extends Instruction {
     // TODO: desc constructor.
     public NoParameterInstruction(byte opcode) {
         super(opcode);
+    }
+
+    @Override
+    public void accept(ICodeVisitor visitor) {
+        visitor.visitNoParameterInstruction(this);
     }
 }

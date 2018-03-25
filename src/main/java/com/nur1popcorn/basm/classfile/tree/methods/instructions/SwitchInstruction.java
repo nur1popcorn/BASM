@@ -3,18 +3,15 @@ package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 import com.nur1popcorn.basm.classfile.tree.methods.ICodeVisitor;
 import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
 
-import static com.nur1popcorn.basm.Constants.SIPUSH;
+public class SwitchInstruction extends Instruction {
+    //TODO: merge with table switch ?
 
-public final class SIPushInstruction extends Instruction {
-    public short data;
-
-    public SIPushInstruction(short data) {
-        super(SIPUSH);
-        this.data = data;
+    public SwitchInstruction(byte opcode) {
+        super(opcode);
     }
 
     @Override
     public void accept(ICodeVisitor visitor) {
-        visitor.visitSIPushInstruction(this);
+        visitor.visitSwitchInstruction(this);
     }
 }

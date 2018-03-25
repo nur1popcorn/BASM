@@ -115,7 +115,7 @@ public final class ClassFile implements IClassVisitor {
     }
 
     public void accept(IClassVisitor visitor) throws IOException {
-        final ConstantPoolBuilder builder = new ConstantPoolBuilder();
+        /*final ConstantPoolBuilder builder = new ConstantPoolBuilder();
 
         // the first 254 entries of the constantpool are reserved for entries to whom an ldc instruction points.
         methodNodes.forEach(methodNode -> {
@@ -384,7 +384,7 @@ public final class ClassFile implements IClassVisitor {
         // TODO: impl.
         visitor.visitFooter(
             new AttributeInfo[0]
-        );
+        );*/
     }
 
     @Override

@@ -26,13 +26,14 @@ import com.nur1popcorn.basm.utils.CodePrinter;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.lang.reflect.Method;
 import java.util.AbstractList;
 import java.util.Arrays;
 
 import static com.nur1popcorn.basm.Constants.*;
 import static com.nur1popcorn.basm.classfile.tree.methods.Instruction.*;
 
-public final class Code extends AbstractList<Instruction> implements ICodeVisitor {
+public final class Code extends AbstractList<Instruction> {
 
     private static final byte UNKNOWN_VALUE = 0x7f;
 
@@ -444,220 +445,15 @@ public final class Code extends AbstractList<Instruction> implements ICodeVisito
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
     }
 
-    @Override
-    public boolean visitCodeAt(int index) {
-        if(index >= 0 && index < size) {
-            currentInstruction = instructions[index];
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public void visitCodeAtEnd() {
-        currentInstruction = null;
-    }
-
-    @Override
-    public boolean visitPrevInstruction() {
-        if(currentInstruction != null && currentInstruction.prev != null) {
-            currentInstruction = currentInstruction.prev;
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public boolean visitNextInstruction() {
-        if(currentInstruction != null && currentInstruction.next != null) {
-            currentInstruction = currentInstruction.next;
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public Instruction visitCurrentInstruction() {
-        return currentInstruction;
-    }
-
-    @Override
-    public void visitMaxes(int maxStack, int maxLocals) {
-        this.maxStack = maxStack;
-        this.maxLocals = maxLocals;
-    }
-
-    @Override
-    public void visitMaxes() {
-        int stack = 0,
-            locals = 0;
-        for(Instruction instruction : this) {
-            final byte opcode = instruction.getOpcode();
-            switch(opcode) {
-                case LDC2_W:
-                    break;
-                default:
-                    stack += STACK_SIZE_MODIFIER_TABLE[opcode & 0xff];
-                    break;
-            }
-            maxStack = Math.max(stack, maxStack);
-            maxLocals = Math.max(locals, maxLocals);
-        }
-    }
-
-    @Override
-    public void visitBiPushInstruction(byte data) {
-        if(currentInstruction != null) {
-            final Instruction instruction = new BIPushInstruction(data);
-            add(indexOf(currentInstruction) + 1, instruction);
-            currentInstruction = instruction;
-        }
-    }
-
-    @Override
-    public void visitClassInstruction(byte opcode, String clazz) {
-        if(currentInstruction != null) {
-            final Instruction instruction = new ClassInstruction(
-                opcode,
-                clazz
-            );
-            add(indexOf(currentInstruction) + 1, instruction);
-            currentInstruction = instruction;
-        }
-    }
-
-    @Override
-    public void visitIIncInstruction(byte index, byte constant) {
-        if(currentInstruction != null) {
-            final Instruction instruction = new IIncInstruction(
-                index,
-                constant
-            );
-            add(indexOf(currentInstruction) + 1, instruction);
-            currentInstruction = instruction;
-        }
-    }
-
-    @Override
-    public void visitInvokeDynamicInstruction() {
-        // TODO: impl
-    }
-
-    @Override
-    public void visitInvokeInterfaceInstruction() {
-        // TODO: impl
-    }
-
-    @Override
-    public void visitJumpInstruction(byte opcode, Label label) {
-        if(currentInstruction != null) {
-            final Instruction instruction = new JumpInstruction(
-                opcode,
-                label
-            );
-            add(indexOf(currentInstruction) + 1, instruction);
-            currentInstruction = instruction;
-        }
-    }
-
-    @Override
-    public void visitLDCInstruction(byte opcode, Object constant, byte tag) {
-        if(currentInstruction != null) {
-            final Instruction instruction = new LDCInstruction(
-                opcode,
-                constant,
-                tag
-            );
-            add(indexOf(currentInstruction) + 1, instruction);
-            currentInstruction = instruction;
-        }
-    }
-
-    @Override
-    public void visitLocalVariableInstruction(byte opcode, byte index) {
-        if(currentInstruction != null) {
-            final Instruction instruction = new LocalVariableInstruction(
-                opcode,
-                index
-            );
-            add(indexOf(currentInstruction) + 1, instruction);
-            currentInstruction = instruction;
-        }
-    }
-
-    @Override
-    public void visitLookupSwitchInstruction() {
-        // TODO: impl
-    }
-
-    @Override
-    public void visitMultiNewArrayInstruction(String clazz, byte dimensions) {
-        if(currentInstruction != null) {
-            final Instruction instruction = new MultiANewArrayInstruction(
-                clazz,
-                dimensions
-            );
-            add(indexOf(currentInstruction) + 1, instruction);
-            currentInstruction = instruction;
-        }
-    }
-
-    @Override
-    public void visitNewArrayInstruction(byte atype) {
-        if(currentInstruction != null) {
-            final Instruction instruction = new NewArrayInstruction(atype);
-            add(indexOf(currentInstruction) + 1, instruction);
-            currentInstruction = instruction;
-        }
-    }
-
-    @Override
-    public void visitNoParameterInstruction(byte opcode) {
-        if(currentInstruction != null) {
-            final Instruction instruction = new NoParameterInstruction(opcode);
-            add(indexOf(currentInstruction) + 1, instruction);
-            currentInstruction = instruction;
-        }
-    }
-
-    @Override
-    public void visitRefInstruction(byte opcode, String clazz, String name, String desc) {
-        if(currentInstruction != null) {
-            final Instruction instruction = new RefInstruction(
-                opcode,
-                clazz,
-                name,
-                desc
-            );
-            add(indexOf(currentInstruction) + 1, instruction);
-            currentInstruction = instruction;
-        }
-    }
-
-    @Override
-    public void visitSiPushInstruction(short data) {
-        if(currentInstruction != null) {
-            final Instruction instruction = new SIPushInstruction(data);
-            add(indexOf(currentInstruction) + 1, instruction);
-            currentInstruction = instruction;
-        }
-    }
-
-    @Override
-    public void visitTableSwitchInstruction() {
-        //TODO: impl
-    }
-
-    @Override
-    public void visitWideInstruction() {
-        //TODO: impl
+    public void accept(ICodeVisitor visitor) {
+        for(Instruction instruction : this)
+            instruction.accept(visitor);
     }
 
     @Override
     public String toString() {
         final StringWriter stringWriter = new StringWriter();
-        new CodePrinter(new PrintWriter(stringWriter))
-                .accept(this);
+        accept(new CodePrinter(new PrintWriter(stringWriter)));
         return stringWriter.toString();
     }
 }

@@ -18,11 +18,17 @@
 
 package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
+import com.nur1popcorn.basm.classfile.tree.methods.ICodeVisitor;
 import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
 
 public final class Label extends Instruction {
     @Override
     public byte getType() {
         return LABEL_INSTRUCTION;
+    }
+
+    @Override
+    public void accept(ICodeVisitor visitor) {
+        visitor.visitLabel(this);
     }
 }

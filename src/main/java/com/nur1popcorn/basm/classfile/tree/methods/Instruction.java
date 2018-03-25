@@ -19,7 +19,10 @@
 package com.nur1popcorn.basm.classfile.tree.methods;
 
 /**
+ * The {@link Instruction} abstract class for all other {@link Instruction}s.
  *
+ * @author nur1popcorn
+ * @since 1.0.0-alpha
  */
 public abstract class Instruction {
 
@@ -248,6 +251,8 @@ public abstract class Instruction {
     public Instruction(byte opcode) {
         this.opcode = opcode;
     }
+
+    public abstract void accept(ICodeVisitor visitor);
 
     public byte getOpcode() {
         return opcode;

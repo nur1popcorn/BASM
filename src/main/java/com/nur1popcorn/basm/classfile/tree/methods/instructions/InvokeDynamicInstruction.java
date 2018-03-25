@@ -18,11 +18,17 @@
 
 package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
+import com.nur1popcorn.basm.classfile.tree.methods.ICodeVisitor;
 import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
 
 public final class InvokeDynamicInstruction extends Instruction {
     public InvokeDynamicInstruction(byte opcode) {
         //TODO: impl
         super(opcode);
+    }
+
+    @Override
+    public void accept(ICodeVisitor visitor) {
+        visitor.visitInvokeDynamicInstruction(this);
     }
 }

@@ -18,6 +18,7 @@
 
 package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
+import com.nur1popcorn.basm.classfile.tree.methods.ICodeVisitor;
 import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
 
 import static com.nur1popcorn.basm.Constants.BIPUSH;
@@ -28,5 +29,10 @@ public final class BIPushInstruction extends Instruction {
     public BIPushInstruction(byte data) {
         super(BIPUSH);
         this.data = data;
+    }
+
+    @Override
+    public void accept(ICodeVisitor visitor) {
+        visitor.visitBIPushInstruction(this);
     }
 }

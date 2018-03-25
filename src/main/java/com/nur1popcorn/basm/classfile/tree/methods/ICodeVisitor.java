@@ -18,33 +18,22 @@
 
 package com.nur1popcorn.basm.classfile.tree.methods;
 
-import com.nur1popcorn.basm.classfile.tree.methods.instructions.Label;
+import com.nur1popcorn.basm.classfile.tree.methods.instructions.*;
 
 public interface ICodeVisitor {
-    boolean visitCodeAt(int index);
-    void visitCodeAtEnd();
-
-    boolean visitPrevInstruction();
-    boolean visitNextInstruction();
-    Instruction visitCurrentInstruction();
-
-    void visitMaxes(int maxStack, int maxLocals);
-    void visitMaxes();
-
-    void visitBiPushInstruction(byte data);
-    void visitClassInstruction(byte opcode, String clazz);
-    void visitIIncInstruction(byte localIndex, byte constant);
-    void visitInvokeDynamicInstruction(); // TODO: impl
-    void visitInvokeInterfaceInstruction(); // TODO: impl
-    void visitJumpInstruction(byte opcode, Label label);
-    void visitLDCInstruction(byte opcode, Object constant, byte tag);
-    void visitLocalVariableInstruction(byte opcode, byte index);
-    void visitLookupSwitchInstruction(); // TODO: impl
-    void visitMultiNewArrayInstruction(String clazz, byte dimensions);
-    void visitNewArrayInstruction(byte atype);
-    void visitNoParameterInstruction(byte opcode);
-    void visitRefInstruction(byte opcode, String clazz, String name, String desc);
-    void visitSiPushInstruction(short data);
-    void visitTableSwitchInstruction(); //TODO: impl
-    void visitWideInstruction(); //TODO: impl
+    default void visitBIPushInstruction(BIPushInstruction instruction) {}
+    default void visitClassInstruction(ClassInstruction instruction) {}
+    default void visitIIncInstruction(IIncInstruction instruction) {}
+    default void visitInvokeDynamicInstruction(InvokeDynamicInstruction instruction) {}
+    default void visitJumpInstruction(JumpInstruction instruction) {}
+    default void visitLabel(Label instruction) {}
+    default void visitLDCInstruction(LDCInstruction instruction) {}
+    default void visitLocalVariableInstruction(LocalVariableInstruction instruction) {}
+    default void visitMultiNewArrayInstruction(MultiANewArrayInstruction instruction) {}
+    default void visitNewArrayInstruction(NewArrayInstruction instruction) {}
+    default void visitNoParameterInstruction(NoParameterInstruction instruction) {}
+    default void visitRefInstruction(RefInstruction instruction) {}
+    default void visitSIPushInstruction(SIPushInstruction instruction) {}
+    default void visitSwitchInstruction(SwitchInstruction instruction) {}
+    default void visitWideInstruction(WideInstruction instruction) {}
 }
