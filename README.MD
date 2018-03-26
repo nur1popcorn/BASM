@@ -3,37 +3,56 @@
 > Because sometimes writing java isn't enough.
 
 ## Index
+* Description
+* Motivation
 * Quick Start
-    * Build instructions
-    * Usage example
+    * Build Instructions
+    * Commandline Parameters.
     * Transformers
 * Example Outputs
     * BinarySearch
+    
+## Description
+
+**BASM** currently is a bytecode editing library in it's early stages.
+
+## Motivation
+
+Why did I write yet another tool to edit bytecode?
+I was reading this: https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html
+and simply wanted to gain an even better understanding of how bytecode works.
+
 ## Quick Start
 
-#### Build instructions
+#### Build Instructions
 
 ```
-sudo apt install maven
 mvn package
 ```
 
-#### Usage example
+#### Commandline Parameters.
 
-`java -jar BASM.jar -in {CLASS} -out {OUT FILE} -transformer {TRANSFORMER}`
+
+|   Parameter   |                               Description                                 |
+|:--------------|:--------------------------------------------------------------------------|
+| -in           | The file which should be transformed.                                     |
+| -out          | The file the output file should be written to.                            |
+| -transformer  | The class of the transformer responsible for transformation of the input. |
 
 #### Transformers
 
-|     Transformer    |                       Description                          |                     Class                    |
-|:-------------------|:-----------------------------------------------------------|:---------------------------------------------|
-|Assembler           |Not Implemented                                             |com.nur1popcorn.basm.transformers.Assembler   |
-|Decompiler          |Not Implemented                                             |com.nur1popcorn.basm.transformers.Decompiler  |
-|Disassembler        |Turns the given class file into it's bytecode representation.|com.nur1popcorn.basm.transformers.Disassembler|
-|MaliciousCodeScanner|Kinda works but not really well.|com.nur1popcorn.basm.transformers.MaliciousCodeScanner|
+Transformers are useful examples of how to use **BASM**.
+One can tell their purpose by looking at their name "Transformer".
+They take in input and transform it into useful output.
+Currently the most useful Transformer seems to be the Disassembler, I have provided some usage example and it's output below.
 
 ## Example Outputs
 
-#### BinarySearch:
+```
+java -jar BASM.jar -in BinarySearch.class -transformer com.nur1popcorn.basm.transformers.Disassembler
+```
+
+#### Binary Search:
 ```
 public binarySearch([II)I:
     iconst_0
