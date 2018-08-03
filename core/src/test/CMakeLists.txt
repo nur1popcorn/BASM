@@ -13,23 +13,28 @@
 #
 # {BASM} is based on this document: https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html
 
-# Java
+enable_testing()
 
-*.class
-*.jar
+add_executable(native_test
+               native/test.c
+              )
 
-hs_err_pid*
+add_test(UnitTest native_test)
 
-# Maven
+find_package(Java REQUIRED)
+include(UseJava)
 
-**/target
-dependency-reduced-pom.xml
+set(CMAKE_JAVA_COMPILE_FLAGS
+    "-source" "1.8"
+    "-target" "1.8")
 
-# Intellij
+add_jar(java_test
+        native/testapp/TestApp.java
+       )
 
-**/.idea
-*.iml
-
-# CLion
-
-**/cmake-build-debug
+add_test(NAME
+         IntegrationTest
+         COMMAND
+         ${Java_JAVA_EXECUTABLE} -agentpath:../main/libbasm_agent.so
+                                 -cp $<TARGET_PROPERTY:java_test,JAR_FILE> TestApp
+        )

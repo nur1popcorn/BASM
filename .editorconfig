@@ -13,23 +13,15 @@
 #
 # {BASM} is based on this document: https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html
 
-# Java
+root = true
 
-*.class
-*.jar
+[*]
+indent_style = space
+indent_size = 4
 
-hs_err_pid*
+end_of_line = lf
+insert_final_newline = true
 
-# Maven
+charset = utf-8
 
-**/target
-dependency-reduced-pom.xml
-
-# Intellij
-
-**/.idea
-*.iml
-
-# CLion
-
-**/cmake-build-debug
+trim_trailing_whitespace = true

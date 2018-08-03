@@ -13,23 +13,17 @@
 #
 # {BASM} is based on this document: https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html
 
-# Java
+cmake_minimum_required(VERSION 3.5)
+project(basm_agent C)
 
-*.class
-*.jar
+set(CMAKE_C_STANDARD 11)
 
-hs_err_pid*
+find_package(JNI REQUIRED)
+include_directories(${JAVA_INCLUDE_PATH})
 
-# Maven
+if(UNIX)
+    include_directories(${JAVA_INCLUDE_PATH}/linux/)
+endif()
 
-**/target
-dependency-reduced-pom.xml
-
-# Intellij
-
-**/.idea
-*.iml
-
-# CLion
-
-**/cmake-build-debug
+add_subdirectory(main)
+add_subdirectory(test)
