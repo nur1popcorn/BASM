@@ -187,6 +187,7 @@ public class ConstantPool implements Iterable<ConstantInfo> {
      *
      * @see #getEntry(int)
      */
+    @SuppressWarnings("unchecked")
     public final <T extends ConstantInfo> T getEntry(int index, byte tag) {
         final ConstantInfo info = getEntry(index);
         if(info == null)
