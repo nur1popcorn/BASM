@@ -23,7 +23,7 @@
 
 static void print_help() {
     puts("Usage: ...=--<option>,<parameter>\n"
-         "   -? --help   Prints this usage message.\n"
+         "   --help      Prints this usage message.\n"
          "   -h --halt   Halts the program at the start of execution, the execution may then be manually resumed by the debugger.\n"
         );
 }
@@ -48,9 +48,11 @@ static int parse_options(char *options) {
         };
 
     static void (*handlers[])() =
-        { &print_help };
+        { &print_help,
+          &halt
+        };
 
-    for(int c, opt_index; (c = getopt_long(argc, argv, "?h", long_options, &opt_index)); )
+    for(int c, opt_index; (c = getopt_long(argc, argv, "h", long_options, &opt_index)); )
         if(c != '?' &&
            c != ':')
             handlers[opt_index]();

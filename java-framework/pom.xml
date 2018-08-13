@@ -26,7 +26,7 @@
         <version>1.0.0-alpha</version>
     </parent>
 
-    <artifactId>framework</artifactId>
+    <artifactId>javaframework</artifactId>
 
     <build>
         <plugins>

@@ -373,10 +373,10 @@ public abstract class Instruction {
                             opcode, defaultIndex, indices, keys);
                     }
                     case LOOKUPSWITCH: {
-                        final int count = in.readInt();
-                        final int indices[] = new int[count];
-                        final int keys[] = new int[count];
-                        for(int i = 0; i < count; i++) {
+                        final int length = in.readInt();
+                        final int indices[] = new int[length];
+                        final int keys[] = new int[length];
+                        for(int i = 0; i < length; i++) {
                             keys[i] = in.readInt();
                             indices[i] = in.readInt();
                         }
