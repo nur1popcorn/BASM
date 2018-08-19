@@ -55,13 +55,13 @@ public abstract class DexInputStream extends InputStream {
 
     public static DexInputStream create(InputStream in, int constant) {
         if(constant == ENDIAN_CONSTANT)
-            return new LEDexInputStream(in);
+            return new LittleEndianInputStream(in);
         else // if(constant == REVERSE_ENDIAN_CONSTANT)
-            return new BEDexInputStream(in);
+            return new BigEndianInputStream(in);
     }
 
-    private static final class LEDexInputStream extends DexInputStream {
-        public LEDexInputStream(InputStream in) {
+    private static final class LittleEndianInputStream extends DexInputStream {
+        public LittleEndianInputStream(InputStream in) {
             super(in);
         }
 
@@ -92,8 +92,8 @@ public abstract class DexInputStream extends InputStream {
         }
     }
 
-    private static final class BEDexInputStream extends DexInputStream {
-        public BEDexInputStream(InputStream in) {
+    private static final class BigEndianInputStream extends DexInputStream {
+        public BigEndianInputStream(InputStream in) {
             super(in);
         }
 
@@ -106,8 +106,8 @@ public abstract class DexInputStream extends InputStream {
         @Override
         public int readInt() throws IOException {
             return (readByte() << 24) |
-                   (readByte() << 16)  |
-                   (readByte() << 8) |
+                   (readByte() << 16) |
+                   (readByte() << 8)  |
                     readByte();
         }
 
@@ -119,7 +119,7 @@ public abstract class DexInputStream extends InputStream {
                    (((long) readByte() & 0xff) << 32) |
                    (((long) readByte() & 0xff) << 24) |
                    (((long) readByte() & 0xff) << 16) |
-                   (((long) readByte() & 0xff) << 8) |
+                   (((long) readByte() & 0xff) << 8)  |
                     ((long) readByte() & 0xff);
         }
     }

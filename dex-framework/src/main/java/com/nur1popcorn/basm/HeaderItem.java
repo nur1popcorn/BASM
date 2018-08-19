@@ -18,15 +18,12 @@
 
 package com.nur1popcorn.basm;
 
-public final class DexConstants {
-    public static final int DEX_MAGIC = 0x6465780a;
-
-    public static final int ENDIAN_CONSTANT = 0x12345678;
-    public static final int REVERSE_ENDIAN_CONSTANT = 0x78563412;
-
-    public static final int DEFAULT_HEADER_SIZE = 0x70;
-
-    // prevent construction :/
-    private DexConstants()
-    {}
+public class HeaderItem {
+    public final byte magic[] = new byte[8];
+    public int checksum;
+    public final byte signature[] = new byte[20];
+    public int fileSize;
+    public int headerSize;
+    public int endianTag;
+    public int linkSize, linkOff;
 }
