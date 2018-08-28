@@ -33,3 +33,7 @@ dependency-reduced-pom.xml
 # CLion
 
 **/cmake-build-debug
+
+# Node
+
+**/node_modules

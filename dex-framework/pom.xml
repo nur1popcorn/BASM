@@ -23,9 +23,10 @@
         <groupId>com.nur1popcorn</groupId>
         <version>1.0.0-alpha</version>
     </parent>
-    <modelVersion>4.0.0</modelVersion>
 
+    <modelVersion>4.0.0</modelVersion>
     <artifactId>dexframework</artifactId>
+    <name>dex-framework</name>
 
     <build>
         <plugins>

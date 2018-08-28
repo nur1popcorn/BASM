@@ -18,30 +18,31 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>ui</artifactId>
+        <groupId>com.nur1popcorn</groupId>
+        <version>1.0.0-alpha</version>
+    </parent>
 
-    <groupId>com.nur1popcorn</groupId>
-    <artifactId>basm</artifactId>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>gui</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.0-alpha</version>
 
     <modules>
-        <module>java-framework</module>
-        <module>dex-framework</module>
-        <module>core</module>
-        <module>ui</module>
+        <module>electron-gui</module>
+        <module>electron-wrappers</module>
+        <module>electron-build</module>
     </modules>
 
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <kotlin.version>1.2.61</kotlin.version>
     </properties>
 
     <dependencies>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
-            <scope>test</scope>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-stdlib-js</artifactId>
+            <version>${kotlin.version}</version>
         </dependency>
     </dependencies>
 

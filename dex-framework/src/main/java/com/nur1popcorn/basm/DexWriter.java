@@ -41,7 +41,8 @@ public final class DexWriter {
                 a += data[i] & 0xff;
                 b += a;
             }
-            a %= MOD_ADLER;
+            // 'a' overflows after 0x808080 iterations therefore no modulo operation is needed here.
+            // a %= MOD_ADLER;
             b %= MOD_ADLER;
         }
 

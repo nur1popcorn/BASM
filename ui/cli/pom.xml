@@ -18,31 +18,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>ui</artifactId>
+        <groupId>com.nur1popcorn</groupId>
+        <version>1.0.0-alpha</version>
+    </parent>
+
     <modelVersion>4.0.0</modelVersion>
-
-    <groupId>com.nur1popcorn</groupId>
-    <artifactId>basm</artifactId>
-    <packaging>pom</packaging>
-    <version>1.0.0-alpha</version>
-
-    <modules>
-        <module>java-framework</module>
-        <module>dex-framework</module>
-        <module>core</module>
-        <module>ui</module>
-    </modules>
-
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
-
-    <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
+    <artifactId>cli</artifactId>
 
 </project>
