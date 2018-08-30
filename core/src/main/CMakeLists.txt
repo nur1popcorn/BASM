@@ -20,6 +20,6 @@ add_library(basm_agent SHARED
             native/src/agent.c
             native/include/globals.h
             native/src/globals.c
-            native/include/command.h
-            native/src/command.c
+#            native/include/command.h
+#            native/src/command.c
            )
