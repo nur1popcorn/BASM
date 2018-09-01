@@ -79,18 +79,16 @@
                         <phase>package</phase>
                         <configuration>
                             <target>
-                                <mkdir dir="${project.build.directory}/js/node_modules/"/>
-
-                                <symlink link="${project.build.directory}/js/node_modules/"
-                                         resource="${project.build.directory}/js/electronwrappers/"
-                                         overwrite="true"
-                                         failonerror="true"/>
-
                                 <exec executable="npm"
                                       dir="${project.build.directory}/js/"
                                       failonerror="true">
                                     <arg line="install"/>
                                 </exec>
+
+                                <symlink link="${project.build.directory}/js/node_modules/"
+                                         resource="${project.build.directory}/js/electronwrappers/"
+                                         overwrite="true"
+                                         failonerror="true"/>
                             </target>
                         </configuration>
                         <goals>
