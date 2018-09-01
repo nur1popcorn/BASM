@@ -1,5 +1,5 @@
 {
-    "name": "test",
+    "name": "basm",
     "version": "1.0.0",
     "main": "electrongui/electrongui.js",
     "scripts": {

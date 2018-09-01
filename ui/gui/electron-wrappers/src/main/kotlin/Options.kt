@@ -17,6 +17,7 @@
  */
 
 class Options {
-    var width : Int = 0
-    var height : Int = 0
+    // https://github.com/electron/electron/blob/master/docs/api/browser-window.md
+    var width : Int = 800
+    var height : Int = 600
 }
