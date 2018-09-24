@@ -29,8 +29,10 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>electron-gui</module>
         <module>electron-wrappers</module>
+        <module>electron-main</module>
+        <module>material-ui-wrappers</module>
+        <module>electron-renderer</module>
         <module>electron-build</module>
     </modules>
 

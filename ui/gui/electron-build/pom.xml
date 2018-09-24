@@ -51,17 +51,33 @@
                             <artifactItems>
                                 <artifactItem>
                                     <groupId>com.nur1popcorn</groupId>
-                                    <artifactId>electrongui</artifactId>
+                                    <artifactId>electronwrappers</artifactId>
                                     <version>${project.version}</version>
-                                    <outputDirectory>${project.build.directory}/js/electrongui/</outputDirectory>
+                                    <outputDirectory>${project.build.directory}/js/electron-wrappers/</outputDirectory>
                                     <includes>*.*</includes>
                                 </artifactItem>
 
                                 <artifactItem>
                                     <groupId>com.nur1popcorn</groupId>
-                                    <artifactId>electronwrappers</artifactId>
+                                    <artifactId>electronmain</artifactId>
                                     <version>${project.version}</version>
-                                    <outputDirectory>${project.build.directory}/js/electronwrappers/</outputDirectory>
+                                    <outputDirectory>${project.build.directory}/js/electron-main/</outputDirectory>
+                                    <includes>*.*</includes>
+                                </artifactItem>
+
+                                <artifactItem>
+                                    <groupId>com.nur1popcorn</groupId>
+                                    <artifactId>materialuiwrappers</artifactId>
+                                    <version>${project.version}</version>
+                                    <outputDirectory>${project.build.directory}/js/material-ui-wrappers/</outputDirectory>
+                                    <includes>*.*</includes>
+                                </artifactItem>
+
+                                <artifactItem>
+                                    <groupId>com.nur1popcorn</groupId>
+                                    <artifactId>electronrenderer</artifactId>
+                                    <version>${project.version}</version>
+                                    <outputDirectory>${project.build.directory}/js/electron-renderer/</outputDirectory>
                                     <includes>*.*</includes>
                                 </artifactItem>
                             </artifactItems>
@@ -85,10 +101,30 @@
                                     <arg line="install"/>
                                 </exec>
 
+                                <symlink link="${project.build.directory}/js/node_modules/electronwrappers"
+                                         resource="${project.build.directory}/js/electron-wrappers/"
+                                         linkfilename="electronwrappers"
+                                         overwrite="true"/>
+                                <symlink link="${project.build.directory}/js/node_modules/materialuiwrappers"
+                                         resource="${project.build.directory}/js/material-ui-wrappers/"
+                                         linkfilename="electronwrappers"
+                                         overwrite="true"/>
+
                                 <symlink link="${project.build.directory}/js/node_modules/"
-                                         resource="${project.build.directory}/js/electronwrappers/"
-                                         overwrite="true"
-                                         failonerror="true"/>
+                                         resource="${project.build.directory}/js/node_modules/@jetbrains/kotlin-react/"
+                                         overwrite="true"/>
+                                <symlink link="${project.build.directory}/js/node_modules/"
+                                         resource="${project.build.directory}/js/node_modules/@jetbrains/kotlin-react-dom/"
+                                         overwrite="true"/>
+                                <symlink link="${project.build.directory}/js/node_modules/"
+                                         resource="${project.build.directory}/js/node_modules/@jetbrains/kotlin-extensions/"
+                                         overwrite="true"/>
+                                <symlink link="${project.build.directory}/js/node_modules/"
+                                         resource="${project.build.directory}/js/node_modules/@jetbrains/kotlin-styled/"
+                                         overwrite="true"/>
+                                <symlink link="${project.build.directory}/js/node_modules/"
+                                         resource="${project.build.directory}/js/node_modules/@jetbrains/kotlin-css-js/"
+                                         overwrite="true"/>
                             </target>
                         </configuration>
                         <goals>

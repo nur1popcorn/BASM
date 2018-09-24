@@ -25,8 +25,8 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>electrongui</artifactId>
-    <name>electron-gui</name>
+    <artifactId>electronmain</artifactId>
+    <name>electron-main</name>
 
     <dependencies>
         <dependency>

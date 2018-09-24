@@ -16,14 +16,14 @@
  *
  */
 
-fun createWindow() {
-    val window = BrowserWindow(Options().apply {
-        width = 1080
-        height = 720
-    }.asDynamic())
-    window.loadFile("electrongui/index.html")
-}
+import kotlinext.js.jsObject
+import react.*
 
-fun main(args : Array<String>) {
-    App.on("ready", ::createWindow)
+fun <P : RProps> RBuilder.child(type : Any, handler : RHandler<P>) : ReactElement {
+    val props : P = jsObject { }
+    val children = with(RElementBuilder(props)) {
+        handler()
+        childList
+    }
+    return child(type, props, children)
 }

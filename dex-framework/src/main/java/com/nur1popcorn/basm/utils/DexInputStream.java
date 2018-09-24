@@ -61,7 +61,7 @@ public abstract class DexInputStream extends InputStream {
     }
 
     private static final class LittleEndianInputStream extends DexInputStream {
-        public LittleEndianInputStream(InputStream in) {
+        private LittleEndianInputStream(InputStream in) {
             super(in);
         }
 
@@ -93,7 +93,7 @@ public abstract class DexInputStream extends InputStream {
     }
 
     private static final class BigEndianInputStream extends DexInputStream {
-        public BigEndianInputStream(InputStream in) {
+        private BigEndianInputStream(InputStream in) {
             super(in);
         }
 
