@@ -28,7 +28,7 @@ interface ButtonBaseActions {
 }
 
 interface ButtonBaseProps : RProps {
-    var action : ((ButtonBaseActions) -> Unit)
+    var action : (ButtonBaseActions) -> Unit
     var centerRipple : Boolean
     var component : dynamic
     var disabled : Boolean
@@ -36,7 +36,7 @@ interface ButtonBaseProps : RProps {
     var disableTouchRipple : Boolean
     var focusRipple : Boolean
     var focusVisibleClassName : String
-    var onFocusVisible : (() -> Unit)
+    var onFocusVisible : () -> Unit
     @JsName("TouchRippleProps")
     var touchRippleProps : RProps
     var type : String

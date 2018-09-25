@@ -21,7 +21,7 @@
     <parent>
         <artifactId>gui</artifactId>
         <groupId>com.nur1popcorn</groupId>
-        <version>1.0.0-alpha</version>
+        <version>1.0.1-alpha</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -63,6 +63,13 @@
     </dependencies>
 
     <build>
+        <resources>
+            <resource>
+                <directory>${project.basedir}/src/main/resources/</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+
         <sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
         <!--<testSourceDirectory>${project.basedir}/src/test/kotlin</testSourceDirectory>-->
 

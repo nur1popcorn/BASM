@@ -23,7 +23,7 @@
     <groupId>com.nur1popcorn</groupId>
     <artifactId>basm</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.0-alpha</version>
+    <version>1.0.1-alpha</version>
 
     <modules>
         <module>java-framework</module>

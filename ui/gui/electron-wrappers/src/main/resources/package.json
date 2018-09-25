@@ -1,5 +1,5 @@
 {
-    "name": "electronwrappers",
-    "version": "1.0.0",
-    "main": "electronwrappers.js"
+    "name": "${project.artifactId}",
+    "version": "${project.version}",
+    "main": "${project.artifactId}.js"
 }

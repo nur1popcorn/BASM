@@ -21,7 +21,7 @@
     <parent>
         <artifactId>gui</artifactId>
         <groupId>com.nur1popcorn</groupId>
-        <version>1.0.0-alpha</version>
+        <version>1.0.1-alpha</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -33,6 +33,7 @@
             <resource>
                 <directory>${project.basedir}/src/main/resources/</directory>
                 <targetPath>${project.build.directory}/js/</targetPath>
+                <filtering>true</filtering>
             </resource>
         </resources>
 
@@ -103,11 +104,9 @@
 
                                 <symlink link="${project.build.directory}/js/node_modules/electronwrappers"
                                          resource="${project.build.directory}/js/electron-wrappers/"
-                                         linkfilename="electronwrappers"
                                          overwrite="true"/>
                                 <symlink link="${project.build.directory}/js/node_modules/materialuiwrappers"
                                          resource="${project.build.directory}/js/material-ui-wrappers/"
-                                         linkfilename="electronwrappers"
                                          overwrite="true"/>
 
                                 <symlink link="${project.build.directory}/js/node_modules/"

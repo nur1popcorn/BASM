@@ -1,5 +1,5 @@
 {
-    "name": "materialuiwrappers",
-    "version": "1.0.0",
-    "main": "materialuiwrappers.js"
+    "name": "${project.artifactId}",
+    "version": "${project.version}",
+    "main": "${project.artifactId}.js"
 }

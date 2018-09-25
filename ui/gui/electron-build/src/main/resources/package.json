@@ -1,6 +1,6 @@
 {
     "name": "basm",
-    "version": "1.0.0",
+    "version": "${project.version}",
     "main": "electron-main/electronmain.js",
     "scripts": {
         "start": "electron ."
