@@ -21,25 +21,29 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 #include <jvmti.h>
 
-#define likely(x) __builtin_expect((x), 1)
-#define unlikely(x) __builtin_expect((x), 0)
+#ifdef __GNUC__
+    #define likely(x) __builtin_expect((x), 1)
+    #define unlikely(x) __builtin_expect((x), 0)
+#else
+    #define likely(x) (x)
+    #define unlikely(x) (x)
+#endif
 
 #define ARRAY_LENGTH(array) (sizeof(array) / sizeof((array)[0]))
 
-#define HALT_FLAG 0x1
-
-struct GlobalData {
+extern struct GlobalData {
     jvmtiEnv *jvmti;
     JavaVM *jvm;
 
     jboolean loaded;
     jint flags;
-};
+} *gdata;
 
-extern struct GlobalData *gdata;
+char **str_split(char *str, char delim, int *size);
 
 static inline void *malloc_or_die(size_t size) {
     void *mem = malloc(size);
@@ -57,6 +61,15 @@ static inline void *calloc_or_die(size_t meb, size_t size) {
         abort();
     }
     return mem;
+}
+
+static inline char *strdup_or_die(const char *s) {
+    void *dup = strdup(s);
+    if(unlikely(!dup)) {
+        perror("Could not allocate memory!\n");
+        abort();
+    }
+    return dup;
 }
 
 #endif /* GLOBALS_H */

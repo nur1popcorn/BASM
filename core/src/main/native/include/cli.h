@@ -16,21 +16,13 @@
  *
  */
 
-#include "globals.h"
+#ifndef CLI_H
+#define CLI_H
 
-struct GlobalData *gdata = NULL;
+/*!
+ * \brief
+ * \param options[in]
+ */
+void parse_options_or_die(char *options);
 
-char **str_split(char *str, char delim, int *size) {
-    int word_count = 0;
-    for(char *c = str; *c != '\0'; c++)
-        if(*c == delim)
-            word_count++;
-    char **strs = malloc_or_die(sizeof(char *) * (*size = word_count));
-
-    strs[0] = str;
-    for(int i = 1; (str = strchr(str, delim)) != NULL; i++) {
-        *str = '\0';
-        strs[i] = ++str;
-    }
-    return strs;
-}
+#endif /* CLI_H */

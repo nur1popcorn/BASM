@@ -79,7 +79,7 @@
                         <configuration>
                             <target>
                                 <exec executable="ctest" dir="${project.build.directory}/test/">
-                                    <arg line="--timeout 60 -E IntegrationTest"/>
+                                    <arg line="--timeout 60 -R unit_"/>
                                 </exec>
                             </target>
                         </configuration>
@@ -94,7 +94,7 @@
                         <configuration>
                             <target>
                                 <exec executable="ctest" dir="${project.build.directory}/test/">
-                                    <arg line="--timeout 60 -E UnitTest"/>
+                                    <arg line="--timeout 60 -R integration_"/>
                                 </exec>
                             </target>
                         </configuration>

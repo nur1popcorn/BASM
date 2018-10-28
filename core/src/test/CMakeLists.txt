@@ -15,11 +15,17 @@
 
 enable_testing()
 
-add_executable(native_test
-               native/test.c
-              )
+set(unit_tests
+    "test"
+    "cli_test"
+    "globals_test")
 
-add_test(UnitTest native_test)
+foreach(test ${unit_tests})
+    add_executable(unit_${test} native/${test}.c)
+    target_include_directories(unit_${test} PUBLIC basm_agent)
+    target_link_libraries(unit_${test} basm_agent)
+    add_test(unit_test unit_${test})
+endforeach()
 
 find_package(Java REQUIRED)
 include(UseJava)
@@ -28,13 +34,14 @@ set(CMAKE_JAVA_COMPILE_FLAGS
     "-source" "1.8"
     "-target" "1.8")
 
-add_jar(java_test
-        native/testapp/TestApp.java
-       )
+set(integration_tests
+    "TestApp")
 
-add_test(NAME
-         IntegrationTest
-         COMMAND
-         ${Java_JAVA_EXECUTABLE} -agentpath:../main/libbasm_agent.so
-                                 -cp $<TARGET_PROPERTY:java_test,JAR_FILE> TestApp
-        )
+foreach(itest ${integration_tests})
+    add_jar(integration_${itest} native/testapps/${itest}.java)
+    add_test(NAME integration_${itest} COMMAND
+                ${Java_JAVA_EXECUTABLE} -agentpath:../main/libbasm_agent.so
+                -cp $<TARGET_PROPERTY:integration_${itest},JAR_FILE>
+                integration_${itest}
+            )
+endforeach()

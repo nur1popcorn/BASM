@@ -17,60 +17,17 @@
  */
 
 #include "globals.h"
-
-#include <string.h>
-#include <getopt.h>
-
-static void print_help() {
-    puts("Usage: ...=--<option>,<parameter>\n"
-         "   --help      Prints this usage message.\n"
-         "   -h --halt   Halts the program at the start of execution, the execution may then be manually resumed by the debugger.\n"
-        );
-}
-
-static void halt() {
-    gdata->flags |= HALT_FLAG;
-}
-
-static int parse_options(char *options) {
-    int argc = 0;
-    for(char *c = options; *c != '\0'; c++)
-        if(*c == ',')
-            argc++;
-    char *argv[argc];
-    argc = 0;
-    for(char *tok = strtok(options, ","); tok; tok = strtok(NULL, ","))
-        argv[argc++] = tok;
-
-    static struct option long_options[] =
-        { { "help", no_argument, NULL,  0 },
-          { "halt", no_argument, NULL, 'h'}
-        };
-
-    static void (*handlers[])() =
-        { &print_help,
-          &halt
-        };
-
-    for(int c, opt_index; (c = getopt_long(argc, argv, "h", long_options, &opt_index)); )
-        if(c != '?' &&
-           c != ':')
-            handlers[opt_index]();
-}
+#include "cli.h"
 
 static void JNICALL vm_init(jvmtiEnv *jvmti_env, JNIEnv *jni_env, jthread thread) {
-
 }
 
 /*!
- * \brief
  *
- * \param vm
- * \param options
  */
-static jint global_init(JavaVM *vm, char *options) {
+JNIEXPORT jint JNICALL Agent_OnLoad(JavaVM *vm, char *options, void *reserved) {
     if(unlikely(gdata != NULL && gdata->loaded)) {
-        perror("The JVMTI agent is already loaded on this JVM and will be disabled.\n");
+        fprintf(stderr, "The JVMTI agent is already loaded on this JVM, therefore this instance will be disabled.\n");
         return JNI_ERR;
     }
 
@@ -80,15 +37,17 @@ static jint global_init(JavaVM *vm, char *options) {
     gdata->loaded = JNI_TRUE;
     gdata->jvm = vm;
 
-    parse_options(options);
+    parse_options_or_die(options);
 
-    jint res = (*vm)->GetEnv(vm, (void**)&gdata->jvmti, JVMTI_VERSION);
-    if(unlikely(res)) {
-        fprintf(stderr,
-            "Unable to access JVMTI version 0x%x, "
-            "GetEnv() returned %d\n",
-                JVMTI_VERSION, res);
-        return JNI_ERR;
+    {
+        jint res = (*vm)->GetEnv(vm, (void**)&gdata->jvmti, JVMTI_VERSION);
+        if(unlikely(res)) {
+            fprintf(stderr,
+                "Unable to access JVMTI version 0x%x.\n"
+                "GetEnv() returned %d\n",
+                    JVMTI_VERSION, res);
+            return JNI_ERR;
+        }
     }
 
     static jvmtiCapabilities capabilities = {
@@ -102,11 +61,12 @@ static jint global_init(JavaVM *vm, char *options) {
         char *error_str = NULL;
         (*gdata->jvmti)->GetErrorName(gdata->jvmti, error, &error_str);
         fprintf(stderr,
-            "A JVMTI error with error occurred while trying to request certain capabilities, "
+            "A JVMTI error with error occurred while trying to request certain capabilities.\n"
             "AddCapabilities() returned %d \"%s\".\n",
                 error, error_str == NULL ?
                     "Unknown" :
-                    error_str);
+                    error_str
+               );
         return JNI_ERR;
     }
 
@@ -119,11 +79,12 @@ static jint global_init(JavaVM *vm, char *options) {
         char *error_str = NULL;
         (*gdata->jvmti)->GetErrorName(gdata->jvmti, error, &error_str);
         fprintf(stderr,
-            "A JVMTI error with error occurred while trying to register the callbacks, "
+            "A JVMTI error with error occurred while trying to register the callbacks.\n"
             "SetEventCallbacks() returned %d \"%s\".\n",
                 error, error_str == NULL ?
-                   "Unknown" :
-                   error_str);
+                    "Unknown" :
+                    error_str
+               );
         return JNI_ERR;
     }
 
@@ -133,20 +94,12 @@ static jint global_init(JavaVM *vm, char *options) {
 /*!
  *
  */
-JNIEXPORT jint JNICALL Agent_OnLoad(JavaVM *vm, char *options, void *reserved) {
-    return global_init(vm, options);
-}
-
-/*!
- *
- */
 JNIEXPORT jint JNICALL Agent_OnAttach(JavaVM *vm, char *options, void *reserved) {
-    return global_init(vm, options);
+    return Agent_OnLoad(vm, options, reserved);
 }
 
 /*!
  *
  */
 JNIEXPORT void JNICALL Agent_OnUnload(JavaVM *vm) {
-    //TODO: fill
 }

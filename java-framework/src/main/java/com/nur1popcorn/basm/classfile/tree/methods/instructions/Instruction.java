@@ -256,7 +256,7 @@ public abstract class Instruction {
      * @return
      */
     public static byte indexType(int opcode) {
-        return (byte) ((INSTRUCTION_TYPE_TABLE[(opcode &= 0xff) / 8] >> (opcode % 8 << 2)) & 0xf);
+        return (byte) ((INSTRUCTION_TYPE_TABLE[(opcode &= 0xff) / 8] >> ((opcode % 8) * 4)) & 0xf);
     }
 
     /**
@@ -266,7 +266,7 @@ public abstract class Instruction {
      */
     public byte getStackModifier() {
         final int opcode = this.opcode & 0xff;
-        byte value = (byte) ((STACK_SIZE_MODIFIER_TABLE[opcode / 8] >> (opcode % 8 << 2)) & 0xf);
+        byte value = (byte) ((STACK_SIZE_MODIFIER_TABLE[opcode / 8] >> ((opcode % 8) * 4)) & 0xf);
         if((value & 0x8) != 0)
             value |= 0xf0;
         return value;
