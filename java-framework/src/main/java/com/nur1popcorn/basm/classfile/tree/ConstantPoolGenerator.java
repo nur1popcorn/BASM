@@ -107,6 +107,26 @@ public final class ConstantPoolGenerator extends ConstantPool {
         return index;
     }
 
+    private void removeSafe(int index) {
+        for(int i = index + 1; i < cpEntries.length; i++) {
+            final ConstantInfo info = cpEntries[i];
+            if(info != null) {
+                final IConstantPoolPointer pointers[] = info.getPointers();
+                for(IConstantPoolPointer pointer : pointers) {
+                    pointer.update(i, i - 1);
+                }
+            }
+        }
+
+        final int moved = cpEntries.length - index - 1;
+        if(moved > 0)
+            System.arraycopy(
+                cpEntries, index + 1,
+                cpEntries, index, moved
+            );
+        cpEntries[this.index--] = null;
+    }
+
     /**
      *
      * @param index
@@ -124,84 +144,47 @@ public final class ConstantPoolGenerator extends ConstantPool {
         if(old == null)
             throw new MalformedClassFileException(
                 "The CONSTANT_Info at index: index=" + index + " is null");
- outer: {   final int tag = old.getTag();
-            switch(tag) {
-                case CONSTANT_CLASS:
-                case CONSTANT_STRING:
-                case CONSTANT_METHOD_TYPE: {
-                    final ConstantName name = (ConstantName) old;
-                    name.indexName(this)
-                        .removePointer(name);
-                }   break;
-                case CONSTANT_NAME_AND_TYPE: {
-                    final ConstantNameAndType nameAndType = (ConstantNameAndType) old;
-                    nameAndType.indexName(this)
-                               .removePointer(nameAndType);
-                    nameAndType.indexDesc(this)
-                               .removePointer(nameAndType);
-                }   break;
-                case CONSTANT_FIELD_REF:
-                case CONSTANT_METHOD_REF:
-                case CONSTANT_INTERFACE_METHOD_REF: {
-                    final ConstantMethodRef methodRef = (ConstantMethodRef) old;
-                    methodRef.indexClass(this)
-                             .removePointer(methodRef);
-                    methodRef.indexNameAndType(this)
-                             .removePointer(methodRef);
-                }   break;
-                case CONSTANT_METHOD_HANDLE: {
-                    final ConstantMethodHandle methodHandle = (ConstantMethodHandle) old;
-                    methodHandle.indexRef(this)
-                                .removePointer(methodHandle);
-                }   break;
-                case CONSTANT_INVOKEDYNAMIC: {
-                    final ConstantInvokeDynamic invokeDynamic = (ConstantInvokeDynamic) old;
-                    invokeDynamic.indexNameAndType(this)
-                                 .removePointer(invokeDynamic);
-                }   break;
-                case CONSTANT_LONG:
-                case CONSTANT_DOUBLE:
-                    for(int i = index + 2; i < length; i++) {
-                        final ConstantInfo info = cpEntries[i];
-                        if(info != null) {
-                            final IConstantPoolPointer pointers[] = info.getPointers();
-                            for(IConstantPoolPointer pointer : pointers) {
-                                pointer.update(i, i - 2);
-                            }
-                        }
-                    }
-
-                    System.arraycopy(
-                        cpEntries,
-                        index + 2,
-                        cpEntries,
-                        index,
-                        length - 2 - index
-                    );
-                    cpEntries[this.index--] =
-                    cpEntries[this.index--] = null;
-                    break outer;
-            }
-
-            for(int i = index + 1; i < length; i++) {
-                final ConstantInfo info = cpEntries[i];
-                if(info != null) {
-                    final IConstantPoolPointer pointers[] = info.getPointers();
-                    for(IConstantPoolPointer pointer : pointers) {
-                        pointer.update(i, i - 1);
-                    }
-                }
-            }
-
-            System.arraycopy(
-                cpEntries,
-                index + 1,
-                cpEntries,
-                index,
-                length - 1 - index
-            );
-            cpEntries[this.index--] = null;
+        final int tag = old.getTag();
+        switch(tag) {
+            case CONSTANT_CLASS:
+            case CONSTANT_STRING:
+            case CONSTANT_METHOD_TYPE: {
+                final ConstantName name = (ConstantName) old;
+                name.indexName(this)
+                    .removePointer(name);
+            }   break;
+            case CONSTANT_NAME_AND_TYPE: {
+                final ConstantNameAndType nameAndType = (ConstantNameAndType) old;
+                nameAndType.indexName(this)
+                           .removePointer(nameAndType);
+                nameAndType.indexDesc(this)
+                           .removePointer(nameAndType);
+            }   break;
+            case CONSTANT_FIELD_REF:
+            case CONSTANT_METHOD_REF:
+            case CONSTANT_INTERFACE_METHOD_REF: {
+                final ConstantMethodRef methodRef = (ConstantMethodRef) old;
+                methodRef.indexClass(this)
+                         .removePointer(methodRef);
+                methodRef.indexNameAndType(this)
+                         .removePointer(methodRef);
+            }   break;
+            case CONSTANT_METHOD_HANDLE: {
+                final ConstantMethodHandle methodHandle = (ConstantMethodHandle) old;
+                methodHandle.indexRef(this)
+                            .removePointer(methodHandle);
+            }   break;
+            case CONSTANT_INVOKEDYNAMIC: {
+                final ConstantInvokeDynamic invokeDynamic = (ConstantInvokeDynamic) old;
+                invokeDynamic.indexNameAndType(this)
+                             .removePointer(invokeDynamic);
+            }   break;
+            case CONSTANT_LONG:
+            case CONSTANT_DOUBLE:
+                removeSafe(index + 1);
+                break;
         }
+        removeSafe(index);
 
         final IConstantPoolPointer pointers[] = old.getPointers();
         if(pointers.length != 0)

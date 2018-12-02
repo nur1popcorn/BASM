@@ -253,10 +253,12 @@ public final class InstructionList extends AbstractList<InstructionHandle> imple
         modCount++;
         rangeCheck(index);
         final InstructionHandle old = instructions[index];
-        System.arraycopy(
-            instructions, index + 1,
-            instructions, index, size - index - 1
-        );
+        final int moved = size - index - 1;
+        if(moved > 0)
+            System.arraycopy(
+                instructions, index + 1,
+                instructions, index, moved
+            );
         instructions[--size] = null;
         if(size != 0) {
             final InstructionHandle element = instructions[index];

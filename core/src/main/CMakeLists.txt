@@ -13,12 +13,16 @@
 #
 # {BASM} is based on this document: https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html
 
-add_library(basm_agent SHARED
-            native/src/agent.c
-            native/include/globals.h
-            native/src/globals.c
-            native/include/cli.h
-            native/src/cli.c
+add_library(basm_agent
+        SHARED
+            ./native/src/agent.c native/include/globals.h
+            ./native/src/globals.c
+            ./native/include/cli.h
+            ./native/src/cli.c
            )
 
-target_include_directories(basm_agent PUBLIC native/include native/src)
+target_include_directories(basm_agent
+                        PUBLIC
+                            ./native/include
+                            ./native/src
+                          )
