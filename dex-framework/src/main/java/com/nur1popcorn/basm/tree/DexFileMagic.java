@@ -6,13 +6,13 @@ import java.util.Arrays;
 import static com.nur1popcorn.basm.DexConstants.DEX_FILE_MAGIC;
 import static com.nur1popcorn.basm.DexConstants.DEX_FILE_MAGIC_VERSIONS;
 
-public class DexMagic {
+public class DexFileMagic {
     private final byte[] dex = new byte[3];
     private final byte newline;
     private final byte[] version = new byte[3];
     private final byte zero;
 
-    public DexMagic(ByteBuffer byteBuffer) {
+    public DexFileMagic(ByteBuffer byteBuffer) {
         byteBuffer.get(dex);
         newline = byteBuffer.get();
         byteBuffer.get(version);

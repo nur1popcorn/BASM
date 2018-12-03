@@ -1,11 +1,9 @@
 package com.nur1popcorn.basm.tree;
 
-import java.util.Arrays;
-
 public class IncorrectMagic extends RuntimeException {
-    private final DexMagic dexMagic;
+    private final DexFileMagic dexMagic;
 
-    public IncorrectMagic(DexMagic dexMagic) {
+    public IncorrectMagic(DexFileMagic dexMagic) {
         super("incorrect dex magic number:" + dexMagic);
         this.dexMagic = dexMagic;
     }
