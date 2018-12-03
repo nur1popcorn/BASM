@@ -19,12 +19,28 @@
 package com.nur1popcorn.basm;
 
 public final class DexConstants {
-    public static final int DEX_MAGIC = 0x6465780a;
+    public static final byte[] DEX_FILE_MAGIC = { 'd', 'e', 'x' };
+    public static final byte[][] DEX_FILE_MAGIC_VERSIONS = {
+        {'0', '3', '5'},
+        // Dex version 036 skipped because of an old dalvik bug on some versions of android where dex
+        // files with that version number would erroneously be accepted and run.
+        {'0', '3', '7'},
+        // Dex version 038: Android "O" and beyond.
+        {'0', '3', '8'},
+        // Dex verion 039: Beyond Android "O".
+        {'0', '3', '9'}
+    };
 
     public static final int ENDIAN_CONSTANT = 0x12345678;
     public static final int REVERSE_ENDIAN_CONSTANT = 0x78563412;
 
-    public static final int DEFAULT_HEADER_SIZE = 0x70;
+    public static final int HEADER_ITEM_SIZE = 0x70;
+    public static final int STRING_ID_ITEM_SIZE = 0x04;
+    public static final int TYPE_ID_ITEM_SIZE = 0x04;
+    public static final int PROTO_ID_ITEM_SIZE = 0x0c;
+    public static final int FIELD_ID_ITEM_SIZE = 0x08;
+    public static final int METHOD_ID_ITEM_SIZE = 0x08;
+    public static final int CLASS_DEF_ITEM_SIZE = 0x20;
 
     // prevent construction :/
     private DexConstants()

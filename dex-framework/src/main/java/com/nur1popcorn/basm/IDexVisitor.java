@@ -18,6 +18,8 @@
 
 package com.nur1popcorn.basm;
 
+import com.nur1popcorn.basm.tree.item.HeaderItem;
+
 public interface IDexVisitor {
     public void visitHeader(HeaderItem header);
 }
