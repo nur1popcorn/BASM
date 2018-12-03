@@ -39,7 +39,7 @@ static char **arg_split(char *str, char delim, int *size) {
     for(char *c = str; *c != '\0'; c++)
         if(*c == delim)
             arg_count++;
-    char **strs = malloc_or_die(sizeof(char *) * (*size = arg_count + 1));
+    char **strs = malloc_or_die(sizeof(char *) * (*size = arg_count));
 
     strs[0] = "";
     strs[1] = str;
@@ -51,6 +51,8 @@ static char **arg_split(char *str, char delim, int *size) {
 }
 
 void parse_options_or_die(char *options) {
+    optind = 1;
+
     int argc;
     char **argv = arg_split(options = strdup_or_die(options), ',', &argc);
 

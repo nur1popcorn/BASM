@@ -17,9 +17,8 @@ int main() {
     {
         char *empty_text = strdup_or_die("");
         int c;
-        char **v = str_split(empty_text, ',', &c);
+        str_split(empty_text, ',', &c);
         assert(c == 0);
-        free(v);
         free(empty_text);
     }
 
