@@ -42,6 +42,10 @@ public class FieldNode extends FieldMethodNode {
         super(access, nameIndex, descIndex, constantPool);
     }
 
+    public FieldNode(FieldMethodInfo info, ConstantPool constantPool) {
+        super(info, constantPool);
+    }
+
     @Override
     public void accept(IFieldMethodNodeVisitor visitor) {
 

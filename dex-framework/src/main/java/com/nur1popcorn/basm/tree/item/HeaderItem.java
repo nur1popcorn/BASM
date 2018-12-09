@@ -34,28 +34,30 @@ public class HeaderItem {
     private final byte signature[] = new byte[20];
     private int fileSize;
     private int headerSize;
-    private final int endianTag;
-    private final int linkSize, linkOff;
-    public final int mapOff;
-    public final int stringIdsSize, stringIdsOff;
-    public final int typeIdsSize, typeIdsOff;
-    public final int protoIdsSize, protoIdsOff;
-    public final int fieldIdsSize, fieldIdsOff;
-    public final int methodIdsSize, methodIdsOff;
-    public final int classDefsSize, classDefsOff;
-    private final int dataSize, dataOff;
+    private int endianTag;
+    private int linkSize, linkOff;
+    public int mapOff;
+    public int stringIdsSize, stringIdsOff;
+    public int typeIdsSize, typeIdsOff;
+    public int protoIdsSize, protoIdsOff;
+    public int fieldIdsSize, fieldIdsOff;
+    public int methodIdsSize, methodIdsOff;
+    public int classDefsSize, classDefsOff;
+    private int dataSize, dataOff;
 
-    public HeaderItem(ByteBuffer byteBuffer) throws IOException {
+    public void read(ByteBuffer byteBuffer) {
         Alignment.alignToFourBytes(byteBuffer);
         byteBuffer.get(magic);
+        final String m = new String(magic);
+        if (!m.matches(DEX_FILE_MAGIC))
+            throw new IncorrectMagic(magic);
 
         checksum = byteBuffer.getInt();
         byteBuffer.get(signature);
         fileSize = byteBuffer.getInt();
         headerSize = byteBuffer.getInt();
-        endianTag = byteBuffer.getInt();
 
-        // Check endianness
+        endianTag = byteBuffer.getInt();
         if (endianTag == REVERSE_ENDIAN_CONSTANT) {
             checksum = Integer.reverseBytes(checksum);
             fileSize = Integer.reverseBytes(fileSize);
@@ -71,9 +73,11 @@ public class HeaderItem {
         linkOff = byteBuffer.getInt();
         if (linkSize == 0 && linkOff != 0)
             throw new OffsetMismatch("link_offset", linkOff, 0);
+
         mapOff = byteBuffer.getInt();
         if (mapOff == 0)
             throw new InvalidOffset("`map_offset` was 0, and it can never be zero");
+
         stringIdsSize = byteBuffer.getInt();
         stringIdsOff = byteBuffer.getInt();
         if (stringIdsSize == 0 && stringIdsOff != 0)
@@ -106,7 +110,11 @@ public class HeaderItem {
 
         dataSize = byteBuffer.getInt();
         if ((dataSize & 0b11) != 0)
-            throw new IOException("`data_size` must be a 4-byte multiple, but it was " + Integer.toHexString(dataSize));
+            throw new RuntimeException("`data_size` must be a 4-byte multiple, but it was " + Integer.toHexString(dataSize));
         dataOff = byteBuffer.getInt();
+    }
+
+    public void write(ByteBuffer byteBuffer) {
+        Alignment.alignToFourBytesWithZeroFill(byteBuffer);
     }
 }

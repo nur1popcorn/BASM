@@ -19,6 +19,10 @@
 package com.nur1popcorn.basm.classfile.attributes;
 
 import com.nur1popcorn.basm.classfile.ConstantPool;
+import com.nur1popcorn.basm.classfile.attributes.annotation.*;
+import com.nur1popcorn.basm.classfile.attributes.clazz.*;
+import com.nur1popcorn.basm.classfile.attributes.field.AttributeConstantValue;
+import com.nur1popcorn.basm.classfile.attributes.method.*;
 import com.nur1popcorn.basm.classfile.constants.ConstantUTF8;
 
 import java.io.DataInputStream;
@@ -74,27 +78,25 @@ public abstract class AttributeInfo {
                  */
                 new SimpleEntry<>("Exceptions", AttributeExceptions.class.getDeclaredConstructor(int.class, DataInputStream.class)),
 
-                //TODO: impl
-                new SimpleEntry<>("InnerClasses", AttributeConstantValue.class.getDeclaredConstructor(int.class, DataInputStream.class)),
-                new SimpleEntry<>("EnclosingMethod", AttributeConstantValue.class.getDeclaredConstructor(int.class, DataInputStream.class)),
-                new SimpleEntry<>("Synthetic", AttributeConstantValue.class.getDeclaredConstructor(int.class, DataInputStream.class)),
-                new SimpleEntry<>("Signature", AttributeConstantValue.class.getDeclaredConstructor(int.class, DataInputStream.class)),
-                new SimpleEntry<>("SourceFile", AttributeConstantValue.class.getDeclaredConstructor(int.class, DataInputStream.class)),
-                new SimpleEntry<>("SourceDebugExtension", AttributeConstantValue.class.getDeclaredConstructor(int.class, DataInputStream.class)),
+                new SimpleEntry<>("InnerClasses", AttributeInnerClasses.class.getDeclaredConstructor(int.class, DataInputStream.class)),
+                new SimpleEntry<>("EnclosingMethod", AttributeEnclosingMethod.class.getDeclaredConstructor(int.class, DataInputStream.class)),
+                new SimpleEntry<>("Synthetic", AttributeSynthetic.class.getDeclaredConstructor(int.class, DataInputStream.class)),
+                new SimpleEntry<>("Signature", AttributeSignature.class.getDeclaredConstructor(int.class, DataInputStream.class)),
+                new SimpleEntry<>("SourceFile", AttributeSourceFile.class.getDeclaredConstructor(int.class, DataInputStream.class)),
+                new SimpleEntry<>("SourceDebugExtension", AttributeSourceDebugExtension.class.getDeclaredConstructor(int.class, DataInputStream.class)),
 
                 new SimpleEntry<>("LineNumberTable", AttributeLineNumberTable.class.getDeclaredConstructor(int.class, DataInputStream.class)),
                 new SimpleEntry<>("LocalVariableTable", AttributeLocalVariableTable.class.getDeclaredConstructor(int.class, DataInputStream.class)),
                 new SimpleEntry<>("LocalVariableTypeTable", AttributeLocalVariableTypeTable.class.getDeclaredConstructor(int.class, DataInputStream.class)),
 
-                //TODO: impl
-                new SimpleEntry<>("Deprecated", AttributeConstantValue.class.getDeclaredConstructor(int.class, DataInputStream.class)),
-                new SimpleEntry<>("RuntimeVisibleAnnotations", AttributeConstantValue.class.getDeclaredConstructor(int.class, DataInputStream.class)),
-                new SimpleEntry<>("RuntimeInvisibleAnnotations", AttributeConstantValue.class.getDeclaredConstructor(int.class, DataInputStream.class)),
-                new SimpleEntry<>("RuntimeVisibleParameterAnnotations", AttributeConstantValue.class.getDeclaredConstructor(int.class, DataInputStream.class)),
-                new SimpleEntry<>("RuntimeInvisibleParameterAnnotations", AttributeConstantValue.class.getDeclaredConstructor(int.class, DataInputStream.class)),
-                new SimpleEntry<>("RuntimeVisibleTypeAnnotations", AttributeConstantValue.class.getDeclaredConstructor(int.class, DataInputStream.class)),
-                new SimpleEntry<>("RuntimeInvisibleTypeAnnotations", AttributeConstantValue.class.getDeclaredConstructor(int.class, DataInputStream.class)),
-                new SimpleEntry<>("AnnotationDefault", AttributeConstantValue.class.getDeclaredConstructor(int.class, DataInputStream.class)),
+                new SimpleEntry<>("Deprecated", AttributeDeprecated.class.getDeclaredConstructor(int.class, DataInputStream.class)),
+                new SimpleEntry<>("RuntimeVisibleAnnotations", AttributeRuntimeVisibleAnnotations.class.getDeclaredConstructor(int.class, DataInputStream.class)),
+                new SimpleEntry<>("RuntimeInvisibleAnnotations", AttributeRuntimeInvisibleAnnotations.class.getDeclaredConstructor(int.class, DataInputStream.class)),
+                new SimpleEntry<>("RuntimeVisibleParameterAnnotations", AttributeRuntimeVisibleParameterAnnotations.class.getDeclaredConstructor(int.class, DataInputStream.class)),
+                new SimpleEntry<>("RuntimeInvisibleParameterAnnotations", AttributeRuntimeInvisibleParameterAnnotations.class.getDeclaredConstructor(int.class, DataInputStream.class)),
+                new SimpleEntry<>("RuntimeVisibleTypeAnnotations", AttributeRuntimeVisibleTypeAnnotations.class.getDeclaredConstructor(int.class, DataInputStream.class)),
+                new SimpleEntry<>("RuntimeInvisibleTypeAnnotations", AttributeRuntimeInvisibleTypeAnnotations.class.getDeclaredConstructor(int.class, DataInputStream.class)),
+                new SimpleEntry<>("AnnotationDefault", AttributeAnnotationDefault.class.getDeclaredConstructor(int.class, DataInputStream.class)),
                 /*
                  * <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.23">
                  *     Bootstrap Methods 4.7.23
@@ -102,15 +104,14 @@ public abstract class AttributeInfo {
                  */
                 new SimpleEntry<>("BootstrapMethods", AttributeBootstrapMethods.class.getDeclaredConstructor(int.class, DataInputStream.class)),
 
-                //TODO: impl
-                new SimpleEntry<>("MethodParameters", AttributeConstantValue.class.getDeclaredConstructor(int.class, DataInputStream.class))
+                new SimpleEntry<>("MethodParameters", AttributeMethodParameters.class.getDeclaredConstructor(int.class, DataInputStream.class))
             ).collect(Collectors.toMap(SimpleEntry::getKey, SimpleEntry::getValue));
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         }
     }
 
-    protected int nameIndex /* u2 */,
+    public int nameIndex /* u2 */,
                   attributeLength /* u4 */;
 
     /**

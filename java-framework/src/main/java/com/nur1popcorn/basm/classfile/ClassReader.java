@@ -22,7 +22,6 @@ import com.nur1popcorn.basm.classfile.attributes.AttributeInfo;
 
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 import static com.nur1popcorn.basm.Constants.*;
 
@@ -220,15 +219,14 @@ public final class ClassReader {
 
     private AttributeInfo attributes[];
 
-    public ClassReader(InputStream in) throws IOException {
-        this(new DataInputStream(in));
-    }
-
     public ClassReader(DataInputStream in) throws IOException {
         this.in = in;
         final int magic = in.readInt();
         if(magic != MAGIC)
-            throw new IOException("The class provided has an invalid file header: " + magic);
+            throw new MalformedClassFileException(
+                "The class provided has an invalid file header: " +
+                Integer.toHexString(magic)
+            );
     }
 
     /**

@@ -60,8 +60,11 @@ public final class DexReader {
         this.byteBuffer = byteBuffer.asReadOnlyBuffer().order(ByteOrder.LITTLE_ENDIAN);
     }
 
-    private void readHeader() throws IOException {
-        header = new HeaderItem(byteBuffer);
+    private void readHeader() {
+        header = new HeaderItem();
+        header.read(byteBuffer);
+
+        //TODO: organize all this into new read methods
         stringIds = new StringIdItem[header.stringIdsSize];
         for (int i = 0; i < stringIds.length; i++)
             stringIds[i] = new StringIdItem(byteBuffer);

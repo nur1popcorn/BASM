@@ -16,17 +16,21 @@
  *
  */
 
-package com.nur1popcorn.basm;
+package com.nur1popcorn.basm.classfile.attributes.method;
 
-public final class DexConstants {
-    public static final String DEX_FILE_MAGIC = "dex\n03[5-9]\0";
+import com.nur1popcorn.basm.classfile.attributes.AttributeInfo;
+import com.nur1popcorn.basm.classfile.attributes.method.stackmap.StackMapFrame;
 
-    public static final int ENDIAN_CONSTANT = 0x12345678;
-    public static final int REVERSE_ENDIAN_CONSTANT = 0x78563412;
+import java.io.DataInputStream;
+import java.io.IOException;
 
-    public static final int HEADER_ITEM_SIZE = 0x70;
+public final class AttributeStackMapTable extends AttributeInfo {
+    private StackMapFrame entries[] /* length: u2 */;
 
-    // prevent construction :/
-    private DexConstants()
-    {}
+    public AttributeStackMapTable(int nameIndex, DataInputStream in) throws IOException {
+        super(nameIndex, in);
+        entries = new StackMapFrame[in.readUnsignedShort()];
+        for(int i = 0; i < entries.length; i++)
+            entries[i] = StackMapFrame.read(in);
+    }
 }

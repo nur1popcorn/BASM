@@ -1,10 +1,10 @@
 package com.nur1popcorn.basm.tree;
 
 public class IncorrectMagic extends RuntimeException {
-    private final DexFileMagic dexMagic;
+    private final byte[] magic;
 
-    public IncorrectMagic(DexFileMagic dexMagic) {
-        super("incorrect dex magic number:" + dexMagic);
-        this.dexMagic = dexMagic;
+    public IncorrectMagic(byte[] magic) {
+        super("incorrect dex magic number:" + magic);
+        this.magic = magic;
     }
 }

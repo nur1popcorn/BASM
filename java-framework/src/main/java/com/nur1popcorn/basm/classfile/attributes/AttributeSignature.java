@@ -16,17 +16,25 @@
  *
  */
 
-package com.nur1popcorn.basm;
+package com.nur1popcorn.basm.classfile.attributes;
 
-public final class DexConstants {
-    public static final String DEX_FILE_MAGIC = "dex\n03[5-9]\0";
+import com.nur1popcorn.basm.classfile.ConstantPool;
 
-    public static final int ENDIAN_CONSTANT = 0x12345678;
-    public static final int REVERSE_ENDIAN_CONSTANT = 0x78563412;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 
-    public static final int HEADER_ITEM_SIZE = 0x70;
+public class AttributeSignature extends AttributeInfo {
+    private final int signatureIndex;
 
-    // prevent construction :/
-    private DexConstants()
-    {}
+    public AttributeSignature(int nameIndex, DataInputStream in) throws IOException {
+        super(nameIndex, in);
+        signatureIndex = in.readUnsignedShort();
+    }
+
+    @Override
+    public void write(DataOutputStream os, ConstantPool constantPool) throws IOException {
+        super.write(os, constantPool);
+        os.writeShort(signatureIndex);
+    }
 }

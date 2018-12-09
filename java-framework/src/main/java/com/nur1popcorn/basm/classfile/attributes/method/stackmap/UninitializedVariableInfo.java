@@ -16,17 +16,30 @@
  *
  */
 
-package com.nur1popcorn.basm;
+package com.nur1popcorn.basm.classfile.attributes.method.stackmap;
 
-public final class DexConstants {
-    public static final String DEX_FILE_MAGIC = "dex\n03[5-9]\0";
+import java.io.DataOutputStream;
+import java.io.IOException;
 
-    public static final int ENDIAN_CONSTANT = 0x12345678;
-    public static final int REVERSE_ENDIAN_CONSTANT = 0x78563412;
+public final class UninitializedVariableInfo extends VariableInfo {
+    private int offset /* u2 */;
 
-    public static final int HEADER_ITEM_SIZE = 0x70;
+    public UninitializedVariableInfo(byte tag, int offset) {
+        super(tag);
+    }
 
-    // prevent construction :/
-    private DexConstants()
-    {}
+    @Override
+    public void write(DataOutputStream os) throws IOException {
+        super.write(os);
+        os.writeShort(offset);
+    }
+
+    @Override
+    public String toString() {
+        return "Uninitialized_variable_info[" + offset + "]";
+    }
+
+    public int getOffset() {
+        return offset;
+    }
 }

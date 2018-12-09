@@ -16,17 +16,15 @@
  *
  */
 
-package com.nur1popcorn.basm;
+package com.nur1popcorn.basm.classfile.attributes.method.stackmap;
 
-public final class DexConstants {
-    public static final String DEX_FILE_MAGIC = "dex\n03[5-9]\0";
+public class AppendedFrame extends StackMapFrame {
+    private int offsetDelta;
+    private VariableInfo locals[];
 
-    public static final int ENDIAN_CONSTANT = 0x12345678;
-    public static final int REVERSE_ENDIAN_CONSTANT = 0x78563412;
-
-    public static final int HEADER_ITEM_SIZE = 0x70;
-
-    // prevent construction :/
-    private DexConstants()
-    {}
+    public AppendedFrame(byte tag, int offsetDelta, VariableInfo locals[]) {
+        super(tag);
+        this.offsetDelta = offsetDelta;
+        this.locals = locals;
+    }
 }
