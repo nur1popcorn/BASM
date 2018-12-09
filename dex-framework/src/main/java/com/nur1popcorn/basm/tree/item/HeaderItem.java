@@ -28,7 +28,7 @@ import java.util.Arrays;
 
 import static com.nur1popcorn.basm.DexConstants.*;
 
-public class HeaderItem {
+public class HeaderItem extends Item {
     private final byte[] magic = new byte[8];
     private int checksum;
     private final byte signature[] = new byte[20];
@@ -45,8 +45,9 @@ public class HeaderItem {
     public int classDefsSize, classDefsOff;
     private int dataSize, dataOff;
 
-    public void read(ByteBuffer byteBuffer) {
-        Alignment.alignToFourBytes(byteBuffer);
+    @Override
+    public void read(ByteBuffer byteBuffer) throws IOException {
+        super.read(byteBuffer);
         byteBuffer.get(magic);
         final String m = new String(magic);
         if (!m.matches(DEX_FILE_MAGIC))
@@ -114,7 +115,8 @@ public class HeaderItem {
         dataOff = byteBuffer.getInt();
     }
 
-    public void write(ByteBuffer byteBuffer) {
-        Alignment.alignToFourBytesWithZeroFill(byteBuffer);
+    @Override
+    public void write(ByteBuffer byteBuffer) throws IOException {
+        super.write(byteBuffer);
     }
 }

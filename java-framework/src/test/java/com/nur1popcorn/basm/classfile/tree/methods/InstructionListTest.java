@@ -5,7 +5,6 @@ import com.nur1popcorn.basm.TestBase;
 import com.nur1popcorn.basm.classfile.constants.ConstantInfo;
 import com.nur1popcorn.basm.classfile.constants.ConstantUTF8;
 import com.nur1popcorn.basm.classfile.tree.ConstantPoolGenerator;
-import com.nur1popcorn.basm.classfile.tree.methods.instructions.Instruction;
 import com.nur1popcorn.basm.classfile.tree.methods.instructions.InstructionFactory;
 import org.junit.Test;
 

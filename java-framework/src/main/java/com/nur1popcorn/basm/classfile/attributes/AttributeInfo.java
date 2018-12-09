@@ -111,7 +111,7 @@ public abstract class AttributeInfo {
         }
     }
 
-    public int nameIndex /* u2 */,
+    protected int nameIndex /* u2 */,
                   attributeLength /* u4 */;
 
     /**
@@ -152,6 +152,10 @@ public abstract class AttributeInfo {
      */
     public ConstantUTF8 indexName(ConstantPool constantPool) {
         return constantPool.getEntry(nameIndex, CONSTANT_UTF8);
+    }
+
+    public int getAttributeLength() {
+        return attributeLength;
     }
 
     /**

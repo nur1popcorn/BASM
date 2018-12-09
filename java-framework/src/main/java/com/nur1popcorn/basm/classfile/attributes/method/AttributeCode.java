@@ -68,7 +68,7 @@ public class AttributeCode extends AttributeInfo {
         for(ExceptionTableEntry entry : exceptionTable)
             attributeLength += 8;
         for(AttributeInfo attributeInfo : attributes)
-            attributeLength += attributeInfo.attributeLength;
+            attributeLength += attributeInfo.getAttributeLength();
         this.attributeLength = attributeLength;
     }
 
