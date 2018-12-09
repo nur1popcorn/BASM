@@ -15,7 +15,7 @@ public class Alignment {
     /**
      * Writes 0x00 until the position is aligned to a multiple of 4.
      */
-    public void alignToFourBytesWithZeroFill(ByteBuffer data) {
+    public static void alignToFourBytesWithZeroFill(ByteBuffer data) {
         while ((data.position() & 3) != 0) {
             data.put((byte) 0);
         }

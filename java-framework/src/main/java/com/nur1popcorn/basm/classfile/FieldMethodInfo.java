@@ -18,7 +18,7 @@
 
 package com.nur1popcorn.basm.classfile;
 
-import com.nur1popcorn.basm.classfile.attributes.AttributeCode;
+import com.nur1popcorn.basm.classfile.attributes.method.AttributeCode;
 import com.nur1popcorn.basm.classfile.attributes.AttributeInfo;
 import com.nur1popcorn.basm.classfile.constants.ConstantUTF8;
 import com.nur1popcorn.basm.classfile.tree.Type;

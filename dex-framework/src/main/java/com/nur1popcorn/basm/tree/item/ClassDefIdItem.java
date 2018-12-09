@@ -5,14 +5,14 @@ import com.nur1popcorn.basm.utils.Alignment;
 import java.nio.ByteBuffer;
 
 public class ClassDefIdItem {
-    public final int classIdx,
-    accessFlags,
-    superclassIdx,
-    interfacesOff,
-    sourceFileIdx,
-    annotationsOff,
-    classDataOff,
-    staticValuesOff;
+    private final int classIdx,
+                     accessFlags,
+                     superclassIdx,
+                     interfacesOff,
+                     sourceFileIdx,
+                     annotationsOff,
+                     classDataOff,
+                     staticValuesOff;
 
     public ClassDefIdItem(ByteBuffer byteBuffer) {
         Alignment.alignToFourBytes(byteBuffer);

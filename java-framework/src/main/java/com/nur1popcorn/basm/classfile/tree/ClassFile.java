@@ -23,9 +23,11 @@ import com.nur1popcorn.basm.classfile.attributes.AttributeInfo;
 import com.nur1popcorn.basm.classfile.constants.ConstantName;
 import com.nur1popcorn.basm.classfile.tree.fields.FieldNode;
 import com.nur1popcorn.basm.classfile.tree.methods.MethodNode;
+import com.nur1popcorn.basm.utils.ClassPool;
 
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,17 +44,19 @@ import static com.nur1popcorn.basm.classfile.ClassReader.READ_ALL;
  */
 public final class ClassFile implements IClassVisitor, IClassVersionProvider {
 
+    private ClassPool classPool;
+
     private ConstantPoolGenerator constantPool;
 
-    public int access;
+    private int access;
 
     private int minorVersion,
                 majorVersion;
 
-    public String thisClass,
-                  superClass;
+    private String thisClass;
+    private ClassFile superClass;
 
-    private List<String> interfaces = new ArrayList<>();
+    public List<ClassFile> interfaces = new ArrayList<>();
 
     private List<FieldNode> fieldNodes = new ArrayList<>();
     private List<MethodNode> methodNodes = new ArrayList<>();
@@ -61,7 +65,12 @@ public final class ClassFile implements IClassVisitor, IClassVersionProvider {
     private ClassFile()
     {}
 
-    public ClassFile(DataInputStream din) throws IOException {
+    public ClassFile(ClassPool classPool, InputStream in) throws IOException {
+        this(classPool, new DataInputStream(in));
+    }
+
+    public ClassFile(ClassPool classPool, DataInputStream din) throws IOException {
+        this.classPool = classPool;
         new ClassReader(din)
             .accept(
                 this,
@@ -74,7 +83,7 @@ public final class ClassFile implements IClassVisitor, IClassVersionProvider {
         this.minorVersion = minorVersion;
         this.majorVersion = majorVersion;
         // TODO: fix
-        //this.constantPool = new ConstantPoolGenerator(this, constantPool.getEntries());
+        this.constantPool = new ConstantPoolGenerator(constantPool.getEntries());
     }
 
     @Override
@@ -82,20 +91,29 @@ public final class ClassFile implements IClassVisitor, IClassVersionProvider {
         this.access = access;
         this.thisClass = ((ConstantName)constantPool.getEntry(thisClass))
             .indexName(constantPool).bytes;
-        this.superClass = ((ConstantName)constantPool.getEntry(superClass))
-            .indexName(constantPool).bytes;
+        final ConstantName constantSuperClass = (ConstantName)constantPool.getEntry(superClass);
+        if (constantSuperClass == null) {
+            if (!this.thisClass.equals("java/lang/Object"))
+                throw new NullPointerException("super class must be non-null");
+            this.superClass = null;
+        } else
+            this.superClass = classPool.find(
+                constantSuperClass.indexName(constantPool).bytes
+            );
         this.interfaces = new ArrayList<>(interfaces.length);
-        for (int anInterface : interfaces)
+        for (int index : interfaces)
             this.interfaces.add(
-                ((ConstantName)constantPool.getEntry(anInterface))
+                classPool.find(
+                    ((ConstantName)constantPool.getEntry(index))
                     .indexName(constantPool).bytes
+                )
             );
     }
 
     @Override
-    public void visitFields(FieldMethodInfo[] fields) throws IOException {
-        //for(FieldMethodInfo fieldInfo : fields)
-        //    fieldNodes.add(new FieldNode(fieldInfo, constantPool));
+    public void visitFields(FieldMethodInfo[] fields) {
+        for(FieldMethodInfo fieldInfo : fields)
+            fieldNodes.add(new FieldNode(fieldInfo, constantPool));
     }
 
     @Override
