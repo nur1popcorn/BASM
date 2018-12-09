@@ -24,6 +24,7 @@ import com.nur1popcorn.basm.utils.Alignment;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 import static com.nur1popcorn.basm.DexConstants.*;
@@ -49,7 +50,7 @@ public class HeaderItem extends Item {
     public void read(ByteBuffer byteBuffer) throws IOException {
         super.read(byteBuffer);
         byteBuffer.get(magic);
-        final String m = new String(magic);
+        final String m = new String(magic, StandardCharsets.UTF_8);
         if (!m.matches(DEX_FILE_MAGIC))
             throw new IncorrectMagic(magic);
 

@@ -8,7 +8,7 @@ public class ElementValueEnumConstant extends ElementValue {
     private final int typeNameIndex,
                       constNameIndex;
 
-    public ElementValueEnumConstant(byte tag, DataInputStream in) throws IOException {
+    public ElementValueEnumConstant(int tag, DataInputStream in) throws IOException {
         super(tag);
         typeNameIndex = in.readUnsignedShort();
         constNameIndex = in.readUnsignedShort();

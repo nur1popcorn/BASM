@@ -9,7 +9,7 @@ import java.io.IOException;
 public class ElementValueNestedAnnotation extends ElementValue {
     private final Annotation annotation;
 
-    public ElementValueNestedAnnotation(byte tag, DataInputStream in) throws IOException {
+    public ElementValueNestedAnnotation(int tag, DataInputStream in) throws IOException {
         super(tag);
         this.annotation = new Annotation(in);
     }

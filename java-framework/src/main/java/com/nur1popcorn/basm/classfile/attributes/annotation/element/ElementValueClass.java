@@ -7,7 +7,7 @@ import java.io.IOException;
 public class ElementValueClass extends ElementValue {
     private final int classInfoIndex;
 
-    public ElementValueClass(byte tag, DataInputStream in) throws IOException {
+    public ElementValueClass(int tag, DataInputStream in) throws IOException {
         super(tag);
         classInfoIndex = in.readUnsignedShort();
     }

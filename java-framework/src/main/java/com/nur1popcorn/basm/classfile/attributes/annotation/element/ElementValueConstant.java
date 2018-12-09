@@ -7,7 +7,7 @@ import java.io.IOException;
 public class ElementValueConstant extends ElementValue {
     private final int constValueIndex;
 
-    public ElementValueConstant(byte tag, DataInputStream in) throws IOException {
+    public ElementValueConstant(int tag, DataInputStream in) throws IOException {
         super(tag);
         constValueIndex = in.readUnsignedShort();
     }
