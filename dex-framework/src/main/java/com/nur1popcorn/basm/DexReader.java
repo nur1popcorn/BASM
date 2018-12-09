@@ -60,7 +60,7 @@ public final class DexReader {
         this.byteBuffer = byteBuffer.asReadOnlyBuffer().order(ByteOrder.LITTLE_ENDIAN);
     }
 
-    private void readHeader() {
+    private void readHeader() throws IOException {
         header = new HeaderItem();
         header.read(byteBuffer);
 

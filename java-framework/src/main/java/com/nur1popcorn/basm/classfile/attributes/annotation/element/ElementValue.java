@@ -5,14 +5,14 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 public abstract class ElementValue {
-    private final byte tag;
+    private final int tag;
 
-    public ElementValue(byte tag) {
+    public ElementValue(int tag) {
         this.tag = tag;
     }
 
     public static ElementValue read(DataInputStream in) throws IOException {
-        final byte tag = in.readByte();
+        final int tag = in.readUnsignedByte();
         switch(tag) {
             case 'B':
             case 'C':

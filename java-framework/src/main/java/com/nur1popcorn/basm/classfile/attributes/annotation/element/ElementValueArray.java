@@ -7,7 +7,7 @@ import java.io.IOException;
 public class ElementValueArray extends ElementValue {
     private final ElementValue[] values;
 
-    public ElementValueArray(byte tag, DataInputStream in) throws IOException {
+    public ElementValueArray(int tag, DataInputStream in) throws IOException {
         super(tag);
         values = new ElementValue[in.readUnsignedShort()];
         for (int i = 0; i < values.length; i++)

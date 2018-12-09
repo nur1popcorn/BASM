@@ -7,14 +7,14 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class TypeAnnotation {
-    private final byte targetType;
+    private final int targetType;
     private final TargetInfo targetInfo;
     private final int typeIndex;
     private final TypePath targetPath;
     private final ElementValuePair[] elementValuePairs;
 
     public TypeAnnotation(DataInputStream in) throws IOException {
-        targetType = in.readByte();
+        targetType = in.readUnsignedByte();
         targetInfo = TargetInfo.read(targetType, in);
         targetPath = new TypePath(in);
         typeIndex = in.readUnsignedShort();
