@@ -30,8 +30,6 @@ import java.io.IOException;
 import java.util.AbstractList;
 import java.util.Arrays;
 
-import static com.nur1popcorn.basm.Constants.*;
-
 /**
  * The {@link InstructionList} class is derived from the abstract {@link AbstractList} class and
  * implements a resizeable array and linked list made up of {@link InstructionHandle}s. These
@@ -79,37 +77,8 @@ public final class InstructionList extends AbstractList<InstructionHandle> imple
     InstructionList(byte code[], ConstantPool constantPool) throws IOException {
         final ByteDataInputStream in = new ByteDataInputStream(code);
         int length = 0;
-        for(; in.available() != 0; length++) {
-            final byte opcode = in.readByte();
-            switch(opcode) {
-                case TABLESWITCH: {
-                    // skip padding.
-                    in.skipBytes(in.position() & 0x3);
-                    final int low = in.readInt();
-                    final int high = in.readInt();
-                    in.skipBytes((high - low + 1) << 2);
-                }   break;
-                case LOOKUPSWITCH:
-                    // skip padding.
-                    in.skipBytes(in.position() & 0x3);
-                    in.skipBytes(in.readInt() << 3);
-                    break;
-                case WIDE:
-                    in.skipBytes(
-                        in.readByte() == IINC ?
-                            4 : 2);
-                    break;
-                default: {
-                    final int parameters = OPCODE_PARAMETERS[opcode & 0xff];
-                    if(parameters == UNKNOWN_PARAMETERS)
-                        throw new MalformedClassFileException(
-                            "The opcode=" + opcode +
-                            " at index=" + length + " is invalid."
-                        );
-                    in.skipBytes(parameters);
-                }
-            }
-        }
+        for(; in.available() != 0; length++)
+            Instruction.parameters(in);
         instructions = new InstructionHandle[Math.max(DEFAULT_SIZE, length)];
         in.reset();
         while(in.available() != 0)

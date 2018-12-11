@@ -23,5 +23,5 @@ import com.nur1popcorn.basm.utils.ClassPool;
 import junit.framework.TestCase;
 
 public abstract class TestBase extends TestCase {
-    private final ClassPool classPool = new ClassPool();
+    protected final ClassPool classPool = new ClassPool();
 }

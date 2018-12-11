@@ -1,5 +1,6 @@
 package com.nur1popcorn.basm.utils;
 
+import com.nur1popcorn.basm.classfile.ClassReader;
 import com.nur1popcorn.basm.classfile.tree.ClassFile;
 
 import java.io.*;
@@ -9,35 +10,58 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import static com.nur1popcorn.basm.classfile.ClassReader.READ_ALL;
+
 public final class ClassPool {
     private final Set<String> paths = new HashSet<>();
     private final Map<String, ClassFile> cache = new HashMap<>();
 
     public ClassPool() {
-        final String classPath = System.getProperty("java.class.path");
-        addPaths(classPath);
+        addPaths(parseSystemProperty("sun.boot.class.path"));
+        addChilds(parseSystemProperty("java.ext.dirs"));
+        addPaths(parseSystemProperty("java.class.path"));
+    }
+
+    private String[] parseSystemProperty(String key) {
+        final String property = System.getProperty(key);
+        return property.split(File.pathSeparator);
+    }
+
+    public void addChilds(String... paths) {
+        if (paths == null || paths.length == 0)
+            return;
+        for (String path : paths) {
+            final File child = new File(path);
+            addFiles(child.listFiles());
+        }
+    }
+
+    public void addPath(String path) {
+        addFile(new File(path));
     }
 
     public void addPaths(String... paths) {
         if (paths == null || paths.length == 0)
             return;
         for (String path : paths)
-            if (path.contains(File.pathSeparator))
-                for (String next : path.split(File.pathSeparator))
-                    addPath(next);
-            else
-                addPath(path);
+            addPath(path);
     }
 
-    public void addPath(String path) {
-        final File file = new File(path);
-        if (file.isFile() && ensureZip(file))
-            paths.add("jar:file:" + path + "!/");
-        else if (file.isDirectory()) {
-            if (!path.endsWith(File.separator))
-                path += File.separator;
-            paths.add("file:" + path);
+    public void addFile(File file) {
+        if (file.exists()) {
+            final String uri =  file.toURI().toString();
+            if (file.isFile() && ensureZip(file))
+                paths.add("jar:" + uri + "!/");
+            else if (file.isDirectory())
+                paths.add(uri);
         }
+    }
+
+    public void addFiles(File... files) {
+        if (files == null || files.length == 0)
+            return;
+        for (File file : files)
+            addFile(file);
     }
 
     public ClassFile find(String name) {
@@ -45,11 +69,14 @@ public final class ClassPool {
             final String fileName = name.replace('.', '/') + ".class";
             for (String path : paths)
                 try {
-                    return new ClassFile(
-                        this,
-                        new URL(path + fileName)
-                            .openStream()
-                    );
+                    final ClassFile classFile = new ClassFile(this);
+                    final InputStream in = new URL(path + fileName).openStream();
+                    new ClassReader(in)
+                        .accept(
+                            classFile,
+                            READ_ALL
+                        );
+                    return classFile;
                 } catch (IOException ignored) { }
             throw new RuntimeException("could not find file: " + fileName);
         });

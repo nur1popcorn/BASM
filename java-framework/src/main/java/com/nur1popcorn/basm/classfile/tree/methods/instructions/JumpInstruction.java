@@ -53,6 +53,7 @@ public final class JumpInstruction extends Instruction implements IInstructionPo
     @Override
     public void write(DataOutputStream os) throws IOException {
         super.write(os);
+        //TODO: fix this
         switch(opcode) {
             case GOTO_W:
             case JSR_W:

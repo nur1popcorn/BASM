@@ -56,26 +56,13 @@ public final class ClassFile implements IClassVisitor, IClassVersionProvider {
     private String thisClass;
     private ClassFile superClass;
 
-    public List<ClassFile> interfaces = new ArrayList<>();
+    private List<ClassFile> interfaces = new ArrayList<>();
 
     private List<FieldNode> fieldNodes = new ArrayList<>();
     private List<MethodNode> methodNodes = new ArrayList<>();
 
-    // prevent construction :/
-    private ClassFile()
-    {}
-
-    public ClassFile(ClassPool classPool, InputStream in) throws IOException {
-        this(classPool, new DataInputStream(in));
-    }
-
-    public ClassFile(ClassPool classPool, DataInputStream din) throws IOException {
+    public ClassFile(ClassPool classPool) {
         this.classPool = classPool;
-        new ClassReader(din)
-            .accept(
-                this,
-                READ_ALL
-            );
     }
 
     @Override
@@ -92,16 +79,16 @@ public final class ClassFile implements IClassVisitor, IClassVersionProvider {
         this.thisClass = ((ConstantName)constantPool.getEntry(thisClass))
             .indexName(constantPool).bytes;
         final ConstantName constantSuperClass = (ConstantName)constantPool.getEntry(superClass);
-        if (constantSuperClass == null) {
-            if (!this.thisClass.equals("java/lang/Object"))
-                throw new NullPointerException("super class must be non-null");
+        if(constantSuperClass == null) {
+            if(!this.thisClass.equals("java/lang/Object"))
+                throw new MalformedClassFileException("super class must be non-null");
             this.superClass = null;
         } else
             this.superClass = classPool.find(
                 constantSuperClass.indexName(constantPool).bytes
             );
         this.interfaces = new ArrayList<>(interfaces.length);
-        for (int index : interfaces)
+        for(int index : interfaces)
             this.interfaces.add(
                 classPool.find(
                     ((ConstantName)constantPool.getEntry(index))
