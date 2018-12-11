@@ -18,6 +18,7 @@
 
 package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
+import com.nur1popcorn.basm.classfile.tree.methods.InstructionHandle;
 import com.nur1popcorn.basm.classfile.tree.methods.InstructionList;
 
 import java.io.DataOutputStream;
@@ -79,13 +80,22 @@ public final class SwitchInstruction extends Instruction implements IInstruction
         for(int i = 0; i < padding; i++)
             os.write(0);
         os.writeInt(defaultIndex);
+        //TODO: fix this
         switch(opcode) {
-            case LOOKUPSWITCH:
-
-                break;
             case TABLESWITCH:
                 // https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.tableswitch
-                // os.writeInt();
+                int length = indices.size();
+                os.writeInt(length);
+                os.writeInt(length);
+                for (Integer index : indices)
+                    os.writeInt(index);
+                break;
+            case LOOKUPSWITCH:
+                os.writeInt(indices.size());
+                for(int i = 0; i < indices.size(); i++) {
+                    os.writeInt(keys.get(i));
+                    os.writeInt(indices.get(i));
+                }
                 break;
         }
     }
@@ -95,7 +105,10 @@ public final class SwitchInstruction extends Instruction implements IInstruction
      */
     @Override
     public void attach(InstructionList instructions) {
-
+        indexDefault(instructions)
+            .addPointer(this);
+        indexTargets(instructions)
+            .forEach(h -> h.addPointer(this));
     }
 
     /**
@@ -103,7 +116,10 @@ public final class SwitchInstruction extends Instruction implements IInstruction
      */
     @Override
     public void dispose(InstructionList instructions) {
-
+        indexDefault(instructions)
+            .removePointer(this);
+        indexTargets(instructions)
+            .forEach(h -> h.removePointer(this));
     }
 
     /**
@@ -111,7 +127,7 @@ public final class SwitchInstruction extends Instruction implements IInstruction
      */
     @Override
     public void update(int newIndex) {
-
+        //this.defaultIndex = newIndex;
     }
 
     /**
@@ -119,8 +135,8 @@ public final class SwitchInstruction extends Instruction implements IInstruction
      *
      * @return
      */
-    public Instruction indexDefault(InstructionList instructions) {
-        return null;
+    public InstructionHandle indexDefault(InstructionList instructions) {
+        return instructions.get(defaultIndex);
     }
 
     /**
@@ -128,9 +144,10 @@ public final class SwitchInstruction extends Instruction implements IInstruction
      *
      * @return
      */
-    public Instruction[] indexTargets(InstructionList instructions) {
-        return null;
+    public List<InstructionHandle> indexTargets(InstructionList instructions) {
+        final List<InstructionHandle> targets = new ArrayList<>(indices.size());
+        for (int index : indices)
+            targets.add(instructions.get(index));
+        return targets;
     }
-
-
 }

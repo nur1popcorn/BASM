@@ -45,7 +45,14 @@ public final class MethodNode extends FieldMethodNode {
      */
     public MethodNode(FieldMethodInfo info, ConstantPool constantPool) throws IOException {
         super(info, constantPool);
-        instructionList = new InstructionList(info.getCode().getByteCode(), constantPool);
+        //TODO: remove this
+        if (info.getCode() != null)
+            instructionList = new InstructionList(
+                info.getCode().getByteCode(),
+                constantPool
+            );
+        else
+            instructionList = new InstructionList();
     }
 
     /**

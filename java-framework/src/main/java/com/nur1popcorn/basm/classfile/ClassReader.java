@@ -22,6 +22,7 @@ import com.nur1popcorn.basm.classfile.attributes.AttributeInfo;
 
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import static com.nur1popcorn.basm.Constants.*;
 
@@ -218,6 +219,10 @@ public final class ClassReader {
     private FieldMethodInfo methods[];
 
     private AttributeInfo attributes[];
+
+    public ClassReader(InputStream in) throws IOException {
+        this(new DataInputStream(in));
+    }
 
     public ClassReader(DataInputStream in) throws IOException {
         this.in = in;

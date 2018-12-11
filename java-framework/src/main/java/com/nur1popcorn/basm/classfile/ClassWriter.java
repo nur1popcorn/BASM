@@ -60,8 +60,8 @@ public final class ClassWriter implements IClassVisitor {
         out.writeShort(superClass);
 
         out.writeShort(interfaces.length);
-        for(int i : interfaces)
-            out.writeShort(i);
+        for(int index : interfaces)
+            out.writeShort(index);
     }
 
     /**
