@@ -155,13 +155,6 @@ public final class InstructionList extends AbstractList<InstructionHandle> imple
         return instructions[index];
     }
 
-    public int getIndex(InstructionHandle instruction) {
-        for (int i = 0; i < instructions.length; i++)
-            if (instruction.equals(instructions[i]))
-                return i;
-        throw new RuntimeException();
-    }
-
     /**
      * Replaces the {@link InstructionHandle} at the given index.
      *

@@ -465,7 +465,7 @@ public abstract class Instruction {
             }
         }
         final int targetAddress =
-            instructions.getIndex(target) + extra;
+            instructions.indexOf(target) + extra;
         return targetAddress - pc;
     }
 
