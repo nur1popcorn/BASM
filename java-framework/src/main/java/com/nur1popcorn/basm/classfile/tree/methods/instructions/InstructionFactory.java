@@ -324,6 +324,11 @@ public final class InstructionFactory {
     public static final NoParameterInstruction IMPDEP1 = new NoParameterInstruction(Constants.IMPDEP1);
     public static final NoParameterInstruction IMPDEP2 = new NoParameterInstruction(Constants.IMPDEP2);
 
+    public static final NoParameterInstruction ARRAYLENGTH = new NoParameterInstruction(Constants.ARRAYLENGTH);
+    public static final NoParameterInstruction ATHROW = new NoParameterInstruction(Constants.ATHROW);
+    public static final NoParameterInstruction MONITORENTER = new NoParameterInstruction(Constants.MONITORENTER);
+    public static final NoParameterInstruction MONITOREXIT = new NoParameterInstruction(Constants.MONITOREXIT);
+
     /**
      *
      */
@@ -475,6 +480,10 @@ public final class InstructionFactory {
         INSTRUCTIONS[Constants.BREAKPOINT & 0xff] = BREAKPOINT;
         INSTRUCTIONS[Constants.IMPDEP1 & 0xff] = IMPDEP1;
         INSTRUCTIONS[Constants.IMPDEP2 & 0xff] = IMPDEP2;
+        INSTRUCTIONS[Constants.ARRAYLENGTH & 0xff] = ARRAYLENGTH;
+        INSTRUCTIONS[Constants.ATHROW & 0xff] = ATHROW;
+        INSTRUCTIONS[Constants.MONITORENTER & 0xff] = MONITORENTER;
+        INSTRUCTIONS[Constants.MONITOREXIT & 0xff] = MONITOREXIT;
     }
 
     private final ConstantPoolGenerator gen;

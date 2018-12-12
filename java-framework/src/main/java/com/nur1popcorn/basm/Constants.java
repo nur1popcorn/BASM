@@ -85,6 +85,8 @@ public final class Constants {
     public static final byte CONSTANT_METHOD_HANDLE =        15;
     public static final byte CONSTANT_METHOD_TYPE =          16;
     public static final byte CONSTANT_INVOKEDYNAMIC =        18;
+    public static final byte CONSTANT_MODULE =               19;
+    public static final byte CONSTANT_PACKAGE =              20;
 
     /**
      * An array containing a string representation of the available constant pool entries.
@@ -631,6 +633,11 @@ public final class Constants {
     public static final byte BREAKPOINT =                    (byte) 0xca;
     public static final byte IMPDEP1 =                       (byte) 0xfe;
     public static final byte IMPDEP2 =                       (byte) 0xff;
+
+    public static final byte ARRAYLENGTH =                   (byte) 0xbe;
+    public static final byte ATHROW =                        (byte) 0xbf;
+    public static final byte MONITORENTER =                  (byte) 0xc2;
+    public static final byte MONITOREXIT =                   (byte) 0xc3;
 
     //TODO: desc.
     public static final String OPCODE_MNEMONICS[] = new String[] {

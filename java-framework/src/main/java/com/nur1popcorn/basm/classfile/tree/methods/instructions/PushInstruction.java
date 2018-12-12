@@ -50,6 +50,7 @@ public final class PushInstruction extends Instruction {
      */
     @Override
     public void write(DataOutputStream os) throws IOException {
+        super.write(os);
         if(opcode == BIPUSH)
             os.writeByte(value);
         else //if(opcode == SIPUSH)

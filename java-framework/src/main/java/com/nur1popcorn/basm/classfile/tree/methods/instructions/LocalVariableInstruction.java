@@ -18,6 +18,9 @@
 
 package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 public class LocalVariableInstruction extends Instruction {
     /*
      *
@@ -29,6 +32,7 @@ public class LocalVariableInstruction extends Instruction {
      */
     LocalVariableInstruction(byte opcode, byte index) {
         super(opcode);
+        this.index = index;
     }
 
     @Override
@@ -48,5 +52,11 @@ public class LocalVariableInstruction extends Instruction {
      */
     public final void setIndex(int index) {
         this.index = (byte) index;
+    }
+
+    @Override
+    public void write(DataOutputStream os) throws IOException {
+        super.write(os);
+        os.writeByte(index);
     }
 }

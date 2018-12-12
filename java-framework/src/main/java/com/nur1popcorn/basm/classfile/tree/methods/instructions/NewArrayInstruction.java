@@ -2,6 +2,9 @@ package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
 import com.nur1popcorn.basm.classfile.tree.Type;
 
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 import static com.nur1popcorn.basm.Constants.NEWARRAY;
 
 public class NewArrayInstruction extends Instruction {
@@ -18,5 +21,11 @@ public class NewArrayInstruction extends Instruction {
     @Override
     public void accept(IInstructionVisitor visitor) {
         // TODO: impl.
+    }
+
+    @Override
+    public void write(DataOutputStream os) throws IOException {
+        super.write(os);
+        os.writeByte(type.getType());
     }
 }
