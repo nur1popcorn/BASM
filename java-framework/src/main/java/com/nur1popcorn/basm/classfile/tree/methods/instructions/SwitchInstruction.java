@@ -30,15 +30,17 @@ import static com.nur1popcorn.basm.Constants.LOOKUPSWITCH;
 import static com.nur1popcorn.basm.Constants.TABLESWITCH;
 
 public final class SwitchInstruction extends Instruction implements IInstructionPointer {
+    protected int padding;
     private int defaultIndex;
     private final List<Integer> keys;
-    private final List<Integer> indices;
+    protected final List<Integer> indices;
 
     /**
      * @param opcode
      */
-    SwitchInstruction(byte opcode, int defaultIndex, int keys[], int indices[]) {
+    SwitchInstruction(byte opcode, int padding, int defaultIndex, int keys[], int indices[]) {
         super(opcode);
+        this.padding = padding;
         this.defaultIndex = defaultIndex;
         this.keys = new ArrayList<>(keys.length);
         for(int i : keys)
@@ -61,8 +63,9 @@ public final class SwitchInstruction extends Instruction implements IInstruction
      * {@inheritDoc}
      */
     @Override
-    public void write(DataOutputStream os) throws IOException {
-        super.write(os);
+    public void write(DataOutputStream os, InstructionList instructions) throws IOException {
+        final int pc = os.size();
+        os.writeByte(opcode);
         /*
             ^
           3 | \    \
@@ -76,25 +79,32 @@ public final class SwitchInstruction extends Instruction implements IInstruction
 
             => y = 3 - (x & 3)
         */
-        final int padding = 3 - (os.size() & 0x3);
+        final int padding = 4 - (os.size() & 0x3);
         for(int i = 0; i < padding; i++)
-            os.write(0);
-        os.writeInt(defaultIndex);
-        //TODO: fix this
+            os.writeByte(0);
+        os.writeInt(computeIndex(
+            pc, indexDefault(instructions), instructions
+        ));
+        final List<InstructionHandle> indexTargets = indexTargets(instructions);
         switch(opcode) {
             case TABLESWITCH:
                 // https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.tableswitch
-                int length = indices.size();
-                os.writeInt(length);
-                os.writeInt(length);
-                for (Integer index : indices)
-                    os.writeInt(index);
+                final int low = keys.get(0);
+                final int high = low + indices.size() - 1;
+                os.writeInt(low);
+                os.writeInt(high);
+                for(InstructionHandle handle : indexTargets)
+                    os.writeInt(computeIndex(
+                        pc, handle, instructions
+                    ));
                 break;
             case LOOKUPSWITCH:
                 os.writeInt(indices.size());
-                for(int i = 0; i < indices.size(); i++) {
+                for (int i = 0; i < indexTargets.size(); i++) {
                     os.writeInt(keys.get(i));
-                    os.writeInt(indices.get(i));
+                    os.writeInt(computeIndex(
+                        pc, indexTargets.get(i), instructions
+                    ));
                 }
                 break;
         }

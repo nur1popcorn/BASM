@@ -25,13 +25,9 @@ import com.nur1popcorn.basm.classfile.tree.fields.FieldNode;
 import com.nur1popcorn.basm.classfile.tree.methods.MethodNode;
 import com.nur1popcorn.basm.utils.ClassPool;
 
-import java.io.DataInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.nur1popcorn.basm.classfile.ClassReader.READ_ALL;
 
 /**
  * The {@link ClassFile} provides an abstraction layer between bytecode and user.
@@ -78,14 +74,14 @@ public final class ClassFile implements IClassVisitor, IClassVersionProvider {
         this.access = access;
         this.thisClass = ((ConstantName)constantPool.getEntry(thisClass))
             .indexName(constantPool).bytes;
-        final ConstantName constantSuperClass = (ConstantName)constantPool.getEntry(superClass);
-        if(constantSuperClass == null) {
+        if(superClass == 0) {
             if(!this.thisClass.equals("java/lang/Object"))
                 throw new MalformedClassFileException("super class must be non-null");
             this.superClass = null;
         } else
             this.superClass = classPool.find(
-                constantSuperClass.indexName(constantPool).bytes
+                ((ConstantName)constantPool.getEntry(superClass))
+                .indexName(constantPool).bytes
             );
         this.interfaces = new ArrayList<>(interfaces.length);
         for(int index : interfaces)

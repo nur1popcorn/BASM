@@ -20,8 +20,12 @@ package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
 import com.nur1popcorn.basm.classfile.tree.methods.InstructionList;
 
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 public interface IInstructionPointer {
     void attach(InstructionList instructions);
     void dispose(InstructionList instructions);
     void update(int newIndex);
+    void write(DataOutputStream os, InstructionList instructions) throws IOException;
 }

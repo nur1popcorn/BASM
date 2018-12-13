@@ -26,7 +26,7 @@ import java.io.IOException;
 import static com.nur1popcorn.basm.Constants.*;
 
 public final class WideInstruction extends Instruction {
-    private byte opcode;
+    protected byte opcode;
     private int index, constant;
 
     /**

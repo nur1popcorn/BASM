@@ -60,8 +60,8 @@ public final class Type {
      */
     public static final Type BOOLEAN = new Type(T_BOOLEAN, "Z");
     public static final Type CHAR = new Type(T_CHAR, "C");
-    public static final Type FLOAT = new Type(T_DOUBLE, "D");
-    public static final Type DOUBLE = new Type(T_FLOAT, "F");
+    public static final Type FLOAT = new Type(T_FLOAT, "F");
+    public static final Type DOUBLE = new Type(T_DOUBLE, "D");
     public static final Type BYTE = new Type(T_BYTE, "B");
     public static final Type SHORT = new Type(T_SHORT, "S");
     public static final Type INT = new Type(T_INT, "I");

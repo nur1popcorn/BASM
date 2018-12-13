@@ -51,16 +51,19 @@ public final class JumpInstruction extends Instruction implements IInstructionPo
      * {@inheritDoc}
      */
     @Override
-    public void write(DataOutputStream os) throws IOException {
-        super.write(os);
-        //TODO: fix this
+    public void write(DataOutputStream os, InstructionList instructions) throws IOException {
+        final int pc = os.size();
+        os.writeByte(opcode);
+        final int targetIndex = computeIndex(
+            pc, indexTarget(instructions), instructions
+        );
         switch(opcode) {
             case GOTO_W:
             case JSR_W:
-                os.writeInt(index);
+                os.writeInt(targetIndex);
                 break;
             default:
-                os.writeShort(index);
+                os.writeShort(targetIndex);
                 break;
         }
     }

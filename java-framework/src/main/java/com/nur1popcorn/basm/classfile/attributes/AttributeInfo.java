@@ -104,7 +104,14 @@ public abstract class AttributeInfo {
                  */
                 new SimpleEntry<>("BootstrapMethods", AttributeBootstrapMethods.class.getDeclaredConstructor(int.class, DataInputStream.class)),
 
-                new SimpleEntry<>("MethodParameters", AttributeMethodParameters.class.getDeclaredConstructor(int.class, DataInputStream.class))
+                new SimpleEntry<>("MethodParameters", AttributeMethodParameters.class.getDeclaredConstructor(int.class, DataInputStream.class)),
+
+                //TODO: implement this
+                new SimpleEntry<>("Module", AttributeMethodParameters.class.getDeclaredConstructor(int.class, DataInputStream.class)),
+                new SimpleEntry<>("ModulePackages", AttributeMethodParameters.class.getDeclaredConstructor(int.class, DataInputStream.class)),
+                new SimpleEntry<>("ModuleMainClass", AttributeMethodParameters.class.getDeclaredConstructor(int.class, DataInputStream.class)),
+                new SimpleEntry<>("NestHost", AttributeMethodParameters.class.getDeclaredConstructor(int.class, DataInputStream.class)),
+                new SimpleEntry<>("NestMembers", AttributeMethodParameters.class.getDeclaredConstructor(int.class, DataInputStream.class))
             ).collect(Collectors.toMap(SimpleEntry::getKey, SimpleEntry::getValue));
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
