@@ -18,6 +18,8 @@
 
 package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
+import com.nur1popcorn.basm.classfile.tree.methods.InstructionList;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
 
@@ -49,8 +51,8 @@ public final class PushInstruction extends Instruction {
      * {@inheritDoc}
      */
     @Override
-    public void write(DataOutputStream os) throws IOException {
-        super.write(os);
+    public void write(DataOutputStream os, InstructionList instructions) throws IOException {
+        super.write(os, instructions);
         if(opcode == BIPUSH)
             os.writeByte(value);
         else //if(opcode == SIPUSH)

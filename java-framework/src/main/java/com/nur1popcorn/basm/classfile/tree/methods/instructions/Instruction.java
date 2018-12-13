@@ -246,9 +246,10 @@ public abstract class Instruction {
     /**
      * @param os
      *
+     * @param instructions
      * @throws IOException
      */
-    public void write(DataOutputStream os) throws IOException {
+    public void write(DataOutputStream os, InstructionList instructions) throws IOException {
         os.writeByte(opcode);
     }
 

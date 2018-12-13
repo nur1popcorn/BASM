@@ -27,5 +27,4 @@ public interface IInstructionPointer {
     void attach(InstructionList instructions);
     void dispose(InstructionList instructions);
     void update(int newIndex);
-    void write(DataOutputStream os, InstructionList instructions) throws IOException;
 }
