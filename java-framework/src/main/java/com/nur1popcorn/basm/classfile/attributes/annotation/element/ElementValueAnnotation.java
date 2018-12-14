@@ -6,10 +6,10 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-public class ElementValueNestedAnnotation extends ElementValue {
+public class ElementValueAnnotation extends ElementValue {
     private final Annotation annotation;
 
-    public ElementValueNestedAnnotation(int tag, DataInputStream in) throws IOException {
+    public ElementValueAnnotation(int tag, DataInputStream in) throws IOException {
         super(tag);
         this.annotation = new Annotation(in);
     }

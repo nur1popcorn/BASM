@@ -21,6 +21,10 @@ package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 import com.nur1popcorn.basm.Constants;
 import com.nur1popcorn.basm.classfile.tree.ConstantPoolGenerator;
 import com.nur1popcorn.basm.classfile.tree.Type;
+import com.nur1popcorn.basm.classfile.tree.methods.InstructionHandle;
+import com.nur1popcorn.basm.classfile.tree.methods.InstructionList;
+
+import java.util.TreeMap;
 
 import static com.nur1popcorn.basm.Constants.LDC;
 import static com.nur1popcorn.basm.Constants.LDC_W;
@@ -319,15 +323,15 @@ public final class InstructionFactory {
     /* returns from the method. */
     public static final NoParameterInstruction RETURN = new NoParameterInstruction(Constants.RETURN);
 
-    // TODO: desc.
-    public static final NoParameterInstruction BREAKPOINT = new NoParameterInstruction(Constants.BREAKPOINT);
-    public static final NoParameterInstruction IMPDEP1 = new NoParameterInstruction(Constants.IMPDEP1);
-    public static final NoParameterInstruction IMPDEP2 = new NoParameterInstruction(Constants.IMPDEP2);
-
     public static final NoParameterInstruction ARRAYLENGTH = new NoParameterInstruction(Constants.ARRAYLENGTH);
     public static final NoParameterInstruction ATHROW = new NoParameterInstruction(Constants.ATHROW);
     public static final NoParameterInstruction MONITORENTER = new NoParameterInstruction(Constants.MONITORENTER);
     public static final NoParameterInstruction MONITOREXIT = new NoParameterInstruction(Constants.MONITOREXIT);
+
+    // TODO: desc.
+    public static final NoParameterInstruction BREAKPOINT = new NoParameterInstruction(Constants.BREAKPOINT);
+    public static final NoParameterInstruction IMPDEP1 = new NoParameterInstruction(Constants.IMPDEP1);
+    public static final NoParameterInstruction IMPDEP2 = new NoParameterInstruction(Constants.IMPDEP2);
 
     /**
      *
@@ -477,13 +481,13 @@ public final class InstructionFactory {
         INSTRUCTIONS[Constants.DRETURN & 0xff] = DRETURN;
         INSTRUCTIONS[Constants.ARETURN & 0xff] = ARETURN;
         INSTRUCTIONS[Constants.RETURN & 0xff] = RETURN;
-        INSTRUCTIONS[Constants.BREAKPOINT & 0xff] = BREAKPOINT;
-        INSTRUCTIONS[Constants.IMPDEP1 & 0xff] = IMPDEP1;
-        INSTRUCTIONS[Constants.IMPDEP2 & 0xff] = IMPDEP2;
         INSTRUCTIONS[Constants.ARRAYLENGTH & 0xff] = ARRAYLENGTH;
         INSTRUCTIONS[Constants.ATHROW & 0xff] = ATHROW;
         INSTRUCTIONS[Constants.MONITORENTER & 0xff] = MONITORENTER;
         INSTRUCTIONS[Constants.MONITOREXIT & 0xff] = MONITOREXIT;
+        INSTRUCTIONS[Constants.BREAKPOINT & 0xff] = BREAKPOINT;
+        INSTRUCTIONS[Constants.IMPDEP1 & 0xff] = IMPDEP1;
+        INSTRUCTIONS[Constants.IMPDEP2 & 0xff] = IMPDEP2;
     }
 
     private final ConstantPoolGenerator gen;
@@ -737,11 +741,19 @@ public final class InstructionFactory {
 
     /**
      * @param opcode
-     * @param index
+     * @param target
      *
      * @return
      */
-    public JumpInstruction createJump(byte opcode, int index) {
-        return new JumpInstruction(opcode, index);
+    public JumpInstruction createJump(byte opcode, InstructionHandle target) {
+        return new JumpInstruction(opcode, target);
+    }
+
+    public SwitchInstruction createSwitch(InstructionList instructions,
+                                          byte opcode,
+                                          InstructionHandle defaultTarget,
+                                          TreeMap<Integer, InstructionHandle> targets) {
+        //TODO: compute address
+        return new SwitchInstruction(opcode, 0, defaultTarget, targets);
     }
 }

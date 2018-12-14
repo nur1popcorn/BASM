@@ -40,7 +40,7 @@ public final class InstructionHandle implements Iterable<InstructionHandle> {
                       prev;
 
 
-    private final Instruction handle;
+    private Instruction handle;
 
     /**
      * @param handle
@@ -89,6 +89,10 @@ public final class InstructionHandle implements Iterable<InstructionHandle> {
      */
     public Instruction getHandle() {
         return handle;
+    }
+
+    public void setHandle(Instruction handle) {
+        this.handle = handle;
     }
 
     @Override

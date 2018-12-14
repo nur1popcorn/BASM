@@ -4,11 +4,11 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-public class ElementValueEnumConstant extends ElementValue {
+public class ElementValueEnum extends ElementValue {
     private final int typeNameIndex,
                       constNameIndex;
 
-    public ElementValueEnumConstant(int tag, DataInputStream in) throws IOException {
+    public ElementValueEnum(int tag, DataInputStream in) throws IOException {
         super(tag);
         typeNameIndex = in.readUnsignedShort();
         constNameIndex = in.readUnsignedShort();
