@@ -28,14 +28,14 @@ import static com.nur1popcorn.basm.Constants.GOTO_W;
 import static com.nur1popcorn.basm.Constants.JSR_W;
 
 public final class JumpInstruction extends Instruction implements IInstructionPointer {
-    private int index;
+    private InstructionHandle target;
 
     /**
      * @param opcode
      */
-    JumpInstruction(byte opcode, int index) {
+    JumpInstruction(byte opcode, InstructionHandle target) {
         super(opcode);
-        this.index = index;
+        this.target = target;
     }
 
     /**
@@ -43,7 +43,6 @@ public final class JumpInstruction extends Instruction implements IInstructionPo
      */
     @Override
     public void accept(IInstructionVisitor visitor) {
-        visitor.visitInstructionPointer(this);
         visitor.visitJumpInstruction(this);
     }
 
@@ -52,10 +51,10 @@ public final class JumpInstruction extends Instruction implements IInstructionPo
      */
     @Override
     public void write(DataOutputStream os, InstructionList instructions) throws IOException {
-        final int pc = os.size();
+        final int start = os.size();
         os.writeByte(opcode);
         final int targetIndex = computeIndex(
-            pc, indexTarget(instructions), instructions
+            start, target, instructions
         );
         switch(opcode) {
             case GOTO_W:
@@ -72,32 +71,24 @@ public final class JumpInstruction extends Instruction implements IInstructionPo
      * {@inheritDoc}
      */
     @Override
-    public void attach(InstructionList instructions) {
-       indexTarget(instructions)
-          .addPointer(this);
+    public void attach() {
+        target.addPointer(this);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void dispose(InstructionList instructions) {
-        indexTarget(instructions)
-           .removePointer(this);
+    public void dispose() {
+        target.removePointer(this);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void update(int newIndex) {
-        this.index = newIndex;
-    }
-
-    /**
-     * @return
-     */
-    public InstructionHandle indexTarget(InstructionList instructions) {
-        return instructions.get(index);
+    public void update(InstructionHandle oldHandle, InstructionHandle newHandle) {
+        if(oldHandle.equals(target))
+            target = newHandle;
     }
 }

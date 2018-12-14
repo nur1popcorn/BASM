@@ -18,13 +18,10 @@
 
 package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
-import com.nur1popcorn.basm.classfile.tree.methods.InstructionList;
-
-import java.io.DataOutputStream;
-import java.io.IOException;
+import com.nur1popcorn.basm.classfile.tree.methods.InstructionHandle;
 
 public interface IInstructionPointer {
-    void attach(InstructionList instructions);
-    void dispose(InstructionList instructions);
-    void update(int newIndex);
+    void attach();
+    void dispose();
+    void update(InstructionHandle oldHandle, InstructionHandle newHandle);
 }

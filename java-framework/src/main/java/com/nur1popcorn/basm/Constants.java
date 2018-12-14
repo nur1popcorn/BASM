@@ -619,6 +619,15 @@ public final class Constants {
 
     public static final byte NEWARRAY =                     (byte) 0xbc;
 
+    public static final byte ANEWARRAY =                    (byte) 0xbd;
+
+    public static final byte ARRAYLENGTH =                  (byte) 0xbe;
+    public static final byte ATHROW =                       (byte) 0xbf;
+    public static final byte CHECKCAST =                    (byte) 0xc0;
+    public static final byte INSTANCEOF =                   (byte) 0xc1;
+    public static final byte MONITORENTER =                 (byte) 0xc2;
+    public static final byte MONITOREXIT =                  (byte) 0xc3;
+
     // TODO: move, desc
     public static final byte WIDE =                         (byte) 0xc4;
     public static final byte MULTIANEWARRAY =               (byte) 0xc5;
@@ -630,14 +639,9 @@ public final class Constants {
 
 
     // TODO: desc.
-    public static final byte BREAKPOINT =                    (byte) 0xca;
-    public static final byte IMPDEP1 =                       (byte) 0xfe;
-    public static final byte IMPDEP2 =                       (byte) 0xff;
-
-    public static final byte ARRAYLENGTH =                   (byte) 0xbe;
-    public static final byte ATHROW =                        (byte) 0xbf;
-    public static final byte MONITORENTER =                  (byte) 0xc2;
-    public static final byte MONITOREXIT =                   (byte) 0xc3;
+    public static final byte BREAKPOINT =                   (byte) 0xca;
+    public static final byte IMPDEP1 =                      (byte) 0xfe;
+    public static final byte IMPDEP2 =                      (byte) 0xff;
 
     //TODO: desc.
     public static final String OPCODE_MNEMONICS[] = new String[] {

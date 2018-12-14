@@ -25,11 +25,11 @@ public abstract class ElementValue {
             case 's':
                 return new ElementValueConstant(tag, in);
             case 'e':
-                return new ElementValueEnumConstant(tag, in);
+                return new ElementValueEnum(tag, in);
             case 'c':
                 return new ElementValueClass(tag, in);
             case '@':
-                return new ElementValueNestedAnnotation(tag, in);
+                return new ElementValueAnnotation(tag, in);
             case '[':
                 return new ElementValueArray(tag, in);
             default:

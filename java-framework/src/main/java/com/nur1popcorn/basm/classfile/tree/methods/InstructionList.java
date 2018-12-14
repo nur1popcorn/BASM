@@ -20,9 +20,7 @@ package com.nur1popcorn.basm.classfile.tree.methods;
 
 import com.nur1popcorn.basm.classfile.ConstantPool;
 import com.nur1popcorn.basm.classfile.MalformedClassFileException;
-import com.nur1popcorn.basm.classfile.tree.methods.instructions.IInstructionPointer;
-import com.nur1popcorn.basm.classfile.tree.methods.instructions.IInstructionVisitor;
-import com.nur1popcorn.basm.classfile.tree.methods.instructions.Instruction;
+import com.nur1popcorn.basm.classfile.tree.methods.instructions.*;
 import com.nur1popcorn.basm.utils.ByteDataInputStream;
 
 import java.io.DataOutputStream;
@@ -69,7 +67,7 @@ public final class InstructionList extends AbstractList<InstructionHandle> imple
      * @param code The serialized {@link Instruction}s which should be read and added to the list.
      * @param constantPool The {@link ConstantPool} referenced by the read {@link Instruction}s.
      *
-     * @see Instruction#read(ByteDataInputStream, ConstantPool)
+     * @see Instruction#read(ByteDataInputStream, ConstantPool, InstructionList)
      *
      * @throws IOException If an error occurs during the process of reading from the {@link ByteDataInputStream}.
      * @throws MalformedClassFileException If an {@link Instruction} is unknown or malformed.
@@ -80,15 +78,16 @@ public final class InstructionList extends AbstractList<InstructionHandle> imple
         for(; in.available() != 0; length++)
             Instruction.parameters(in);
         instructions = new InstructionHandle[Math.max(DEFAULT_SIZE, length)];
+        for(int i = 0; i < length; i++)
+            add(new InstructionHandle(InstructionFactory.NOP));
         in.reset();
-        while(in.available() != 0)
-            add(new InstructionHandle(
-                Instruction.read(in, constantPool)));
+        for(InstructionHandle handle : this)
+            handle.setHandle(Instruction.read(in, constantPool, this));
         stream()
             .map(InstructionHandle::getHandle)
             .filter(IInstructionPointer.class::isInstance)
             .map(IInstructionPointer.class::cast)
-            .forEach(pointer -> pointer.attach(this));
+            .forEach(IInstructionPointer::attach);
     }
 
     /**
@@ -166,8 +165,10 @@ public final class InstructionList extends AbstractList<InstructionHandle> imple
         final InstructionHandle old = instructions[index];
         instructions[index] = element;
         final IInstructionPointer pointers[] = old.getPointers();
-        for(IInstructionPointer pointer : pointers)
+        for(IInstructionPointer pointer : pointers) {
             element.addPointer(pointer);
+            pointer.update(old, element);
+        }
         if((element.prev = old.prev) == null)
             first = element;
         if((element.next = old.next) == null)
@@ -204,9 +205,12 @@ public final class InstructionList extends AbstractList<InstructionHandle> imple
                 .next = element)
                     .next = instructions[index + 1])
                         .prev = element;
-        for(int i = index + 1; i < size; i++)
-            for(IInstructionPointer pointer : instructions[i].getPointers())
-                pointer.update(i);
+        for(int i = index + 1; i < size; i++) {
+            final Instruction instruction = instructions[i].getHandle();
+            if(instruction instanceof SwitchInstruction)
+                ((SwitchInstruction) instruction)
+                    .updateAddress(instructions[i], this);
+        }
     }
 
     /**
@@ -235,6 +239,12 @@ public final class InstructionList extends AbstractList<InstructionHandle> imple
                 first = element;
             if((element.next = old.next) == null)
                 last = element;
+            for(int i = index; i < size; i++) {
+                final Instruction instruction = instructions[i].getHandle();
+                if(instruction instanceof SwitchInstruction)
+                    ((SwitchInstruction) instruction)
+                        .updateAddress(instructions[i], this);
+            }
         }
         if(old.hasPointers())
             throw new InstructionLostException(old.getPointers());

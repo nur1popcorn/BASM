@@ -29,6 +29,7 @@ import com.nur1popcorn.basm.utils.ByteDataInputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.TreeMap;
 
 import static com.nur1popcorn.basm.Constants.*;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.InstructionFactory.INSTRUCTIONS;
@@ -310,8 +311,8 @@ public abstract class Instruction {
      *
      * @return
      */
-    public static Instruction read(ByteDataInputStream in, ConstantPool cp) throws IOException {
-        final int pc = in.position();
+    public static Instruction read(ByteDataInputStream in, ConstantPool cp, InstructionList instructions) throws IOException {
+        final int start = in.position();
         final byte opcode = in.readByte();
         switch(indexType(opcode)) {
             case NO_PARAM_INS:
@@ -341,28 +342,27 @@ public abstract class Instruction {
             case IINC_INS:
                 return new IIncInstruction(
                     opcode, in.readByte(), in.readByte());
-            case JUMP_INS:
-                switch(opcode) {
+            case JUMP_INS: {
+                final int index;
+                switch (opcode) {
                     // a 4 byte index must be constructed for the goto_w & jsr_w opcodes.
                     // https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.goto_w
                     // https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.jsr_w
                     case GOTO_W:
                     case JSR_W:
-                        return new JumpInstruction(
-                            opcode,
-                            recomputeIndex(in, pc, in.readInt())
-                        );
+                        index = recomputeIndex(in, start, in.readInt());
+                        return new JumpInstruction(opcode, instructions.get(index));
                     default:
-                        return new JumpInstruction(
-                            opcode,
-                            recomputeIndex(in, pc, in.readShort())
-                        );
+                        index = recomputeIndex(in, start, in.readShort());
+                        return new JumpInstruction(opcode, instructions.get(index));
                 }
+            }
             case SWITCH_INS: {
                 // skip padding bytes and read default index.
-                final int padding = 4 - (in.position() & 0x3);
-                in.skipBytes(padding);
-                final int defaultIndex = recomputeIndex(in, pc, in.readInt());
+                in.skipBytes(4 - (in.position() & 0x3));
+                final int defaultIndex = recomputeIndex(in, start, in.readInt());
+                final InstructionHandle defaultTarget = instructions.get(defaultIndex);
+                final TreeMap<Integer, InstructionHandle> targets = new TreeMap<>();
                 switch(opcode) {
                     case TABLESWITCH: {
                         final int low = in.readInt();
@@ -370,26 +370,20 @@ public abstract class Instruction {
 
                         final int length = high - low + 1;
 
-                        final int indices[] = new int[length];
-                        final int keys[] = new int[length];
-                        for(int i = 0; i < length; i++) {
-                            keys[i] = low + i;
-                            indices[i] = recomputeIndex(in, pc, in.readInt());
-                        }
+                        for(int i = 0; i < length; i++)
+                            targets.put(low + i, instructions.get(
+                                recomputeIndex(in, start, in.readInt())));
 
                         return new SwitchInstruction(
-                            opcode, padding, defaultIndex, keys, indices);
+                            opcode, start, defaultTarget, targets);
                     }
                     case LOOKUPSWITCH: {
                         final int length = in.readInt();
-                        final int indices[] = new int[length];
-                        final int keys[] = new int[length];
-                        for(int i = 0; i < length; i++) {
-                            keys[i] = in.readInt();
-                            indices[i] = recomputeIndex(in, pc, in.readInt());
-                        }
+                        for(int i = 0; i < length; i++)
+                            targets.put(in.readInt(), instructions.get(
+                                recomputeIndex(in, start, in.readInt())));
                         return new SwitchInstruction(
-                            opcode, padding, defaultIndex, keys, indices);
+                            opcode, start, defaultTarget, targets);
                     }
                 }
             }
@@ -436,15 +430,20 @@ public abstract class Instruction {
         }
     }
 
-    protected static int computeIndex(int pc, InstructionHandle target, InstructionList instructions) {
+    static int computeIndex(int start, InstructionHandle target, InstructionList instructions) {
+        return computeAddress(target, instructions) - start;
+    }
+
+    static int computeAddress(InstructionHandle target, InstructionList instructions) {
         int extra = 0;
         for(InstructionHandle handle : instructions) {
             if(handle.equals(target)) break;
             final Instruction instruction = handle.getHandle();
             if(instruction instanceof SwitchInstruction) {
                 final SwitchInstruction switchInsn = (SwitchInstruction) instruction;
-                extra += switchInsn.padding + 4;
-                final int size = switchInsn.indices.size();
+                final int position = switchInsn.address + 1;
+                extra += 8 - (position & 0x3);
+                final int size = switchInsn.targets.size();
                 switch(switchInsn.getOpcode()) {
                     case TABLESWITCH:
                         extra += 8 + 4 * size;
@@ -454,8 +453,8 @@ public abstract class Instruction {
                         break;
                 }
             } else if(instruction instanceof  WideInstruction)
-                extra += ((WideInstruction) instruction)
-                    .opcode == IINC ?  5 : 3;
+                extra += 1 + ((WideInstruction) instruction)
+                    .opcode == IINC ?  4 : 2;
             else {
                 //TODO duplicated code
                 final int op = instruction.getOpcode() & 0xff;
@@ -465,13 +464,11 @@ public abstract class Instruction {
                 extra += parameters;
             }
         }
-        final int targetAddress =
-            instructions.indexOf(target) + extra;
-        return targetAddress - pc;
+        return instructions.indexOf(target) + extra;
     }
 
-    private static int recomputeIndex(ByteDataInputStream in, int pc, int defaultIndex) throws IOException {
-        final int target = pc + defaultIndex;
+    private static int recomputeIndex(ByteDataInputStream in, int start, int defaultIndex) throws IOException {
+        final int target = start + defaultIndex;
         final int oldPosition = in.position();
         in.reset();
         int extra = 0;
