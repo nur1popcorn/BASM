@@ -48,6 +48,7 @@ public final class SwitchInstruction extends Instruction implements IInstruction
      */
     @Override
     public void accept(IInstructionVisitor visitor) {
+        visitor.visitInstructionPointer(this);
         visitor.visitSwitchInstruction(this);
     }
 

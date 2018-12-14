@@ -43,6 +43,7 @@ public final class JumpInstruction extends Instruction implements IInstructionPo
      */
     @Override
     public void accept(IInstructionVisitor visitor) {
+        visitor.visitInstructionPointer(this);
         visitor.visitJumpInstruction(this);
     }
 
