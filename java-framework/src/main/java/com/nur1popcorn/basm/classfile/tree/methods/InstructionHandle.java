@@ -109,6 +109,7 @@ public final class InstructionHandle implements Iterable<InstructionHandle> {
                 case WIDE:
                     index += ((WideInstruction) handle).getOpcodeParameter() == IINC ?
                         5 : 3;
+                    break;
                 default:
                     final int parameters = OPCODE_PARAMETERS[opcode & 0xff];
                     if(parameters == UNKNOWN_PARAMETERS)
@@ -116,6 +117,7 @@ public final class InstructionHandle implements Iterable<InstructionHandle> {
                             "The opcode=" + OPCODE_MNEMONICS[opcode & 0xff] + " is invalid."
                         );
                     index += parameters;
+                    break;
             }
         }
         return index;
