@@ -29,18 +29,22 @@ import static com.nur1popcorn.basm.Constants.LOOKUPSWITCH;
 import static com.nur1popcorn.basm.Constants.TABLESWITCH;
 
 public final class SwitchInstruction extends Instruction implements IInstructionPointer {
-    int address;
-    private InstructionHandle defaultTarget;
-    final TreeMap<Integer, InstructionHandle> targets;
+    private int defaultIndex;
+    private final List<Integer> keys;
+    private final List<Integer> indices;
 
     /**
      * @param opcode
      */
-    SwitchInstruction(byte opcode, int address, InstructionHandle defaultTarget, TreeMap<Integer, InstructionHandle> targets) {
+    SwitchInstruction(byte opcode, int defaultIndex, int keys[], int indices[]) {
         super(opcode);
-        this.address = address;
-        this.defaultTarget = defaultTarget;
-        this.targets = targets;
+        this.defaultIndex = defaultIndex;
+        this.keys = new ArrayList<>(keys.length);
+        for(int i : keys)
+            this.keys.add(i);
+        this.indices = new ArrayList<>(indices.length);
+        for(int i : indices)
+            this.indices.add(i);
     }
 
     /**
@@ -101,6 +105,10 @@ public final class SwitchInstruction extends Instruction implements IInstruction
         }
     }
 
+    public int getCount() {
+        return indices.size();
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -129,9 +137,5 @@ public final class SwitchInstruction extends Instruction implements IInstruction
         for(Map.Entry<Integer, InstructionHandle> entry : targets.entrySet())
             if(entry.getValue().equals(oldHandle))
                 entry.setValue(newHandle);
-    }
-
-    public void updateAddress(InstructionHandle thisHandle, InstructionList instructions) {
-        address =  computeAddress(thisHandle, instructions);
     }
 }

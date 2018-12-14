@@ -205,7 +205,7 @@ public final class InstructionList extends AbstractList<InstructionHandle> imple
                 .next = element)
                     .next = instructions[index + 1])
                         .prev = element;
-        for(int i = index + 1; i < size; i++) {
+        for(int i = index + 1; i < size; i++) { // TODO: change
             final Instruction instruction = instructions[i].getHandle();
             if(instruction instanceof SwitchInstruction)
                 ((SwitchInstruction) instruction)
