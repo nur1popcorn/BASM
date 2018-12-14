@@ -99,12 +99,12 @@ public final class InstructionHandle implements Iterable<InstructionHandle> {
                 case TABLESWITCH: {
                     final SwitchInstruction instruction = (SwitchInstruction) handle;
                     final int switchIndex = current.computeIndex();
-                    return index + 16 + 4 * instruction.getCount() - (switchIndex & 0x3);
+                    return index + switchIndex + 16 + 4 * instruction.getCount() - (switchIndex & 0x3);
                 }
                 case LOOKUPSWITCH: {
                     final SwitchInstruction instruction = (SwitchInstruction) handle;
                     final int switchIndex = current.computeIndex();
-                    return index + 12 + 8 * instruction.getCount() - (switchIndex & 0x3);
+                    return index + switchIndex + 12 + 8 * instruction.getCount() - (switchIndex & 0x3);
                 }
                 case WIDE:
                     index += ((WideInstruction) handle).getOpcodeParameter() == IINC ?
