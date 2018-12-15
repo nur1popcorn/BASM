@@ -89,17 +89,6 @@ public final class InstructionHandle implements Iterable<InstructionHandle> {
         return arr;
     }
 
-    /**
-     * @return
-     */
-    public Instruction getHandle() {
-        return handle;
-    }
-
-    public void setHandle(Instruction handle) {
-        this.handle = handle;
-    }
-
     public int computeIndex() {
         int index = 0;
         for(InstructionHandle current = prev; current != null;
@@ -134,6 +123,17 @@ public final class InstructionHandle implements Iterable<InstructionHandle> {
             }
         }
         return index;
+    }
+
+    /**
+     * @return
+     */
+    public Instruction getHandle() {
+        return handle;
+    }
+
+    public void setHandle(Instruction handle) {
+        this.handle = handle;
     }
 
     @Override

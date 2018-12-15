@@ -86,12 +86,12 @@ public final class SwitchInstruction extends Instruction implements IInstruction
                 final int high = low + getCount() - 1;
                 os.writeInt(low);
                 os.writeInt(high);
-                for (int index : indices)
+                for(int index : indices)
                     os.writeInt(computeIndex(start, index, instructions));
                 break;
             case LOOKUPSWITCH:
                 os.writeInt(getCount());
-                for (int i = 0; i < getCount(); i++) {
+                for(int i = 0; i < getCount(); i++) {
                     os.writeInt(keys.get(i));
                     os.writeInt(computeIndex(start, indices.get(i), instructions));
                 }
