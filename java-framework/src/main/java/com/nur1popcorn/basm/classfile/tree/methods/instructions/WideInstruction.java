@@ -18,7 +18,6 @@
 
 package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
-import com.nur1popcorn.basm.classfile.MalformedClassFileException;
 import com.nur1popcorn.basm.classfile.tree.methods.InstructionList;
 
 import java.io.DataOutputStream;
@@ -27,7 +26,7 @@ import java.io.IOException;
 import static com.nur1popcorn.basm.Constants.*;
 
 public final class WideInstruction extends Instruction {
-    protected byte opcode;
+    private byte opcode;
     private int index, constant;
 
     /**
@@ -61,20 +60,7 @@ public final class WideInstruction extends Instruction {
             os.writeShort(constant);
     }
 
-    /**
-     * {@inheritDoc}
-     * @throws MalformedClassFileException
-     */
-    @Override
-    public void setOpcode(byte opcode) {
-        switch(indexType(opcode)) {
-            case LOCAL_VARIABLE_INS:
-            case IINC_INS:
-                this.opcode = opcode;
-                break;
-            default:
-                // TODO: desc
-                throw new MalformedClassFileException();
-        }
+    public byte getOpcodeParameter() {
+        return opcode;
     }
 }

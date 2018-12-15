@@ -18,12 +18,17 @@
 
 package com.nur1popcorn.basm.classfile.tree.methods;
 
+import com.nur1popcorn.basm.classfile.MalformedClassFileException;
 import com.nur1popcorn.basm.classfile.tree.methods.instructions.IInstructionPointer;
 import com.nur1popcorn.basm.classfile.tree.methods.instructions.Instruction;
+import com.nur1popcorn.basm.classfile.tree.methods.instructions.SwitchInstruction;
+import com.nur1popcorn.basm.classfile.tree.methods.instructions.WideInstruction;
 import com.nur1popcorn.basm.utils.WeakHashSet;
 
 import java.util.Iterator;
 import java.util.Set;
+
+import static com.nur1popcorn.basm.Constants.*;
 
 /**
  * The {@link InstructionHandle}
@@ -93,6 +98,42 @@ public final class InstructionHandle implements Iterable<InstructionHandle> {
 
     public void setHandle(Instruction handle) {
         this.handle = handle;
+    }
+
+    public int computeIndex() {
+        int index = 0;
+        for(InstructionHandle current = prev; current != null;
+            current = current.prev, index++) {
+            final Instruction handle = current.getHandle();
+            final byte opcode = handle.getOpcode();
+            switch(opcode) {
+                case TABLESWITCH: {
+                    final SwitchInstruction instruction = (SwitchInstruction) handle;
+                    final int switchIndex = current.computeIndex();
+                    index += 16 + 4 * instruction.getCount() - (switchIndex + 1 & 0x3);
+                    break;
+                }
+                case LOOKUPSWITCH: {
+                    final SwitchInstruction instruction = (SwitchInstruction) handle;
+                    final int switchIndex = current.computeIndex();
+                    index += 12 + 8 * instruction.getCount() - (switchIndex + 1 & 0x3);
+                    break;
+                }
+                case WIDE:
+                    index += ((WideInstruction) handle).getOpcodeParameter() == IINC ?
+                        5 : 3;
+                    break;
+                default:
+                    final int parameters = OPCODE_PARAMETERS[opcode & 0xff];
+                    if(parameters == UNKNOWN_PARAMETERS)
+                        throw new MalformedClassFileException(
+                            "The opcode=" + OPCODE_MNEMONICS[opcode & 0xff] + " is invalid."
+                        );
+                    index += parameters;
+                    break;
+            }
+        }
+        return index;
     }
 
     @Override

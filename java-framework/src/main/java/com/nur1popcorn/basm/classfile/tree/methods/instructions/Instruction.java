@@ -22,14 +22,12 @@ import com.nur1popcorn.basm.classfile.ConstantPool;
 import com.nur1popcorn.basm.classfile.IClassVersionProvider;
 import com.nur1popcorn.basm.classfile.MalformedClassFileException;
 import com.nur1popcorn.basm.classfile.tree.Type;
-import com.nur1popcorn.basm.classfile.tree.methods.InstructionHandle;
 import com.nur1popcorn.basm.classfile.tree.methods.InstructionList;
 import com.nur1popcorn.basm.utils.ByteDataInputStream;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.TreeMap;
 
 import static com.nur1popcorn.basm.Constants.*;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.InstructionFactory.INSTRUCTIONS;
@@ -247,7 +245,6 @@ public abstract class Instruction {
     /**
      * @param os
      *
-     * @param instructions
      * @throws IOException
      */
     public void write(DataOutputStream os, InstructionList instructions) throws IOException {
@@ -311,7 +308,7 @@ public abstract class Instruction {
      *
      * @return
      */
-    public static Instruction read(ByteDataInputStream in, ConstantPool cp, InstructionList instructions) throws IOException {
+    public static Instruction read(ByteDataInputStream in, ConstantPool cp) throws IOException {
         final int start = in.position();
         final byte opcode = in.readByte();
         switch(indexType(opcode)) {
@@ -351,18 +348,16 @@ public abstract class Instruction {
                     case GOTO_W:
                     case JSR_W:
                         index = recomputeIndex(in, start, in.readInt());
-                        return new JumpInstruction(opcode, instructions.get(index));
+                        return new JumpInstruction(opcode, index);
                     default:
                         index = recomputeIndex(in, start, in.readShort());
-                        return new JumpInstruction(opcode, instructions.get(index));
+                        return new JumpInstruction(opcode, index);
                 }
             }
             case SWITCH_INS: {
                 // skip padding bytes and read default index.
                 in.skipBytes(4 - (in.position() & 0x3));
                 final int defaultIndex = recomputeIndex(in, start, in.readInt());
-                final InstructionHandle defaultTarget = instructions.get(defaultIndex);
-                final TreeMap<Integer, InstructionHandle> targets = new TreeMap<>();
                 switch(opcode) {
                     case TABLESWITCH: {
                         final int low = in.readInt();
@@ -370,20 +365,26 @@ public abstract class Instruction {
 
                         final int length = high - low + 1;
 
-                        for(int i = 0; i < length; i++)
-                            targets.put(low + i, instructions.get(
-                                recomputeIndex(in, start, in.readInt())));
+                        final int indices[] = new int[length];
+                        final int keys[] = new int[length];
+                        for(int i = 0; i < length; i++) {
+                            keys[i] = low + i;
+                            indices[i] = recomputeIndex(in, start, in.readInt());
+                        }
 
                         return new SwitchInstruction(
-                            opcode, start, defaultTarget, targets);
+                            opcode, defaultIndex, keys, indices);
                     }
                     case LOOKUPSWITCH: {
                         final int length = in.readInt();
-                        for(int i = 0; i < length; i++)
-                            targets.put(in.readInt(), instructions.get(
-                                recomputeIndex(in, start, in.readInt())));
+                        final int indices[] = new int[length];
+                        final int keys[] = new int[length];
+                        for(int i = 0; i < length; i++) {
+                            keys[i] = in.readInt();
+                            indices[i] = recomputeIndex(in, start, in.readInt());
+                        }
                         return new SwitchInstruction(
-                            opcode, start, defaultTarget, targets);
+                            opcode, defaultIndex, keys, indices);
                     }
                 }
             }
@@ -430,41 +431,9 @@ public abstract class Instruction {
         }
     }
 
-    static int computeIndex(int start, InstructionHandle target, InstructionList instructions) {
-        return computeAddress(target, instructions) - start;
-    }
-
-    static int computeAddress(InstructionHandle target, InstructionList instructions) {
-        int extra = 0;
-        for(InstructionHandle handle : instructions) {
-            if(handle.equals(target)) break;
-            final Instruction instruction = handle.getHandle();
-            if(instruction instanceof SwitchInstruction) {
-                final SwitchInstruction switchInsn = (SwitchInstruction) instruction;
-                final int position = switchInsn.address + 1;
-                extra += 8 - (position & 0x3);
-                final int size = switchInsn.targets.size();
-                switch(switchInsn.getOpcode()) {
-                    case TABLESWITCH:
-                        extra += 8 + 4 * size;
-                        break;
-                    case LOOKUPSWITCH:
-                        extra += 4 + 8 * size;
-                        break;
-                }
-            } else if(instruction instanceof  WideInstruction)
-                extra += 1 + ((WideInstruction) instruction)
-                    .opcode == IINC ?  4 : 2;
-            else {
-                //TODO duplicated code
-                final int op = instruction.getOpcode() & 0xff;
-                final int parameters = OPCODE_PARAMETERS[op];
-                if(parameters == UNKNOWN_PARAMETERS)
-                    throw new MalformedClassFileException();
-                extra += parameters;
-            }
-        }
-        return instructions.indexOf(target) + extra;
+    static int computeIndex(int start, int index, InstructionList instructions) {
+        return instructions.get(index)
+            .computeIndex() - start;
     }
 
     private static int recomputeIndex(ByteDataInputStream in, int start, int defaultIndex) throws IOException {
@@ -507,11 +476,10 @@ public abstract class Instruction {
                 in.skipBytes(skip);
                 return 1 + skip;
             default: {
-                final int op = opcode & 0xff;
-                final int parameters = OPCODE_PARAMETERS[op];
+                final int parameters = OPCODE_PARAMETERS[opcode & 0xff];
                 if(parameters == UNKNOWN_PARAMETERS)
                     throw new MalformedClassFileException(
-                        "The opcode=" + OPCODE_MNEMONICS[op] +
+                        "The opcode=" + OPCODE_MNEMONICS[opcode & 0xff] +
                         " at index=" + in.position() + " is invalid."
                     );
                 in.skipBytes(parameters);

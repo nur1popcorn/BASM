@@ -18,29 +18,33 @@
 
 package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
-import com.nur1popcorn.basm.classfile.tree.methods.InstructionHandle;
 import com.nur1popcorn.basm.classfile.tree.methods.InstructionList;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.nur1popcorn.basm.Constants.LOOKUPSWITCH;
 import static com.nur1popcorn.basm.Constants.TABLESWITCH;
 
 public final class SwitchInstruction extends Instruction implements IInstructionPointer {
-    int address;
-    private InstructionHandle defaultTarget;
-    final TreeMap<Integer, InstructionHandle> targets;
+    private int defaultIndex;
+    private final List<Integer> keys;
+    private final List<Integer> indices;
 
     /**
      * @param opcode
      */
-    SwitchInstruction(byte opcode, int address, InstructionHandle defaultTarget, TreeMap<Integer, InstructionHandle> targets) {
+    SwitchInstruction(byte opcode, int defaultIndex, int keys[], int indices[]) {
         super(opcode);
-        this.address = address;
-        this.defaultTarget = defaultTarget;
-        this.targets = targets;
+        this.defaultIndex = defaultIndex;
+        this.keys = new ArrayList<>(keys.length);
+        for(int i : keys)
+            this.keys.add(i);
+        this.indices = new ArrayList<>(indices.length);
+        for(int i : indices)
+            this.indices.add(i);
     }
 
     /**
@@ -74,28 +78,22 @@ public final class SwitchInstruction extends Instruction implements IInstruction
         */
         while((os.size() & 0x3) != 0)
             os.writeByte(0);
-        os.writeInt(computeIndex(
-            start, defaultTarget, instructions
-        ));
+        os.writeInt(computeIndex(start, defaultIndex, instructions));
         switch(opcode) {
             case TABLESWITCH:
                 // https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.tableswitch
-                final int low = targets.firstKey();
-                final int high = low + targets.size() - 1;
+                final int low = keys.get(0);
+                final int high = low + getCount() - 1;
                 os.writeInt(low);
                 os.writeInt(high);
-                for(InstructionHandle target : targets.values())
-                    os.writeInt(computeIndex(
-                        start, target, instructions
-                    ));
+                for (int index : indices)
+                    os.writeInt(computeIndex(start, index, instructions));
                 break;
             case LOOKUPSWITCH:
-                os.writeInt(targets.size());
-                for(Map.Entry<Integer, InstructionHandle> entry : targets.entrySet()) {
-                    os.writeInt(entry.getKey());
-                    os.writeInt(computeIndex(
-                        start, entry.getValue(), instructions
-                    ));
+                os.writeInt(getCount());
+                for (int i = 0; i < getCount(); i++) {
+                    os.writeInt(keys.get(i));
+                    os.writeInt(computeIndex(start, indices.get(i), instructions));
                 }
                 break;
         }
@@ -105,33 +103,32 @@ public final class SwitchInstruction extends Instruction implements IInstruction
      * {@inheritDoc}
      */
     @Override
-    public void attach() {
-        defaultTarget.addPointer(this);
-        targets.values().forEach(h -> h.addPointer(this));
+    public void attach(InstructionList instructions) {
+        instructions.get(defaultIndex)
+            .addPointer(this);
+        for(int i : indices)
+            instructions.get(i).addPointer(this);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void dispose() {
-        defaultTarget.removePointer(this);
-        targets.values().forEach(h -> h.removePointer(this));
+    public void dispose(InstructionList instructions) {
+        instructions.get(defaultIndex)
+            .removePointer(this);
+        for(int i : indices)
+            instructions.get(i).removePointer(this);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void update(InstructionHandle oldHandle, InstructionHandle newHandle) {
-        if(oldHandle.equals(defaultTarget))
-            defaultTarget = newHandle;
-        for(Map.Entry<Integer, InstructionHandle> entry : targets.entrySet())
-            if(entry.getValue().equals(oldHandle))
-                entry.setValue(newHandle);
+    public void update(int newIndex) {
     }
 
-    public void updateAddress(InstructionHandle thisHandle, InstructionList instructions) {
-        address =  computeAddress(thisHandle, instructions);
+    public int getCount() {
+        return indices.size();
     }
 }
