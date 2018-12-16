@@ -18,10 +18,10 @@
 
 package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
-import com.nur1popcorn.basm.classfile.tree.methods.InstructionHandle;
+import com.nur1popcorn.basm.classfile.tree.methods.InstructionList;
 
 public interface IInstructionPointer {
-    void attach();
-    void dispose();
-    void update(InstructionHandle oldHandle, InstructionHandle newHandle);
+    void attach(InstructionList instructions);
+    void dispose(InstructionList instructions);
+    void update(int newIndex);
 }

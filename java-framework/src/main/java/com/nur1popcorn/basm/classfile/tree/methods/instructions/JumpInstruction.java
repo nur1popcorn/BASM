@@ -18,7 +18,6 @@
 
 package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
-import com.nur1popcorn.basm.classfile.tree.methods.InstructionHandle;
 import com.nur1popcorn.basm.classfile.tree.methods.InstructionList;
 
 import java.io.DataOutputStream;
@@ -28,12 +27,12 @@ import static com.nur1popcorn.basm.Constants.GOTO_W;
 import static com.nur1popcorn.basm.Constants.JSR_W;
 
 public final class JumpInstruction extends Instruction implements IInstructionPointer {
-    private InstructionHandle target;
+    private int target;
 
     /**
      * @param opcode
      */
-    JumpInstruction(byte opcode, InstructionHandle target) {
+    JumpInstruction(byte opcode, int target) {
         super(opcode);
         this.target = target;
     }
@@ -54,9 +53,7 @@ public final class JumpInstruction extends Instruction implements IInstructionPo
     public void write(DataOutputStream os, InstructionList instructions) throws IOException {
         final int start = os.size();
         os.writeByte(opcode);
-        final int targetIndex = computeIndex(
-            start, target, instructions
-        );
+        final int targetIndex = computeIndex(start, target, instructions);
         switch(opcode) {
             case GOTO_W:
             case JSR_W:
@@ -72,24 +69,25 @@ public final class JumpInstruction extends Instruction implements IInstructionPo
      * {@inheritDoc}
      */
     @Override
-    public void attach() {
-        target.addPointer(this);
+    public void attach(InstructionList instructions) {
+        instructions.get(target)
+            .addPointer(this);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void dispose() {
-        target.removePointer(this);
+    public void dispose(InstructionList instructions) {
+        instructions.get(target)
+            .removePointer(this);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void update(InstructionHandle oldHandle, InstructionHandle newHandle) {
-        if(oldHandle.equals(target))
-            target = newHandle;
+    public void update(int newIndex) {
+        target = newIndex;
     }
 }

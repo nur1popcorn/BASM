@@ -22,7 +22,6 @@ import com.nur1popcorn.basm.Constants;
 import com.nur1popcorn.basm.classfile.tree.ConstantPoolGenerator;
 import com.nur1popcorn.basm.classfile.tree.Type;
 import com.nur1popcorn.basm.classfile.tree.methods.InstructionHandle;
-import com.nur1popcorn.basm.classfile.tree.methods.InstructionList;
 
 import java.util.TreeMap;
 
@@ -745,15 +744,13 @@ public final class InstructionFactory {
      *
      * @return
      */
-    public JumpInstruction createJump(byte opcode, InstructionHandle target) {
+    public static JumpInstruction createJump(byte opcode, int target) {
         return new JumpInstruction(opcode, target);
     }
 
-    public SwitchInstruction createSwitch(InstructionList instructions,
-                                          byte opcode,
+    public SwitchInstruction createSwitch(byte opcode,
                                           InstructionHandle defaultTarget,
                                           TreeMap<Integer, InstructionHandle> targets) {
-        //TODO: compute address
-        return new SwitchInstruction(opcode, 0, defaultTarget, targets);
+        return null;
     }
 }

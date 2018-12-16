@@ -29,7 +29,6 @@ import java.util.Iterator;
 import java.util.Set;
 
 import static com.nur1popcorn.basm.Constants.*;
-import static com.nur1popcorn.basm.Constants.UNKNOWN_PARAMETERS;
 
 /**
  * The {@link InstructionHandle}
@@ -92,19 +91,22 @@ public final class InstructionHandle implements Iterable<InstructionHandle> {
 
     public int computeIndex() {
         int index = 0;
-        for(InstructionHandle current = prev; prev != null; current = current.prev) {
+        for(InstructionHandle current = prev; current != null;
+            current = current.prev, index++) {
             final Instruction handle = current.getHandle();
             final byte opcode = handle.getOpcode();
             switch(opcode) {
                 case TABLESWITCH: {
                     final SwitchInstruction instruction = (SwitchInstruction) handle;
                     final int switchIndex = current.computeIndex();
-                    return index + switchIndex + 16 + 4 * instruction.getCount() - (switchIndex & 0x3);
+                    index += 16 + 4 * instruction.getCount() - (switchIndex + 1 & 0x3);
+                    break;
                 }
                 case LOOKUPSWITCH: {
                     final SwitchInstruction instruction = (SwitchInstruction) handle;
                     final int switchIndex = current.computeIndex();
-                    return index + switchIndex + 12 + 8 * instruction.getCount() - (switchIndex & 0x3);
+                    index += 12 + 8 * instruction.getCount() - (switchIndex + 1 & 0x3);
+                    break;
                 }
                 case WIDE:
                     index += ((WideInstruction) handle).getOpcodeParameter() == IINC ?

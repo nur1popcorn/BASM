@@ -28,9 +28,9 @@ public final class ClassPool {
     }
 
     public void addChilds(String... paths) {
-        if (paths == null || paths.length == 0)
+        if(paths == null || paths.length == 0)
             return;
-        for (String path : paths) {
+        for(String path : paths) {
             final File child = new File(path);
             addFiles(child.listFiles());
         }
@@ -41,33 +41,33 @@ public final class ClassPool {
     }
 
     public void addPaths(String... paths) {
-        if (paths == null || paths.length == 0)
+        if(paths == null || paths.length == 0)
             return;
-        for (String path : paths)
+        for(String path : paths)
             addPath(path);
     }
 
     public void addFile(File file) {
-        if (file.exists()) {
-            final String uri =  file.toURI().toString();
-            if (file.isFile() && ensureZip(file))
+        if(file.exists()) {
+            final String uri = file.toURI().toString();
+            if(file.isFile() && ensureZip(file))
                 paths.add("jar:" + uri + "!/");
-            else if (file.isDirectory())
+            else if(file.isDirectory())
                 paths.add(uri);
         }
     }
 
     public void addFiles(File... files) {
-        if (files == null || files.length == 0)
+        if(files == null || files.length == 0)
             return;
-        for (File file : files)
+        for(File file : files)
             addFile(file);
     }
 
     public ClassFile find(String name) {
         return cache.computeIfAbsent(name, n -> {
-            final String fileName = name.replace('.', '/') + ".class";
-            for (String path : paths)
+            final String fileName = n.replace('.', '/') + ".class";
+            for(String path : paths)
                 try {
                     final ClassFile classFile = new ClassFile(this);
                     final InputStream in = new URL(path + fileName).openStream();
@@ -83,8 +83,8 @@ public final class ClassPool {
     }
 
     private boolean ensureZip(File file) {
-        try (InputStream in = new FileInputStream(file);
-             DataInputStream din = new DataInputStream(in)) {
+        try(InputStream in = new FileInputStream(file);
+            DataInputStream din = new DataInputStream(in)) {
             return din.readInt() == 0x504b0304;
         } catch (IOException e) {
             return false;

@@ -18,12 +18,12 @@
 
 package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
-import com.nur1popcorn.basm.classfile.tree.methods.InstructionHandle;
 import com.nur1popcorn.basm.classfile.tree.methods.InstructionList;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.nur1popcorn.basm.Constants.LOOKUPSWITCH;
 import static com.nur1popcorn.basm.Constants.TABLESWITCH;
@@ -78,64 +78,57 @@ public final class SwitchInstruction extends Instruction implements IInstruction
         */
         while((os.size() & 0x3) != 0)
             os.writeByte(0);
-        os.writeInt(computeIndex(
-            start, defaultTarget, instructions
-        ));
+        os.writeInt(computeIndex(start, defaultIndex, instructions));
         switch(opcode) {
             case TABLESWITCH:
                 // https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.tableswitch
-                final int low = targets.firstKey();
-                final int high = low + targets.size() - 1;
+                final int low = keys.get(0);
+                final int high = low + getCount() - 1;
                 os.writeInt(low);
                 os.writeInt(high);
-                for(InstructionHandle target : targets.values())
-                    os.writeInt(computeIndex(
-                        start, target, instructions
-                    ));
+                for(int index : indices)
+                    os.writeInt(computeIndex(start, index, instructions));
                 break;
             case LOOKUPSWITCH:
-                os.writeInt(targets.size());
-                for(Map.Entry<Integer, InstructionHandle> entry : targets.entrySet()) {
-                    os.writeInt(entry.getKey());
-                    os.writeInt(computeIndex(
-                        start, entry.getValue(), instructions
-                    ));
+                os.writeInt(getCount());
+                for(int i = 0; i < getCount(); i++) {
+                    os.writeInt(keys.get(i));
+                    os.writeInt(computeIndex(start, indices.get(i), instructions));
                 }
                 break;
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void attach(InstructionList instructions) {
+        instructions.get(defaultIndex)
+            .addPointer(this);
+        for(int i : indices)
+            instructions.get(i).addPointer(this);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void dispose(InstructionList instructions) {
+        instructions.get(defaultIndex)
+            .removePointer(this);
+        for(int i : indices)
+            instructions.get(i).removePointer(this);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void update(int newIndex) {
+    }
+
     public int getCount() {
         return indices.size();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void attach() {
-        defaultTarget.addPointer(this);
-        targets.values().forEach(h -> h.addPointer(this));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void dispose() {
-        defaultTarget.removePointer(this);
-        targets.values().forEach(h -> h.removePointer(this));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void update(InstructionHandle oldHandle, InstructionHandle newHandle) {
-        if(oldHandle.equals(defaultTarget))
-            defaultTarget = newHandle;
-        for(Map.Entry<Integer, InstructionHandle> entry : targets.entrySet())
-            if(entry.getValue().equals(oldHandle))
-                entry.setValue(newHandle);
     }
 }
