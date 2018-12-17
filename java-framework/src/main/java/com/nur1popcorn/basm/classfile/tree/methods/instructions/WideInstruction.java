@@ -23,7 +23,8 @@ import com.nur1popcorn.basm.classfile.tree.methods.InstructionList;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import static com.nur1popcorn.basm.Constants.*;
+import static com.nur1popcorn.basm.Constants.IINC;
+import static com.nur1popcorn.basm.Constants.WIDE;
 
 public final class WideInstruction extends Instruction {
     private byte opcode;

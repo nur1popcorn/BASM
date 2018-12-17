@@ -18,6 +18,7 @@
 
 package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
+import com.nur1popcorn.basm.classfile.MalformedClassFileException;
 import com.nur1popcorn.basm.classfile.tree.methods.InstructionList;
 
 import java.io.DataOutputStream;
@@ -46,14 +47,22 @@ public final class JumpInstruction extends Instruction implements IInstructionPo
         visitor.visitJumpInstruction(this);
     }
 
+    private static int computeOffset(InstructionList instructions, int position, int targetIndex) {
+        if(targetIndex < 0 || targetIndex >= instructions.size())
+            throw new MalformedClassFileException(
+                "Invalid jump instruction's targetIndex= " + targetIndex + " out of bounds.");
+        return instructions.get(targetIndex)
+            .computeIndex(instructions) - position;
+    }
+
     /**
      * {@inheritDoc}
      */
     @Override
     public void write(DataOutputStream os, InstructionList instructions) throws IOException {
-        final int start = os.size();
+        final int position = os.size();
         os.writeByte(opcode);
-        final int targetIndex = computeIndex(start, target, instructions);
+        final int targetIndex = computeOffset(instructions, position, target);
         switch(opcode) {
             case GOTO_W:
             case JSR_W:

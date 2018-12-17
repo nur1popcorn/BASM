@@ -45,7 +45,7 @@ public final class InstructionHandle implements Iterable<InstructionHandle> {
                       prev;
 
 
-    private Instruction handle;
+    private final Instruction handle;
 
     /**
      * @param handle
@@ -89,37 +89,31 @@ public final class InstructionHandle implements Iterable<InstructionHandle> {
         return arr;
     }
 
-    public int computeIndex() {
+    public int computeIndex(InstructionList il) {
         int index = 0;
-        for(InstructionHandle current = prev; current != null;
-            current = current.prev, index++) {
+        for(InstructionHandle current = il.getFirst(); current != this; current = current.next) {
             final Instruction handle = current.getHandle();
             final byte opcode = handle.getOpcode();
             switch(opcode) {
                 case TABLESWITCH: {
                     final SwitchInstruction instruction = (SwitchInstruction) handle;
-                    final int switchIndex = current.computeIndex();
-                    index += 16 + 4 * instruction.getCount() - (switchIndex + 1 & 0x3);
-                    break;
-                }
+                    index += ((instruction.getCount() - (index & 0x3)) << 2) + 17;
+                }   break;
                 case LOOKUPSWITCH: {
                     final SwitchInstruction instruction = (SwitchInstruction) handle;
-                    final int switchIndex = current.computeIndex();
-                    index += 12 + 8 * instruction.getCount() - (switchIndex + 1 & 0x3);
-                    break;
-                }
+                    index += ((instruction.getCount() - (index & 0x3)) << 3) + 13;
+                }   break;
                 case WIDE:
-                    index += ((WideInstruction) handle).getOpcodeParameter() == IINC ?
-                        5 : 3;
+                    index += ((WideInstruction) handle).getOpcodeParameter() == IINC ? 6 : 4;
                     break;
-                default:
+                default: {
                     final int parameters = OPCODE_PARAMETERS[opcode & 0xff];
                     if(parameters == UNKNOWN_PARAMETERS)
                         throw new MalformedClassFileException(
                             "The opcode=" + OPCODE_MNEMONICS[opcode & 0xff] + " is invalid."
                         );
-                    index += parameters;
-                    break;
+                    index += parameters + 1;
+                }   break;
             }
         }
         return index;
@@ -130,10 +124,6 @@ public final class InstructionHandle implements Iterable<InstructionHandle> {
      */
     public Instruction getHandle() {
         return handle;
-    }
-
-    public void setHandle(Instruction handle) {
-        this.handle = handle;
     }
 
     @Override

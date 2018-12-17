@@ -18,6 +18,7 @@
 
 package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
+import com.nur1popcorn.basm.classfile.MalformedClassFileException;
 import com.nur1popcorn.basm.classfile.tree.methods.InstructionList;
 
 import java.io.DataOutputStream;
@@ -56,6 +57,14 @@ public final class SwitchInstruction extends Instruction implements IInstruction
         visitor.visitSwitchInstruction(this);
     }
 
+    private static int computeOffset(InstructionList instructions, int position, int targetIndex) {
+        if(targetIndex < 0 || targetIndex >= instructions.size())
+            throw new MalformedClassFileException(
+                "Invalid switch instruction's targetIndex= " + targetIndex + " out of bounds.");
+        return instructions.get(targetIndex)
+            .computeIndex(instructions) - position;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -78,7 +87,7 @@ public final class SwitchInstruction extends Instruction implements IInstruction
         */
         while((os.size() & 0x3) != 0)
             os.writeByte(0);
-        os.writeInt(computeIndex(start, defaultIndex, instructions));
+        os.writeInt(computeOffset(instructions, start, defaultIndex));
         switch(opcode) {
             case TABLESWITCH:
                 // https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.tableswitch
@@ -87,13 +96,13 @@ public final class SwitchInstruction extends Instruction implements IInstruction
                 os.writeInt(low);
                 os.writeInt(high);
                 for(int index : indices)
-                    os.writeInt(computeIndex(start, index, instructions));
+                    os.writeInt(computeOffset(instructions, start, index));
                 break;
             case LOOKUPSWITCH:
                 os.writeInt(getCount());
                 for(int i = 0; i < getCount(); i++) {
                     os.writeInt(keys.get(i));
-                    os.writeInt(computeIndex(start, indices.get(i), instructions));
+                    os.writeInt(computeOffset(instructions, start, indices.get(i)));
                 }
                 break;
         }

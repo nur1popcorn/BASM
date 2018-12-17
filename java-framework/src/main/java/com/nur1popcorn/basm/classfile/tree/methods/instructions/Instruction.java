@@ -432,11 +432,6 @@ public abstract class Instruction {
         }
     }
 
-    static int computeIndex(int start, int index, InstructionList instructions) {
-        return instructions.get(index)
-            .computeIndex() - start;
-    }
-
     private static int recomputeIndex(ByteDataInputStream in, int start, int defaultIndex) throws IOException {
         final int target = start + defaultIndex;
         final int oldPosition = in.position();

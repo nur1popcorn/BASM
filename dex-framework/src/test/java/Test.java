@@ -10,7 +10,7 @@ import java.nio.file.Paths;
 public class Test extends TestCase {
     @org.junit.Test
     public void test() throws IOException {
-        final Path path = Paths.get("classes.dex");
-        new DexFile(ByteBuffer.wrap(Files.readAllBytes(path)));
+        //final Path path = Paths.get("classes.dex");
+        //new DexFile(ByteBuffer.wrap(Files.readAllBytes(path)));
     }
 }
