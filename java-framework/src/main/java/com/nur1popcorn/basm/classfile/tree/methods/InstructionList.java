@@ -76,18 +76,15 @@ public final class InstructionList extends AbstractList<InstructionHandle> imple
     InstructionList(byte code[], ConstantPool constantPool) throws IOException {
         final ByteDataInputStream in = new ByteDataInputStream(code);
         int length = 0;
-        for(; in.available() != 0; length++)
-            Instruction.parameters(in);
+        while(in.available() != 0) {
+            in.skipInstructionParameters();
+            length++;
+        }
         instructions = new InstructionHandle[Math.max(DEFAULT_SIZE, length)];
         in.reset();
         while(in.available() != 0)
             add(new InstructionHandle(
                 Instruction.read(in, constantPool)));
-        stream()
-            .map(InstructionHandle::getHandle)
-            .filter(IInstructionPointer.class::isInstance)
-            .map(IInstructionPointer.class::cast)
-            .forEach(pointer -> pointer.attach(this));
     }
 
     /**

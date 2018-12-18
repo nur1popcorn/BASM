@@ -436,51 +436,13 @@ public abstract class Instruction {
         final int target = start + defaultIndex;
         final int oldPosition = in.position();
         in.reset();
-        int extra = 0;
-        while (in.position() < target)
-            extra += parameters(in);
+        int index = 0;
+        while(in.position() < target) {
+            in.skipInstructionParameters();
+            index++;
+        }
         in.reset();
         in.skipBytes(oldPosition);
-        return target - extra;
-    }
-
-    public static int parameters(ByteDataInputStream in) throws IOException {
-        final byte opcode = in.readByte();
-        switch(opcode) {
-            case TABLESWITCH: {
-                // skip padding bytes and skip default index.
-                final int skip = 8 - (in.position() & 0x3);
-                in.skipBytes(skip);
-                final int low = in.readInt();
-                final int high = in.readInt();
-                final int count = (high - low + 1) << 2;
-                in.skipBytes(count);
-                return skip + 8 + count;
-            }
-            case LOOKUPSWITCH: {
-                // skip padding bytes and skip default index.
-                final int skip = 8 - (in.position() & 0x3);
-                in.skipBytes(skip);
-                final int count = in.readInt() << 3;
-                in.skipBytes(count);
-                return skip + 4 + count;
-            }
-            case WIDE:
-                final int skip =
-                    in.readByte() == IINC ?
-                        4 : 2;
-                in.skipBytes(skip);
-                return 1 + skip;
-            default: {
-                final int parameters = OPCODE_PARAMETERS[opcode & 0xff];
-                if(parameters == UNKNOWN_PARAMETERS)
-                    throw new MalformedClassFileException(
-                        "The opcode=" + OPCODE_MNEMONICS[opcode & 0xff] +
-                        " at index=" + in.position() + " is invalid."
-                    );
-                in.skipBytes(parameters);
-                return parameters;
-            }
-        }
+        return index;
     }
 }
