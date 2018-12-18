@@ -28,6 +28,9 @@ import java.util.Iterator;
 import java.util.Set;
 
 import static com.nur1popcorn.basm.Constants.*;
+import static com.nur1popcorn.basm.classfile.tree.methods.instructions.Instruction.SWITCH_INS;
+import static com.nur1popcorn.basm.classfile.tree.methods.instructions.Instruction.WIDE_INS;
+import static com.nur1popcorn.basm.classfile.tree.methods.instructions.Instruction.indexType;
 
 /**
  * The {@link InstructionHandle}
@@ -93,16 +96,14 @@ public final class InstructionHandle implements Iterable<InstructionHandle> {
         for(InstructionHandle current = il.getFirst(); current != this; current = current.next) {
             final Instruction handle = current.getHandle();
             final byte opcode = handle.getOpcode();
-            switch(opcode) {
-                case TABLESWITCH: {
+            switch(indexType(opcode)) {
+                case SWITCH_INS: {
                     final SwitchInstruction instruction = (SwitchInstruction) handle;
-                    index += ((instruction.getCount() - (index & 0x3)) << 2) + 17;
+                    index += opcode == TABLESWITCH ?
+                        ((instruction.getCount() - (index & 0x3)) << 2) + 17 :
+                        ((instruction.getCount() - (index & 0x3)) << 3) + 13;
                 }   break;
-                case LOOKUPSWITCH: {
-                    final SwitchInstruction instruction = (SwitchInstruction) handle;
-                    index += ((instruction.getCount() - (index & 0x3)) << 3) + 13;
-                }   break;
-                case WIDE:
+                case WIDE_INS:
                     index += ((WideInstruction) handle).getOpcodeParameter() == IINC ? 6 : 4;
                     break;
                 default: {
