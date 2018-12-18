@@ -31,7 +31,7 @@ public final class ClassPool {
                 .listFiles();
             if(files == null)
                 continue;
-            addFiles();
+            addFiles(files);
         }
     }
 
