@@ -100,8 +100,8 @@ public final class InstructionHandle implements Iterable<InstructionHandle> {
                 case SWITCH_INS: {
                     final SwitchInstruction instruction = (SwitchInstruction) handle;
                     index += opcode == TABLESWITCH ?
-                        ((instruction.getCount() - (index & 0x3)) << 2) + 17 :
-                        ((instruction.getCount() - (index & 0x3)) << 3) + 13;
+                        (instruction.getCount() << 2) - (index & 0x3) + 17 :
+                        (instruction.getCount() << 3) - (index & 0x3) + 13;
                 }   break;
                 case WIDE_INS:
                     index += ((WideInstruction) handle).getOpcodeParameter() == IINC ? 6 : 4;
