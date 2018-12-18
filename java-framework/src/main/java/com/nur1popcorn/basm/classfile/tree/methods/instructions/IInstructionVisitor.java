@@ -19,6 +19,7 @@
 package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
 import com.nur1popcorn.basm.classfile.constants.IConstantPoolPointer;
+import com.nur1popcorn.basm.classfile.tree.methods.IInstructionPointer;
 
 public interface IInstructionVisitor {
     default void visitNoParameterInstruction(NoParameterInstruction instruction) {}
@@ -31,7 +32,6 @@ public interface IInstructionVisitor {
     default void visitLocalVariableInstruction(LocalVariableInstruction instruction) {}
     default void visitIIncInstruction(IIncInstruction instruction) {}
 
-    default void visitInstructionPointer(IInstructionPointer instruction) {}
     default void visitJumpInstruction(JumpInstruction instruction) {}
     default void visitSwitchInstruction(SwitchInstruction instruction) {}
 

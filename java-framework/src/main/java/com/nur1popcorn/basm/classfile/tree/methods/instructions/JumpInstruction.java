@@ -27,7 +27,7 @@ import java.io.IOException;
 import static com.nur1popcorn.basm.Constants.GOTO_W;
 import static com.nur1popcorn.basm.Constants.JSR_W;
 
-public final class JumpInstruction extends Instruction implements IInstructionPointer {
+public final class JumpInstruction extends Instruction {
     private int target;
 
     /**
@@ -43,7 +43,6 @@ public final class JumpInstruction extends Instruction implements IInstructionPo
      */
     @Override
     public void accept(IInstructionVisitor visitor) {
-        visitor.visitInstructionPointer(this);
         visitor.visitJumpInstruction(this);
     }
 
@@ -72,31 +71,5 @@ public final class JumpInstruction extends Instruction implements IInstructionPo
                 os.writeShort(targetIndex);
                 break;
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void attach(InstructionList instructions) {
-        instructions.get(target)
-            .addPointer(this);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void dispose(InstructionList instructions) {
-        instructions.get(target)
-            .removePointer(this);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void update(int newIndex) {
-        target = newIndex;
     }
 }

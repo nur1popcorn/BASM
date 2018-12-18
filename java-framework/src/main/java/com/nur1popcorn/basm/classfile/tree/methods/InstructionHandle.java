@@ -19,7 +19,6 @@
 package com.nur1popcorn.basm.classfile.tree.methods;
 
 import com.nur1popcorn.basm.classfile.MalformedClassFileException;
-import com.nur1popcorn.basm.classfile.tree.methods.instructions.IInstructionPointer;
 import com.nur1popcorn.basm.classfile.tree.methods.instructions.Instruction;
 import com.nur1popcorn.basm.classfile.tree.methods.instructions.SwitchInstruction;
 import com.nur1popcorn.basm.classfile.tree.methods.instructions.WideInstruction;

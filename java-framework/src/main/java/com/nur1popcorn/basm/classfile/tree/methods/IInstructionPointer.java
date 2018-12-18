@@ -16,9 +16,7 @@
  *
  */
 
-package com.nur1popcorn.basm.classfile.tree.methods.instructions;
-
-import com.nur1popcorn.basm.classfile.tree.methods.InstructionList;
+package com.nur1popcorn.basm.classfile.tree.methods;
 
 public interface IInstructionPointer {
     void attach(InstructionList instructions);

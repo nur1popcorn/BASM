@@ -29,7 +29,7 @@ import java.util.List;
 import static com.nur1popcorn.basm.Constants.LOOKUPSWITCH;
 import static com.nur1popcorn.basm.Constants.TABLESWITCH;
 
-public final class SwitchInstruction extends Instruction implements IInstructionPointer {
+public final class SwitchInstruction extends Instruction {
     private int defaultIndex;
     private final List<Integer> keys;
     private final List<Integer> indices;
@@ -53,7 +53,6 @@ public final class SwitchInstruction extends Instruction implements IInstruction
      */
     @Override
     public void accept(IInstructionVisitor visitor) {
-        visitor.visitInstructionPointer(this);
         visitor.visitSwitchInstruction(this);
     }
 
@@ -106,35 +105,6 @@ public final class SwitchInstruction extends Instruction implements IInstruction
                 }
                 break;
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void attach(InstructionList instructions) {
-        instructions.get(defaultIndex)
-            .addPointer(this);
-        for(int i : indices)
-            instructions.get(i).addPointer(this);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void dispose(InstructionList instructions) {
-        instructions.get(defaultIndex)
-            .removePointer(this);
-        for(int i : indices)
-            instructions.get(i).removePointer(this);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void update(int newIndex) {
     }
 
     public int getCount() {

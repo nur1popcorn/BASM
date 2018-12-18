@@ -23,11 +23,14 @@ import com.nur1popcorn.basm.classfile.attributes.AttributeInfo;
 import com.nur1popcorn.basm.classfile.constants.ConstantName;
 import com.nur1popcorn.basm.classfile.tree.fields.FieldNode;
 import com.nur1popcorn.basm.classfile.tree.methods.MethodNode;
-import com.nur1popcorn.basm.utils.ClassPool;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.nur1popcorn.basm.Constants.CONSTANT_CLASS;
+import static com.nur1popcorn.basm.classfile.ClassReader.READ_ALL;
 
 /**
  * The {@link ClassFile} provides an abstraction layer between bytecode and user.
@@ -38,27 +41,26 @@ import java.util.List;
  * @author nur1popcorn
  * @since 1.0.0-alpha
  */
-public final class ClassFile implements IClassVisitor, IClassVersionProvider {
-
-    private ClassPool classPool;
-
+public final class ClassFile extends AccessFlags implements IClassVisitor, IClassVersionProvider {
     private ConstantPoolGenerator constantPool;
-
-    private int access;
 
     private int minorVersion,
                 majorVersion;
 
     private String thisClass;
-    private ClassFile superClass;
+    private String superClass;
 
-    private List<ClassFile> interfaces = new ArrayList<>();
+    private List<String> interfaces = new ArrayList<>();
 
     private List<FieldNode> fieldNodes = new ArrayList<>();
     private List<MethodNode> methodNodes = new ArrayList<>();
 
-    public ClassFile(ClassPool classPool) {
-        this.classPool = classPool;
+    public ClassFile(InputStream in) throws IOException {
+        new ClassReader(in)
+            .accept(
+                this,
+                READ_ALL
+            );
     }
 
     @Override
@@ -72,24 +74,22 @@ public final class ClassFile implements IClassVisitor, IClassVersionProvider {
     @Override
     public void visitBody(int access, int thisClass, int superClass, int interfaces[]) {
         this.access = access;
-        this.thisClass = ((ConstantName)constantPool.getEntry(thisClass))
-            .indexName(constantPool).bytes;
-        if(superClass == 0) {
-            if(!this.thisClass.equals("java/lang/Object"))
-                throw new MalformedClassFileException("super class must be non-null");
-            this.superClass = null;
-        } else
-            this.superClass = classPool.find(
-                ((ConstantName)constantPool.getEntry(superClass))
-                .indexName(constantPool).bytes
-            );
+
+        this.thisClass = ((ConstantName) constantPool.getEntry(thisClass))
+            .indexName(constantPool)
+            .bytes;
+        this.superClass = superClass == 0 ?
+            null :
+            ((ConstantName) constantPool.getEntry(superClass, CONSTANT_CLASS))
+                .indexName(constantPool)
+                .bytes;
+
         this.interfaces = new ArrayList<>(interfaces.length);
         for(int index : interfaces)
             this.interfaces.add(
-                classPool.find(
-                    ((ConstantName)constantPool.getEntry(index))
-                    .indexName(constantPool).bytes
-                )
+                ((ConstantName)constantPool.getEntry(index))
+                    .indexName(constantPool)
+                    .bytes
             );
     }
 
@@ -124,6 +124,10 @@ public final class ClassFile implements IClassVisitor, IClassVersionProvider {
 
     public void accept(IClassVisitor visitor) throws IOException {
 
+    }
+
+    public List<String> getInterfaces() {
+        return interfaces;
     }
 
     public List<FieldNode> getFieldNodes() {

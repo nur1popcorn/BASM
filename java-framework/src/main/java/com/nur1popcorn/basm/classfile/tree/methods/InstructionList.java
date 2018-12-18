@@ -20,7 +20,6 @@ package com.nur1popcorn.basm.classfile.tree.methods;
 
 import com.nur1popcorn.basm.classfile.ConstantPool;
 import com.nur1popcorn.basm.classfile.MalformedClassFileException;
-import com.nur1popcorn.basm.classfile.tree.methods.instructions.IInstructionPointer;
 import com.nur1popcorn.basm.classfile.tree.methods.instructions.IInstructionVisitor;
 import com.nur1popcorn.basm.classfile.tree.methods.instructions.Instruction;
 import com.nur1popcorn.basm.utils.ByteDataInputStream;
