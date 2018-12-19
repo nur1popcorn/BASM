@@ -43,10 +43,7 @@ public final class ByteDataInputStream extends DataInputStream {
     }
 
     public void skipPadding() throws IOException {
-        final int offset = position();
-        final int mask = 0x3;
-        if((offset & mask) != 0)
-            skipBytes(4 - (offset & mask));
+        skipBytes(3 - ((position() + 3) & 0x3));
     }
 
     public void skipInstructionParameters() throws IOException {

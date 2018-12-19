@@ -99,13 +99,9 @@ public final class InstructionHandle implements Iterable<InstructionHandle> {
             switch(indexType(opcode)) {
                 case SWITCH_INS: {
                     final SwitchInstruction instruction = (SwitchInstruction) handle;
-                    final int offset = ++index;
-                    final int mask = 0x3;
-                    if((offset & mask) != 0)
-                        index += 4 - (offset & mask);
                     index += opcode == TABLESWITCH ?
-                        12 + (instruction.getCount() << 2) :
-                         8 + (instruction.getCount() << 3);
+                        16 + (instruction.getCount() << 2) - (index & 0x3) :
+                        12 + (instruction.getCount() << 3) - (index & 0x3);
                 }   break;
                 case WIDE_INS:
                     index += ((WideInstruction) handle).getOpcodeParameter() == IINC ? 6 : 4;
