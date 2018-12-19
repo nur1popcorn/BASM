@@ -129,7 +129,15 @@ public final class ConstantMethodHandle extends ConstantInfo implements IConstan
      *         inside of the {@link ConstantPool}.
      */
     public ConstantMethodRef indexRef(ConstantPool constantPool) {
-        return constantPool.getEntry(refIndex, CONSTANT_METHOD_REF);
+        final byte actual = constantPool.getEntry(refIndex).getTag();
+        // allow these tag types also:
+        byte expected = CONSTANT_METHOD_REF;
+        switch(actual) {
+            case CONSTANT_FIELD_REF:
+            case CONSTANT_INTERFACE_METHOD_REF:
+                expected = actual;
+        }
+        return constantPool.getEntry(refIndex, expected);
     }
 
     @Override

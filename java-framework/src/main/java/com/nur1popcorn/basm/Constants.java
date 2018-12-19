@@ -84,6 +84,7 @@ public final class Constants {
     public static final byte CONSTANT_NAME_AND_TYPE =        12;
     public static final byte CONSTANT_METHOD_HANDLE =        15;
     public static final byte CONSTANT_METHOD_TYPE =          16;
+    public static final byte CONSTANT_DYNAMIC =              17;
     public static final byte CONSTANT_INVOKEDYNAMIC =        18;
     public static final byte CONSTANT_MODULE =               19;
     public static final byte CONSTANT_PACKAGE =              20;
@@ -109,8 +110,10 @@ public final class Constants {
         null,
         "CONSTANT_MethodHandle",
         "CONSTANT_MethodType",
-        null,
+        "CONSTANT_Dynamic",
         "CONSTANT_Invokedynamic",
+        "CONSTANT_Module",
+        "CONSTANT_Package"
     };
 
     /**

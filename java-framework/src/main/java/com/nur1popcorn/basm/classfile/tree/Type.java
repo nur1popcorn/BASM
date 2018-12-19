@@ -51,8 +51,8 @@ public final class Type {
         null,        null,      null,      null,
         "t_boolean", "t_char",  "t_float", "t_double",
         "t_byte",    "t_short", "t_int",   "t_long",
-        "t_object",  "t_array", "t_field", "t_method",
-        "t_void"
+        "t_object",  "t_array", "t_method", "t_void",
+        "t_field"
     };
 
     /*

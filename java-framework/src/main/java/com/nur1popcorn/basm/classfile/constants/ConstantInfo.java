@@ -159,35 +159,39 @@ public abstract class ConstantInfo {
     public static ConstantInfo read(DataInputStream in) throws IOException {
         final byte identifier = in.readByte();
         switch(identifier) {
+            case CONSTANT_UTF8:
+                return new ConstantUTF8(in.readUTF());
+            case CONSTANT_INTEGER:
+                return new ConstantInteger(in.readInt());
+            case CONSTANT_FLOAT:
+                return new ConstantInteger(in.readFloat());
+            case CONSTANT_LONG:
+                return new ConstantLong(in.readLong());
+            case CONSTANT_DOUBLE:
+                return new ConstantLong(in.readDouble());
             case CONSTANT_CLASS:
             case CONSTANT_STRING:
             case CONSTANT_METHOD_TYPE:
+            case CONSTANT_MODULE:
+            case CONSTANT_PACKAGE:
                 return new ConstantName(identifier,
                                         in.readUnsignedShort());
-            case CONSTANT_NAME_AND_TYPE:
-                return new ConstantNameAndType(in.readUnsignedShort(),
-                                               in.readUnsignedShort());
             case CONSTANT_FIELD_REF:
             case CONSTANT_METHOD_REF:
             case CONSTANT_INTERFACE_METHOD_REF:
                 return new ConstantMethodRef(identifier,
                                              in.readUnsignedShort(),
                                              in.readUnsignedShort());
-            case CONSTANT_INTEGER:
-                return new ConstantInteger(in.readInt());
-            case CONSTANT_FLOAT:
-                return new ConstantInteger(in.readFloat());
-            case CONSTANT_LONG:
-                return new ConstantLong(in.readDouble());
-            case CONSTANT_DOUBLE:
-                return new ConstantLong(in.readLong());
-            case CONSTANT_UTF8:
-                return new ConstantUTF8(in.readUTF());
+            case CONSTANT_NAME_AND_TYPE:
+                return new ConstantNameAndType(in.readUnsignedShort(),
+                                               in.readUnsignedShort());
             case CONSTANT_METHOD_HANDLE:
                 return new ConstantMethodHandle(in.readByte(),
                                                 in.readUnsignedShort());
+            case CONSTANT_DYNAMIC:
             case CONSTANT_INVOKEDYNAMIC:
-                return new ConstantInvokeDynamic(in.readUnsignedShort(),
+                return new ConstantInvokeDynamic(identifier,
+                                                 in.readUnsignedShort(),
                                                  in.readUnsignedShort());
             default:
                 throw new IOException("Invalid constant pool entry tag: " + Integer.toHexString(identifier));

@@ -30,7 +30,7 @@ public class AttributeRuntimeInvisibleParameterAnnotations extends AttributeInfo
 
     public AttributeRuntimeInvisibleParameterAnnotations(int nameIndex, DataInputStream in) throws IOException {
         super(nameIndex, in);
-        parameterAnnotations = new ParameterAnnotation[in.readUnsignedShort()];
+        parameterAnnotations = new ParameterAnnotation[in.readUnsignedByte()];
         for(int i = 0; i < parameterAnnotations.length; i++)
             parameterAnnotations[i] = new ParameterAnnotation(in);
     }
@@ -38,7 +38,7 @@ public class AttributeRuntimeInvisibleParameterAnnotations extends AttributeInfo
     @Override
     public void write(DataOutputStream os, ConstantPool constantPool) throws IOException {
         super.write(os, constantPool);
-        os.writeShort(parameterAnnotations.length);
+        os.writeByte(parameterAnnotations.length);
         for(ParameterAnnotation annotation : parameterAnnotations)
             annotation.write(os);
     }

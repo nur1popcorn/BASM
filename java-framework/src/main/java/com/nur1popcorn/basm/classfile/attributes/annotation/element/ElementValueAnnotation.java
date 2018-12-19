@@ -16,6 +16,7 @@ public class ElementValueAnnotation extends ElementValue {
 
     @Override
     public void write(DataOutputStream os) throws IOException {
+        super.write(os);
         annotation.write(os);
     }
 }

@@ -14,6 +14,7 @@ public class ElementValueClass extends ElementValue {
 
     @Override
     public void write(DataOutputStream os) throws IOException {
+        super.write(os);
         os.writeShort(classInfoIndex);
     }
 }

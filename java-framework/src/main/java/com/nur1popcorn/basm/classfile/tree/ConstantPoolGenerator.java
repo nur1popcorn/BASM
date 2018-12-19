@@ -30,6 +30,7 @@ import java.util.Map;
 import static com.nur1popcorn.basm.Constants.*;
 import static com.nur1popcorn.basm.classfile.IClassVersionProvider.JAVA_7;
 import static com.nur1popcorn.basm.classfile.IClassVersionProvider.JAVA_8;
+import static com.nur1popcorn.basm.classfile.IClassVersionProvider.JAVA_9;
 
 /**
  * The {@link ConstantPoolGenerator} is used to build a {@link ConstantPool} without duplicates.
@@ -148,7 +149,9 @@ public final class ConstantPoolGenerator extends ConstantPool {
         switch(tag) {
             case CONSTANT_CLASS:
             case CONSTANT_STRING:
-            case CONSTANT_METHOD_TYPE: {
+            case CONSTANT_METHOD_TYPE:
+            case CONSTANT_MODULE:
+            case CONSTANT_PACKAGE: {
                 final ConstantName name = (ConstantName) old;
                 name.indexName(this)
                     .removePointer(name);
@@ -259,6 +262,7 @@ public final class ConstantPoolGenerator extends ConstantPool {
     public int findInvokeDynamic(int bootstrapMethodAttrIndex, String name, String desc) {
         provider.ensureMajorVersion(JAVA_7);
         final ConstantInvokeDynamic invokeDynamic = new ConstantInvokeDynamic(
+            CONSTANT_INVOKEDYNAMIC,
             bootstrapMethodAttrIndex,
             findNameAndType(
                 name,
@@ -338,6 +342,30 @@ public final class ConstantPoolGenerator extends ConstantPool {
         provider.ensureMajorVersion(JAVA_7);
         final ConstantName cName = new ConstantName(
             CONSTANT_METHOD_TYPE,
+            findUTF8(name)
+        );
+        final int index = findEntry(cName);
+        if(index != 0)
+            return index;
+        return addEntry(cName);
+    }
+
+    public int findModule(String name) {
+        provider.ensureMajorVersion(JAVA_9);
+        final ConstantName cName = new ConstantName(
+            CONSTANT_MODULE,
+            findUTF8(name)
+        );
+        final int index = findEntry(cName);
+        if(index != 0)
+            return index;
+        return addEntry(cName);
+    }
+
+    public int findPackage(String name) {
+        provider.ensureMajorVersion(JAVA_9);
+        final ConstantName cName = new ConstantName(
+            CONSTANT_PACKAGE,
             findUTF8(name)
         );
         final int index = findEntry(cName);

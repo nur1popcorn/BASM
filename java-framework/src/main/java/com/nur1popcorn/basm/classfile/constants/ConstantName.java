@@ -94,6 +94,8 @@ public final class ConstantName extends ConstantInfo implements IConstantPoolPoi
             case CONSTANT_CLASS: visitor.visitClass(this); break;
             case CONSTANT_STRING: visitor.visitString(this); break;
             case CONSTANT_METHOD_TYPE: visitor.visitMethodType(this); break;
+            case CONSTANT_MODULE: visitor.visitModule(this); break;
+            case CONSTANT_PACKAGE: visitor.visitPackage(this); break;
         }
     }
 

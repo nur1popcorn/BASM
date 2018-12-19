@@ -16,6 +16,7 @@ public class ElementValueArray extends ElementValue {
 
     @Override
     public void write(DataOutputStream os) throws IOException {
+        super.write(os);
         os.writeShort(values.length);
         for (ElementValue value : values)
             value.write(os);

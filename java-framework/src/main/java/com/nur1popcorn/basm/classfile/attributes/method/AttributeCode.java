@@ -41,8 +41,7 @@ public class AttributeCode extends AttributeInfo {
         maxLocals = in.readUnsignedShort();
 
         code = new byte[in.readInt()];
-        for(int i = 0; i < code.length; i++)
-            code[i] = in.readByte();
+        in.readFully(code);
 
         exceptionTable = new ExceptionTableEntry[in.readUnsignedShort()];
         for(int i = 0; i < exceptionTable.length; i++)
