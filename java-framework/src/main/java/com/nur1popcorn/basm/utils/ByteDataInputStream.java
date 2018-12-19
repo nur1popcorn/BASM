@@ -25,9 +25,6 @@ import java.io.DataInputStream;
 import java.io.IOException;
 
 import static com.nur1popcorn.basm.Constants.*;
-import static com.nur1popcorn.basm.classfile.tree.methods.instructions.Instruction.SWITCH_INS;
-import static com.nur1popcorn.basm.classfile.tree.methods.instructions.Instruction.WIDE_INS;
-import static com.nur1popcorn.basm.classfile.tree.methods.instructions.Instruction.indexType;
 
 public final class ByteDataInputStream extends DataInputStream {
     private ByteArrayInputStreamDelegate in;
@@ -45,19 +42,34 @@ public final class ByteDataInputStream extends DataInputStream {
         return in.position();
     }
 
+    public void skipPadding() throws IOException {
+        final int offset = position();
+        final int mask = 0x3;
+        if((offset & mask) != 0)
+            skipBytes(4 - (offset & mask));
+    }
+
     public void skipInstructionParameters() throws IOException {
         final byte opcode = readByte();
-        switch(indexType(opcode)) {
-            case SWITCH_INS: {
+        switch(opcode) {
+            case TABLESWITCH: {
                 // skip padding bytes and skip default index.
-                skipBytes(8 - (position() & 0x3));
-                skipBytes(opcode == TABLESWITCH ?
-                        (readInt() - readInt() + 1) << 2 :
-                         readInt() << 3);
+                skipPadding();
+                skipBytes(4);
+                final int low = readInt();
+                final int high = readInt();
+                skipBytes((high - low + 1) << 2);
             }   break;
-            case WIDE_INS:
-                skipBytes(readByte() == IINC ?
-                    4 : 2);
+            case LOOKUPSWITCH:
+                // skip padding bytes and skip default index.
+                skipPadding();
+                skipBytes(4);
+                skipBytes(readInt() << 3);
+                break;
+            case WIDE:
+                skipBytes(
+                    readByte() == IINC ?
+                        4 : 2);
                 break;
             default: {
                 final int parameters = OPCODE_PARAMETERS[opcode & 0xff];

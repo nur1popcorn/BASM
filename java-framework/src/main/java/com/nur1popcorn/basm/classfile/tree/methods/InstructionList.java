@@ -80,9 +80,9 @@ public final class InstructionList extends AbstractList<InstructionHandle> imple
             in.skipInstructionParameters();
             length++;
         }
-        instructions = new InstructionHandle[Math.max(DEFAULT_SIZE, length)];
+        instructions = new InstructionHandle[length];
         in.reset();
-        while(in.available() != 0)
+        for(int i = 0; i < length; i++)
             add(new InstructionHandle(
                 Instruction.read(in, constantPool)));
     }

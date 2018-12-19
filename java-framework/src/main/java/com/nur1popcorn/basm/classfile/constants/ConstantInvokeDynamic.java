@@ -23,6 +23,7 @@ import com.nur1popcorn.basm.classfile.ConstantPool;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
+import static com.nur1popcorn.basm.Constants.CONSTANT_DYNAMIC;
 import static com.nur1popcorn.basm.Constants.CONSTANT_INVOKEDYNAMIC;
 import static com.nur1popcorn.basm.Constants.CONSTANT_NAME_AND_TYPE;
 
@@ -60,8 +61,8 @@ public final class ConstantInvokeDynamic extends ConstantInfo implements IConsta
      * @param bootstrapMethodAttrIndex
      * @param nameAndTypeIndex
      */
-    public ConstantInvokeDynamic(int bootstrapMethodAttrIndex, int nameAndTypeIndex) {
-        super(CONSTANT_INVOKEDYNAMIC);
+    public ConstantInvokeDynamic(byte tag, int bootstrapMethodAttrIndex, int nameAndTypeIndex) {
+        super(tag);
         this.bootstrapMethodAttrIndex = bootstrapMethodAttrIndex;
         this.nameAndTypeIndex = nameAndTypeIndex;
     }
@@ -82,7 +83,10 @@ public final class ConstantInvokeDynamic extends ConstantInfo implements IConsta
     @Override
     public void accept(IConstantVisitor visitor) {
         visitor.visitCPPointer(this);
-        visitor.visitInvokeDynamic(this);
+        if(getTag() == CONSTANT_INVOKEDYNAMIC)
+            visitor.visitInvokeDynamic(this);
+        else if(getTag() == CONSTANT_DYNAMIC)
+            visitor.visitDynamicConstant(this);
     }
 
     /**

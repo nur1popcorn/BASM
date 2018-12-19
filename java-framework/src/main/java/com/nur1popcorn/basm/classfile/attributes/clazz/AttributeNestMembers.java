@@ -16,7 +16,7 @@
  *
  */
 
-package com.nur1popcorn.basm.classfile.attributes.annotation;
+package com.nur1popcorn.basm.classfile.attributes.clazz;
 
 import com.nur1popcorn.basm.classfile.ConstantPool;
 import com.nur1popcorn.basm.classfile.attributes.AttributeInfo;
@@ -25,21 +25,21 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-public class AttributeRuntimeVisibleParameterAnnotations extends AttributeInfo {
-    private final ParameterAnnotation[] parameterAnnotations;
+public class AttributeNestMembers extends AttributeInfo {
+    private final int[] classes;
 
-    public AttributeRuntimeVisibleParameterAnnotations(int nameIndex, DataInputStream in) throws IOException {
+    public AttributeNestMembers(int nameIndex, DataInputStream in) throws IOException {
         super(nameIndex, in);
-        parameterAnnotations = new ParameterAnnotation[in.readUnsignedByte()];
-        for(int i = 0; i < parameterAnnotations.length; i++)
-            parameterAnnotations[i] = new ParameterAnnotation(in);
+        classes = new int[in.readUnsignedShort()];
+        for(int i = 0; i < classes.length; i++)
+            classes[i] = in.readUnsignedShort();
     }
 
     @Override
     public void write(DataOutputStream os, ConstantPool constantPool) throws IOException {
         super.write(os, constantPool);
-        os.writeByte(parameterAnnotations.length);
-        for(ParameterAnnotation annotation : parameterAnnotations)
-            annotation.write(os);
+        os.writeShort(classes.length);
+        for(int i : classes)
+            os.writeShort(i);
     }
 }

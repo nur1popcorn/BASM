@@ -22,6 +22,7 @@ public interface IConstantVisitor {
     default void visitInt(ConstantInteger info) {}
     default void visitFloat(ConstantInteger info) {}
     default void visitInvokeDynamic(ConstantInvokeDynamic info) {}
+    default void visitDynamicConstant(ConstantInvokeDynamic info) {}
     default void visitLong(ConstantLong info) {}
     default void visitDouble(ConstantLong info) {}
     default void visitMethodHandle(ConstantMethodHandle info) {}
@@ -31,6 +32,8 @@ public interface IConstantVisitor {
     default void visitMethodType(ConstantName info) {}
     default void visitNameAndType(ConstantNameAndType info) {}
     default void visitUTF8(ConstantUTF8 info) {}
+    default void visitModule(ConstantName info) {}
+    default void visitPackage(ConstantName info) {}
 
     default void visitCPPointer(IConstantPoolPointer pointer) {}
 }

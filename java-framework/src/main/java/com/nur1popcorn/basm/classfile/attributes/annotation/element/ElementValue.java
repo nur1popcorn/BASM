@@ -37,5 +37,7 @@ public abstract class ElementValue {
         }
     }
 
-    public abstract void write(DataOutputStream os) throws IOException;
+    public void write(DataOutputStream os) throws IOException {
+        os.writeByte(tag);
+    }
 }

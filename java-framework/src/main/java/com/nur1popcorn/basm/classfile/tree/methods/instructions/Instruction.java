@@ -357,7 +357,7 @@ public abstract class Instruction {
             }
             case SWITCH_INS: {
                 // skip padding bytes and read default index.
-                in.skipBytes(4 - (in.position() & 0x3));
+                in.skipPadding();
                 final int defaultIndex = recomputeIndex(in, start, in.readInt());
                 switch(opcode) {
                     case TABLESWITCH: {
