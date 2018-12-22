@@ -43,7 +43,7 @@ public final class ByteDataInputStream extends DataInputStream {
     }
 
     public void skipPadding() throws IOException {
-        skipBytes(3 - ((position() + 3) & 0x3));
+        skipBytes(-position() & 0x3);
     }
 
     public void skipInstructionParameters() throws IOException {

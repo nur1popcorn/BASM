@@ -60,8 +60,7 @@ public final class SwitchInstruction extends Instruction {
         if(targetIndex < 0 || targetIndex >= instructions.size())
             throw new MalformedClassFileException(
                 "Invalid switch instruction's targetIndex= " + targetIndex + " out of bounds.");
-        return instructions.get(targetIndex)
-            .computeIndex(instructions) - position;
+        return instructions.computeIndex(instructions.get(targetIndex)) - position;
     }
 
     /**
