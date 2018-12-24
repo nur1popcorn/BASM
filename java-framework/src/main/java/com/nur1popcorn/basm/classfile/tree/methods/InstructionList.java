@@ -22,12 +22,20 @@ import com.nur1popcorn.basm.classfile.ConstantPool;
 import com.nur1popcorn.basm.classfile.MalformedClassFileException;
 import com.nur1popcorn.basm.classfile.tree.methods.instructions.IInstructionVisitor;
 import com.nur1popcorn.basm.classfile.tree.methods.instructions.Instruction;
+import com.nur1popcorn.basm.classfile.tree.methods.instructions.SwitchInstruction;
+import com.nur1popcorn.basm.classfile.tree.methods.instructions.WideInstruction;
 import com.nur1popcorn.basm.utils.ByteDataInputStream;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.AbstractList;
 import java.util.Arrays;
+
+import static com.nur1popcorn.basm.Constants.*;
+import static com.nur1popcorn.basm.Constants.OPCODE_MNEMONICS;
+import static com.nur1popcorn.basm.classfile.tree.methods.instructions.Instruction.SWITCH_INS;
+import static com.nur1popcorn.basm.classfile.tree.methods.instructions.Instruction.WIDE_INS;
+import static com.nur1popcorn.basm.classfile.tree.methods.instructions.Instruction.indexType;
 
 /**
  * The {@link InstructionList} class is derived from the abstract {@link AbstractList} class and
@@ -109,7 +117,7 @@ public final class InstructionList extends AbstractList<InstructionHandle> imple
      * @throws IOException If an error occurs during the process of writing to the {@link DataOutputStream}.
      */
     public void write(DataOutputStream os) throws IOException {
-        os.writeInt(size);
+        os.writeInt(computeSize());
         for(InstructionHandle ih : this)
             ih.getHandle()
               .write(os, this);
@@ -301,5 +309,39 @@ public final class InstructionList extends AbstractList<InstructionHandle> imple
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public int computeSize() {
+        return computeIndex(null);
+    }
+
+    public int computeIndex(InstructionHandle target) {
+        int index = 0;
+        for(InstructionHandle current = getFirst(); current != target; current = current.next) {
+            final Instruction handle = current.getHandle();
+            final byte opcode = handle.getOpcode();
+            index++; // add opcode length
+            switch(indexType(opcode)) {
+                case SWITCH_INS: {
+                    final SwitchInstruction instruction = (SwitchInstruction) handle;
+                    index += opcode == TABLESWITCH ?
+                        (-index & 0x3) + 12 + (instruction.getCount() << 2) :
+                        (-index & 0x3) + 8 + (instruction.getCount() << 3);
+                }   break;
+                case WIDE_INS:
+                    index += ((WideInstruction) handle)
+                        .getOpcodeParameter() == IINC ? 5 : 3;
+                    break;
+                default: {
+                    final int parameters = OPCODE_PARAMETERS[opcode & 0xff];
+                    if(parameters == UNKNOWN_PARAMETERS)
+                        throw new MalformedClassFileException(
+                            "The opcode=" + OPCODE_MNEMONICS[opcode & 0xff] + " is invalid."
+                        );
+                    index += parameters;
+                }   break;
+            }
+        }
+        return index;
     }
 }
