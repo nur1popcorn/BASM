@@ -109,7 +109,6 @@ public final class InstructionList extends AbstractList<InstructionHandle> imple
      * @throws IOException If an error occurs during the process of writing to the {@link DataOutputStream}.
      */
     public void write(DataOutputStream os) throws IOException {
-        os.writeInt(computeSize());
         for(InstructionHandle ih : this)
             ih.getHandle()
               .write(os, this);

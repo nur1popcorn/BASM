@@ -99,7 +99,6 @@ public final class InstructionHandle implements Iterable<InstructionHandle> {
     }
 
     public int getLength(int index) {
-        final Instruction handle = getHandle();
         final byte opcode = handle.getOpcode();
         switch(indexType(opcode)) {
             case SWITCH_INS: {
