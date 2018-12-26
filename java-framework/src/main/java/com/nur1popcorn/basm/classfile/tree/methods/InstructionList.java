@@ -85,7 +85,7 @@ public final class InstructionList extends AbstractList<InstructionHandle> imple
         final ByteDataInputStream in = new ByteDataInputStream(code);
         int length = 0;
         while(in.available() != 0) {
-            in.skipInstructionParameters();
+            in.skipInstruction();
             length++;
         }
         instructions = new InstructionHandle[length];
@@ -311,10 +311,6 @@ public final class InstructionList extends AbstractList<InstructionHandle> imple
         }
     }
 
-    public int computeSize() {
-        return computeIndex(null);
-    }
-
     public int computeIndex(InstructionHandle target) {
         int index = 0;
         for(InstructionHandle current = getFirst(); current != target; current = current.next) {
@@ -343,5 +339,9 @@ public final class InstructionList extends AbstractList<InstructionHandle> imple
             }
         }
         return index;
+    }
+
+    public int computeSize() {
+        return computeIndex(null);
     }
 }

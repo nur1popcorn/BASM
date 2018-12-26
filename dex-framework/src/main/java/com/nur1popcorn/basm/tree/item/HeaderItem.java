@@ -50,8 +50,7 @@ public class HeaderItem extends Item {
     public void read(ByteBuffer byteBuffer) throws IOException {
         super.read(byteBuffer);
         byteBuffer.get(magic);
-        final String m = new String(magic, StandardCharsets.UTF_8);
-        if (!m.matches(DEX_FILE_MAGIC))
+        if (!new String(magic, StandardCharsets.UTF_8).equals(DEX_FILE_MAGIC))
             throw new IncorrectMagic(magic);
 
         checksum = byteBuffer.getInt();

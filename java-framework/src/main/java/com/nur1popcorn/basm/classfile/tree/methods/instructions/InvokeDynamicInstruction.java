@@ -8,7 +8,7 @@ import java.io.IOException;
 
 import static com.nur1popcorn.basm.Constants.INVOKEDYNAMIC;
 
-public class InvokeDynamicInstruction extends CPInstruction {
+public final class InvokeDynamicInstruction extends CPInstruction {
     InvokeDynamicInstruction(int index, ConstantPool cp) {
         super(INVOKEDYNAMIC, index, cp);
     }
