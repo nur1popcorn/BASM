@@ -7,7 +7,7 @@ import java.io.IOException;
 
 import static com.nur1popcorn.basm.Constants.MULTIANEWARRAY;
 
-public class MultiANewArrayInstruction extends Instruction {
+public final class MultiANewArrayInstruction extends Instruction {
     private int index;
     private byte dimensions;
 

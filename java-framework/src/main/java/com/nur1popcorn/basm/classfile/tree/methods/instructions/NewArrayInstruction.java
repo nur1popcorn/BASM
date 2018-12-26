@@ -8,7 +8,7 @@ import java.io.IOException;
 
 import static com.nur1popcorn.basm.Constants.NEWARRAY;
 
-public class NewArrayInstruction extends Instruction {
+public final class NewArrayInstruction extends Instruction {
     private Type type;
 
     /**

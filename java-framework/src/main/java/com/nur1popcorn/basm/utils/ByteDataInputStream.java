@@ -42,16 +42,12 @@ public final class ByteDataInputStream extends DataInputStream {
         return in.position();
     }
 
-    public void skipPadding() throws IOException {
-        skipBytes(-position() & 0x3);
-    }
-
-    public void skipInstructionParameters() throws IOException {
+    public void skipInstruction() throws IOException {
         final byte opcode = readByte();
         switch(opcode) {
             case TABLESWITCH: {
                 // skip padding bytes and skip default index.
-                skipPadding();
+                skipBytes(-position() & 0x3);
                 skipBytes(4);
                 final int low = readInt();
                 final int high = readInt();
@@ -59,7 +55,7 @@ public final class ByteDataInputStream extends DataInputStream {
             }   break;
             case LOOKUPSWITCH:
                 // skip padding bytes and skip default index.
-                skipPadding();
+                skipBytes(-position() & 0x3);
                 skipBytes(4);
                 skipBytes(readInt() << 3);
                 break;
