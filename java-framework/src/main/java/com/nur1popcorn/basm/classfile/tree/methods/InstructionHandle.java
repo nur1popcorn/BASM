@@ -18,11 +18,19 @@
 
 package com.nur1popcorn.basm.classfile.tree.methods;
 
+import com.nur1popcorn.basm.classfile.MalformedClassFileException;
 import com.nur1popcorn.basm.classfile.tree.methods.instructions.Instruction;
+import com.nur1popcorn.basm.classfile.tree.methods.instructions.SwitchInstruction;
+import com.nur1popcorn.basm.classfile.tree.methods.instructions.WideInstruction;
 import com.nur1popcorn.basm.utils.WeakHashSet;
 
 import java.util.Iterator;
 import java.util.Set;
+
+import static com.nur1popcorn.basm.Constants.*;
+import static com.nur1popcorn.basm.classfile.tree.methods.instructions.Instruction.SWITCH_INS;
+import static com.nur1popcorn.basm.classfile.tree.methods.instructions.Instruction.WIDE_INS;
+import static com.nur1popcorn.basm.classfile.tree.methods.instructions.Instruction.indexType;
 
 /**
  * The {@link InstructionHandle}
@@ -88,6 +96,31 @@ public final class InstructionHandle implements Iterable<InstructionHandle> {
      */
     public Instruction getHandle() {
         return handle;
+    }
+
+    public int getLength(int index) {
+        final Instruction handle = getHandle();
+        final byte opcode = handle.getOpcode();
+        switch(indexType(opcode)) {
+            case SWITCH_INS: {
+                final SwitchInstruction instruction = (SwitchInstruction) handle;
+                index++;
+                return opcode == TABLESWITCH ?
+                    (-index & 0x3) + 13 + (instruction.getCount() << 2) :
+                    (-index & 0x3) + 9 + (instruction.getCount() << 3);
+            }
+            case WIDE_INS:
+                return ((WideInstruction) handle)
+                    .getOpcodeParameter() == IINC ? 6 : 4;
+            default: {
+                final int parameters = OPCODE_PARAMETERS[opcode & 0xff];
+                if(parameters == UNKNOWN_PARAMETERS)
+                    throw new MalformedClassFileException(
+                        "The opcode=" + OPCODE_MNEMONICS[opcode & 0xff] + " is invalid."
+                    );
+                return parameters + 1;
+            }
+        }
     }
 
     @Override

@@ -57,10 +57,7 @@ public final class SwitchInstruction extends Instruction {
     }
 
     private static int computeOffset(InstructionList instructions, int position, int targetIndex) {
-        if(targetIndex < 0 || targetIndex >= instructions.size())
-            throw new MalformedClassFileException(
-                "Invalid switch instruction's targetIndex= " + targetIndex + " out of bounds.");
-        return instructions.computeIndex(instructions.get(targetIndex)) - position;
+        return instructions.computeIndex(targetIndex) - position;
     }
 
     /**
