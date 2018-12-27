@@ -18,7 +18,6 @@
 
 package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
-import com.nur1popcorn.basm.classfile.MalformedClassFileException;
 import com.nur1popcorn.basm.classfile.tree.methods.InstructionList;
 
 import java.io.DataOutputStream;
@@ -57,7 +56,7 @@ public final class SwitchInstruction extends Instruction {
     }
 
     private static int computeOffset(InstructionList instructions, int position, int targetIndex) {
-        return instructions.computeIndex(targetIndex) - position;
+        return instructions.toRealIndex(targetIndex) - position;
     }
 
     /**

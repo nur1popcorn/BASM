@@ -25,39 +25,93 @@ import static com.nur1popcorn.basm.DexConstants.*;
 
 public abstract class DexInputStream extends InputStream {
     private InputStream in;
+    private long position;
 
     private DexInputStream(InputStream in) {
         this.in = in;
     }
 
-    public abstract short readShort() throws IOException;
-    public abstract int readInt() throws IOException;
-    public abstract long readLong() throws IOException;
+    public long position() {
+        return position;
+    }
+
+    public void skipBytes(long n) throws IOException {
+        long i = skip(n);
+        while(i < n)
+            i += skip(n);
+        position += n;
+    }
+
+    public void readFully(byte bytes[]) throws IOException {
+        int i = read(bytes);
+        while(i < bytes.length)
+            i += read(bytes, i, bytes.length);
+        position += i;
+    }
+
+    /**
+     * Skips bytes until the position is aligned to a multiple of 4.
+     */
+    public void alignToFourBytes() throws IOException {
+        skipBytes(-position & 0x3L);
+    }
 
     public byte readByte() throws IOException {
         return (byte) read();
     }
 
     public int readLeb128() throws IOException {
-        int res = 0;
-        byte read;
-        do {
-            read = readByte();
-            res = (res << 7) | (read & 0x7f);
-        } while((read & 0x80) != 0);
+        int res = readByte();
+        if((res & 0x80) == 0) {
+            res = (res & 0x7f) | readByte() << 7;
+            if((res & 0x4000) == 0) {
+                res = (res & 0x7f) | readByte() << 14;
+                if((res & 0x200000) == 0) {
+                    res = (res & 0x7f) | readByte() << 21;
+                    if((res & 0x10000000) == 0)
+                        res = (res & 0x7f) | readByte() << 24;
+                }
+            }
+        }
         return res;
+    }
+
+    public abstract short readShort() throws IOException;
+    public abstract int readInt() throws IOException;
+    public abstract long readLong() throws IOException;
+
+
+    public int readUnsignedShort() throws IOException {
+        return readShort() & 0xffff;
     }
 
     @Override
     public final int read() throws IOException {
+        position++;
         return in.read();
+    }
+
+    @Override
+    public int available() throws IOException {
+        return in.available();
+    }
+
+    @Override
+    public void close() throws IOException {
+        in.close();
+    }
+
+    public DexInputStream reverseOrder() {
+        final DexInputStream din = this instanceof LittleEndianInputStream ?
+            new BigEndianInputStream(in) : new LittleEndianInputStream(in);
+        din.position = position;
+        return din;
     }
 
     public static DexInputStream create(InputStream in, int constant) {
         if(constant == ENDIAN_CONSTANT)
             return new LittleEndianInputStream(in);
-        else // if(constant == REVERSE_ENDIAN_CONSTANT)
-            return new BigEndianInputStream(in);
+        return new BigEndianInputStream(in);
     }
 
     private static final class LittleEndianInputStream extends DexInputStream {

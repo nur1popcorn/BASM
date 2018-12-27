@@ -135,6 +135,13 @@ public final class InstructionList extends AbstractList<InstructionHandle> imple
         return size;
     }
 
+    public int getRealSize() {
+        int size = 0;
+        for(int i = 0; i < this.size; i++)
+            size += instructions[i].getLength(size);
+        return size;
+    }
+
     /**
      * @param index The index of the {@link Instruction} which should be returned.
      * @return The {@link Instruction} at the given index.
@@ -143,6 +150,14 @@ public final class InstructionList extends AbstractList<InstructionHandle> imple
     public InstructionHandle get(int index) {
         rangeCheck(index);
         return instructions[index];
+    }
+
+    public int toRealIndex(int targetIndex) {
+        rangeCheck(targetIndex);
+        int index = 0;
+        for(int i = 0; i != targetIndex; i++)
+            index += instructions[i].getLength(index);
+        return index;
     }
 
     /**
@@ -296,20 +311,5 @@ public final class InstructionList extends AbstractList<InstructionHandle> imple
         il.instructions = Arrays.copyOf(instructions, size);
         il.modCount = 0;
         return il;
-    }
-
-    public int computeIndex(int targetIndex) {
-        rangeCheck(targetIndex);
-        int index = 0;
-        for(int i = 0; i != targetIndex; i++)
-            index += instructions[i].getLength(index);
-        return index;
-    }
-
-    public int computeSize() {
-        int size = 0;
-        for(int i = 0; i < this.size; i++)
-            size += instructions[i].getLength(size);
-        return size;
     }
 }
