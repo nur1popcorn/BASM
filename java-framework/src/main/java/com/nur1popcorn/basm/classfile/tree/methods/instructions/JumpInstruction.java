@@ -45,10 +45,6 @@ public final class JumpInstruction extends Instruction {
         visitor.visitJumpInstruction(this);
     }
 
-    private static int computeOffset(InstructionList instructions, int position, int targetIndex) {
-        return instructions.toRealIndex(targetIndex) - position;
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -56,7 +52,7 @@ public final class JumpInstruction extends Instruction {
     public void write(DataOutputStream os, InstructionList instructions) throws IOException {
         final int position = os.size();
         os.writeByte(opcode);
-        final int targetIndex = computeOffset(instructions, position, target);
+        final int targetIndex = instructions.get(target).getOffset() - position;
         switch(opcode) {
             case GOTO_W:
             case JSR_W:

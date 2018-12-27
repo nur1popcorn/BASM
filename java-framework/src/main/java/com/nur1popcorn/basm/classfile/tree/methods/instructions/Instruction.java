@@ -23,6 +23,7 @@ import com.nur1popcorn.basm.classfile.IClassVersionProvider;
 import com.nur1popcorn.basm.classfile.MalformedClassFileException;
 import com.nur1popcorn.basm.classfile.tree.Type;
 import com.nur1popcorn.basm.classfile.tree.methods.InstructionList;
+import com.nur1popcorn.basm.classfile.tree.methods.instructions.SwitchInstruction.KeyIndexPair;
 import com.nur1popcorn.basm.utils.ByteDataInputStream;
 
 import java.io.DataInputStream;
@@ -348,17 +349,17 @@ public abstract class Instruction {
                     // https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.jsr_w
                     case GOTO_W:
                     case JSR_W:
-                        index = recomputeIndex(in, start, in.readInt());
+                        index = recomputeIndex(in, start + in.readInt());
                         return new JumpInstruction(opcode, index);
                     default:
-                        index = recomputeIndex(in, start, in.readShort());
+                        index = recomputeIndex(in, start + in.readShort());
                         return new JumpInstruction(opcode, index);
                 }
             }
             case SWITCH_INS: {
                 // skip padding bytes and read default index.
                 in.skipBytes(-in.position() & 0x3);
-                final int defaultIndex = recomputeIndex(in, start, in.readInt());
+                final int defaultIndex = recomputeIndex(in, start + in.readInt());
                 switch(opcode) {
                     case TABLESWITCH: {
                         final int low = in.readInt();
@@ -366,26 +367,28 @@ public abstract class Instruction {
 
                         final int length = high - low + 1;
 
-                        final int indices[] = new int[length];
-                        final int keys[] = new int[length];
+                        final KeyIndexPair[] indices = new KeyIndexPair[length];
                         for(int i = 0; i < length; i++) {
-                            keys[i] = low + i;
-                            indices[i] = recomputeIndex(in, start, in.readInt());
+                            indices[i] = new KeyIndexPair(
+                                low + i,
+                                recomputeIndex(in, start + in.readInt())
+                            );
                         }
 
                         return new SwitchInstruction(
-                            opcode, defaultIndex, keys, indices);
+                            opcode, defaultIndex, indices);
                     }
                     case LOOKUPSWITCH: {
                         final int length = in.readInt();
-                        final int indices[] = new int[length];
-                        final int keys[] = new int[length];
+                        final KeyIndexPair[] indices = new KeyIndexPair[length];
                         for(int i = 0; i < length; i++) {
-                            keys[i] = in.readInt();
-                            indices[i] = recomputeIndex(in, start, in.readInt());
+                            indices[i] = new KeyIndexPair(
+                                in.readInt(),
+                                recomputeIndex(in, start + in.readInt())
+                            );
                         }
                         return new SwitchInstruction(
-                            opcode, defaultIndex, keys, indices);
+                            opcode, defaultIndex, indices);
                     }
                 }
             }
@@ -432,12 +435,11 @@ public abstract class Instruction {
         }
     }
 
-    private static int recomputeIndex(ByteDataInputStream in, int start, int defaultIndex) throws IOException {
-        final int target = start + defaultIndex;
+    private static int recomputeIndex(ByteDataInputStream in, int targetIndex) throws IOException {
         final int oldPosition = in.position();
         in.reset();
         int index = 0;
-        while(in.position() < target) {
+        while(in.position() < targetIndex) {
             in.skipInstruction();
             index++;
         }

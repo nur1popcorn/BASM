@@ -23,6 +23,7 @@ import com.nur1popcorn.basm.classfile.tree.methods.InstructionList;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static com.nur1popcorn.basm.Constants.LOOKUPSWITCH;
@@ -30,21 +31,16 @@ import static com.nur1popcorn.basm.Constants.TABLESWITCH;
 
 public final class SwitchInstruction extends Instruction {
     private int defaultIndex;
-    private final List<Integer> keys;
-    private final List<Integer> indices;
+    private final List<KeyIndexPair> indices;
 
     /**
      * @param opcode
      */
-    SwitchInstruction(byte opcode, int defaultIndex, int keys[], int indices[]) {
+    SwitchInstruction(byte opcode, int defaultIndex, KeyIndexPair indices[]) {
         super(opcode);
         this.defaultIndex = defaultIndex;
-        this.keys = new ArrayList<>(keys.length);
-        for(int i : keys)
-            this.keys.add(i);
         this.indices = new ArrayList<>(indices.length);
-        for(int i : indices)
-            this.indices.add(i);
+        Collections.addAll(this.indices, indices);
     }
 
     /**
@@ -53,10 +49,6 @@ public final class SwitchInstruction extends Instruction {
     @Override
     public void accept(IInstructionVisitor visitor) {
         visitor.visitSwitchInstruction(this);
-    }
-
-    private static int computeOffset(InstructionList instructions, int position, int targetIndex) {
-        return instructions.toRealIndex(targetIndex) - position;
     }
 
     /**
@@ -81,22 +73,22 @@ public final class SwitchInstruction extends Instruction {
         */
         while((os.size() & 0x3) != 0)
             os.writeByte(0);
-        os.writeInt(computeOffset(instructions, start, defaultIndex));
+        os.writeInt(instructions.get(defaultIndex).getOffset() - start);
         switch(opcode) {
             case TABLESWITCH:
                 // https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.tableswitch
-                final int low = keys.get(0);
+                final int low = indices.get(0).key;
                 final int high = low + getCount() - 1;
                 os.writeInt(low);
                 os.writeInt(high);
-                for(int index : indices)
-                    os.writeInt(computeOffset(instructions, start, index));
+                for(KeyIndexPair pair : indices)
+                    os.writeInt(instructions.get(pair.index).getOffset() - start);
                 break;
             case LOOKUPSWITCH:
                 os.writeInt(getCount());
-                for(int i = 0; i < getCount(); i++) {
-                    os.writeInt(keys.get(i));
-                    os.writeInt(computeOffset(instructions, start, indices.get(i)));
+                for(KeyIndexPair pair : indices) {
+                    os.writeInt(pair.key);
+                    os.writeInt(instructions.get(pair.index).getOffset() - start);
                 }
                 break;
         }
@@ -104,5 +96,15 @@ public final class SwitchInstruction extends Instruction {
 
     public int getCount() {
         return indices.size();
+    }
+
+    public static class KeyIndexPair {
+        public int key;
+        public int index;
+
+        public KeyIndexPair(int key, int index) {
+            this.key = key;
+            this.index = index;
+        }
     }
 }

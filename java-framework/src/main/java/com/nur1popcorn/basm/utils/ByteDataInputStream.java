@@ -47,16 +47,14 @@ public final class ByteDataInputStream extends DataInputStream {
         switch(opcode) {
             case TABLESWITCH: {
                 // skip padding bytes and skip default index.
-                skipBytes(-position() & 0x3);
-                skipBytes(4);
+                skipBytes((-position() & 0x3) + 4);
                 final int low = readInt();
                 final int high = readInt();
                 skipBytes((high - low + 1) << 2);
             }   break;
             case LOOKUPSWITCH:
                 // skip padding bytes and skip default index.
-                skipBytes(-position() & 0x3);
-                skipBytes(4);
+                skipBytes((-position() & 0x3) + 4);
                 skipBytes(readInt() << 3);
                 break;
             case WIDE:

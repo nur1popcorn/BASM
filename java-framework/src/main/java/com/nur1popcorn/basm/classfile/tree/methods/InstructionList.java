@@ -82,9 +82,12 @@ public final class InstructionList extends AbstractList<InstructionHandle> imple
         }
         instructions = new InstructionHandle[length];
         in.reset();
-        for(int i = 0; i < length; i++)
+        for(int i = 0; i < length; i++) {
+            final int offset = in.position();
             add(new InstructionHandle(
-                Instruction.read(in, constantPool)));
+                Instruction.read(in, constantPool),
+                offset));
+        }
     }
 
     /**
@@ -136,10 +139,7 @@ public final class InstructionList extends AbstractList<InstructionHandle> imple
     }
 
     public int getRealSize() {
-        int size = 0;
-        for(int i = 0; i < this.size; i++)
-            size += instructions[i].getLength(size);
-        return size;
+        return last.getOffset() + last.getLength();
     }
 
     /**
@@ -150,14 +150,6 @@ public final class InstructionList extends AbstractList<InstructionHandle> imple
     public InstructionHandle get(int index) {
         rangeCheck(index);
         return instructions[index];
-    }
-
-    public int toRealIndex(int targetIndex) {
-        rangeCheck(targetIndex);
-        int index = 0;
-        for(int i = 0; i != targetIndex; i++)
-            index += instructions[i].getLength(index);
-        return index;
     }
 
     /**
@@ -215,8 +207,7 @@ public final class InstructionList extends AbstractList<InstructionHandle> imple
                     .next = instructions[index + 1])
                         .prev = element;
         for(int i = index + 1; i < size; i++)
-            for(IInstructionPointer pointer : instructions[i].getPointers())
-                pointer.update(i);
+            instructions[i].offset += element.getLength();
     }
 
     /**
@@ -246,8 +237,7 @@ public final class InstructionList extends AbstractList<InstructionHandle> imple
             if((element.next = old.next) == null)
                 last = element;
             for(int i = index; i < size; i++)
-                for(IInstructionPointer pointer : instructions[i].getPointers())
-                    pointer.update(i);
+                instructions[i].offset -= old.getLength();
         }
         if(old.hasPointers())
             throw new InstructionLostException(old.getPointers());

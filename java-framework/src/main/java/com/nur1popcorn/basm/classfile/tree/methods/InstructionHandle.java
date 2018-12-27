@@ -48,12 +48,14 @@ public final class InstructionHandle implements Iterable<InstructionHandle> {
 
 
     private final Instruction handle;
+    int offset;
 
     /**
      * @param handle
      */
-    InstructionHandle(Instruction handle) {
+    InstructionHandle(Instruction handle, int offset) {
         this.handle = handle;
+        this.offset = offset;
     }
 
     /**
@@ -98,15 +100,18 @@ public final class InstructionHandle implements Iterable<InstructionHandle> {
         return handle;
     }
 
-    public int getLength(int index) {
+    public int getOffset() {
+        return offset;
+    }
+
+    public int getLength() {
         final byte opcode = handle.getOpcode();
         switch(indexType(opcode)) {
             case SWITCH_INS: {
                 final SwitchInstruction instruction = (SwitchInstruction) handle;
-                index++;
                 return opcode == TABLESWITCH ?
-                    (-index & 0x3) + 13 + (instruction.getCount() << 2) :
-                    (-index & 0x3) + 9 + (instruction.getCount() << 3);
+                    (-(offset + 1) & 0x3) + 13 + (instruction.getCount() << 2) :
+                    (-(offset + 1) & 0x3) + 9 + (instruction.getCount() << 3);
             }
             case WIDE_INS:
                 return ((WideInstruction) handle)
