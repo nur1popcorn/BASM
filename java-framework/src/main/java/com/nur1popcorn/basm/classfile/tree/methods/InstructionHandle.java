@@ -44,10 +44,12 @@ public final class InstructionHandle implements Iterable<InstructionHandle> {
      */
     InstructionHandle next,
                       prev;
-
+    /*
+     *
+     */
+    int offset;
 
     private final Instruction handle;
-    int offset;
 
     InstructionHandle(Instruction handle) {
         this.handle = handle;
@@ -64,7 +66,7 @@ public final class InstructionHandle implements Iterable<InstructionHandle> {
     /**
      * @param pointer
      */
-    public final void addPointer(IInstructionPointer pointer) {
+    public void addPointer(IInstructionPointer pointer) {
         if(pointers == null)
             pointers = new WeakHashSet<>();
         pointers.add(pointer);
@@ -73,22 +75,23 @@ public final class InstructionHandle implements Iterable<InstructionHandle> {
     /**
      * @param pointer
      */
-    public final void removePointer(IInstructionPointer pointer) {
+    public void removePointer(IInstructionPointer pointer) {
         pointers.remove(pointer);
     }
 
     /**
      * @return
      */
-    public final boolean hasPointers() {
+    public boolean hasPointers() {
         return pointers != null &&
                pointers.size() != 0;
     }
 
+
     /**
      * @return
      */
-    public final IInstructionPointer[] getPointers() {
+    public IInstructionPointer[] getPointers() {
         if(pointers == null)
             return new IInstructionPointer[0];
         final IInstructionPointer arr[] = new IInstructionPointer[pointers.size()];
