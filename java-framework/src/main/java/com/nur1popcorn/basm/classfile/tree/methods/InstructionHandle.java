@@ -113,8 +113,8 @@ public final class InstructionHandle implements Iterable<InstructionHandle> {
             case SWITCH_INS: {
                 final SwitchInstruction instruction = (SwitchInstruction) handle;
                 return opcode == TABLESWITCH ?
-                    (-(offset + 1) & 0x3) + 13 + (instruction.getCount() << 2) :
-                    (-(offset + 1) & 0x3) + 9 + (instruction.getCount() << 3);
+                    ((-1 - offset) & 0x3) + 13 + (instruction.getCount() << 2) :
+                    ((-1 - offset) & 0x3) + 9 + (instruction.getCount() << 3);
             }
             case WIDE_INS:
                 return ((WideInstruction) handle)
