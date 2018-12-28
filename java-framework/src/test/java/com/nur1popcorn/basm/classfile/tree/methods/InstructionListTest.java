@@ -13,7 +13,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class InstructionListTest extends TestBase {
-    /*@Test
+    @Test
     public void testAdd() {
         final InstructionList il = new InstructionList();
         for(int i = 0; i < 38; i++)
@@ -83,5 +83,5 @@ public class InstructionListTest extends TestBase {
         assertEquals(il.size(), control.size());
         for(int i = 0; i < control.size(); i++)
             assertEquals(control.get(i).getHandle(), il.get(i).getHandle());
-    }*/
+    }
 }

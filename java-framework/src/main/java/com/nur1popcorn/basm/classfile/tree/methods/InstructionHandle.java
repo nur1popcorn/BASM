@@ -30,7 +30,6 @@ import java.util.Set;
 import static com.nur1popcorn.basm.Constants.*;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.Instruction.SWITCH_INS;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.Instruction.WIDE_INS;
-import static com.nur1popcorn.basm.classfile.tree.methods.instructions.Instruction.indexType;
 
 /**
  * The {@link InstructionHandle}
@@ -49,6 +48,10 @@ public final class InstructionHandle implements Iterable<InstructionHandle> {
 
     private final Instruction handle;
     int offset;
+
+    InstructionHandle(Instruction handle) {
+        this.handle = handle;
+    }
 
     /**
      * @param handle
@@ -106,7 +109,7 @@ public final class InstructionHandle implements Iterable<InstructionHandle> {
 
     public int getLength() {
         final byte opcode = handle.getOpcode();
-        switch(indexType(opcode)) {
+        switch(handle.getType()) {
             case SWITCH_INS: {
                 final SwitchInstruction instruction = (SwitchInstruction) handle;
                 return opcode == TABLESWITCH ?
