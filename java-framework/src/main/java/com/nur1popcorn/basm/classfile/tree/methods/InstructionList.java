@@ -82,12 +82,9 @@ public final class InstructionList extends AbstractList<InstructionHandle> imple
         }
         instructions = new InstructionHandle[length];
         in.reset();
-        for(int i = 0; i < length; i++) {
-            final int offset = in.position();
+        for(int i = 0; i < length; i++)
             add(new InstructionHandle(
-                Instruction.read(in, constantPool),
-                offset));
-        }
+                Instruction.read(in, constantPool)));
     }
 
     /**
@@ -174,7 +171,7 @@ public final class InstructionList extends AbstractList<InstructionHandle> imple
             first = element;
         if((element.next = old.next) == null)
             last = element;
-        if(index != 0 && element.getOffset() == 0)
+        if(index != 0)
             element.offset = old.getOffset();
         final int diff = element.getLength() - old.getLength();
         if(diff != 0)
@@ -204,9 +201,8 @@ public final class InstructionList extends AbstractList<InstructionHandle> imple
         else if(oldSize == index) {
             last = (element.prev = instructions[index - 1])
                 .next = element;
-            if(element.getOffset() == 0)
-                element.offset = element.prev.getOffset() +
-                                 element.prev.getLength();
+            element.offset = element.prev.getOffset() +
+                             element.prev.getLength();
         } else if(index == 0)
                 first = (element.next = first)
                     .prev = element;
@@ -215,9 +211,8 @@ public final class InstructionList extends AbstractList<InstructionHandle> imple
                 .next = element)
                     .next = instructions[index + 1])
                         .prev = element;
-            if(element.getOffset() == 0)
-                element.offset = element.prev.getOffset() +
-                                 element.prev.getLength();
+            element.offset = element.prev.getOffset() +
+                             element.prev.getLength();
         }
         for(int i = index + 1; i < size; i++)
             instructions[i].offset += element.getLength();

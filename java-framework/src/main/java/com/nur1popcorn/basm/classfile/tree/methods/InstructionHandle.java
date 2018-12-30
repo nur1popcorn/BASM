@@ -56,14 +56,6 @@ public final class InstructionHandle implements Iterable<InstructionHandle> {
     }
 
     /**
-     * @param handle
-     */
-    InstructionHandle(Instruction handle, int offset) {
-        this.handle = handle;
-        this.offset = offset;
-    }
-
-    /**
      * @param pointer
      */
     public void addPointer(IInstructionPointer pointer) {
