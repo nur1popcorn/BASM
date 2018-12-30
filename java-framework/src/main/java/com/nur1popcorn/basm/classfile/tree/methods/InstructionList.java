@@ -174,9 +174,12 @@ public final class InstructionList extends AbstractList<InstructionHandle> imple
             first = element;
         if((element.next = old.next) == null)
             last = element;
-        if(element.getLength() != old.getLength())
+        if(index != 0 && element.getOffset() == 0)
+            element.offset = old.getOffset();
+        final int diff = element.getLength() - old.getLength();
+        if(diff != 0)
             for(int i = index + 1; i < size; i++)
-                instructions[i].offset += element.getLength() - old.getLength();
+                instructions[i].offset += diff;
         return old;
     }
 
@@ -207,11 +210,15 @@ public final class InstructionList extends AbstractList<InstructionHandle> imple
         } else if(index == 0)
                 first = (element.next = first)
                     .prev = element;
-        else
+        else {
             (((element.prev = instructions[index - 1])
                 .next = element)
                     .next = instructions[index + 1])
                         .prev = element;
+            if(element.getOffset() == 0)
+                element.offset = element.prev.getOffset() +
+                                 element.prev.getLength();
+        }
         for(int i = index + 1; i < size; i++)
             instructions[i].offset += element.getLength();
     }

@@ -84,4 +84,21 @@ public class InstructionListTest extends TestBase {
         for(int i = 0; i < control.size(); i++)
             assertEquals(control.get(i).getHandle(), il.get(i).getHandle());
     }
+
+    public void testOffset() {
+        final InstructionList il = new InstructionList();
+        il.add(new InstructionHandle(InstructionFactory.NOP));
+        il.add(new InstructionHandle(InstructionFactory.createJump(Constants.GOTO, 2)));
+        il.add(new InstructionHandle(InstructionFactory.NOP));
+        il.add(new InstructionHandle(InstructionFactory.NOP));
+        il.add(new InstructionHandle(InstructionFactory.NOP));
+        il.set(1, new InstructionHandle(InstructionFactory.createJump(Constants.GOTO, 2)));
+        final int array[] = { 0, 1, 4, 5, 6 };
+        for(int i = 0; i < array.length; i++)
+            assertEquals(il.get(i).offset, array[i]);
+        il.add(3, new InstructionHandle(InstructionFactory.createJump(Constants.GOTO, 4)));
+        final int array2[] = { 0, 1, 4, 5, 8, 9 };
+        for(int i = 0; i < array2.length; i++)
+            assertEquals(il.get(i).offset, array2[i]);
+    }
 }

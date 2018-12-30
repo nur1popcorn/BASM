@@ -342,18 +342,17 @@ public abstract class Instruction {
                 return new IIncInstruction(
                     opcode, in.readByte(), in.readByte());
             case JUMP_INS: {
-                final int index;
                 switch (opcode) {
                     // a 4 byte index must be constructed for the goto_w & jsr_w opcodes.
                     // https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.goto_w
                     // https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.jsr_w
                     case GOTO_W:
                     case JSR_W:
-                        index = recomputeIndex(in, start + in.readInt());
-                        return new JumpInstruction(opcode, index);
+                        return new JumpInstruction(opcode,
+                            recomputeIndex(in, start + in.readInt()));
                     default:
-                        index = recomputeIndex(in, start + in.readShort());
-                        return new JumpInstruction(opcode, index);
+                        return new JumpInstruction(opcode,
+                            recomputeIndex(in, start + in.readShort()));
                 }
             }
             case SWITCH_INS: {

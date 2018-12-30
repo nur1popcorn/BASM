@@ -55,7 +55,7 @@ public final class MethodInstruction extends FieldMethodInstruction {
     public void write(DataOutputStream os, InstructionList instructions) throws IOException {
         super.write(os, instructions);
         if(opcode == INVOKEINTERFACE) {
-            os.writeByte(count & 0xff);
+            os.writeByte(count);
             os.writeByte(0);
         }
     }
