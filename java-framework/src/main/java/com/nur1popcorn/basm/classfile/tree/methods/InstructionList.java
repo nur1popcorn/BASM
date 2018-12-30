@@ -188,6 +188,7 @@ public final class InstructionList extends AbstractList<InstructionHandle> imple
      */
     @Override
     public void add(int index, InstructionHandle element) {
+        element.offset = getRealSize();
         rangeCheckAdd(index);
         final int oldSize = size;
         grow(++size);
@@ -206,14 +207,11 @@ public final class InstructionList extends AbstractList<InstructionHandle> imple
         } else if(index == 0)
                 first = (element.next = first)
                     .prev = element;
-        else {
+        else
             (((element.prev = instructions[index - 1])
                 .next = element)
                     .next = instructions[index + 1])
                         .prev = element;
-            element.offset = element.prev.getOffset() +
-                             element.prev.getLength();
-        }
         for(int i = index + 1; i < size; i++)
             instructions[i].offset += element.getLength();
     }
