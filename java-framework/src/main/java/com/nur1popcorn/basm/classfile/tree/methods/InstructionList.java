@@ -198,18 +198,16 @@ public final class InstructionList extends AbstractList<InstructionHandle> imple
             instructions, index + 1, oldSize - index
         );
         instructions[index] = element;
-        if(oldSize == 0) {
+        if(oldSize == 0)
             last = first = element;
-            element.offset = 0;
-        } else if(oldSize == index) {
+        else if(oldSize == index) {
             last = (element.prev = instructions[index - 1])
                 .next = element;
             element.offset = getRealSize();
-        } else if(index == 0) {
+        } else if(index == 0)
             first = (element.next = first)
                 .prev = element;
-            element.offset = 0;
-        } else {
+        else {
             final InstructionHandle prev = instructions[index - 1];
             (((element.prev = prev)
                 .next = element)
