@@ -136,7 +136,9 @@ public final class InstructionList extends AbstractList<InstructionHandle> imple
     }
 
     public int getRealSize() {
-        return last.getOffset() + last.getLength();
+        if(last != null)
+            return last.getOffset() + last.getLength();
+        return 0;
     }
 
     /**
@@ -188,7 +190,6 @@ public final class InstructionList extends AbstractList<InstructionHandle> imple
      */
     @Override
     public void add(int index, InstructionHandle element) {
-        element.offset = getRealSize();
         rangeCheckAdd(index);
         final int oldSize = size;
         grow(++size);
@@ -197,21 +198,25 @@ public final class InstructionList extends AbstractList<InstructionHandle> imple
             instructions, index + 1, oldSize - index
         );
         instructions[index] = element;
-        if(oldSize == 0)
+        if(oldSize == 0) {
             last = first = element;
-        else if(oldSize == index) {
+            element.offset = 0;
+        } else if(oldSize == index) {
             last = (element.prev = instructions[index - 1])
                 .next = element;
-            element.offset = element.prev.getOffset() +
-                             element.prev.getLength();
-        } else if(index == 0)
-                first = (element.next = first)
-                    .prev = element;
-        else
-            (((element.prev = instructions[index - 1])
+            element.offset = getRealSize();
+        } else if(index == 0) {
+            first = (element.next = first)
+                .prev = element;
+            element.offset = 0;
+        } else {
+            final InstructionHandle prev = instructions[index - 1];
+            (((element.prev = prev)
                 .next = element)
                     .next = instructions[index + 1])
                         .prev = element;
+            element.offset = prev.getOffset() + prev.getLength();
+        }
         for(int i = index + 1; i < size; i++)
             instructions[i].offset += element.getLength();
     }
