@@ -38,16 +38,17 @@ public final class InstructionHandle implements Iterable<InstructionHandle> {
     /*
      *
      */
-    private Set<IInstructionPointer> pointers;
-    /*
-     *
-     */
     InstructionHandle next,
                       prev;
     /*
      *
      */
     int offset;
+
+    /*
+     *
+     */
+    private Set<IInstructionPointer> pointers;
 
     private final Instruction handle;
 
