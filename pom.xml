@@ -28,6 +28,7 @@
     <modules>
         <module>java-framework</module>
         <module>dex-framework</module>
+        <module>java-bytecode-assembler</module>
         <module>core</module>
         <module>ui</module>
     </modules>

@@ -25,7 +25,8 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>core</artifactId>
+    <artifactId>javabytecodeassembler</artifactId>
+    <name>java-bytecode-assembler</name>
 
     <dependencies>
         <dependency>
@@ -48,53 +49,37 @@
             </plugin>
 
             <plugin>
+                <groupId>de.jflex</groupId>
+                <artifactId>jflex-maven-plugin</artifactId>
+                <version>1.7.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>src/main/java/</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
                 <version>1.8</version>
                 <executions>
                     <execution>
-                        <id>compile-natives</id>
-                        <phase>compile</phase>
+                        <id>generate-parser</id>
+                        <phase>generate-sources</phase>
                         <goals>
                             <goal>run</goal>
                         </goals>
                         <configuration>
                             <target>
-                                <exec executable="cmake" dir="${project.build.directory}" failonerror="true">
-                                    <arg line="${basedir}/src/"/>
-                                </exec>
-                                <exec executable="cmake" failonerror="true">
-                                    <arg line="--build ${project.build.directory}"/>
-                                </exec>
-                            </target>
-                        </configuration>
-                    </execution>
-
-                    <execution>
-                        <id>test-natives</id>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <target>
-                                <exec executable="ctest" dir="${project.build.directory}/test/" failonerror="true">
-                                    <arg line="--timeout 60 -R unit_"/>
-                                </exec>
-                            </target>
-                        </configuration>
-                    </execution>
-
-                    <execution>
-                        <id>integration-test-natives</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <target>
-                                <exec executable="ctest" dir="${project.build.directory}/test/" failonerror="true">
-                                    <arg line="--timeout 60 -R integration_"/>
+                                <mkdir dir="${basedir}/src/main/java/com/nur1popcorn/basm/"/>
+                                <exec executable="bison" dir="${basedir}/src/main/java/com/nur1popcorn/basm" failonerror="true">
+                                    <arg line="${basedir}/src/main/yacc/Assembler.y"/>
                                 </exec>
                             </target>
                         </configuration>
@@ -103,4 +88,5 @@
             </plugin>
         </plugins>
     </build>
+
 </project>
