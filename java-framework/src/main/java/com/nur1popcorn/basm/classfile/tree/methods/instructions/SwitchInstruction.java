@@ -18,8 +18,6 @@
 
 package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
-import com.nur1popcorn.basm.classfile.tree.methods.InstructionList;
-
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -55,8 +53,7 @@ public final class SwitchInstruction extends Instruction {
      * {@inheritDoc}
      */
     @Override
-    public void write(DataOutputStream os, InstructionList instructions) throws IOException {
-        final int start = os.size();
+    public void write(DataOutputStream os) throws IOException {
         os.writeByte(opcode);
         /*
             ^
@@ -73,7 +70,7 @@ public final class SwitchInstruction extends Instruction {
         */
         while((os.size() & 0x3) != 0)
             os.writeByte(0);
-        os.writeInt(instructions.get(defaultIndex).getOffset() - start);
+        os.writeInt(defaultIndex);
         switch(opcode) {
             case TABLESWITCH:
                 // https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.tableswitch
@@ -82,13 +79,13 @@ public final class SwitchInstruction extends Instruction {
                 os.writeInt(low);
                 os.writeInt(high);
                 for(KeyIndexPair pair : indices)
-                    os.writeInt(instructions.get(pair.index).getOffset() - start);
+                    os.writeInt(pair.index);
                 break;
             case LOOKUPSWITCH:
                 os.writeInt(getCount());
                 for(KeyIndexPair pair : indices) {
                     os.writeInt(pair.key);
-                    os.writeInt(instructions.get(pair.index).getOffset() - start);
+                    os.writeInt(pair.index);
                 }
                 break;
         }

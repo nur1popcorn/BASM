@@ -18,8 +18,6 @@
 
 package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
-import com.nur1popcorn.basm.classfile.tree.methods.InstructionList;
-
 import java.io.DataOutputStream;
 import java.io.IOException;
 
@@ -49,17 +47,15 @@ public final class JumpInstruction extends Instruction {
      * {@inheritDoc}
      */
     @Override
-    public void write(DataOutputStream os, InstructionList instructions) throws IOException {
-        final int position = os.size();
+    public void write(DataOutputStream os) throws IOException {
         os.writeByte(opcode);
-        final int targetIndex = instructions.get(target).getOffset() - position;
         switch(opcode) {
             case GOTO_W:
             case JSR_W:
-                os.writeInt(targetIndex);
+                os.writeInt(target);
                 break;
             default:
-                os.writeShort(targetIndex);
+                os.writeShort(target);
                 break;
         }
     }

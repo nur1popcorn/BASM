@@ -19,7 +19,6 @@
 package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
 import com.nur1popcorn.basm.classfile.ConstantPool;
-import com.nur1popcorn.basm.classfile.tree.methods.InstructionList;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -52,8 +51,8 @@ public final class MethodInstruction extends FieldMethodInstruction {
     }
 
     @Override
-    public void write(DataOutputStream os, InstructionList instructions) throws IOException {
-        super.write(os, instructions);
+    public void write(DataOutputStream os) throws IOException {
+        super.write(os);
         if(opcode == INVOKEINTERFACE) {
             os.writeByte(count);
             os.writeByte(0);

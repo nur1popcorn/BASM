@@ -111,7 +111,7 @@ public final class InstructionList extends AbstractList<InstructionHandle> imple
     public void write(DataOutputStream os) throws IOException {
         for(InstructionHandle ih : this)
             ih.getHandle()
-              .write(os, this);
+              .write(os);
     }
 
     /**

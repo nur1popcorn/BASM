@@ -22,7 +22,6 @@ import com.nur1popcorn.basm.classfile.ConstantPool;
 import com.nur1popcorn.basm.classfile.IClassVersionProvider;
 import com.nur1popcorn.basm.classfile.MalformedClassFileException;
 import com.nur1popcorn.basm.classfile.tree.Type;
-import com.nur1popcorn.basm.classfile.tree.methods.InstructionList;
 import com.nur1popcorn.basm.classfile.tree.methods.instructions.SwitchInstruction.KeyIndexPair;
 import com.nur1popcorn.basm.utils.ByteDataInputStream;
 
@@ -245,11 +244,10 @@ public abstract class Instruction {
 
     /**
      * @param os
-     * @param instructions
      *
      * @throws IOException
      */
-    public void write(DataOutputStream os, InstructionList instructions) throws IOException {
+    public void write(DataOutputStream os) throws IOException {
         os.writeByte(opcode);
     }
 
@@ -311,7 +309,6 @@ public abstract class Instruction {
      * @return
      */
     public static Instruction read(ByteDataInputStream in, ConstantPool cp) throws IOException {
-        final int start = in.position();
         final byte opcode = in.readByte();
         switch(indexType(opcode)) {
             case NO_PARAM_INS:
@@ -348,17 +345,15 @@ public abstract class Instruction {
                     // https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.jsr_w
                     case GOTO_W:
                     case JSR_W:
-                        return new JumpInstruction(opcode,
-                            recomputeIndex(in, start + in.readInt()));
+                        return new JumpInstruction(opcode, in.readInt());
                     default:
-                        return new JumpInstruction(opcode,
-                            recomputeIndex(in, start + in.readShort()));
+                        return new JumpInstruction(opcode, in.readShort());
                 }
             }
             case SWITCH_INS: {
                 // skip padding bytes and read default index.
                 in.skipBytes(-in.position() & 0x3);
-                final int defaultIndex = recomputeIndex(in, start + in.readInt());
+                final int defaultIndex = in.readInt();
                 switch(opcode) {
                     case TABLESWITCH: {
                         final int low = in.readInt();
@@ -370,7 +365,7 @@ public abstract class Instruction {
                         for(int i = 0; i < length; i++) {
                             indices[i] = new KeyIndexPair(
                                 low + i,
-                                recomputeIndex(in, start + in.readInt())
+                                in.readInt()
                             );
                         }
 
@@ -383,7 +378,7 @@ public abstract class Instruction {
                         for(int i = 0; i < length; i++) {
                             indices[i] = new KeyIndexPair(
                                 in.readInt(),
-                                recomputeIndex(in, start + in.readInt())
+                                in.readInt()
                             );
                         }
                         return new SwitchInstruction(
