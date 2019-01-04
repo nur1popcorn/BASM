@@ -18,11 +18,11 @@
 
 package com.nur1popcorn.basm;
 
-import static com.nur1popcorn.basm.Assembler.Lexer.*;
+import static com.nur1popcorn.basm.Parser.Lexer.*;
 
 %%
 
-%class AssemblerLexer
+%class FlexLexer
 %line
 
 %{
@@ -82,12 +82,25 @@ IDENTIFIER = [:jletter:][:jletterdigit:]*
     ".field" { return yytoken(FIELD); }
     ".method" { return yytoken(METHOD); }
 
-    "public" { return yytoken(ACC_PUBLIC); }
-    "private" { return yytoken(ACC_PRIVATE); }
-    "protected" { return yytoken(ACC_PROTECTED); }
-
-    "extends" { return yytoken(EXTENDS); }
-    "implements" { return yytoken(IMPLEMENTS); }
+    "public" { return yytoken(PUBLIC); }
+    "private" { return yytoken(PRIVATE); }
+    "protected" { return yytoken(PROTECTED); }
+    "static" { return yytoken(STATIC); }
+    "final" { return yytoken(FINAL); }
+    "synchronized" { return yytoken(SYNCHRONIZED); }
+    "volatile" { return yytoken(VOLATILE); }
+    "transient" { return yytoken(TRANSIENT); }
+    "native" { return yytoken(NATIVE); }
+    "interface" { return yytoken(INTERFACE); }
+    "abstract" { return yytoken(ABSTRACT); }
+    "strict" { return yytoken(STRICT); }
+    "synthetic" { return yytoken(SYNTHETIC); }
+    "annotation" { return yytoken(ANNOTATION); }
+    "enum" { return yytoken(ENUM); }
+    "super" { return yytoken(SUPER); }
+    "bridge" { return yytoken(BRIDGE); }
+    "varargs" { return yytoken(VARARGS); }
+    "mandated" { return yytoken(MANDATED); }
 
     \{ { return yytoken(L_BRACE); }
     \} { return yytoken(R_BRACE); }

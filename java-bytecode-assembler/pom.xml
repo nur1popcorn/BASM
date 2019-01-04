@@ -79,7 +79,8 @@
                             <target>
                                 <mkdir dir="${basedir}/src/main/java/com/nur1popcorn/basm/"/>
                                 <exec executable="bison" dir="${basedir}/src/main/java/com/nur1popcorn/basm" failonerror="true">
-                                    <arg line="${basedir}/src/main/yacc/Assembler.y"/>
+                                    <arg line="-o ./Parser.java"/>
+                                    <arg line="${basedir}/src/main/yacc/parser.y"/>
                                 </exec>
                             </target>
                         </configuration>
