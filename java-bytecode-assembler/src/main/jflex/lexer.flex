@@ -129,14 +129,14 @@ IDENTIFIER = [:jletter:][:jletterdigit:]*
        }
 
     // https://docs.oracle.com/javase/specs/jls/se11/html/jls-3.html#jls-3.10.6
-    "\\b"  { sb.append("\b"); }
-    "\\t"  { sb.append("\t"); }
-    "\\n"  { sb.append("\n"); }
-    "\\f"  { sb.append("\f"); }
-    "\\r"  { sb.append("\r"); }
-    "\\\"" { sb.append("\""); }
-    "\\'"  { sb.append("'"); }
-    "\\\\" { sb.append("\\"); }
+    "\\b"  { sb.append('\b'); }
+    "\\t"  { sb.append('\t'); }
+    "\\n"  { sb.append('\n'); }
+    "\\f"  { sb.append('\f'); }
+    "\\r"  { sb.append('\r'); }
+    "\\\"" { sb.append('\"'); }
+    "\\'"  { sb.append('\''); }
+    "\\\\" { sb.append('\\'); }
 
     \\[0-3]?[0-7]?[0-7] { sb.append(Integer.parseInt(yytext().substring(1), 8)); }
 

@@ -1040,42 +1040,42 @@ class FlexLexer {
             // fall through
           case 57: break;
           case 13: 
-            { sb.append("\r");
+            { sb.append('\r');
             } 
             // fall through
           case 58: break;
           case 14: 
-            { sb.append("\t");
+            { sb.append('\t');
             } 
             // fall through
           case 59: break;
           case 15: 
-            { sb.append("\f");
+            { sb.append('\f');
             } 
             // fall through
           case 60: break;
           case 16: 
-            { sb.append("\b");
+            { sb.append('\b');
             } 
             // fall through
           case 61: break;
           case 17: 
-            { sb.append("\n");
+            { sb.append('\n');
             } 
             // fall through
           case 62: break;
           case 18: 
-            { sb.append("\"");
+            { sb.append('\"');
             } 
             // fall through
           case 63: break;
           case 19: 
-            { sb.append("\\");
+            { sb.append('\\');
             } 
             // fall through
           case 64: break;
           case 20: 
-            { sb.append("'");
+            { sb.append('\'');
             } 
             // fall through
           case 65: break;

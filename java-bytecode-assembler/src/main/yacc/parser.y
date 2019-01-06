@@ -20,6 +20,7 @@
 
 %define package { com.nur1popcorn.basm }
 %define parser_class_name { Parser }
+%define parse.error verbose
 
 %code imports {
     import java.io.InputStream;
@@ -73,7 +74,7 @@
     }
 
     public static void main(String args[]) throws IOException {
-        Parser parser= new Parser(new LexerAdapter(System.in))
+        Parser parser= new Parser(new LexerAdapter(System.in));
         parser.setDebugLevel(100);
         parser.parse();
     }
@@ -116,131 +117,73 @@
 
 %type<String> IDENTIFIER
               STRING_LIT
+              identifier
 
-%type<Integer> public_flag
-               private_flag
-               protected_flag
-               static_flag
-               final_flag
-               synchronized_flag
-               volatile_flag
-               transient_flag
-               native_flag
-               interface_flag
-               abstract_flag
-               strict_flag
-               synthetic_flag
-               annotation_flag
-               enum_flag
-               super_flag
-               bridge_flag
-               varargs_flag
-               mandated_flag
-               class_modifiers
+%type<Integer> class_modifier class_modifiers
+               field_modifier field_modifiers
 
 %%
 
 program:
-    imports class_declaration "{" directives "}";
+    imports class_declaration;
+
+l_brace:
+    error | "{"
+
+
+r_brace:
+    error | "}"
+
+identifier:
+    error {  } |
+    IDENTIFIER { $$ = $1; } |
+    STRING_LIT { $$ = $1; }
+
+import:
+    error | ".import"
 
 imports:
-    imports ".import" IDENTIFIER { System.out.println("Identifier: " + $3); } |
-    imports ".import" STRING_LIT { System.out.println("String: " + $3); } |
+    imports import identifier {  } |
     %empty
 
-public_flag:
+class_modifier:
     "public" { $$ = ACC_PUBLIC; } |
-    %empty { $$ = 0; }
-
-private_flag:
-    "private" { $$ = ACC_PRIVATE; } |
-    %empty { $$ = 0; }
-
-protected_flag:
-    "protected" { $$ = ACC_PROTECTED; } |
-    %empty { $$ = 0; }
-
-static_flag:
-    "static" { $$ = ACC_STATIC; } |
-    %empty { $$ = 0; }
-
-final_flag:
     "final" { $$ = ACC_FINAL; } |
-    %empty { $$ = 0; }
-
-synchronized_flag:
-    "synchronized" { $$ = ACC_SYNCHRONIZED; } |
-    %empty { $$ = 0; }
-
-volatile_flag:
-    "volatile" { $$ = ACC_SYNCHRONIZED; } |
-    %empty { $$ = 0; }
-
-transient_flag:
-    "transient" { $$ = ACC_TRANSIENT; } |
-    %empty { $$ = 0; }
-
-native_flag:
-    "native" { $$ = ACC_NATIVE; } |
-    %empty { $$ = 0; }
-
-interface_flag:
-    "interface" { $$ = ACC_INTERFACE; } |
-    %empty { $$ = 0; }
-
-abstract_flag:
-    "abstract" { $$ = ACC_ABSTRACT; } |
-    %empty { $$ = 0; }
-
-strict_flag:
-    "strict" { $$ = ACC_STRICT; } |
-    %empty { $$ = 0; }
-
-synthetic_flag:
-    "synthetic" { $$ = ACC_SYNTHETIC; } |
-    %empty { $$ = 0; }
-
-annotation_flag:
-    "annotation" { $$ = ACC_ANNOTATION; } |
-    %empty { $$ = 0; }
-
-enum_flag:
-    "enum" { $$ = ACC_ENUM; } |
-    %empty { $$ = 0; }
-
-super_flag:
     "super" { $$ = ACC_SUPER; } |
-    %empty { $$ = 0; }
-
-bridge_flag:
-    "bridge" { $$ = ACC_BRIDGE; } |
-    %empty { $$ = 0; }
-
-varargs_flag:
-    "varargs" { $$ = ACC_VARARGS; } |
-    %empty { $$ = 0; }
-
-mandated_flag:
-    "mandated" { $$ = ACC_MANDATED; } |
-    %empty { $$ = 0; }
+    "interface" { $$ = ACC_INTERFACE; } |
+    "abstract" { $$ = ACC_ABSTRACT; } |
+    "synthetic" { $$ = ACC_SYNTHETIC; } |
+    "annotation" { $$ = ACC_ANNOTATION; } |
+    "enum" { $$ = ACC_ENUM; }
 
 // https://docs.oracle.com/javase/specs/jls/se11/html/jls-8.html#jls-ClassModifier
 class_modifiers:
-    public_flag final_flag super_flag interface_flag abstract_flag synthetic_flag annotation_flag enum_flag
-        {
-            $$ = $1 | $2 | $3 | $4 |
-                 $5 | $6 | $7 | $8;
-        }
+    class_modifiers class_modifier { $$ = $1 | $2; } |
+    %empty { $$ = 0; };
 
 class_declaration:
-    ".class" class_modifiers IDENTIFIER { System.out.println("Identifier, " + $2 + ", " + $3); } |
-    ".class" class_modifiers STRING_LIT { System.out.println("Identifier, " + $2 + ", " + $3); }
+    ".class" class_modifiers identifier l_brace directives r_brace {  }
+
+field_modifier:
+    "public" { $$ = ACC_PUBLIC; } |
+    "private" { $$ = ACC_PRIVATE; } |
+    "protected" { $$ = ACC_PROTECTED; } |
+    "static" { $$ = ACC_STATIC; } |
+    "final" { $$ = ACC_FINAL; } |
+    "volatile" { $$ = ACC_VOLATILE; } |
+    "transient" { $$ = ACC_TRANSIENT; } |
+    "synthetic" { $$ = ACC_SYNTHETIC; } |
+    "enum" { $$ = ACC_ENUM; }
+
+field_modifiers:
+    field_modifiers field_modifier { $$ = $1 | $2; } |
+    %empty { $$ = 0; };
 
 field:
-    ".field"
+    ".field" field_modifiers identifier {  }
 
 directives:
-    //directive field |
+    directives field |
     %empty
 
 %%
