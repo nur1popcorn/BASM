@@ -29,12 +29,10 @@ public final class WideInstruction extends Instruction {
     private int index, constant;
 
     /**
-     * @param opcode
+     * @param index
      */
-    WideInstruction(byte opcode, int index, int constant) {
-        super(WIDE);
-        this.opcode = opcode;
-        this.index = index;
+    WideInstruction(int index, int constant) {
+        this(IINC, index);
         this.constant = constant;
     }
 
@@ -42,7 +40,9 @@ public final class WideInstruction extends Instruction {
      * @param opcode
      */
     WideInstruction(byte opcode, int index) {
-        this(opcode, index, 0);
+        super(WIDE);
+        this.opcode = opcode;
+        this.index = index;
     }
 
     @Override

@@ -416,7 +416,7 @@ public abstract class Instruction {
                 final byte wopcode = in.readByte();
                 if(wopcode == IINC)
                     return new WideInstruction(
-                        wopcode, in.readUnsignedShort(), in.readUnsignedShort());
+                        in.readUnsignedShort(), in.readUnsignedShort());
                 else
                     return new WideInstruction(
                         wopcode, in.readUnsignedShort());
@@ -427,18 +427,5 @@ public abstract class Instruction {
             default:
                 throw new MalformedClassFileException();
         }
-    }
-
-    private static int recomputeIndex(ByteDataInputStream in, int targetIndex) throws IOException {
-        final int oldPosition = in.position();
-        in.reset();
-        int index = 0;
-        while(in.position() < targetIndex) {
-            in.skipInstruction();
-            index++;
-        }
-        in.reset();
-        in.skipBytes(oldPosition);
-        return index;
     }
 }

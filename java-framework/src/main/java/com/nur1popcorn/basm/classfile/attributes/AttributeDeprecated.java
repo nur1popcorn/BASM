@@ -18,19 +18,11 @@
 
 package com.nur1popcorn.basm.classfile.attributes;
 
-import com.nur1popcorn.basm.classfile.ConstantPool;
-
 import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class AttributeDeprecated extends AttributeInfo {
     public AttributeDeprecated(int nameIndex, DataInputStream in) throws IOException {
         super(nameIndex, in);
-    }
-
-    @Override
-    public void write(DataOutputStream os, ConstantPool constantPool) throws IOException {
-        super.write(os, constantPool);
     }
 }

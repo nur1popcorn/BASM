@@ -25,14 +25,14 @@ import static com.nur1popcorn.basm.Constants.GOTO_W;
 import static com.nur1popcorn.basm.Constants.JSR_W;
 
 public final class JumpInstruction extends Instruction {
-    private int target;
+    private int offset;
 
     /**
      * @param opcode
      */
-    JumpInstruction(byte opcode, int target) {
+    JumpInstruction(byte opcode, int offset) {
         super(opcode);
-        this.target = target;
+        this.offset = offset;
     }
 
     /**
@@ -48,14 +48,14 @@ public final class JumpInstruction extends Instruction {
      */
     @Override
     public void write(DataOutputStream os) throws IOException {
-        os.writeByte(opcode);
+        super.write(os);
         switch(opcode) {
             case GOTO_W:
             case JSR_W:
-                os.writeInt(target);
+                os.writeInt(offset);
                 break;
             default:
-                os.writeShort(target);
+                os.writeShort(offset);
                 break;
         }
     }

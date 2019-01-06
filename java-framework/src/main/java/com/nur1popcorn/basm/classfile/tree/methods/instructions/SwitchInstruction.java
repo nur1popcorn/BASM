@@ -54,7 +54,7 @@ public final class SwitchInstruction extends Instruction {
      */
     @Override
     public void write(DataOutputStream os) throws IOException {
-        os.writeByte(opcode);
+        super.write(os);
         /*
             ^
           3 | \    \

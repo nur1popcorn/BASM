@@ -18,11 +18,20 @@
 
 package com.nur1popcorn.basm.classfile.attributes.method.stackmap;
 
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 public class SameFrameExtended extends StackMapFrame {
     private int offsetDelta /* u2 */;
 
     public SameFrameExtended(byte tag, int offsetDelta) {
         super(tag);
         this.offsetDelta = offsetDelta;
+    }
+
+    @Override
+    public void write(DataOutputStream os) throws IOException {
+        super.write(os);
+        os.writeShort(offsetDelta);
     }
 }

@@ -18,6 +18,9 @@
 
 package com.nur1popcorn.basm.classfile.attributes.method.stackmap;
 
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 public class AppendedFrame extends StackMapFrame {
     private int offsetDelta;
     private VariableInfo locals[];
@@ -26,5 +29,13 @@ public class AppendedFrame extends StackMapFrame {
         super(tag);
         this.offsetDelta = offsetDelta;
         this.locals = locals;
+    }
+
+    @Override
+    public void write(DataOutputStream os) throws IOException {
+        super.write(os);
+        os.writeShort(offsetDelta);
+        for(VariableInfo local : locals)
+            local.write(os);
     }
 }

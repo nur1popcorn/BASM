@@ -18,6 +18,9 @@
 
 package com.nur1popcorn.basm.classfile.attributes.method.stackmap;
 
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 public class FullFrame extends StackMapFrame {
     private int offsetDelta;
     private VariableInfo locals[] /* length: u2 */;
@@ -28,5 +31,17 @@ public class FullFrame extends StackMapFrame {
         this.offsetDelta = offsetDelta;
         this.locals = locals;
         this.stack = stack;
+    }
+
+    @Override
+    public void write(DataOutputStream os) throws IOException {
+        super.write(os);
+        os.writeShort(offsetDelta);
+        os.writeShort(locals.length);
+        for(VariableInfo local : locals)
+            local.write(os);
+        os.writeShort(stack.length);
+        for(VariableInfo stack : stack)
+            stack.write(os);
     }
 }

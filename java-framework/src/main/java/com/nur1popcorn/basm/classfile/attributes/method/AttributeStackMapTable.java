@@ -18,10 +18,12 @@
 
 package com.nur1popcorn.basm.classfile.attributes.method;
 
+import com.nur1popcorn.basm.classfile.ConstantPool;
 import com.nur1popcorn.basm.classfile.attributes.AttributeInfo;
 import com.nur1popcorn.basm.classfile.attributes.method.stackmap.StackMapFrame;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 
 public final class AttributeStackMapTable extends AttributeInfo {
@@ -32,5 +34,13 @@ public final class AttributeStackMapTable extends AttributeInfo {
         entries = new StackMapFrame[in.readUnsignedShort()];
         for(int i = 0; i < entries.length; i++)
             entries[i] = StackMapFrame.read(in);
+    }
+
+    @Override
+    public void write(DataOutputStream os, ConstantPool constantPool) throws IOException {
+        super.write(os, constantPool);
+        os.writeShort(entries.length);
+        for(StackMapFrame entry : entries)
+            entry.write(os);
     }
 }
