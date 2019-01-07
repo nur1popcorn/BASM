@@ -26,4 +26,12 @@ public final class MultiANewArrayInstruction extends Instruction {
         os.writeShort(index);
         os.writeByte(dimensions);
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public byte getStackModifier() {
+        return dimensions;
+    }
 }

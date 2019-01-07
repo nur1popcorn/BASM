@@ -259,7 +259,7 @@ public final class Type {
         final LinkedList<Type> types = new LinkedList<>();
         for(int i = 1; i < descriptor.length() && descriptor.charAt(i) != ')'; i++) {
             types.add(Type.getType(descriptor, i));
-            switch(descriptor.charAt(i++)) {
+            switch(descriptor.charAt(i)) {
                 case '[':
                     while(descriptor.charAt(i) == '[')
                         i++;
