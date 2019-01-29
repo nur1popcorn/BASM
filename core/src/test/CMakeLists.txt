@@ -18,12 +18,16 @@ enable_testing()
 set(unit_tests
     "test"
     "cli_test"
-    "globals_test")
+    "globals_test"
+    "socket_test")
+
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
 
 foreach(test ${unit_tests})
     add_executable(unit_${test} native/${test}.c)
     target_include_directories(unit_${test} PUBLIC basm_agent)
-    target_link_libraries(unit_${test} basm_agent)
+    target_link_libraries(unit_${test} basm_agent Threads::Threads)
     add_test(unit_test unit_${test})
 endforeach()
 

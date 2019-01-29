@@ -15,10 +15,14 @@
 
 add_library(basm_agent
         SHARED
-            ./native/src/agent.c native/include/globals.h
-            ./native/src/globals.c
-            ./native/include/cli.h
+            ./native/src/agent.c
             ./native/src/cli.c
+            ./native/src/globals.c
+            ./native/src/socket.c
+
+            ./native/include/cli.h
+            ./native/include/globals.h
+            ./native/include/socket.h
            )
 
 target_include_directories(basm_agent

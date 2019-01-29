@@ -21,11 +21,6 @@
 struct GlobalData *gdata = NULL;
 
 char **str_split(char *str, char delim, int *size) {
-    if(!*str) {
-        *size = 0;
-        return NULL;
-    }
-
     int word_count = 1;
     for(char *c = str; *c != '\0'; c++)
         if(*c == delim)

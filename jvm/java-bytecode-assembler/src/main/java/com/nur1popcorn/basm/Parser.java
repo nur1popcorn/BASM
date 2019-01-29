@@ -37,7 +37,7 @@ package  com.nur1popcorn.basm ;
 
 /* "./Parser.java":39  */ /* lalr1.java:92  */
 /* "%code imports" blocks.  */
-/* "/home/nur1popcorn/Desktop/Projects/BASM/java-bytecode-assembler/src/main/yacc/parser.y":25  */ /* lalr1.java:93  */
+/* "/home/nur1popcorn/Desktop/Projects/BASM/jvm/java-bytecode-assembler/src/main/yacc/parser.y":25  */ /* lalr1.java:93  */
 
     import java.io.InputStream;
     import java.io.InputStreamReader;
@@ -48,7 +48,7 @@ package  com.nur1popcorn.basm ;
 /* "./Parser.java":49  */ /* lalr1.java:93  */
 
 /**
- * A Bison parser, automatically generated from <tt>/home/nur1popcorn/Desktop/Projects/BASM/java-bytecode-assembler/src/main/yacc/parser.y</tt>.
+ * A Bison parser, automatically generated from <tt>/home/nur1popcorn/Desktop/Projects/BASM/jvm/java-bytecode-assembler/src/main/yacc/parser.y</tt>.
  *
  * @author LALR (1) parser skeleton written by Paolo Bonzini.
  */
@@ -389,191 +389,191 @@ class  Parser
 
     switch (yyn)
       {
-          case 7:
-  if (yyn == 7)
-    /* "/home/nur1popcorn/Desktop/Projects/BASM/java-bytecode-assembler/src/main/yacc/parser.y":138  */ /* lalr1.java:489  */
+          case 3:
+  if (yyn == 3)
+    /* "/home/nur1popcorn/Desktop/Projects/BASM/jvm/java-bytecode-assembler/src/main/yacc/parser.y":131  */ /* lalr1.java:489  */
     {  };
+  break;
+    
+
+  case 4:
+  if (yyn == 4)
+    /* "/home/nur1popcorn/Desktop/Projects/BASM/jvm/java-bytecode-assembler/src/main/yacc/parser.y":132  */ /* lalr1.java:489  */
+    { yyval = ((String)(yystack.valueAt (1-(1)))); };
+  break;
+    
+
+  case 5:
+  if (yyn == 5)
+    /* "/home/nur1popcorn/Desktop/Projects/BASM/jvm/java-bytecode-assembler/src/main/yacc/parser.y":133  */ /* lalr1.java:489  */
+    { yyval = ((String)(yystack.valueAt (1-(1)))); };
   break;
     
 
   case 8:
   if (yyn == 8)
-    /* "/home/nur1popcorn/Desktop/Projects/BASM/java-bytecode-assembler/src/main/yacc/parser.y":139  */ /* lalr1.java:489  */
-    { yyval = ((String)(yystack.valueAt (1-(1)))); };
+    /* "/home/nur1popcorn/Desktop/Projects/BASM/jvm/java-bytecode-assembler/src/main/yacc/parser.y":139  */ /* lalr1.java:489  */
+    {  };
   break;
     
 
-  case 9:
-  if (yyn == 9)
-    /* "/home/nur1popcorn/Desktop/Projects/BASM/java-bytecode-assembler/src/main/yacc/parser.y":140  */ /* lalr1.java:489  */
-    { yyval = ((String)(yystack.valueAt (1-(1)))); };
+  case 10:
+  if (yyn == 10)
+    /* "/home/nur1popcorn/Desktop/Projects/BASM/jvm/java-bytecode-assembler/src/main/yacc/parser.y":143  */ /* lalr1.java:489  */
+    { yyval = ACC_PUBLIC; };
+  break;
+    
+
+  case 11:
+  if (yyn == 11)
+    /* "/home/nur1popcorn/Desktop/Projects/BASM/jvm/java-bytecode-assembler/src/main/yacc/parser.y":144  */ /* lalr1.java:489  */
+    { yyval = ACC_FINAL; };
   break;
     
 
   case 12:
   if (yyn == 12)
-    /* "/home/nur1popcorn/Desktop/Projects/BASM/java-bytecode-assembler/src/main/yacc/parser.y":146  */ /* lalr1.java:489  */
-    {  };
+    /* "/home/nur1popcorn/Desktop/Projects/BASM/jvm/java-bytecode-assembler/src/main/yacc/parser.y":145  */ /* lalr1.java:489  */
+    { yyval = ACC_SUPER; };
+  break;
+    
+
+  case 13:
+  if (yyn == 13)
+    /* "/home/nur1popcorn/Desktop/Projects/BASM/jvm/java-bytecode-assembler/src/main/yacc/parser.y":146  */ /* lalr1.java:489  */
+    { yyval = ACC_INTERFACE; };
   break;
     
 
   case 14:
   if (yyn == 14)
-    /* "/home/nur1popcorn/Desktop/Projects/BASM/java-bytecode-assembler/src/main/yacc/parser.y":150  */ /* lalr1.java:489  */
-    { yyval = ACC_PUBLIC; };
+    /* "/home/nur1popcorn/Desktop/Projects/BASM/jvm/java-bytecode-assembler/src/main/yacc/parser.y":147  */ /* lalr1.java:489  */
+    { yyval = ACC_ABSTRACT; };
   break;
     
 
   case 15:
   if (yyn == 15)
-    /* "/home/nur1popcorn/Desktop/Projects/BASM/java-bytecode-assembler/src/main/yacc/parser.y":151  */ /* lalr1.java:489  */
-    { yyval = ACC_FINAL; };
+    /* "/home/nur1popcorn/Desktop/Projects/BASM/jvm/java-bytecode-assembler/src/main/yacc/parser.y":148  */ /* lalr1.java:489  */
+    { yyval = ACC_SYNTHETIC; };
   break;
     
 
   case 16:
   if (yyn == 16)
-    /* "/home/nur1popcorn/Desktop/Projects/BASM/java-bytecode-assembler/src/main/yacc/parser.y":152  */ /* lalr1.java:489  */
-    { yyval = ACC_SUPER; };
+    /* "/home/nur1popcorn/Desktop/Projects/BASM/jvm/java-bytecode-assembler/src/main/yacc/parser.y":149  */ /* lalr1.java:489  */
+    { yyval = ACC_ANNOTATION; };
   break;
     
 
   case 17:
   if (yyn == 17)
-    /* "/home/nur1popcorn/Desktop/Projects/BASM/java-bytecode-assembler/src/main/yacc/parser.y":153  */ /* lalr1.java:489  */
-    { yyval = ACC_INTERFACE; };
+    /* "/home/nur1popcorn/Desktop/Projects/BASM/jvm/java-bytecode-assembler/src/main/yacc/parser.y":150  */ /* lalr1.java:489  */
+    { yyval = ACC_ENUM; };
   break;
     
 
   case 18:
   if (yyn == 18)
-    /* "/home/nur1popcorn/Desktop/Projects/BASM/java-bytecode-assembler/src/main/yacc/parser.y":154  */ /* lalr1.java:489  */
-    { yyval = ACC_ABSTRACT; };
+    /* "/home/nur1popcorn/Desktop/Projects/BASM/jvm/java-bytecode-assembler/src/main/yacc/parser.y":154  */ /* lalr1.java:489  */
+    { yyval = ((Integer)(yystack.valueAt (2-(1)))) | ((Integer)(yystack.valueAt (2-(2)))); };
   break;
     
 
   case 19:
   if (yyn == 19)
-    /* "/home/nur1popcorn/Desktop/Projects/BASM/java-bytecode-assembler/src/main/yacc/parser.y":155  */ /* lalr1.java:489  */
-    { yyval = ACC_SYNTHETIC; };
-  break;
-    
-
-  case 20:
-  if (yyn == 20)
-    /* "/home/nur1popcorn/Desktop/Projects/BASM/java-bytecode-assembler/src/main/yacc/parser.y":156  */ /* lalr1.java:489  */
-    { yyval = ACC_ANNOTATION; };
-  break;
-    
-
-  case 21:
-  if (yyn == 21)
-    /* "/home/nur1popcorn/Desktop/Projects/BASM/java-bytecode-assembler/src/main/yacc/parser.y":157  */ /* lalr1.java:489  */
-    { yyval = ACC_ENUM; };
-  break;
-    
-
-  case 22:
-  if (yyn == 22)
-    /* "/home/nur1popcorn/Desktop/Projects/BASM/java-bytecode-assembler/src/main/yacc/parser.y":161  */ /* lalr1.java:489  */
-    { yyval = ((Integer)(yystack.valueAt (2-(1)))) | ((Integer)(yystack.valueAt (2-(2)))); };
-  break;
-    
-
-  case 23:
-  if (yyn == 23)
-    /* "/home/nur1popcorn/Desktop/Projects/BASM/java-bytecode-assembler/src/main/yacc/parser.y":162  */ /* lalr1.java:489  */
+    /* "/home/nur1popcorn/Desktop/Projects/BASM/jvm/java-bytecode-assembler/src/main/yacc/parser.y":155  */ /* lalr1.java:489  */
     { yyval = 0; };
   break;
     
 
   case 24:
   if (yyn == 24)
-    /* "/home/nur1popcorn/Desktop/Projects/BASM/java-bytecode-assembler/src/main/yacc/parser.y":165  */ /* lalr1.java:489  */
+    /* "/home/nur1popcorn/Desktop/Projects/BASM/jvm/java-bytecode-assembler/src/main/yacc/parser.y":164  */ /* lalr1.java:489  */
     {  };
   break;
     
 
   case 25:
   if (yyn == 25)
-    /* "/home/nur1popcorn/Desktop/Projects/BASM/java-bytecode-assembler/src/main/yacc/parser.y":168  */ /* lalr1.java:489  */
+    /* "/home/nur1popcorn/Desktop/Projects/BASM/jvm/java-bytecode-assembler/src/main/yacc/parser.y":167  */ /* lalr1.java:489  */
     { yyval = ACC_PUBLIC; };
   break;
     
 
   case 26:
   if (yyn == 26)
-    /* "/home/nur1popcorn/Desktop/Projects/BASM/java-bytecode-assembler/src/main/yacc/parser.y":169  */ /* lalr1.java:489  */
+    /* "/home/nur1popcorn/Desktop/Projects/BASM/jvm/java-bytecode-assembler/src/main/yacc/parser.y":168  */ /* lalr1.java:489  */
     { yyval = ACC_PRIVATE; };
   break;
     
 
   case 27:
   if (yyn == 27)
-    /* "/home/nur1popcorn/Desktop/Projects/BASM/java-bytecode-assembler/src/main/yacc/parser.y":170  */ /* lalr1.java:489  */
+    /* "/home/nur1popcorn/Desktop/Projects/BASM/jvm/java-bytecode-assembler/src/main/yacc/parser.y":169  */ /* lalr1.java:489  */
     { yyval = ACC_PROTECTED; };
   break;
     
 
   case 28:
   if (yyn == 28)
-    /* "/home/nur1popcorn/Desktop/Projects/BASM/java-bytecode-assembler/src/main/yacc/parser.y":171  */ /* lalr1.java:489  */
+    /* "/home/nur1popcorn/Desktop/Projects/BASM/jvm/java-bytecode-assembler/src/main/yacc/parser.y":170  */ /* lalr1.java:489  */
     { yyval = ACC_STATIC; };
   break;
     
 
   case 29:
   if (yyn == 29)
-    /* "/home/nur1popcorn/Desktop/Projects/BASM/java-bytecode-assembler/src/main/yacc/parser.y":172  */ /* lalr1.java:489  */
+    /* "/home/nur1popcorn/Desktop/Projects/BASM/jvm/java-bytecode-assembler/src/main/yacc/parser.y":171  */ /* lalr1.java:489  */
     { yyval = ACC_FINAL; };
   break;
     
 
   case 30:
   if (yyn == 30)
-    /* "/home/nur1popcorn/Desktop/Projects/BASM/java-bytecode-assembler/src/main/yacc/parser.y":173  */ /* lalr1.java:489  */
+    /* "/home/nur1popcorn/Desktop/Projects/BASM/jvm/java-bytecode-assembler/src/main/yacc/parser.y":172  */ /* lalr1.java:489  */
     { yyval = ACC_VOLATILE; };
   break;
     
 
   case 31:
   if (yyn == 31)
-    /* "/home/nur1popcorn/Desktop/Projects/BASM/java-bytecode-assembler/src/main/yacc/parser.y":174  */ /* lalr1.java:489  */
+    /* "/home/nur1popcorn/Desktop/Projects/BASM/jvm/java-bytecode-assembler/src/main/yacc/parser.y":173  */ /* lalr1.java:489  */
     { yyval = ACC_TRANSIENT; };
   break;
     
 
   case 32:
   if (yyn == 32)
-    /* "/home/nur1popcorn/Desktop/Projects/BASM/java-bytecode-assembler/src/main/yacc/parser.y":175  */ /* lalr1.java:489  */
+    /* "/home/nur1popcorn/Desktop/Projects/BASM/jvm/java-bytecode-assembler/src/main/yacc/parser.y":174  */ /* lalr1.java:489  */
     { yyval = ACC_SYNTHETIC; };
   break;
     
 
   case 33:
   if (yyn == 33)
-    /* "/home/nur1popcorn/Desktop/Projects/BASM/java-bytecode-assembler/src/main/yacc/parser.y":176  */ /* lalr1.java:489  */
+    /* "/home/nur1popcorn/Desktop/Projects/BASM/jvm/java-bytecode-assembler/src/main/yacc/parser.y":175  */ /* lalr1.java:489  */
     { yyval = ACC_ENUM; };
   break;
     
 
   case 34:
   if (yyn == 34)
-    /* "/home/nur1popcorn/Desktop/Projects/BASM/java-bytecode-assembler/src/main/yacc/parser.y":179  */ /* lalr1.java:489  */
+    /* "/home/nur1popcorn/Desktop/Projects/BASM/jvm/java-bytecode-assembler/src/main/yacc/parser.y":178  */ /* lalr1.java:489  */
     { yyval = ((Integer)(yystack.valueAt (2-(1)))) | ((Integer)(yystack.valueAt (2-(2)))); };
   break;
     
 
   case 35:
   if (yyn == 35)
-    /* "/home/nur1popcorn/Desktop/Projects/BASM/java-bytecode-assembler/src/main/yacc/parser.y":180  */ /* lalr1.java:489  */
+    /* "/home/nur1popcorn/Desktop/Projects/BASM/jvm/java-bytecode-assembler/src/main/yacc/parser.y":179  */ /* lalr1.java:489  */
     { yyval = 0; };
   break;
     
 
   case 36:
   if (yyn == 36)
-    /* "/home/nur1popcorn/Desktop/Projects/BASM/java-bytecode-assembler/src/main/yacc/parser.y":183  */ /* lalr1.java:489  */
+    /* "/home/nur1popcorn/Desktop/Projects/BASM/jvm/java-bytecode-assembler/src/main/yacc/parser.y":182  */ /* lalr1.java:489  */
     {  };
   break;
     
@@ -1014,10 +1014,10 @@ class  Parser
   {
     return new byte[]
     {
-      13,     0,     0,     1,    10,    11,    23,     0,     2,     0,
-       7,     8,     9,    12,    14,    15,    17,    18,    19,    20,
-      21,    16,     0,    22,     3,     4,    38,     0,     5,    35,
-       6,    24,    37,     0,    25,    26,    27,    28,    29,    30,
+       9,     0,     0,     1,     6,     7,    19,     0,     2,     0,
+       3,     4,     5,     8,    10,    11,    13,    14,    15,    16,
+      17,    12,     0,    18,    20,    21,    38,     0,    22,    35,
+      23,    24,    37,     0,    25,    26,    27,    28,    29,    30,
       31,    32,    33,    36,    34
     };
   }
@@ -1028,7 +1028,7 @@ class  Parser
   {
     return new byte[]
     {
-      -9,    -9,    -9,    -9,    -8,    -9,    -9,    -9,    -9,    -9,
+      -9,    -9,    -8,    -9,    -9,    -9,    -9,    -9,    -9,    -9,
       -9,    -9,    -9,    -9
     };
   }
@@ -1039,7 +1039,7 @@ class  Parser
   {
     return new byte[]
     {
-      -1,     1,    26,    31,    13,     7,     2,    23,     9,     8,
+      -1,     1,    13,     7,     2,    23,     9,    26,    31,     8,
       44,    33,    32,    27
     };
   }
@@ -1080,11 +1080,11 @@ private static final byte yycheck_[] = yycheck_init();
   {
     return new byte[]
     {
-       0,    35,    40,     0,     1,     3,     4,    39,    43,    42,
-       1,    32,    33,    38,    13,    17,    22,    23,    25,    26,
-      27,    28,    38,    41,     1,     7,    36,    47,     1,     5,
-       8,    37,    46,    45,    13,    14,    15,    16,    17,    19,
-      20,    25,    27,    38,    44
+       0,    35,    38,     0,     1,     3,     4,    37,    43,    40,
+       1,    32,    33,    36,    13,    17,    22,    23,    25,    26,
+      27,    28,    36,    39,     1,     7,    41,    47,     1,     5,
+       8,    42,    46,    45,    13,    14,    15,    16,    17,    19,
+      20,    25,    27,    36,    44
     };
   }
 
@@ -1094,8 +1094,8 @@ private static final byte yycheck_[] = yycheck_init();
   {
     return new byte[]
     {
-       0,    34,    35,    36,    36,    37,    37,    38,    38,    38,
-      39,    39,    40,    40,    41,    41,    41,    41,    41,    41,
+       0,    34,    35,    36,    36,    36,    37,    37,    38,    38,
+      39,    39,    39,    39,    39,    39,    39,    39,    40,    40,
       41,    41,    42,    42,    43,    44,    44,    44,    44,    44,
       44,    44,    44,    44,    45,    45,    46,    47,    47
     };
@@ -1107,9 +1107,9 @@ private static final byte yycheck_[] = yycheck_init();
   {
     return new byte[]
     {
-       0,     2,     2,     1,     1,     1,     1,     1,     1,     1,
-       1,     1,     3,     0,     1,     1,     1,     1,     1,     1,
-       1,     1,     2,     0,     6,     1,     1,     1,     1,     1,
+       0,     2,     2,     1,     1,     1,     1,     1,     3,     0,
+       1,     1,     1,     1,     1,     1,     1,     1,     2,     0,
+       1,     1,     1,     1,     6,     1,     1,     1,     1,     1,
        1,     1,     1,     1,     2,     0,     3,     2,     0
     };
   }
@@ -1142,8 +1142,8 @@ private static final byte yycheck_[] = yycheck_init();
   "\"native\"", "\"interface\"", "\"abstract\"", "\"strict\"",
   "\"synthetic\"", "\"annotation\"", "\"enum\"", "\"super\"", "\"bridge\"",
   "\"varargs\"", "\"mandated\"", "IDENTIFIER", "STRING_LIT", "$accept",
-  "program", "l_brace", "r_brace", "identifier", "import", "imports",
-  "class_modifier", "class_modifiers", "class_declaration",
+  "program", "identifier", "import", "imports", "class_modifier",
+  "class_modifiers", "l_brace", "r_brace", "class_declaration",
   "field_modifier", "field_modifiers", "field", "directives", null
     };
   }
@@ -1154,10 +1154,10 @@ private static final byte yycheck_[] = yycheck_init();
   {
     return new short[]
     {
-       0,   128,   128,   131,   131,   135,   135,   138,   139,   140,
-     143,   143,   146,   147,   150,   151,   152,   153,   154,   155,
-     156,   157,   161,   162,   165,   168,   169,   170,   171,   172,
-     173,   174,   175,   176,   179,   180,   183,   186,   187
+       0,   128,   128,   131,   132,   133,   136,   136,   139,   140,
+     143,   144,   145,   146,   147,   148,   149,   150,   154,   155,
+     158,   158,   161,   161,   164,   167,   168,   169,   170,   171,
+     172,   173,   174,   175,   178,   179,   182,   185,   186
     };
   }
 
@@ -1240,7 +1240,7 @@ private static final byte yycheck_[] = yycheck_init();
 
 /* User implementation code.  */
 /* Unqualified %code blocks.  */
-/* "/home/nur1popcorn/Desktop/Projects/BASM/java-bytecode-assembler/src/main/yacc/parser.y":33  */ /* lalr1.java:1066  */
+/* "/home/nur1popcorn/Desktop/Projects/BASM/jvm/java-bytecode-assembler/src/main/yacc/parser.y":33  */ /* lalr1.java:1066  */
 
     private static final class LexerAdapter implements Lexer {
         private final FlexLexer lexer;
@@ -1294,7 +1294,7 @@ private static final byte yycheck_[] = yycheck_init();
 
 }
 
-/* "/home/nur1popcorn/Desktop/Projects/BASM/java-bytecode-assembler/src/main/yacc/parser.y":189  */ /* lalr1.java:1070  */
+/* "/home/nur1popcorn/Desktop/Projects/BASM/jvm/java-bytecode-assembler/src/main/yacc/parser.y":188  */ /* lalr1.java:1070  */
 
 
 final class Yytoken<T> {

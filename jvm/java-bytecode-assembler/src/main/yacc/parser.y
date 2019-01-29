@@ -125,14 +125,7 @@
 %%
 
 program:
-    imports class_declaration;
-
-l_brace:
-    error | "{"
-
-
-r_brace:
-    error | "}"
+    imports class_declaration
 
 identifier:
     error {  } |
@@ -159,7 +152,13 @@ class_modifier:
 // https://docs.oracle.com/javase/specs/jls/se11/html/jls-8.html#jls-ClassModifier
 class_modifiers:
     class_modifiers class_modifier { $$ = $1 | $2; } |
-    %empty { $$ = 0; };
+    %empty { $$ = 0; }
+
+l_brace:
+    error | "{"
+
+r_brace:
+    error | "}"
 
 class_declaration:
     ".class" class_modifiers identifier l_brace directives r_brace {  }
@@ -177,7 +176,7 @@ field_modifier:
 
 field_modifiers:
     field_modifiers field_modifier { $$ = $1 | $2; } |
-    %empty { $$ = 0; };
+    %empty { $$ = 0; }
 
 field:
     ".field" field_modifiers identifier {  }
