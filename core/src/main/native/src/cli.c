@@ -23,15 +23,31 @@
 #include <string.h>
 #include <getopt.h>
 
-static void print_help() {
+typedef void (*cli_handler)(struct cli_options *options);
+
+/*!
+ * \param options
+ */
+static void print_help(struct cli_options *options) {
     puts("Usage: ...=--<option>=<parameter>,...\n"
          "    -h --help         Prints this usage message.\n"
          "    -b --bind <port>  Binds the native agent to any given port.\n"
     );
 }
 
-static void bind_port() {
-    printf("Binding port: %s\n", optarg);
+/*!
+ * \param options
+ */
+static void parse_port(struct cli_options *options) {
+    char *temp;
+    const long port = strtol(optarg, &temp, 10);
+    if(!*temp ||
+       port < 0 || port > 65535) {
+        fprintf(stderr,
+            "Invalid port range (0 - 65535).");
+        return;
+    }
+    options->port = strdup_or_die(optarg);
 }
 
 static char **arg_split(char *str, int *size) {
@@ -53,7 +69,7 @@ static char **arg_split(char *str, int *size) {
     return strs;
 }
 
-void parse_options_or_die(char *options) {
+struct cli_options *cli_options_parse(char *options) {
     optind = 1;
 
     int argc;
@@ -66,20 +82,29 @@ void parse_options_or_die(char *options) {
         };
 
     /* a ghetto hash table implementation follows. */
-    static void (*handlers[0x10])() =
-        { NULL };
-    {
+    static cli_handler handlers[0x10]; {
         handlers['h' & 0xf] = &print_help;
-        handlers['b' & 0xf] = &bind_port;
+        handlers['b' & 0xf] = &parse_port;
     }
+
+    struct cli_options *parsed_options = malloc_or_die(sizeof(struct cli_options));
+    memset(parsed_options, 0, sizeof(struct cli_options));
 
     int c, opt_index = 0;
     while((c = getopt_long(argc, argv, "hb:", long_options, &opt_index)) != -1) {
         if(c == '?')
             abort();
-        handlers[c & 0xf]();
+        handlers[c & 0xf](parsed_options);
     }
 
     free(argv);
     free(options);
+
+    return parsed_options;
+}
+
+void cli_options_delete(struct cli_options *this) {
+    if(this->port)
+        free(this->port);
+    free(this);
 }

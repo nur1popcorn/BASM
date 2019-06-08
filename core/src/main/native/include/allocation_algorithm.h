@@ -16,25 +16,38 @@
  *
  */
 
-#include "cutest.h"
+#ifndef ALLOCATION_ALGORITHM_H
+#define ALLOCATION_ALGORITHM_H
 
-#include "cli.h"
+#include "function.h"
 
-CU_TEST(bob) {
-    cli_options_delete(cli_options_parse("-h,--help,-b=16464,--bind=123"));
-    cli_options_delete(cli_options_parse(""));
-}
+/*!
+ * \brief
+ */
+struct AllocationInfo {
+    int register_count;
+    int registers[];
+};
 
-static struct CUTestInfo example;
+/*!
+ * \brief
+ */
+struct AllocationTable {
+    int allocation_count;
+    struct Allocation {
+        int index,
+            reg;
+    } *allocation_table;
+};
 
-CU_TEST_SUITE_START(awesome)
+void AllocationTable_delete(struct AllocationTable *table);
 
-CU_TEST_SUITE_ADD(
-    &example
-)
+/*!
+ * \brief
+ *
+ * \param info
+ * \return
+ */
+struct AllocationTable *AllocationAlgorithm_allocate_registers(struct AllocationInfo *info, struct Function *function);
 
-CU_TEST_SUITE_END
-
-
-
-
+#endif /* ALLOCATION_ALGORITHM_H */

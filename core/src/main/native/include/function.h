@@ -15,26 +15,31 @@
  * {BASM} is based on this document: https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html
  *
  */
+#ifndef FUNCTION_H
+#define FUNCTION_H
 
-#include "cutest.h"
+#include <linked_list.h>
 
-#include "cli.h"
+struct LocalVariableTable {
+    int local_count;
+    struct LocalVariable {
+        int start,
+            length;
+        char type;
+        int index;
+    } locals_table[];
+};
 
-CU_TEST(bob) {
-    cli_options_delete(cli_options_parse("-h,--help,-b=16464,--bind=123"));
-    cli_options_delete(cli_options_parse(""));
-}
+/*!
+ * \brief
+ */
+struct Function {
+    struct LinkedList *instructions;
+    struct LocalVariableTable *locals;
+};
 
-static struct CUTestInfo example;
+void Function_delete(struct Function *function);
 
-CU_TEST_SUITE_START(awesome)
+void* Function_compile(struct Function *this);
 
-CU_TEST_SUITE_ADD(
-    &example
-)
-
-CU_TEST_SUITE_END
-
-
-
-
+#endif /* FUNCTION_H */

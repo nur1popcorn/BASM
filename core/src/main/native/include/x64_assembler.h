@@ -16,22 +16,49 @@
  *
  */
 
-#ifndef CLI_H
-#define CLI_H
+#ifndef X64_ASSEMBLER_H
+#define X64_ASSEMBLER_H
 
-struct cli_options {
-    char *port;
+#include "assembler.h"
+#include "allocation_algorithm.h"
+
+#define X64_REGISTER_ENUM(o)   \
+/*                          *  \
+ *                          *  \
+ *                          */ \
+    o(rax, "rax", 0x1, ..)
+
+struct X64Assembler {
+//     struct Assembler super;
+
 };
 
 /*!
  * \brief
- * \param options[in]
  */
-struct cli_options *cli_options_parse(char *options);
+enum Register {
+    rax, rcx, rdx, rbx,
+    rsp, rbp, rsi, rdi,
+    r8,  r9,  r10, r11,
+    r12, r13, r14, r15
+};
+
+/*!
+ * \brief
+ */
+struct Assembler *Assembler_new();
 
 /*!
  * \param this
  */
-void cli_options_delete(struct cli_options *this);
+static inline void Assembler_delete(struct Assembler *this) {
+    //ByteBuffer_delete(&this->super);
+}
 
-#endif /* CLI_H */
+/*!
+ * \param this
+ * \param src
+ */
+void Assembler_pushq_reg(struct Assembler *this, enum Register src);
+
+#endif /* X64_ASSEMBLER_H */

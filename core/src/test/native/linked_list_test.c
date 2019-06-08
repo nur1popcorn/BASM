@@ -16,12 +16,38 @@
  *
  */
 
-#include <stdio.h>
+#include "linked_list.h"
+
+#include <assert.h>
 
 #include "globals.h"
-#include "agent.c"
 
 int main(int argc, char **argv) {
-    cli_options_parse("-s,--help");
-    printf("Test\n");
+    /*struct LinkedList *list = LinkedList_new();
+
+    int *array = malloc_or_die(sizeof(int) * 100);
+    for(int i = 0; i < 100; i++)
+        array[i] = i;
+
+    for(int i = 0; i < 100; i++)
+        LinkedList_add(list, &array[i]);
+
+    {
+        struct LinkedListEntry *entry = list->first;
+        for(int i = 0; entry; i++) {
+            assert(i == *((int *) entry->value));
+            entry = entry->next;
+        }
+
+        entry = list->last;
+        for(int i = 100; i --> 0; ) {
+            assert(i == *((int *) entry->value));
+            entry = entry->prev;
+        }
+    }
+
+    // assert(LinkedList_contains(list, ));
+
+    LinkedList_delete(list);
+    free(array);*/
 }

@@ -16,25 +16,20 @@
  *
  */
 
-#include "cutest.h"
+#include "assembler.h"
 
-#include "cli.h"
+const struct OpcodeInfo opcode_infos[] = {
+#define o(a, b, c, d, e, f) \
+    { b, d, e, f },
+    INSTRUCTION_ENUM(o)
+#undef o
+};
 
-CU_TEST(bob) {
-    cli_options_delete(cli_options_parse("-h,--help,-b=16464,--bind=123"));
-    cli_options_delete(cli_options_parse(""));
-}
-
-static struct CUTestInfo example;
-
-CU_TEST_SUITE_START(awesome)
-
-CU_TEST_SUITE_ADD(
-    &example
-)
-
-CU_TEST_SUITE_END
-
-
+/*!
+ * \brief
+ */
+struct FunctionBuilder {
+    struct Instruction *first;
+};
 
 

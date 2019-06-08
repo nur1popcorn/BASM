@@ -26,18 +26,16 @@ static void JNICALL vm_init(jvmtiEnv *jvmti_env, JNIEnv *jni_env, jthread thread
  *
  */
 JNIEXPORT jint JNICALL Agent_OnLoad(JavaVM *vm, char *options, void *reserved) {
-    if(unlikely(gdata != NULL && gdata->loaded)) {
-        fprintf(stderr, "The JVMTI agent is already loaded on this JVM, therefore this instance will be disabled.\n");
+    /*if(is_running) {
+        fprintf(stderr,
+            "The JVMTI agent is already loaded on this JVM, "
+            " therefore this instance will be disabled.\n");
         return JNI_ERR;
     }
 
-    static struct GlobalData data;
-    gdata = &data;
+    struct cli_options *parsed_options = cli_parse_options(options);
 
-    gdata->loaded = JNI_TRUE;
-    gdata->jvm = vm;
-
-    parse_options_or_die(options);
+    cli_delete_options(parsed_options);
 
     {
         jint res = (*vm)->GetEnv(vm, (void**)&gdata->jvmti, JVMTI_VERSION);
@@ -86,7 +84,7 @@ JNIEXPORT jint JNICALL Agent_OnLoad(JavaVM *vm, char *options, void *reserved) {
                     error_str
                );
         return JNI_ERR;
-    }
+    }*/
 
     return JNI_OK;
 }

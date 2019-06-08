@@ -16,13 +16,29 @@
 add_library(basm_agent
         SHARED
             ./native/src/agent.c
+            ./native/src/assembler.c
+            ./native/src/bit_vector.c
+            ./native/src/byte_buffer.c
             ./native/src/cli.c
             ./native/src/globals.c
+            ./native/src/graph.c
+            ./native/src/linked_list.c
             ./native/src/socket.c
+            ./native/src/x64_assembler.c
 
+            ./native/include/allocation_algorithm.h
+            ./native/include/assembler.h
+            ./native/include/bit_vector.h
+            ./native/include/byte_buffer.h
             ./native/include/cli.h
+            ./native/include/function.h
             ./native/include/globals.h
+            ./native/include/graph.h
+            ./native/include/linked_list.h
+            ./native/include/instruction.h
+            ./native/include/iterator.h
             ./native/include/socket.h
+            ./native/include/x64_assembler.h
            )
 
 target_include_directories(basm_agent

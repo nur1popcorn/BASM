@@ -16,25 +16,38 @@
  *
  */
 
-#include "cutest.h"
+#ifndef INSTRUCTION_H
+#define INSTRUCTION_H
 
-#include "cli.h"
+/*!
+ * \brief
+ */
+struct Instruction {
+    char opcode;
+};
 
-CU_TEST(bob) {
-    cli_options_delete(cli_options_parse("-h,--help,-b=16464,--bind=123"));
-    cli_options_delete(cli_options_parse(""));
-}
+/*!
+ * \brief
+ */
+struct PushInstruction {
+    struct Instruction super;
+    int value;
+};
 
-static struct CUTestInfo example;
+/*!
+ * \brief
+ */
+struct JmpInstruction {
+    struct Instruction super;
+    struct Instruction *target;
+};
 
-CU_TEST_SUITE_START(awesome)
+/*!
+ * \brief
+ */
+struct VariableInstruction {
+    struct Instruction super;
+    // struct
+};
 
-CU_TEST_SUITE_ADD(
-    &example
-)
-
-CU_TEST_SUITE_END
-
-
-
-
+#endif /* INSTRUCTION_H */

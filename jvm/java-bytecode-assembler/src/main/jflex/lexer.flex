@@ -139,7 +139,7 @@ IDENTIFIER = [:jletter:][:jletterdigit:]*
     "\\\\" { sb.append('\\'); }
 
     \\[0-3]?[0-7]?[0-7] { sb.append(Integer.parseInt(yytext().substring(1), 8)); }
-    \\u[0-9a-fA-F]?[0-9a-fA-F]?[0-9a-fA-F]?[0-9a-fA-F] { sb.append(parseUnicode(yytext())); }
+    \\[u]+[0-9a-fA-F]?[0-9a-fA-F]?[0-9a-fA-F]?[0-9a-fA-F] { sb.append(parseUnicode(yytext())); }
 
     // https://docs.oracle.com/javase/specs/jls/se11/html/jls-3.html#jls-3.10.5
     \\ { throw new Error("Illegal string character '\\' at line: " + yyline + "."); }

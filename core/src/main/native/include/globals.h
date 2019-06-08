@@ -22,6 +22,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <stddef.h>
 
 #include <jvmti.h>
 
@@ -33,18 +34,69 @@
     #define unlikely(x) (x)
 #endif
 
-#define ARRAY_LENGTH(array) (sizeof(array) / sizeof((array)[0]))
+/*!
+ * \brief
+ */
+#define GET_CHILD_PTR(                 \
+         child_class,                  \
+         super_class,                  \
+         super_ptr                     \
+        )                              \
+    (                                  \
+     (child_class *)                   \
+     (((char *) super_ptr)             \
+        - offsetof(super_class, super) \
+     )                                 \
+    )
 
-extern struct GlobalData {
-    jvmtiEnv *jvmti;
-    JavaVM *jvm;
+/*!
+ * \brief performs a xor swap between the two parameters. <i>Note: </i> that this swap only works
+ *        if both parameters hold a different value.
+ */
+#define SWAP_XOR(a, b) \
+    do {               \
+        a ^= b;        \
+        b ^= a;        \
+        a ^= b;        \
+    } while(0)
 
-    jboolean loaded;
-    jint flags;
-} *gdata;
+/**
+ * \brief
+ */
+#define MIN(a, b) \
+    (a < b ? a : b)
 
+/**
+ * \brief
+ */
+#define MAX(a, b) \
+    (a > b ? a : b)
+
+/*!
+ * \brief
+ */
+#define ARRAY_LENGTH(array)             \
+    (                                   \
+     sizeof(array) / sizeof((array)[0]) \
+    )
+
+/*!
+ * \brief
+ *
+ * \param str
+ * \param delim
+ * \param size
+ *
+ * \return
+ */
 char **str_split(char *str, char delim, int *size);
 
+/*!
+ * \brief
+ *
+ * \param size
+ * \return
+ */
 static inline void *malloc_or_die(size_t size) {
     void *mem = malloc(size);
     if(unlikely(!mem)) {
@@ -54,6 +106,14 @@ static inline void *malloc_or_die(size_t size) {
     return mem;
 }
 
+/*!
+ * \brief
+ *
+ * \param meb
+ * \param size
+ *
+ * \return
+ */
 static inline void *calloc_or_die(size_t meb, size_t size) {
     void *mem = calloc(meb, size);
     if(unlikely(!mem)) {
@@ -63,6 +123,29 @@ static inline void *calloc_or_die(size_t meb, size_t size) {
     return mem;
 }
 
+/*!
+ * \brief
+ *
+ * \param ptr
+ * \param size
+ *
+ * \return
+ */
+static inline void *realloc_or_die(void *ptr, size_t size) {
+    void *mem = realloc(ptr, size);
+    if(unlikely(!mem)) {
+        perror("Could not reallocate memory!\n");
+        abort();
+    }
+    return mem;
+}
+
+/*!
+ * \brief
+ *
+ * \param s
+ * \return
+ */
 static inline char *strdup_or_die(const char *s) {
     void *dup = strdup(s);
     if(unlikely(!dup)) {

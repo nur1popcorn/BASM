@@ -17,8 +17,11 @@ enable_testing()
 
 set(unit_tests
     "test"
+    "byte_buffer_test"
     "cli_test"
     "globals_test"
+    "graph_test"
+    "linked_list_test"
     "socket_test")
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)

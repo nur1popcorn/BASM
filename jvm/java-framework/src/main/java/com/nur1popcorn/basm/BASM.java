@@ -43,6 +43,10 @@ public final class BASM {
         "nur1popcorn"
     };
 
+    public static void main(String args[]) {
+
+    }
+
     /*public static void main(String args[]) throws IOException {
         try {
             final OptionParser optionParser = new OptionParser();

@@ -49,13 +49,12 @@ enum SocketResult Socket_create(Socket *sock, char *address, char *port) {
             p->ai_protocol)) == -1)
             continue;
 
-        /*static const int yes = 1;
         static const struct timeval timeout = {
             .tv_sec = 5
         };
-        if(setsockopt(*sock, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) == -1 ||
-           setsockopt(*sock, SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(struct timeval)))
-            return SOCKET_ERROR_CREATE;*/
+
+        if(setsockopt(*sock, SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(struct timeval)))
+            return SOCKET_ERROR_CREATE;
 
         if(connect(*sock, p->ai_addr, p->ai_addrlen) == -1) {
             close(*sock);
@@ -143,7 +142,7 @@ enum SocketResult Socket_accept(Socket sock, Socket *new_sock, struct SocketInfo
                 info->port = malloc_or_die(6 * sizeof(char));
                 snprintf(info->port, 6, "%u", ntohs(in->sin_port));
 
-                info->ipv6 = 0;
+                info->ipv6 = false;
             }   break;
             case AF_INET6: {
                 struct sockaddr_in6 *in = (struct sockaddr_in6 *) &addr;
@@ -154,7 +153,7 @@ enum SocketResult Socket_accept(Socket sock, Socket *new_sock, struct SocketInfo
                 info->port = malloc_or_die(6 * sizeof(char));
                 snprintf(info->port, 6, "%u", ntohs(in->sin6_port));
 
-                info->ipv6 = 1;
+                info->ipv6 = true;
             }   break;
             default:
                 return SOCKET_ERROR_ACCEPT;
@@ -184,15 +183,15 @@ enum SocketResult Socket_send(Socket sock, char *message, int length) {
 
 char *Socket_error(enum SocketResult result) {
     static char *error_codes[] =
-    { "Everything is OK, no error occurred.",
-      "An error occurred while creating the socket.",
-      "An error occurred while trying to bind the socket.",
-      "An error occurred while trying to connect to the server.",
-      "An error occurred while trying to close the socket.",
-      "An error occurred while trying to mark the socket as a listener.",
-      "An error occurred while trying to accept an incoming socket's connection request.",
-      "An error occurred while receiving a message.",
-      "An error occurred while sending a message." };
+    { "Everything is OK, no error occurred.\n",
+      "An error occurred while creating the socket.\n",
+      "An error occurred while trying to bind the socket.\n",
+      "An error occurred while trying to connect to the server.\n",
+      "An error occurred while trying to close the socket.\n",
+      "An error occurred while trying to mark the socket as a listener.\n",
+      "An error occurred while trying to accept an incoming socket's connection request.\n",
+      "An error occurred while receiving a message.\n",
+      "An error occurred while sending a message.\n" };
     assert(result >= 0 && result < ARRAY_LENGTH(error_codes));
     return error_codes[result];
 }

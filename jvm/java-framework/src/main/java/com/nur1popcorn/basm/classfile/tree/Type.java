@@ -23,6 +23,7 @@ import com.nur1popcorn.basm.classfile.MalformedClassFileException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.LinkedList;
+import java.util.List;
 
 public final class Type {
 
@@ -255,8 +256,8 @@ public final class Type {
      *
      * @return
      */
-    public LinkedList<Type> getParameters() {
-        final LinkedList<Type> types = new LinkedList<>();
+    public List<Type> getParameters() {
+        final List<Type> types = new LinkedList<>();
         for(int i = 1; i < descriptor.length() && descriptor.charAt(i) != ')'; i++) {
             types.add(Type.getType(descriptor, i));
             switch(descriptor.charAt(i)) {
@@ -323,8 +324,7 @@ public final class Type {
                 while(descriptor.charAt(end++) != ')');
                 // fallthrough.
             case '[':
-                while(descriptor.charAt(end) == '[')
-                    end++;
+                while(descriptor.charAt(end++) == '[');
                 if(descriptor.charAt(end++) != 'L')
                     break;
                 // fallthrough.
