@@ -21,6 +21,7 @@ package com.nur1popcorn.basm.classfile.attributes;
 import com.nur1popcorn.basm.classfile.ConstantPool;
 
 import java.io.DataOutputStream;
+import java.io.IOException;
 
 /**
  * The {@link AttributeInfo} is an abstract class containing information about the
@@ -47,8 +48,9 @@ public abstract class AttributeInfo {
         this.attributeLength = attributeLength;
     }
 
-    public void write(DataOutputStream os, ConstantPool cp) {
-
+    public void write(DataOutputStream os, ConstantPool cp) throws IOException {
+        os.writeShort(nameIndex);
+        os.writeInt(attributeLength);
     }
 
     /**

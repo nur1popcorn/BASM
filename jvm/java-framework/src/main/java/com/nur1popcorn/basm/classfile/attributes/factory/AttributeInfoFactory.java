@@ -18,5 +18,5 @@ public interface AttributeInfoFactory<T extends AttributeInfo> {
      *
      * @return
      */
-    T read(DataInputStream in, int nameIndex, int attributeLength, ConstantPool cp) throws IOException;
+    T createAttribute(DataInputStream in, int nameIndex, int attributeLength, ConstantPool cp) throws IOException;
 }

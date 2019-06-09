@@ -8,7 +8,7 @@ import java.io.IOException;
 
 final class ConstantValueFactory implements AttributeInfoFactory<AttributeConstantValue> {
     @Override
-    public AttributeConstantValue read(DataInputStream in, int nameIndex, int attributeLength, ConstantPool cp) throws IOException {
+    public AttributeConstantValue createAttribute(DataInputStream in, int nameIndex, int attributeLength, ConstantPool cp) throws IOException {
         return new AttributeConstantValue(
             nameIndex, attributeLength, in.readUnsignedShort());
     }

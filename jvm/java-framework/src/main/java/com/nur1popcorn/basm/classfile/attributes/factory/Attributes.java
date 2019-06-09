@@ -35,7 +35,7 @@ public final class Attributes {
 
             attributes[i] = ATTRIBUTE_FACTORY_MAP
                 .getOrDefault(name.bytes, UNKNOWN_FACTORY)
-                .read(in, nameIndex, attributeLength, cp);
+                .createAttribute(in, nameIndex, attributeLength, cp);
         }
         return attributes;
     }

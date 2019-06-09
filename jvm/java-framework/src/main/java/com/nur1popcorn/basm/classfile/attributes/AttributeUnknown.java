@@ -1,6 +1,6 @@
 package com.nur1popcorn.basm.classfile.attributes;
 
-public final class AttributeUnkown extends AttributeInfo {
+public final class AttributeUnknown extends AttributeInfo {
     private final byte info[];
 
     /**
@@ -8,7 +8,7 @@ public final class AttributeUnkown extends AttributeInfo {
      * @param attributeLength
      * @param info
      */
-    public AttributeUnkown(int nameIndex, int attributeLength, byte info[]) {
+    public AttributeUnknown(int nameIndex, int attributeLength, byte info[]) {
         super(nameIndex, attributeLength);
         this.info = info;
     }
