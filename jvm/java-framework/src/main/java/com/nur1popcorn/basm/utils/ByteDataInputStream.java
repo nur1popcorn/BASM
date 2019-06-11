@@ -42,38 +42,6 @@ public final class ByteDataInputStream extends DataInputStream {
         return in.position();
     }
 
-    public void skipInstruction() throws IOException {
-        final byte opcode = readByte();
-        switch(opcode) {
-            case TABLESWITCH: {
-                // skip padding bytes and skip default index.
-                skipBytes((-position() & 0x3) + 4);
-                final int low = readInt();
-                final int high = readInt();
-                skipBytes((high - low + 1) << 2);
-            }   break;
-            case LOOKUPSWITCH:
-                // skip padding bytes and skip default index.
-                skipBytes((-position() & 0x3) + 4);
-                skipBytes(readInt() << 3);
-                break;
-            case WIDE:
-                skipBytes(
-                    readByte() == IINC ?
-                        4 : 2);
-                break;
-            default: {
-                final int parameters = OPCODE_PARAMETERS[opcode & 0xff];
-                if(parameters == UNKNOWN_PARAMETERS)
-                    throw new MalformedClassFileException(
-                        "The opcode=" + OPCODE_MNEMONICS[opcode & 0xff] +
-                        " at index=" + position() + " is invalid."
-                    );
-                skipBytes(parameters);
-            }   break;
-        }
-    }
-
     private static final class ByteArrayInputStreamDelegate extends ByteArrayInputStream {
         public ByteArrayInputStreamDelegate(byte[] buffer) {
             super(buffer);

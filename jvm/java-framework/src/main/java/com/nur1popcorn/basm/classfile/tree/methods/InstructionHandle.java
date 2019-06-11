@@ -18,18 +18,11 @@
 
 package com.nur1popcorn.basm.classfile.tree.methods;
 
-import com.nur1popcorn.basm.classfile.MalformedClassFileException;
 import com.nur1popcorn.basm.classfile.tree.methods.instructions.Instruction;
-import com.nur1popcorn.basm.classfile.tree.methods.instructions.SwitchInstruction;
-import com.nur1popcorn.basm.classfile.tree.methods.instructions.WideInstruction;
 import com.nur1popcorn.basm.utils.WeakHashSet;
 
 import java.util.Iterator;
 import java.util.Set;
-
-import static com.nur1popcorn.basm.Constants.*;
-import static com.nur1popcorn.basm.classfile.tree.methods.instructions.Instruction.SWITCH_INS;
-import static com.nur1popcorn.basm.classfile.tree.methods.instructions.Instruction.WIDE_INS;
 
 /**
  * The {@link InstructionHandle}
@@ -101,29 +94,6 @@ public final class InstructionHandle implements Iterable<InstructionHandle> {
 
     public int getOffset() {
         return offset;
-    }
-
-    public int getLength() {
-        final byte opcode = handle.getOpcode();
-        switch(handle.getType()) {
-            case SWITCH_INS: {
-                final SwitchInstruction instruction = (SwitchInstruction) handle;
-                return opcode == TABLESWITCH ?
-                    ((-1 - offset) & 0x3) + 13 + (instruction.getCount() << 2) :
-                    ((-1 - offset) & 0x3) + 9 + (instruction.getCount() << 3);
-            }
-            case WIDE_INS:
-                return ((WideInstruction) handle)
-                    .getOpcodeParameter() == IINC ? 6 : 4;
-            default: {
-                final int parameters = OPCODE_PARAMETERS[opcode & 0xff];
-                if(parameters == UNKNOWN_PARAMETERS)
-                    throw new MalformedClassFileException(
-                        "The opcode=" + OPCODE_MNEMONICS[opcode & 0xff] + " is invalid."
-                    );
-                return parameters + 1;
-            }
-        }
     }
 
     @Override

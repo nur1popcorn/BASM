@@ -22,293 +22,374 @@ import com.nur1popcorn.basm.classfile.ConstantPool;
 import com.nur1popcorn.basm.classfile.MalformedClassFileException;
 import com.nur1popcorn.basm.classfile.tree.methods.instructions.IInstructionVisitor;
 import com.nur1popcorn.basm.classfile.tree.methods.instructions.Instruction;
+import com.nur1popcorn.basm.classfile.tree.methods.instructions.SwitchInstruction;
+import com.nur1popcorn.basm.classfile.tree.methods.instructions.WideInstruction;
 import com.nur1popcorn.basm.utils.ByteDataInputStream;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.AbstractList;
-import java.util.Arrays;
+import java.util.*;
+import java.util.function.Consumer;
 
-/**
- * The {@link InstructionList} class is derived from the abstract {@link AbstractList} class and
- * implements a resizeable array and linked list made up of {@link InstructionHandle}s. These
- * {@link InstructionHandle}s allow for {@link Instruction}s to be recycled and provide iterability.
- * The list can be modified by invoking any of the set(), add() and remove() methods, where removing
- * {@link InstructionHandle}s might result in an {@link InstructionLostException} being thrown.
- * Further more, the list's {@link Instruction}'s can be transversed by invoking the accept()
- * method. Deserialization is handled by a package local constructor, where as serialization is
- * handled by the write() method.
- *
- * @see #write(DataOutputStream)
- * @see #accept(IInstructionVisitor)
- *
- * @see #get(int)
- * @see #set(int, InstructionHandle)
- * @see #add(int, InstructionHandle)
- * @see #remove(int)
- *
- * @author nur1popcorn
- * @since 1.0.0-alpha
- */
-public final class InstructionList extends AbstractList<InstructionHandle> implements Cloneable {
-    /* This constant denotes the average number of instruction per method in the runtime classes that
-     * conglomerate the Java core.
-     *
-     */
-    private static final int DEFAULT_SIZE = 37;
+import static com.nur1popcorn.basm.Constants.*;
+import static com.nur1popcorn.basm.Constants.OPCODE_MNEMONICS;
+import static com.nur1popcorn.basm.classfile.tree.methods.instructions.Instruction.SWITCH_INS;
+import static com.nur1popcorn.basm.classfile.tree.methods.instructions.Instruction.WIDE_INS;
 
-    private InstructionHandle first, last;
-    private InstructionHandle instructions[];
+public final class InstructionList extends AbstractSequentialList<Instruction> implements Cloneable {
     private int size;
+    private Node head,
+                 tail;
 
-    /**
-     * Constructs a new {@link InstructionList}, reads the {@link Instruction}s from the specified
-     * byte code, inserts them into mentioned list and links them together.
-     *
-     * @param code The serialized {@link Instruction}s which should be read and added to the list.
-     * @param constantPool The {@link ConstantPool} referenced by the read {@link Instruction}s.
-     *
-     * @see Instruction#read(ByteDataInputStream, ConstantPool)
-     *
-     * @throws IOException If an error occurs during the process of reading from the {@link ByteDataInputStream}.
-     * @throws MalformedClassFileException If an {@link Instruction} is unknown or malformed.
-     */
+    public InstructionList() {
+    }
+
     InstructionList(byte code[], ConstantPool constantPool) throws IOException {
         final ByteDataInputStream in = new ByteDataInputStream(code);
-        int length = 0;
-        while(in.available() != 0) {
-            in.skipInstruction();
-            length++;
-        }
-        instructions = new InstructionHandle[length];
-        in.reset();
-        for(int i = 0; i < length; i++)
-            add(new InstructionHandle(
-                Instruction.read(in, constantPool)));
+        while(in.available() != 0)
+            addBack(Instruction.read(in, constantPool));
     }
 
-    /**
-     * Constructs a new empty {@link InstructionList} instance.
-     * @param size The {@link InstructionList}'s initial capacity.
-     */
-    public InstructionList(int size) {
-        instructions = new InstructionHandle[size];
-    }
-
-    /**
-     * Constructs a new empty {@link InstructionList} instance with default size 37.
-     */
-    public InstructionList() {
-        this(DEFAULT_SIZE);
-    }
-
-    /**
-     * Writes the {@link InstructionList}'s length and entries to the given {@link DataOutputStream}.
-     *
-     * @param os The {@link DataOutputStream} the {@link InstructionList} should be written to.
-     * @throws IOException If an error occurs during the process of writing to the {@link DataOutputStream}.
-     */
     public void write(DataOutputStream os) throws IOException {
-        for(InstructionHandle ih : this)
-            ih.getHandle()
-              .write(os);
+        for(Instruction instruction : this)
+            instruction.write(os);
     }
 
-    /**
-     * Accepts a {@link IInstructionVisitor}, transverses the {@link InstructionList} and calls the
-     * for the {@link Instruction} appropriate 'visitXXX()' methods to notify the visitor of
-     * what type of {@link Instruction} is being entered.
-     *
-     * @param visitor The {@link IInstructionVisitor} whose callbacks will be invoked.
-     */
     public void accept(IInstructionVisitor visitor) {
-        for(InstructionHandle ih : this)
-            ih.getHandle()
-              .accept(visitor);
+        for(Instruction ih : this)
+            ih.accept(visitor);
     }
 
-    /**
-     * @return The number of instructions stored in the {@link InstructionList}.
-     */
+    private void addBack(Instruction value) {
+        size++;
+        modCount++;
+        final Node newNode = new Node(value, tail, null);
+        if(head == null)
+            head = tail = newNode;
+        else
+            tail = (tail.next = newNode);
+    }
+
+    private void addFront(Instruction value) {
+        size++;
+        modCount++;
+        final Node newNode = new Node(value, null, head);
+        if(head == null)
+            head = tail = newNode;
+        else
+            head = (head.prev = newNode);
+    }
+
+    private void addBefore(Instruction value, Node node) {
+        size++;
+        modCount++;
+        final Node newNode = new Node(value, node.prev, node);
+        if(node == head) {
+            head = (head.prev = newNode);
+            return;
+        }
+
+        node.prev = (node.prev.next = newNode);
+    }
+
+    private void addAfter(Instruction value, Node prevNode) {
+        size++;
+        modCount++;
+        final Node newNode = new Node(value, prevNode, prevNode.next);
+        Node nextNode = prevNode.next;
+        prevNode.next = newNode;
+        nextNode.prev = newNode;
+    }
+
+    @Override
+    public void add(int index, Instruction element) {
+        if (index == size)
+            addBack(element);
+        else
+            addBefore(element, find(index));
+    }
+
+    @Override
+    public Instruction set(int index, Instruction element) {
+        final Node x = find(index);
+        final Instruction oldVal = x.value;
+        x.value = element;
+        return oldVal;
+    }
+
+    private void checkIndex(int index) {
+        if(index < 0 || index >= size)
+            throw new IndexOutOfBoundsException(
+                "The index=" + index + " cannot be contained in a linked list of size=" + size + ".");
+    }
+
+    private Node find(int index) {
+        checkIndex(index);
+        if(index <= (size / 2)) {
+            Node cursor = head;
+            for(int i = 0; i < index; i++)
+                cursor = cursor.next;
+            return cursor;
+        } else {
+            Node cursor = tail;
+            for(int i = size - 1; i > index; i--)
+                cursor = cursor.prev;
+            return cursor;
+        }
+    }
+
+    @Override
+    public Instruction get(int index) {
+        return find(index).value;
+    }
+
+    private void unlink(Node node) {
+        size--;
+        modCount++;
+        if(node == head)
+            head = node.next;
+        else
+            node.prev.next = node.next;
+
+        if(node == tail)
+            tail = node.prev;
+        else
+            node.next.prev = node.prev;
+    }
+
+    @Override
+    public Instruction remove(int index) {
+        final Node found = find(index);
+        unlink(found);
+        return found.value;
+    }
+
+    private Node find(Object obj) {
+        for(Node node = head; node != null; node = node.next)
+            if(node.value.equals(obj))
+                return node;
+        return null;
+    }
+
+    @Override
+    public boolean remove(Object obj) {
+        final Node found = find(obj);
+        if(found != null) {
+            unlink(found);
+            return true;
+        }
+        return false;
+    }
+
+    public Instruction removeLast() {
+        size--;
+        modCount++;
+        final Node node = tail;
+        if(node == null)
+            throw new NoSuchElementException("The list is empty.");
+        tail = node.prev;
+        return node.value;
+    }
+
+    @Override
+    public boolean contains(Object obj) {
+        return find(obj) != null;
+    }
+
+    @Override
+    public int indexOf(Object obj) {
+        Node cursor = head;
+        for(int i = 0; i < size; i++) {
+            if(cursor.equals(obj))
+                return i;
+            cursor = cursor.next;
+        }
+        return -1;
+    }
+
+    @Override
+    public int lastIndexOf(Object obj) {
+        Node cursor = tail;
+        for(int i = size; i < 0; i--) {
+            if(cursor.equals(obj))
+                return i;
+            cursor = cursor.prev;
+        }
+        return -1;
+    }
+
     @Override
     public int size() {
         return size;
     }
 
-    public int getRealSize() {
-        if(last != null)
-            return last.getOffset() + last.getLength();
-        return 0;
-    }
-
-    /**
-     * @param index The index of the {@link Instruction} which should be returned.
-     * @return The {@link Instruction} at the given index.
-     */
     @Override
-    public InstructionHandle get(int index) {
-        rangeCheck(index);
-        return instructions[index];
-    }
-
-    /**
-     * Replaces the {@link InstructionHandle} at the given index.
-     *
-     * @param index The index of the {@link InstructionHandle} which is to be replaced.
-     * @param element The {@link InstructionHandle} with which the other {@link InstructionHandle}
-     *                is to be replaced.
-     *
-     * @return The {@link Instruction} which previously occupied the given index.
-     */
-    @Override
-    public InstructionHandle set(int index, InstructionHandle element) {
-        modCount++;
-        rangeCheck(index);
-        final InstructionHandle old = instructions[index];
-        instructions[index] = element;
-        final IInstructionPointer pointers[] = old.getPointers();
-        for(IInstructionPointer pointer : pointers)
-            element.addPointer(pointer);
-        if((element.prev = old.prev) == null)
-            first = element;
-        if((element.next = old.next) == null)
-            last = element;
-        element.offset = old.getOffset();
-        final int diff = element.getLength() - old.getLength();
-        if(diff != 0)
-            for(int i = index + 1; i < size; i++)
-                instructions[i].offset += diff;
-        return old;
-    }
-
-    /**
-     * Inserts the {@link InstructionHandle} at the given index.
-     *
-     * @param index The index at which the {@link InstructionHandle} is to be inserted.
-     * @param element The {@link InstructionHandle} which is to be inserted.
-     */
-    @Override
-    public void add(int index, InstructionHandle element) {
-        rangeCheckAdd(index);
-        final int oldSize = size;
-        grow(++size);
-        System.arraycopy(
-            instructions, index,
-            instructions, index + 1, oldSize - index
-        );
-        instructions[index] = element;
-        if(oldSize == 0)
-            last = first = element;
-        else if(oldSize == index) {
-            final InstructionHandle prev = instructions[index - 1];
-            last = (element.prev = prev)
-                .next = element;
-            element.offset = prev.getOffset() + prev.getLength();
-        } else if(index == 0)
-            first = (element.next = first)
-                .prev = element;
-        else {
-            final InstructionHandle prev = instructions[index - 1];
-            (((element.prev = prev)
-                .next = element)
-                    .next = instructions[index + 1])
-                        .prev = element;
-            element.offset = prev.getOffset() + prev.getLength();
-        }
-        for(int i = index + 1; i < size; i++)
-            instructions[i].offset += element.getLength();
-    }
-
-    /**
-     * Removes the {@link InstructionHandle} at the specified index from the {@link InstructionList}.
-     *
-     * @param index The index of the {@link InstructionHandle} which is to be removed.
-     * @throws InstructionLostException If the number of {@link IInstructionPointer}s pointing at the to
-     *         be removed {@link InstructionHandle} is greater than 0.
-     * @return The {@link InstructionHandle} which was removed.
-     */
-    @Override
-    public InstructionHandle remove(int index) {
-        modCount++;
-        rangeCheck(index);
-        final InstructionHandle old = instructions[index];
-        final int moved = size - index - 1;
-        if(moved > 0)
-            System.arraycopy(
-                instructions, index + 1,
-                instructions, index, moved
-            );
-        instructions[--size] = null;
-        if(size != 0) {
-            final InstructionHandle element = instructions[index];
-            if((element.prev = old.prev) == null)
-                first = element;
-            if((element.next = old.next) == null)
-                last = element;
-            for(int i = index; i < size; i++)
-                instructions[i].offset -= old.getLength();
-        }
-        if(old.hasPointers())
-            throw new InstructionLostException(old.getPointers());
-        return old;
-    }
-
-    /**
-     * @return The first {@link InstructionHandle} in the list.
-     */
-    public InstructionHandle getFirst() {
-        return first;
-    }
-
-    /**
-     * @return The last {@link InstructionHandle} in the list.
-     */
-    public InstructionHandle getLast() {
-        return last;
-    }
-
-    /**
-     * @param index The index which should be tested.
-     * @throws IndexOutOfBoundsException If the index is not in range of the instruction array.
-     */
-    private void rangeCheck(int index) {
-        if(index < 0 || index >= size)
-            throw new IndexOutOfBoundsException(
-                "index=" + index + ", size=" + size);
-    }
-
-    /**
-     * @param index The index which should be tested.
-     * @throws IndexOutOfBoundsException If the index is not the size of the array or in range of the
-     *                                   instruction array.
-     */
-    private void rangeCheckAdd(int index) {
-        if(index < 0 || index > size)
-            throw new IndexOutOfBoundsException(
-                "index=" + index + ", size=" + size);
-    }
-
-    /**
-     * Grows the instruction array if the given value is bigger than the capacity of said array.
-     * @param size The minimum capacity.
-     */
-    private void grow(int size) {
-        modCount++;
-        final InstructionHandle old[] = instructions;
-        if(old.length < size)
-            instructions = Arrays.copyOf(
-                old,
-                size << 1
-            );
-    }
-
-    /**
-     * @return A clone of this {@link InstructionList}'s instance.
-     */
     public Object clone() throws CloneNotSupportedException {
-        final InstructionList il = (InstructionList) super.clone();
-        il.instructions = Arrays.copyOf(instructions, size);
-        il.modCount = 0;
-        return il;
+        final InstructionList clone = (InstructionList) super.clone();
+        clone.head = clone.tail = null;
+        clone.size = 0;
+        clone.modCount = 0;
+        for (Node x = head; x != null; x = x.next)
+            clone.add(x.value);
+        return clone;
+    }
+
+    private static int getLength(Instruction handle, int offset) {
+        final byte opcode = handle.getOpcode();
+        switch(handle.getType()) {
+            case SWITCH_INS: {
+                final SwitchInstruction instruction = (SwitchInstruction) handle;
+                return opcode == TABLESWITCH ?
+                    ((-1 - offset) & 0x3) + 13 + (instruction.getCount() << 2) :
+                    ((-1 - offset) & 0x3) + 9 + (instruction.getCount() << 3);
+            }
+            case WIDE_INS:
+                return ((WideInstruction) handle)
+                    .getOpcodeParameter() == IINC ? 6 : 4;
+            default: {
+                final int parameters = OPCODE_PARAMETERS[opcode & 0xff];
+                if(parameters == UNKNOWN_PARAMETERS)
+                    throw new MalformedClassFileException(
+                        "The opcode=" + OPCODE_MNEMONICS[opcode & 0xff] + " is invalid."
+                    );
+                return parameters + 1;
+            }
+        }
+    }
+
+    @Override
+    public OffsetListIterator listIterator(int index) {
+        return new OffsetListIterator() {
+            private Node lastReturned;
+            private Node next = next = (index == size) ? null : find(index);
+            private int nextIndex = index, nextOffset;
+            private int expectedModCount = modCount;
+
+            @Override
+            public boolean hasNext() {
+                return next != null;
+            }
+
+            @Override
+            public Instruction next() {
+                checkForComodification();
+                if (!hasNext())
+                    throw new NoSuchElementException();
+
+                lastReturned = next;
+                next = next.next;
+                nextIndex++;
+                nextOffset += getLength(lastReturned.value, nextOffset);
+                return lastReturned.value;
+            }
+
+            @Override
+            public boolean hasPrevious() {
+                return nextIndex > 0 && nextOffset > 0;
+            }
+
+            @Override
+            public Instruction previous() {
+                checkForComodification();
+                if (!hasPrevious())
+                    throw new NoSuchElementException();
+
+                lastReturned = next = (next == null) ? tail : next.prev;
+                nextIndex--;
+                nextOffset -= getLength(lastReturned.value, nextOffset);
+                return lastReturned.value;
+            }
+
+            @Override
+            public int nextIndex() {
+                return nextIndex;
+            }
+
+            @Override
+            public int previousIndex() {
+                return nextIndex - 1;
+            }
+
+            @Override
+            public int nextOffset() {
+                return nextOffset;
+            }
+
+            @Override
+            public int previousOffset() {
+                if(lastReturned == null)
+                    return -1;
+                return nextOffset - getLength(lastReturned.value, nextOffset);
+            }
+
+            @Override
+            public void remove() {
+                checkForComodification();
+                if (lastReturned == null)
+                    throw new IllegalStateException();
+
+                Node lastNext = lastReturned.next;
+                unlink(lastReturned);
+                if (next == lastReturned)
+                    next = lastNext;
+                else {
+                    nextIndex--;
+                    nextOffset -= getLength(lastReturned.value, nextOffset);
+                }
+                lastReturned = null;
+                expectedModCount++;
+            }
+
+            @Override
+            public void set(Instruction e) {
+                if (lastReturned == null)
+                    throw new IllegalStateException();
+                checkForComodification();
+                lastReturned.value = e;
+            }
+
+            @Override
+            public void add(Instruction e) {
+                checkForComodification();
+                lastReturned = null;
+                if (next == null)
+                    addBack(e);
+                else
+                    addBefore(e, next);
+                nextIndex++;
+                nextOffset += getLength(e, nextOffset);
+                expectedModCount++;
+            }
+
+            @Override
+            public void forEachRemaining(Consumer<? super Instruction> action) {
+                Objects.requireNonNull(action);
+                while (modCount == expectedModCount && next != null) {
+                    action.accept(next.value);
+                    lastReturned = next;
+                    next = next.next;
+                    nextIndex++;
+                    nextOffset += getLength(lastReturned.value, nextOffset);
+                }
+                checkForComodification();
+            }
+
+            private void checkForComodification() {
+                if (modCount != expectedModCount)
+                    throw new ConcurrentModificationException();
+            }
+        };
+    }
+
+    private static final class Node {
+        private Instruction value;
+        private Node prev,
+            next;
+
+        private Node(Instruction value, Node prev, Node next) {
+            this.value = value;
+            this.prev = prev;
+            this.next = next;
+        }
     }
 }
