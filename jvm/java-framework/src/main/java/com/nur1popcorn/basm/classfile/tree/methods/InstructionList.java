@@ -29,20 +29,15 @@ import com.nur1popcorn.basm.utils.ByteDataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.*;
-import java.util.function.Consumer;
 
 import static com.nur1popcorn.basm.Constants.*;
 import static com.nur1popcorn.basm.Constants.OPCODE_MNEMONICS;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.Instruction.SWITCH_INS;
 import static com.nur1popcorn.basm.classfile.tree.methods.instructions.Instruction.WIDE_INS;
 
-public final class InstructionList extends AbstractSequentialList<Instruction> implements Cloneable {
+public final class InstructionList extends AbstractSequentialList<Instruction> {
+    private Node head, tail;
     private int size;
-    private Node head,
-                 tail;
-
-    public InstructionList() {
-    }
 
     InstructionList(byte code[], ConstantPool constantPool) throws IOException {
         final ByteDataInputStream in = new ByteDataInputStream(code);
@@ -112,9 +107,8 @@ public final class InstructionList extends AbstractSequentialList<Instruction> i
     @Override
     public Instruction set(int index, Instruction element) {
         final Node x = find(index);
-        final Instruction oldVal = x.value;
-        x.value = element;
-        return oldVal;
+        addAfter(element, x);
+        return unlink(x);
     }
 
     private void checkIndex(int index) {
@@ -143,25 +137,29 @@ public final class InstructionList extends AbstractSequentialList<Instruction> i
         return find(index).value;
     }
 
-    private void unlink(Node node) {
-        size--;
-        modCount++;
+    private Instruction unlink(Node node) {
+        final Node prev = node.prev;
+        final Node next = node.next;
+
         if(node == head)
-            head = node.next;
+            head = next;
         else
-            node.prev.next = node.next;
+            prev.next = next;
 
         if(node == tail)
-            tail = node.prev;
+            tail = prev;
         else
-            node.next.prev = node.prev;
+            next.prev = prev;
+
+        size--;
+        modCount++;
+
+        return node.value;
     }
 
     @Override
     public Instruction remove(int index) {
-        final Node found = find(index);
-        unlink(found);
-        return found.value;
+        return unlink(find(index));
     }
 
     private Node find(Object obj) {
@@ -179,16 +177,6 @@ public final class InstructionList extends AbstractSequentialList<Instruction> i
             return true;
         }
         return false;
-    }
-
-    public Instruction removeLast() {
-        size--;
-        modCount++;
-        final Node node = tail;
-        if(node == null)
-            throw new NoSuchElementException("The list is empty.");
-        tail = node.prev;
-        return node.value;
     }
 
     @Override
@@ -223,17 +211,6 @@ public final class InstructionList extends AbstractSequentialList<Instruction> i
         return size;
     }
 
-    @Override
-    public Object clone() throws CloneNotSupportedException {
-        final InstructionList clone = (InstructionList) super.clone();
-        clone.head = clone.tail = null;
-        clone.size = 0;
-        clone.modCount = 0;
-        for (Node x = head; x != null; x = x.next)
-            clone.add(x.value);
-        return clone;
-    }
-
     private static int getLength(Instruction handle, int offset) {
         final byte opcode = handle.getOpcode();
         switch(handle.getType()) {
@@ -258,133 +235,113 @@ public final class InstructionList extends AbstractSequentialList<Instruction> i
     }
 
     @Override
-    public OffsetListIterator listIterator(int index) {
-        return new OffsetListIterator() {
-            private Node lastReturned;
-            private Node next = next = (index == size) ? null : find(index);
-            private int nextIndex = index, nextOffset;
-            private int expectedModCount = modCount;
+    public Iterator<Instruction> iterator() {
+        return new InsItr();
+    }
 
-            @Override
-            public boolean hasNext() {
-                return next != null;
-            }
+    @Override
+    public ListIterator<Instruction> listIterator(int index) {
+        return new InsListItr(index);
+    }
 
-            @Override
-            public Instruction next() {
-                checkForComodification();
-                if (!hasNext())
-                    throw new NoSuchElementException();
 
-                lastReturned = next;
-                next = next.next;
-                nextIndex++;
-                nextOffset += getLength(lastReturned.value, nextOffset);
-                return lastReturned.value;
-            }
 
-            @Override
-            public boolean hasPrevious() {
-                return nextIndex > 0 && nextOffset > 0;
-            }
+    private class InsItr implements Iterator<Instruction> {
+        Node lastReturned, next = head;
+        int expectedModCount = modCount;
 
-            @Override
-            public Instruction previous() {
-                checkForComodification();
-                if (!hasPrevious())
-                    throw new NoSuchElementException();
+        @Override
+        public boolean hasNext() {
+            return next != null;
+        }
 
-                lastReturned = next = (next == null) ? tail : next.prev;
-                nextIndex--;
-                nextOffset -= getLength(lastReturned.value, nextOffset);
-                return lastReturned.value;
-            }
+        @Override
+        public Instruction next() {
+            checkCountMod();
+            if (!hasNext())
+                throw new NoSuchElementException();
+            lastReturned = next;
+            return (next = next.next).value;
+        }
 
-            @Override
-            public int nextIndex() {
-                return nextIndex;
-            }
+        @Override
+        public void remove() {
+            checkCountMod();
+            if (lastReturned == null)
+                throw new IllegalStateException();
+            unlink(lastReturned);
+            if(next == lastReturned && hasNext())
+                next();
+            expectedModCount++;
+        }
 
-            @Override
-            public int previousIndex() {
-                return nextIndex - 1;
-            }
+        void checkCountMod() {
+            if (modCount != expectedModCount)
+                throw new ConcurrentModificationException();
+        }
+    }
 
-            @Override
-            public int nextOffset() {
-                return nextOffset;
-            }
+    private class InsListItr extends InsItr implements ListIterator<Instruction> {
+        int nextIndex;
 
-            @Override
-            public int previousOffset() {
-                if(lastReturned == null)
-                    return -1;
-                return nextOffset - getLength(lastReturned.value, nextOffset);
-            }
+        InsListItr(int index) {
+            this.nextIndex = index;
+        }
 
-            @Override
-            public void remove() {
-                checkForComodification();
-                if (lastReturned == null)
-                    throw new IllegalStateException();
+        @Override
+        public boolean hasPrevious() {
+            return lastReturned != null;
+        }
 
-                Node lastNext = lastReturned.next;
-                unlink(lastReturned);
-                if (next == lastReturned)
-                    next = lastNext;
-                else {
-                    nextIndex--;
-                    nextOffset -= getLength(lastReturned.value, nextOffset);
-                }
-                lastReturned = null;
-                expectedModCount++;
-            }
+        @Override
+        public Instruction previous() {
+            checkCountMod();
+            if (!hasPrevious())
+                throw new NoSuchElementException();
 
-            @Override
-            public void set(Instruction e) {
-                if (lastReturned == null)
-                    throw new IllegalStateException();
-                checkForComodification();
-                lastReturned.value = e;
-            }
+            lastReturned = next = (next == null) ?
+                tail : next.prev;
+            nextIndex--;
+            return lastReturned.value;
+        }
 
-            @Override
-            public void add(Instruction e) {
-                checkForComodification();
-                lastReturned = null;
-                if (next == null)
-                    addBack(e);
-                else
-                    addBefore(e, next);
-                nextIndex++;
-                nextOffset += getLength(e, nextOffset);
-                expectedModCount++;
-            }
+        @Override
+        public int nextIndex() {
+            return nextIndex;
+        }
 
-            @Override
-            public void forEachRemaining(Consumer<? super Instruction> action) {
-                Objects.requireNonNull(action);
-                while (modCount == expectedModCount && next != null) {
-                    action.accept(next.value);
-                    lastReturned = next;
-                    next = next.next;
-                    nextIndex++;
-                    nextOffset += getLength(lastReturned.value, nextOffset);
-                }
-                checkForComodification();
-            }
+        @Override
+        public int previousIndex() {
+            return nextIndex - 1;
+        }
 
-            private void checkForComodification() {
-                if (modCount != expectedModCount)
-                    throw new ConcurrentModificationException();
-            }
-        };
+        @Override
+        public void set(Instruction e) {
+            checkCountMod();
+            if (lastReturned == null)
+                throw new IllegalStateException();
+
+            addAfter(e, lastReturned);
+            unlink(lastReturned);
+        }
+
+        @Override
+        public void add(Instruction e) {
+            checkCountMod();
+            lastReturned = null;
+            if (next == null)
+                addBack(e);
+            else
+                addBefore(e, next);
+
+            nextIndex++;
+            expectedModCount++;
+        }
     }
 
     private static final class Node {
-        private Instruction value;
-        private Node prev,
-            next;
+        private final Instruction value;
+        private Node prev, next;
 
         private Node(Instruction value, Node prev, Node next) {
             this.value = value;

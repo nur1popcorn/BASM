@@ -18,6 +18,7 @@
 
 package com.nur1popcorn.basm.classfile;
 
+import com.nur1popcorn.basm.classfile.attributes.factory.AttributeFactory;
 import com.nur1popcorn.basm.classfile.attributes.method.AttributeCode;
 import com.nur1popcorn.basm.classfile.attributes.AttributeInfo;
 import com.nur1popcorn.basm.classfile.constants.ConstantUTF8;
@@ -67,7 +68,7 @@ public final class FieldMethodInfo extends AccessFlags {
         this(in.readUnsignedShort(),
              in.readUnsignedShort(),
              in.readUnsignedShort(),
-             AttributeInfo.read(in, constantPool),
+             AttributeFactory.read(in, constantPool),
              constantPool);
     }
 

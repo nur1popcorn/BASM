@@ -4,13 +4,10 @@ import com.nur1popcorn.basm.classfile.tree.ClassFile;
 
 import java.io.*;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public final class ClassPool {
-    private final Set<String> paths = new HashSet<>();
+    private final List<String> paths = new LinkedList<>();
     private final Map<String, ClassFile> cache = new HashMap<>();
 
     public ClassPool() {

@@ -640,7 +640,6 @@ public final class Constants {
     public static final byte GOTO_W =                       (byte) 0xc8;
     public static final byte JSR_W =                        (byte) 0xc9;
 
-
     // TODO: desc.
     public static final byte BREAKPOINT =                   (byte) 0xca;
     public static final byte IMPDEP1 =                      (byte) 0xfe;

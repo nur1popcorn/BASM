@@ -122,8 +122,6 @@ public abstract class AccessFlags {
     protected int access;
 
     /**
-     *
-     *
      * @param access
      */
     public AccessFlags(int access) {

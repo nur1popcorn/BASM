@@ -1,3 +1,21 @@
+/*
+ * Copyright (C) Keanu Poeschko - All Rights Reserved
+ * Unauthorized copying of this file is strictly prohibited
+ *
+ * Created by Keanu Poeschko <nur1popcorn@gmail.com>, August 2017
+ * This file is part of {BASM}.
+ *
+ * Do not copy or distribute files of {BASM} without permission of {Keanu Poeschko}
+ *
+ * Permission to use, copy, modify, and distribute my software for
+ * educational, and research purposes, without a signed licensing agreement
+ * and for free, is hereby granted, provided that the above copyright notice
+ * and this paragraph appear in all copies, modifications, and distributions.
+ *
+ * {BASM} is based on this document: https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html
+ *
+ */
+
 package com.nur1popcorn.basm.classfile.attributes.factory;
 
 import com.nur1popcorn.basm.classfile.ConstantPool;
@@ -10,11 +28,13 @@ import java.util.Map;
 
 import static com.nur1popcorn.basm.Constants.CONSTANT_UTF8;
 
-public final class Attributes {
+public final class AttributeFactory {
     private static final UnknownFactory UNKNOWN_FACTORY = new UnknownFactory();
 
-    private static final Map<String, AttributeInfoFactory<? extends AttributeInfo>> ATTRIBUTE_FACTORY_MAP = Map.of(
+    private static final Map<String, IAttributeInfoFactory<? extends AttributeInfo>> ATTRIBUTE_FACTORY_MAP = Map.of(
+        /* https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.2 */
         "ConstantValue", new ConstantValueFactory(),
+        /* https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.3 */
         "Code", new CodeFactory()
     );
 

@@ -19,16 +19,22 @@
 package com.nur1popcorn.basm.classfile.attributes.factory;
 
 import com.nur1popcorn.basm.classfile.ConstantPool;
-import com.nur1popcorn.basm.classfile.attributes.AttributeUnknown;
+import com.nur1popcorn.basm.classfile.attributes.AttributeInfo;
 
 import java.io.DataInputStream;
 import java.io.IOException;
 
-final class UnknownFactory implements IAttributeInfoFactory<AttributeUnknown> {
-    @Override
-    public AttributeUnknown createAttribute(DataInputStream in, int nameIndex, int attributeLength, ConstantPool cp) throws IOException {
-        final byte info[] = new byte[attributeLength];
-        in.read(info);
-        return new AttributeUnknown(nameIndex, attributeLength, info);
-    }
+/**
+ * The {@link AttributeInfo} interface
+ */
+public interface IAttributeInfoFactory<T extends AttributeInfo> {
+    /**
+     * @param in
+     * @param nameIndex
+     * @param attributeLength
+     * @param cp
+     *
+     * @return
+     */
+    T createAttribute(DataInputStream in, int nameIndex, int attributeLength, ConstantPool cp) throws IOException;
 }

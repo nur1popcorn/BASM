@@ -19,6 +19,7 @@
 package com.nur1popcorn.basm.classfile;
 
 import com.nur1popcorn.basm.classfile.attributes.AttributeInfo;
+import com.nur1popcorn.basm.classfile.attributes.factory.AttributeFactory;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -384,7 +385,7 @@ public final class ClassReader {
      * @see #accept(IClassVisitor, int)
      */
     private void readFooter() throws IOException {
-        attributes = AttributeInfo.read(in, constantPool);
+        attributes = AttributeFactory.read(in, constantPool);
     }
 
     /**

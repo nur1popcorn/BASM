@@ -18,13 +18,8 @@
 
 package com.nur1popcorn.basm.utils;
 
-import com.nur1popcorn.basm.classfile.MalformedClassFileException;
-
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
-import java.io.IOException;
-
-import static com.nur1popcorn.basm.Constants.*;
 
 public final class ByteDataInputStream extends DataInputStream {
     private ByteArrayInputStreamDelegate in;

@@ -209,8 +209,8 @@ void MapEntry_delete(struct MapEntry *this) {
  * \return
  */
 static int MapEntry_compare(const void *a, const void *b) {
-    return  ((struct MapEntry *) a)->degree -
-            ((struct MapEntry *) b)->degree;
+    return ((struct MapEntry *) a)->degree -
+           ((struct MapEntry *) b)->degree;
 }
 
 /*!
@@ -266,52 +266,9 @@ static struct LinkedList *Graph_list_cliques(struct Graph *this) {
     memcpy(sorted_map, degree_map, vertex_count * sizeof(struct MapEntry *));
     qsort(sorted_map, vertex_count, sizeof(struct MapEntry), &MapEntry_compare);
 
-    struct Graph *copy = Graph_copy(this);
     struct LinkedList *result = LinkedList_new();
 
-    struct BitVector *a = BitVector_new(),
-                     *b = BitVector_new();
 
-    for(int i = 0; i < vertex_count; i++) {
-        const struct MapEntry *entry = sorted_map[i];
-        const int v = entry->vertex;
-        while(entry->degree) {
-            Graph_neighbours(copy, a, v);
-
-            for(int j = 0; j < vertex_count; j++)
-                if(BitVector_test(a, j)) {
-                    Graph_neighbours(copy, b, j);
-                    BitVector_and(a, b);
-                }
-
-            int count = 0;
-            for(int j = 0; j < vertex_count; j++)
-                if(BitVector_test(a, j))
-                    count++;
-
-            struct Clique *clique = Clique_new(count);
-            for(int j = 0, k = 0; j < vertex_count; j++)
-                if(BitVector_test(a, j)) {
-                    BitVector_clear(
-                        copy->adj_matrix,
-                        EDGE_INDEX(v, j)
-                    );
-
-                    degree_map[v]->degree--;
-                    degree_map[j]->degree--;
-
-                    clique->vertices[k++] = j;
-                }
-
-            LinkedList_add(result, clique);
-            BitVector_zero(a);
-        }
-    }
-
-    BitVector_delete(b);
-    BitVector_delete(a);
-
-    Graph_delete(copy);
 
     for(int i = 0; i < vertex_count; i++)
         MapEntry_delete(sorted_map[i]);

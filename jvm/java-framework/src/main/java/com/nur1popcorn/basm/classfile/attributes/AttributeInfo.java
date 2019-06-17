@@ -24,8 +24,9 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 /**
- * The {@link AttributeInfo} is an abstract class containing information about the
- * attribute and ways to read them.
+ * The {@link AttributeInfo} are used in the ClassFile, field_info, method_info and Code_attribute
+ * structures of the class file format. They can provide all sorts of general data about the class
+ * file.
  * <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7">
  *     Attributes 4.7
  * </a>
@@ -36,34 +37,62 @@ import java.io.IOException;
  * @since 1.0.0-alpha
  */
 public abstract class AttributeInfo {
-    private final int nameIndex /* u2 */,
-                      attributeLength /* u4 */;
+    private int nameIndex /* u2 */,
+                attributeLength /* u4 */;
 
     /**
-     * @param nameIndex
-     * @param attributeLength
+     * @param nameIndex The index of the CONSTANT_UTF8 which identifies the type of {@link AttributeInfo}.
+     * @param attributeLength The {@link AttributeInfo}'s length in bytes.
      */
     public AttributeInfo(int nameIndex, int attributeLength) {
         this.nameIndex = nameIndex;
         this.attributeLength = attributeLength;
     }
 
+    /**
+     * Writes the {@link AttributeInfo} to the given {@link DataOutputStream}.
+     *
+     * @param os The {@link DataOutputStream} which the {@link AttributeInfo} should be written to.
+     * @param cp The {@link ConstantPool} may be used by certain attributes.
+     */
     public void write(DataOutputStream os, ConstantPool cp) throws IOException {
         os.writeShort(nameIndex);
         os.writeInt(attributeLength);
     }
 
     /**
-     * @return
+     * Accepts a {@link IAttributeVisitor}, calls the for the {@link AttributeInfo} appropriate 'visitXXX()'
+     * methods to notify the visitor of what type of {@link AttributeInfo} is being entered.
+     *
+     * @param v The {@link IAttributeVisitor} whom's callbacks will be invoked.
+     */
+    public abstract void accept(IAttributeVisitor v);
+
+    /**
+     * @return The index of the CONSTANT_UTF8 which identifies the type of {@link AttributeInfo}.
      */
     public int getNameIndex() {
         return nameIndex;
     }
 
     /**
-     * @return
+     * @param nameIndex The index of the CONSTANT_UTF8 which identifies the type of {@link AttributeInfo}.
+     */
+    public void setNameIndex(int nameIndex) {
+        this.nameIndex = nameIndex;
+    }
+
+    /**
+     * @return The {@link AttributeInfo}'s length in bytes.
      */
     public int getAttributeLength() {
         return attributeLength;
+    }
+
+    /**
+     * @param attributeLength The {@link AttributeInfo}'s length in bytes.
+     */
+    public void setAttributeLength(int attributeLength) {
+        this.attributeLength = attributeLength;
     }
 }
