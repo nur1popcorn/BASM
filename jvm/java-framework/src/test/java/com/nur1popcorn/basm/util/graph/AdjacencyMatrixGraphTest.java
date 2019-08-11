@@ -16,7 +16,28 @@
  *
  */
 
-package com.nur1popcorn.basm.utils;
+package com.nur1popcorn.basm.util.graph;
 
-public final class ProxyFactory {
+import com.nur1popcorn.basm.utils.graph.AdjacencyMatrixGraph;
+import com.nur1popcorn.basm.utils.graph.SimpleEdge;
+import com.nur1popcorn.basm.utils.graph.SimpleGraph;
+import org.junit.Test;
+
+public final class AdjacencyMatrixGraphTest extends SimpleGraphTest<Integer, SimpleEdge<Integer>> {
+    private int current;
+
+    @Override
+    protected SimpleGraph<Integer, SimpleEdge<Integer>> createGraph() {
+        return new AdjacencyMatrixGraph<>();
+    }
+
+    @Override
+    protected Integer createVertex() {
+        return current++;
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testAdd() {
+        graph.hasEdge(null, null);
+    }
 }

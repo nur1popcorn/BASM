@@ -29,7 +29,6 @@ import java.util.Objects;
  * The {@link AttributeCode} class stores the instructions of a method along with some other useful
  * information about it. The Code attributes also stores the exception table along with the maximal
  * stack and local variable size.
- *
  * <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.3">
  *     4.7.3. The Code Attribute
  * </a>
@@ -82,6 +81,8 @@ public final class AttributeCode extends AttributeInfo {
     @Override
     public void accept(IAttributeVisitor v) {
         v.visit(this);
+        for(AttributeInfo info : attributes)
+            info.accept(v);
     }
 
     /**
@@ -92,7 +93,10 @@ public final class AttributeCode extends AttributeInfo {
         int length = 0;
         for(AttributeInfo info : attributes)
             length += info.getAttributeLength();
-        return 2 /* max_stack */ +
+        return 2 /* attribute_name_index */ +
+               4 /* attribute_length */ +
+
+               2 /* max_stack */ +
                2 /* max_locals */ +
 
                4 /* code_length */ +

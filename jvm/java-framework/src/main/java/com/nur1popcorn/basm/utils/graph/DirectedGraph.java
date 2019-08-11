@@ -16,7 +16,18 @@
  *
  */
 
-package com.nur1popcorn.basm.utils;
+package com.nur1popcorn.basm.utils.graph;
 
-public final class ProxyFactory {
+import java.util.Collection;
+
+public interface DirectedGraph<V, E extends SimpleEdge<V>> extends SimpleGraph<V, E> {
+    /**
+     *
+     */
+    Collection<E> getOutEdges(V v);
+
+    /**
+     *
+     */
+    Collection<E> getInEdges(V v);
 }

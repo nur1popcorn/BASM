@@ -16,7 +16,19 @@
  *
  */
 
-package com.nur1popcorn.basm.utils;
+package com.nur1popcorn.basm.utils.graph;
 
-public final class ProxyFactory {
+/**
+ * @param <V> The type vertices which the edge will connect.
+ */
+public interface SimpleEdge<V> {
+    /**
+     * @return The starting vertex.
+     */
+    V getFrom();
+
+    /**
+     * @return The target vertex.
+     */
+    V getTo();
 }

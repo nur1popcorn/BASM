@@ -18,5 +18,6 @@
 
 package com.nur1popcorn.basm.utils;
 
-public final class ProxyFactory {
+public abstract class EditDistanceDecorator<T> implements EditDistanceStrategy<T> {
+    // private <T>
 }

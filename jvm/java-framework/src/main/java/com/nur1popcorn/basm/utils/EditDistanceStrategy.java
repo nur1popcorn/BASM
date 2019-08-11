@@ -18,5 +18,15 @@
 
 package com.nur1popcorn.basm.utils;
 
-public final class ProxyFactory {
+/**
+ * @param <T>
+ */
+public interface EditDistanceStrategy<T> {
+    /**
+     * @param a
+     * @param b
+     *
+     * @return
+     */
+    int distance(T a, T b);
 }

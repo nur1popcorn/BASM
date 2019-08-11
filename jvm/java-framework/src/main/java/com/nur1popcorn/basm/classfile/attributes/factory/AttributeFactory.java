@@ -28,6 +28,10 @@ import java.util.Map;
 
 import static com.nur1popcorn.basm.Constants.CONSTANT_UTF8;
 
+/**
+ * The {@link AttributeFactory} class, not to be confused with the IAttributeInfoFactory interface, is
+ * responsible for bootstrapping the reading process of all {@link AttributeInfo}s.
+ */
 public final class AttributeFactory {
     private static final UnknownFactory UNKNOWN_FACTORY = new UnknownFactory();
 
@@ -35,7 +39,9 @@ public final class AttributeFactory {
         /* https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.2 */
         "ConstantValue", new ConstantValueFactory(),
         /* https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.3 */
-        "Code", new CodeFactory()
+        "Code", new CodeFactory(),
+        /* https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.12 */
+        "LineNumberTable", new LineNumberTableFactory()
     );
 
     /**
@@ -44,7 +50,7 @@ public final class AttributeFactory {
      * @param cp the {@link ConstantPool} is used to index the attribute's identifier
      *           and may or may not be used to construct certain attributes.
      *
-     * @throws IOException
+     * @throws IOException if an error occurs while reading any of the attributes.
      */
     public static AttributeInfo[] read(DataInputStream in, ConstantPool cp) throws IOException {
         final AttributeInfo attributes[] = new AttributeInfo[in.readUnsignedShort()];

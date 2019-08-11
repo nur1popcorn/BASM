@@ -218,7 +218,7 @@ public class ConstantPool implements Iterable<ConstantInfo> {
 
     @Override
     public final Iterator<ConstantInfo> iterator() {
-        return new Iterator<ConstantInfo>() {
+        return new Iterator<>() {
             private int cursor = 1;
 
             @Override

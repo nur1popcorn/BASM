@@ -27,15 +27,13 @@
 struct Graph *Graph_new(int vertex_count) {
     struct Graph *this = malloc_or_die(sizeof(struct Graph));
     this->vertex_count = vertex_count;
-    /* This minimal form of the adj matrix can be derived as follows:
+    /* The size of the adj matrix can be computed by summing the number of required bits per row.
      * m_{adj} = \begin{bmatrix}
      *               x & x & x & x \\
      *               a & x & x & x \\
      *               b & d & x & x \\
      *               c & e & f & x
 	 *           \end{bmatrix}
-     *
-     * The size of the adj matrix can be computed by summing the number of required bits per row.
      * 0 + 1 + 2 + ... (n-1) = \sum_{k=1}^{n-1} k = ((0 + (v - 1)) * v) / 2 = ((v - 1) * v) / 2
      */
     this->adj_matrix = BitVector_new();

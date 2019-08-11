@@ -18,5 +18,32 @@
 
 package com.nur1popcorn.basm.utils;
 
-public final class ProxyFactory {
+import java.util.Map;
+import java.util.TreeMap;
+
+public final class BKTree<T> {
+    private Node<T> root;
+    private final EditDistanceStrategy<? super T> strategy;
+
+    public BKTree(EditDistanceStrategy<? super T> strategy) {
+        this.strategy = strategy;
+    }
+
+    public void add(T element) {
+
+    }
+
+    public EditDistanceStrategy<? super T> getStrategy() {
+        return strategy;
+    }
+
+    private static final class Node<T> {
+        private final T value;
+        private final Map<Integer, Node<T>> children = new TreeMap<>();
+
+        public Node(T value) {
+            this.value = value;
+        }
+    }
 }
+

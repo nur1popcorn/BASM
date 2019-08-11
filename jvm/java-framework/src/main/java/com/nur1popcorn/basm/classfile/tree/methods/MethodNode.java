@@ -26,7 +26,7 @@ import com.nur1popcorn.basm.classfile.tree.IFieldMethodNodeVisitor;
 import java.io.IOException;
 
 public final class MethodNode extends FieldMethodNode {
-    private final InstructionList instructionList;
+    //private final InstructionList instructionList;
 
     /**
      * @param access
@@ -36,7 +36,7 @@ public final class MethodNode extends FieldMethodNode {
      */
     public MethodNode(int access, int nameIndex, int descIndex, ConstantPool constantPool) {
         super(access, nameIndex, descIndex, constantPool);
-        instructionList = null;//new InstructionList();
+        //instructionList = null;//new InstructionList();
     }
 
     /**
@@ -46,13 +46,13 @@ public final class MethodNode extends FieldMethodNode {
     public MethodNode(FieldMethodInfo info, ConstantPool constantPool) throws IOException {
         super(info, constantPool);
         //TODO: remove this
-        if (info.getCode() != null)
-            instructionList = new InstructionList(
-                info.getCode().getByteCode(),
-                constantPool
-            );
-        else
-            instructionList = new InstructionList();
+        //if (info.getCode() != null)
+            //instructionList = new InstructionList(
+            //    info.getCode().getByteCode(),
+            //    constantPool
+            //);
+        //else
+        //    instructionList = new InstructionList();
     }
 
     /**
@@ -66,6 +66,7 @@ public final class MethodNode extends FieldMethodNode {
 
     public InstructionList getInstructionList() {
         // TODO: remove
-        return instructionList;
+        //return instructionList;
+        return null;
     }
 }

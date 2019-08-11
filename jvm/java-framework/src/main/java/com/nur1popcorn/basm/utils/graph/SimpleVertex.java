@@ -16,7 +16,35 @@
  *
  */
 
-package com.nur1popcorn.basm.utils;
+package com.nur1popcorn.basm.utils.graph;
 
-public final class ProxyFactory {
+public final class SimpleVertex {
+    private final int label;
+
+    public SimpleVertex(int label) {
+       this.label = label;
+    }
+
+    public int getLabel() {
+        return label;
+    }
+
+    @Override
+    public String toString() {
+        return "[" + label + "]";
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if(other instanceof SimpleVertex) {
+            final SimpleVertex vertex = (SimpleVertex) other;
+            return vertex.label == label;
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return label;
+    }
 }

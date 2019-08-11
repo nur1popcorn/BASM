@@ -1,12 +1,13 @@
 package com.nur1popcorn.basm.util;
 
 import com.nur1popcorn.basm.utils.WeakHashSet;
-import junit.framework.TestCase;
 import org.junit.Test;
 
 import java.lang.ref.WeakReference;
 
-public final class TestWeakHashSet extends TestCase {
+import static org.junit.Assert.*;
+
+public final class TestWeakHashSet {
     @Test
     public void testAdd() {
         final WeakHashSet<Object> set = new WeakHashSet<>();
@@ -24,7 +25,7 @@ public final class TestWeakHashSet extends TestCase {
     }
 
     @Test
-    public void testGC() {
+    public void testGC() throws InterruptedException {
         final WeakHashSet<Object> set = new WeakHashSet<>();
         Object object = new Object();
         set.add(object);
@@ -35,6 +36,8 @@ public final class TestWeakHashSet extends TestCase {
             System.gc();
             System.runFinalization();
         }
+        Thread.yield();
+        Thread.sleep(250);
         assertTrue(set.isEmpty());
     }
 
