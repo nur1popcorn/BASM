@@ -18,16 +18,24 @@
 
 package com.nur1popcorn.basm.classfile.attributes;
 
+import com.nur1popcorn.basm.classfile.ConstantPool;
+
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 /**
+ * The {@link AttributeUnknown} is responsible for handling attributes which are not implemented / supported.
  *
+ * @author nur1popcorn
+ * @since 1.1.0-alpha
  */
 public final class AttributeUnknown extends AttributeInfo {
-    private final byte info[];
+    private byte info[];
 
     /**
-     * @param nameIndex
-     * @param attributeLength
-     * @param info
+     * @param nameIndex The index of the CONSTANT_UTF8 which identifies the type of {@link AttributeInfo}.
+     * @param attributeLength The {@link AttributeInfo}'s length in bytes.
+     * @param info The bytes which make up the unknown attribute.
      */
     public AttributeUnknown(int nameIndex, int attributeLength, byte info[]) {
         super(nameIndex, attributeLength);
@@ -35,8 +43,24 @@ public final class AttributeUnknown extends AttributeInfo {
     }
 
     @Override
-    public void accept(IAttributeVisitor visitor) {
+    public void accept(IAttributeVisitor v) {
+        v.visit(this);
+    }
 
+    @Override
+    public void write(DataOutputStream os, ConstantPool cp) throws IOException {
+        super.write(os, cp);
+        os.write(info);
+    }
+
+    /**
+     * @param info The bytes which describe this {@link AttributeInfo}.
+     */
+    public void setInfo(byte info[]) {
+        this.info = info;
+        setAttributeLength(2 /* attribute_name_index */ +
+                           4 /* attribute_length */ +
+                           info.length);
     }
 
     /**

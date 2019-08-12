@@ -25,6 +25,12 @@ import com.nur1popcorn.basm.classfile.attributes.ExceptionTableEntry;
 import java.io.DataInputStream;
 import java.io.IOException;
 
+/**
+ * The {@link CodeFactory} is responsible for reading {@link AttributeCode}s.
+ *
+ * @author nur1popcorn
+ * @since 1.1.0-alpha
+ */
 final class CodeFactory implements IAttributeInfoFactory<AttributeCode> {
     @Override
     public AttributeCode createAttribute(DataInputStream in, int nameIndex, int attributeLength, ConstantPool cp) throws IOException {

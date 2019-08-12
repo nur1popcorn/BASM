@@ -18,12 +18,18 @@
 
 package com.nur1popcorn.basm.classfile.attributes;
 
+import java.util.Arrays;
+import java.util.Comparator;
+
 /**
  * The {@link AttributeLineNumberTable} is an optional attribute which may be used by debuggers,
  * decompilers, etc. to figure out which instruction corresponds with which linenumber.
  * <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.12">
  *     4.7.12. The LineNumberTable Attribute
  * </a>
+ *
+ * @author nur1popcorn
+ * @since 1.1.0-alpha
  */
 public final class AttributeLineNumberTable extends AttributeInfo {
     private LineNumberTableEntry table[];
@@ -36,6 +42,20 @@ public final class AttributeLineNumberTable extends AttributeInfo {
     public AttributeLineNumberTable(int nameIndex, int attributeLength, LineNumberTableEntry table[]) {
         super(nameIndex, attributeLength);
         this.table = table;
+        if(!isTableSorted(table))
+            Arrays.sort(table, Comparator.comparingInt(
+                LineNumberTableEntry::getStartPc));
+    }
+
+    /**
+     * @param table The table which should be checked.
+     * @return True if the table is sorted.
+     */
+    private static boolean isTableSorted(LineNumberTableEntry table[]) {
+        for(int i = 0; i < table.length - 1; i++)
+            if(table[i].getStartPc() > table[i + 1].getStartPc())
+                return false;
+        return true;
     }
 
     @Override
@@ -68,5 +88,49 @@ public final class AttributeLineNumberTable extends AttributeInfo {
     public void setTable(LineNumberTableEntry[] table) {
         this.table = table;
         setAttributeLength(calculateLength());
+
+        if(!isTableSorted(table))
+            Arrays.sort(table, Comparator.comparingInt(
+                LineNumberTableEntry::getStartPc));
+    }
+
+    /**
+     * Find the line number which corresponds with the byte code index.
+     *
+     * @param index The index of the instruction.
+     * @return The line number which corresponds with that instruction.
+     */
+    public int getLineNumber(int index) {
+        int low = 0;
+        int high = table.length - 1;
+        while(low <= high) {
+            final int mid = (low + high) >>> 1;
+
+            final int pc = table[mid]
+                .getStartPc();
+
+            if(index < pc)
+                high = mid - 1;
+            else if(index > pc)
+                low = mid + 1;
+            else
+                return table[mid]
+                    .getLineNumber();
+        }
+
+        return table[(low + high) >>> 1]
+            .getLineNumber();
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        return this == other ||
+            (other instanceof AttributeLineNumberTable &&
+             Arrays.equals(table, ((AttributeLineNumberTable) other).table));
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode(table);
     }
 }

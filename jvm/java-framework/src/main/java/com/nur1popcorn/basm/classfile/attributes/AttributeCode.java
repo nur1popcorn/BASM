@@ -32,6 +32,9 @@ import java.util.Objects;
  * <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.3">
  *     4.7.3. The Code Attribute
  * </a>
+ *
+ * @author nur1popcorn
+ * @since 1.1.0-alpha
  */
 public final class AttributeCode extends AttributeInfo {
     private int maxStack /* u2 */,

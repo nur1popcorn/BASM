@@ -23,12 +23,19 @@ import com.nur1popcorn.basm.classfile.constants.ConstantInfo;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.Objects;
 
 /**
+ * The {@link AttributeConstantValue} is used to initialize static fields with some value.
+ * <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.2">
+ *     4.7.2. The ConstantValue Attribute
+ * </a>
  *
+ * @author nur1popcorn
+ * @since 1.1.0-alpha
  */
 public final class AttributeConstantValue extends AttributeInfo {
-    private final int constantValueIndex /* u2 */;
+    private int constantValueIndex /* u2 */;
 
     /**
      * @param nameIndex The index of the CONSTANT_UTF8 which identifies the type of {@link AttributeInfo}.
@@ -52,6 +59,13 @@ public final class AttributeConstantValue extends AttributeInfo {
     }
 
     /**
+     * @param constantValueIndex The new index of the constant value.
+     */
+    public void setConstantValueIndex(int constantValueIndex) {
+        this.constantValueIndex = constantValueIndex;
+    }
+
+    /**
      * @return The index of the constant value in the constant pool.
      */
     public int getConstantValueIndex() {
@@ -69,5 +83,17 @@ public final class AttributeConstantValue extends AttributeInfo {
      */
     public ConstantInfo indexConstantValue(ConstantPool constantPool) {
         return constantPool.getEntry(constantValueIndex);
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        return this == other ||
+            (other instanceof AttributeConstantValue &&
+             constantValueIndex == ((AttributeConstantValue) other).constantValueIndex);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(constantValueIndex);
     }
 }

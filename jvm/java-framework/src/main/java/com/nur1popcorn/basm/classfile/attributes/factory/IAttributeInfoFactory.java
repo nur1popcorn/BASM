@@ -25,16 +25,19 @@ import java.io.DataInputStream;
 import java.io.IOException;
 
 /**
- * The {@link AttributeInfo} interface
+ * The {@link IAttributeInfoFactory} is responsible for reading the various types of {@link AttributeInfo}s.
+ *
+ * @author nur1popcorn
+ * @since 1.1.0-alpha
  */
 public interface IAttributeInfoFactory<T extends AttributeInfo> {
     /**
-     * @param in
-     * @param nameIndex
-     * @param attributeLength
-     * @param cp
+     * @param in The {@link DataInputStream} from which the {@link AttributeInfo} should be read.
+     * @param nameIndex The index which was used to identify the {@link AttributeInfo}
+     * @param attributeLength The length of the {@link AttributeInfo} in bytes.
+     * @param cp The {@link ConstantPool} associated with the class file.
      *
-     * @return
+     * @return The read {@link AttributeInfo}.
      */
     T createAttribute(DataInputStream in, int nameIndex, int attributeLength, ConstantPool cp) throws IOException;
 }

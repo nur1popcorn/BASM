@@ -27,6 +27,9 @@ import java.io.IOException;
 
 /**
  * The {@link LineNumberTableFactory} is responsible for reading {@link AttributeLineNumberTable}s.
+ *
+ * @author nur1popcorn
+ * @since 1.1.0-alpha
  */
 final class LineNumberTableFactory implements IAttributeInfoFactory<AttributeLineNumberTable> {
     @Override

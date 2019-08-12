@@ -7,6 +7,8 @@ import com.nur1popcorn.basm.utils.graph.SimpleGraph;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Random;
+
 import static org.junit.Assert.assertEquals;
 
 public final class ApproximateEditDistanceTest {

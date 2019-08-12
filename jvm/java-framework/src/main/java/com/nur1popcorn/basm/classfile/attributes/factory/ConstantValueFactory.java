@@ -24,6 +24,12 @@ import com.nur1popcorn.basm.classfile.attributes.AttributeConstantValue;
 import java.io.DataInputStream;
 import java.io.IOException;
 
+/**
+ * The {@link ConstantValueFactory} is responsible for reading {@link AttributeConstantValue}s.
+ *
+ * @author nur1popcorn
+ * @since 1.1.0-alpha
+ */
 final class ConstantValueFactory implements IAttributeInfoFactory<AttributeConstantValue> {
     @Override
     public AttributeConstantValue createAttribute(DataInputStream in, int nameIndex, int attributeLength, ConstantPool cp) throws IOException {

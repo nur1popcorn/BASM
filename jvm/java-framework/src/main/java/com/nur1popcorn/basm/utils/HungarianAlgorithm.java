@@ -23,7 +23,8 @@ import java.util.BitSet;
 import java.util.LinkedList;
 
 /**
- * An implementation of the hungarian algorithm based on these descriptions of the algorithm:
+ * The {@link HungarianAlgorithm} class houses an implementation of the hungarian algorithm based on
+ * these descriptions of the algorithm:
  * <a href="https://en.wikipedia.org/wiki/Hungarian_algorithm"> Hungarian algorithm </a>
  * <a href="http://www.netlib.org/utk/lsi/pcwLSI/text/node222.html"> 9.8.2 The Sequential Algorithm </a>
  * <a href="http://math.harvard.edu/archive/20_spring_05/handouts/assignment_overheads.pdf"> The Assignment Problem and the Hungarian Method </a>
