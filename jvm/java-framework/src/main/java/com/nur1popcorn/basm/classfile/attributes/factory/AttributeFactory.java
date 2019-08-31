@@ -31,6 +31,9 @@ import static com.nur1popcorn.basm.Constants.CONSTANT_UTF8;
 /**
  * The {@link AttributeFactory} class, not to be confused with the IAttributeInfoFactory interface, is
  * responsible for bootstrapping the reading process of all {@link AttributeInfo}s.
+ *
+ * @author nur1popcorn
+ * @since 1.1.0-alpha
  */
 public final class AttributeFactory {
     private static final UnknownFactory UNKNOWN_FACTORY = new UnknownFactory();
@@ -40,8 +43,12 @@ public final class AttributeFactory {
         "ConstantValue", new ConstantValueFactory(),
         /* https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.3 */
         "Code", new CodeFactory(),
+        /* https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.10 */
+        "SourceFile", new SourceFileFactory(),
         /* https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.12 */
-        "LineNumberTable", new LineNumberTableFactory()
+        "LineNumberTable", new LineNumberTableFactory(),
+        /* https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.15 */
+        "Deprecated", new DeprecatedFactory()
     );
 
     /**

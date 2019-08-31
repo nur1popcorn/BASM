@@ -18,8 +18,13 @@
 
 package com.nur1popcorn.basm.utils;
 
+import com.nur1popcorn.basm.classfile.Opcode;
+
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
+import java.io.IOException;
+
+import static com.nur1popcorn.basm.classfile.Opcode.IINC;
 
 public final class ByteDataInputStream extends DataInputStream {
     private ByteArrayInputStreamDelegate in;
@@ -35,6 +40,33 @@ public final class ByteDataInputStream extends DataInputStream {
 
     public int position() {
         return in.position();
+    }
+
+    public void skip(Opcode opcode) throws IOException {
+        switch(opcode) {
+            case TABLESWITCH: {
+                // skip padding bytes and skip default index.
+                skipBytes(-position() & 0x3);
+                skipBytes(4);
+                final int low = readInt();
+                final int high = readInt();
+                skipBytes((high - low + 1) << 2);
+            }   break;
+            case LOOKUPSWITCH:
+                // skip padding bytes and skip default index.
+                skipBytes(-position() & 0x3);
+                skipBytes(4);
+                skipBytes(readInt() << 3);
+                break;
+            case WIDE: {
+                skipBytes(
+                    readByte() == IINC.getOpcode() ?
+                        4 : 2);
+            }   break;
+            default:
+                skipBytes(opcode.getParameter());
+                break;
+        }
     }
 
     private static final class ByteArrayInputStreamDelegate extends ByteArrayInputStream {

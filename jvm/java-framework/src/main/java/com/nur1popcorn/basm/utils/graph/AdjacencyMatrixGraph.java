@@ -20,6 +20,12 @@ package com.nur1popcorn.basm.utils.graph;
 
 import java.util.*;
 
+/**
+ * The {@link AdjacencyMatrixGraph} class is an implementation of a simple graph which utilizes an adjacency matrix.
+ *
+ * @author nur1popcorn
+ * @since 1.1.0-alpha
+ */
 public final class AdjacencyMatrixGraph<V> implements SimpleGraph<V, SimpleEdge<V>> {
     private final Map<V, Integer> vertexMap = new HashMap<>();
     private final List<V> indexMap = new ArrayList<>();

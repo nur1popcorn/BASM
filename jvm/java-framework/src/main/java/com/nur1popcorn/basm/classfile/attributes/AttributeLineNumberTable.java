@@ -18,6 +18,10 @@
 
 package com.nur1popcorn.basm.classfile.attributes;
 
+import com.nur1popcorn.basm.classfile.ConstantPool;
+
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Comparator;
 
@@ -42,25 +46,21 @@ public final class AttributeLineNumberTable extends AttributeInfo {
     public AttributeLineNumberTable(int nameIndex, int attributeLength, LineNumberTableEntry table[]) {
         super(nameIndex, attributeLength);
         this.table = table;
-        if(!isTableSorted(table))
-            Arrays.sort(table, Comparator.comparingInt(
-                LineNumberTableEntry::getStartPc));
-    }
-
-    /**
-     * @param table The table which should be checked.
-     * @return True if the table is sorted.
-     */
-    private static boolean isTableSorted(LineNumberTableEntry table[]) {
-        for(int i = 0; i < table.length - 1; i++)
-            if(table[i].getStartPc() > table[i + 1].getStartPc())
-                return false;
-        return true;
+        Arrays.sort(table, Comparator.comparingInt(
+            LineNumberTableEntry::getStartPc));
     }
 
     @Override
     public void accept(IAttributeVisitor v) {
         v.visit(this);
+    }
+
+    @Override
+    public void write(DataOutputStream os, ConstantPool cp) throws IOException {
+        super.write(os, cp);
+        os.writeShort(table.length);
+        for(LineNumberTableEntry entry : table)
+            entry.write(os);
     }
 
     /**
@@ -88,10 +88,8 @@ public final class AttributeLineNumberTable extends AttributeInfo {
     public void setTable(LineNumberTableEntry[] table) {
         this.table = table;
         setAttributeLength(calculateLength());
-
-        if(!isTableSorted(table))
-            Arrays.sort(table, Comparator.comparingInt(
-                LineNumberTableEntry::getStartPc));
+        Arrays.sort(table, Comparator.comparingInt(
+            LineNumberTableEntry::getStartPc));
     }
 
     /**

@@ -18,17 +18,39 @@
 
 package com.nur1popcorn.basm.classfile.attributes;
 
-public final class AttributeLocalVariableTypeTable extends AttributeInfo {
+import com.nur1popcorn.basm.classfile.ConstantPool;
+
+import java.io.DataOutputStream;
+import java.io.IOException;
+
+public final class AttributeDeprecated extends AttributeInfo {
+    private final byte info[];
+
     /**
      * @param nameIndex The index of the CONSTANT_UTF8 which identifies the type of {@link AttributeInfo}.
      * @param attributeLength The {@link AttributeInfo}'s length in bytes.
+     * @param info The bytes which make up the deprecated attribute.
      */
-    public AttributeLocalVariableTypeTable(int nameIndex, int attributeLength) {
+    public AttributeDeprecated(int nameIndex, int attributeLength, byte info[]) {
         super(nameIndex, attributeLength);
+        this.info = info;
     }
 
     @Override
     public void accept(IAttributeVisitor v) {
+        v.visit(this);
+    }
 
+    @Override
+    public void write(DataOutputStream os, ConstantPool cp) throws IOException {
+        super.write(os, cp);
+        os.write(info);
+    }
+
+    /**
+     * @return The bytes which make up the {@link AttributeDeprecated}.
+     */
+    public byte[] getInfo() {
+        return info;
     }
 }

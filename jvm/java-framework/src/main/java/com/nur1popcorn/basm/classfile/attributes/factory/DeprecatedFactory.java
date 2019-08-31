@@ -16,14 +16,19 @@
  *
  */
 
-package com.nur1popcorn.basm.classfile.attributes;
+package com.nur1popcorn.basm.classfile.attributes.factory;
 
-public interface IAttributeVisitor {
-    default void visit(AttributeUnknown attribute) {}
+import com.nur1popcorn.basm.classfile.ConstantPool;
+import com.nur1popcorn.basm.classfile.attributes.AttributeDeprecated;
 
-    default void visit(AttributeConstantValue attribute) { }
-    default void visit(AttributeCode attribute) { }
-    default void visit(AttributeSourceFile attribute) {}
-    default void visit(AttributeLineNumberTable attribute) { }
-    default void visit(AttributeDeprecated attribute) {}
+import java.io.DataInputStream;
+import java.io.IOException;
+
+public final class DeprecatedFactory implements IAttributeInfoFactory<AttributeDeprecated> {
+    @Override
+    public AttributeDeprecated createAttribute(DataInputStream in, int nameIndex, int attributeLength, ConstantPool cp) throws IOException {
+        final byte info[] = new byte[attributeLength];
+        in.readFully(info);
+        return new AttributeDeprecated(nameIndex, attributeLength, info);
+    }
 }

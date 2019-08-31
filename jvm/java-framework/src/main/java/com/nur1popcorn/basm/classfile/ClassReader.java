@@ -202,7 +202,7 @@ public final class ClassReader {
        -1,
         4, // CONSTANT_Invokedynamic
     };
-    
+
     private DataInputStream in;
 
     private int minorVersion,
@@ -418,7 +418,7 @@ public final class ClassReader {
      * - b.k.
      *
      * @param visitor the visitor for whom the class is partially or fully read.
-     * @param read the flags used to determine what parts of the class should be read.
+     * @param read the flags which determine what parts of the class should be read.
      *
      * @throws IOException if an error occurs during the process of reading from the {@link DataInputStream}.
      *
