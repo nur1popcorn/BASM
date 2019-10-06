@@ -49,8 +49,7 @@ public final class DirectedAdjacencyMatrixGraph<V> extends AdjacencyMatrixGraph<
             matrix.set(edgeIndex(j, vi), matrix.get(edgeIndex(j, size - 1)));
 
         // set loop.
-        matrix.set(edgeIndex(vi, vi),
-                   edgeIndex(size - 1, size - 1));
+        matrix.set(edgeIndex(vi, vi), matrix.get(edgeIndex(size - 1, size - 1)));
 
         matrix.clear(edgeIndex(size - 1, 0),
                      edgeIndex(size - 1, size - 1));
