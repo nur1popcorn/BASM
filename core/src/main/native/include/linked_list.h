@@ -21,8 +21,6 @@
 
 #include <stdbool.h>
 
-#include "iterator.h"
-
 /*!
  * \brief
  */

@@ -22,12 +22,15 @@ import java.util.Iterator;
 import java.util.Set;
 
 /**
- * The {@link SimpleGraph}
+ * The {@link SimpleGraph} has no sense of edge direction and can also not deal with self loops.
  *
  * @param <V> The type of vertex.
  * @param <E> The type of edge.
+ *
+ * @author nur1popcorn
+ * @since 1.1.0-alpha
  */
-public interface SimpleGraph<V, E extends SimpleEdge<V>> extends Iterable<V> {
+public interface SimpleGraph<V, E> extends Iterable<V> {
     /**
      * Adds a vertex to the graph.
      * @param v The vertex which should be added.
@@ -35,17 +38,52 @@ public interface SimpleGraph<V, E extends SimpleEdge<V>> extends Iterable<V> {
     void addVertex(V v);
 
     /**
+     * Removes the vertex from the graph.
+     * @param v The vertex which should be removed.
+     */
+    void removeVertex(V v);
+
+    /**
+     * @param v The vertex which should be tested.
+     * @return True if the if the graph contains the given vertex.
+     */
+    boolean hasVertex(V v);
+
+    /**
      * Connects the two given vertices using an edge.
+     *
+     * @param v The start vertex.
+     * @param w The end vertex.
      */
     void addEdge(V v, V w);
 
     /**
-     * @throws IllegalArgumentException if the edge is a self loop, hence v equals w.
-     * @return True if the two given vertices are connected by an edge.
+     * Removes the given edge from the graph.
+     *
+     * @param v The start vertex.
+     * @param w The end vertex.
+     */
+    void removeEdge(V v, V w);
+
+    /**
+     * @param v The start vertex.
+     * @param w The end vertex.
+     *
+     * @return True if there exists an edge between the two nodes.
      */
     boolean hasEdge(V v, V w);
 
     /**
+     * @param v The start vertex.
+     * @param w The end vertex.
+     *
+     * @return The edge which connects the two vertices.
+     */
+    E getEdge(V v, V w);
+
+    /**
+     * <i>NOTE: In a directed graph this method returns the sum of in and out degree.</i>
+     *
      * @param v The vertex whose degree should be calculated.
      * @return The degree of a given vertex.
      */
@@ -57,6 +95,8 @@ public interface SimpleGraph<V, E extends SimpleEdge<V>> extends Iterable<V> {
     int size();
 
     /**
+     * <i>NOTE: In a directed graph this method returns the union of in and out neighbours.</i>
+     *
      * @param v The vertex whose neighbours should be listed.
      * @return All neighbours of the given vertex.
      */
@@ -68,15 +108,9 @@ public interface SimpleGraph<V, E extends SimpleEdge<V>> extends Iterable<V> {
     Set<V> getVertices();
 
     /**
-     * @return All edges of the graph.
+     * @return The number of edges in the graph.
      */
-    Set<E> getEdges();
-
-    /**
-     * @param v The vertex whose edges should be returned.
-     * @return All edges connected to a vertex.
-     */
-    Set<E> getEdges(V v);
+    int getEdgeCount();
 
     @Override
     default Iterator<V> iterator() {
@@ -113,6 +147,9 @@ public interface SimpleGraph<V, E extends SimpleEdge<V>> extends Iterable<V> {
             return parent.next();
         }
 
+        /**
+         * @return The number of vertices which have already been processed.
+         */
         public int count() {
             return count;
         }

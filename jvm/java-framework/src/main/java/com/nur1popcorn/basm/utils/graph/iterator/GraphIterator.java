@@ -16,19 +16,13 @@
  *
  */
 
-package com.nur1popcorn.basm.utils.graph;
+package com.nur1popcorn.basm.utils.graph.iterator;
 
-/**
- * @param <V> The type vertices which the edge will connect.
- */
-public interface SimpleEdge<V> {
-    /**
-     * @return The starting vertex.
-     */
-    V getFrom();
+import java.util.Iterator;
 
+public interface GraphIterator<V> extends Iterator<V> {
     /**
-     * @return The target vertex.
+     * @return The depth of the iterator.
      */
-    V getTo();
+    int getDepth();
 }

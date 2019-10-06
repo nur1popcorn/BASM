@@ -73,8 +73,7 @@ public final class ClassFile extends AccessFlags implements IClassVisitor, IClas
 
     @Override
     public void visitBody(int access, int thisClass, int superClass, int interfaces[]) {
-        this.access = access;
-
+        setAccessFlags(access);
         this.thisClass = ((ConstantName) constantPool.getEntry(thisClass))
             .indexName(constantPool)
             .bytes;
@@ -87,7 +86,7 @@ public final class ClassFile extends AccessFlags implements IClassVisitor, IClas
         this.interfaces = new ArrayList<>(interfaces.length);
         for(int index : interfaces)
             this.interfaces.add(
-                ((ConstantName)constantPool.getEntry(index))
+                ((ConstantName) constantPool.getEntry(index))
                     .indexName(constantPool)
                     .bytes
             );

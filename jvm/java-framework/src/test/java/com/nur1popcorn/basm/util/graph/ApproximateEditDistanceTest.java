@@ -1,24 +1,21 @@
 package com.nur1popcorn.basm.util.graph;
 
-import com.nur1popcorn.basm.utils.graph.AdjacencyMatrixGraph;
 import com.nur1popcorn.basm.utils.graph.ApproximateEditDistance;
-import com.nur1popcorn.basm.utils.graph.SimpleEdge;
 import com.nur1popcorn.basm.utils.graph.SimpleGraph;
+import com.nur1popcorn.basm.utils.graph.model.simple.SimpleAdjacencyMatrixGraph;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
 
 public final class ApproximateEditDistanceTest {
-    private final ApproximateEditDistance<Integer, SimpleEdge<Integer>> ged = new ApproximateEditDistance<>();
-    private SimpleGraph<Integer, SimpleEdge<Integer>> g1, g2;
+    private final ApproximateEditDistance<Integer, Boolean> ged = new ApproximateEditDistance<>();
+    private SimpleGraph<Integer, Boolean> g1, g2;
 
     @Before
     public void setup() {
-        g1 = new AdjacencyMatrixGraph<>();
-        g2 = new AdjacencyMatrixGraph<>();
+        g1 = new SimpleAdjacencyMatrixGraph<>();
+        g2 = new SimpleAdjacencyMatrixGraph<>();
     }
 
     @Test

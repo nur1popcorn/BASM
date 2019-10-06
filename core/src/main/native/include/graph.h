@@ -40,7 +40,7 @@ struct Graph {
      *                d & e & f & 0
 	 *            \end{bmatrix}
      *
-     * Since the graph is "simple graph" two parts can be discarded direction. Direction comes in the
+     * Since the graph is a "simple graph" two parts can be discarded direction. Direction comes in the
      * form of mirrored entries into the graph as seen above. These can simply be discarded as they are
      * not needed.
      *

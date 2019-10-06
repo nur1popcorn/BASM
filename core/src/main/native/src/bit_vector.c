@@ -36,7 +36,7 @@ void BitVector_delete(struct BitVector *this) {
 }
 
 int BitVector_length(struct BitVector *this) {
-    return this->size * sizeof(uint8_t);
+    return this->size * (int) sizeof(uint8_t);
 }
 
 #define REAL_SIZE(size) \

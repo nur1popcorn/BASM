@@ -194,27 +194,6 @@ public abstract class Instruction {
         0x00000000, 0x00000000, 0x00000000, 0x11000000,
     };
 
-    /* This constant denotes an instruction whose effect on the stack is uncertain.
-     */
-    public static final byte UNKNOWN_VALUE = (byte) 0xf8;
-
-    /* This table maps each opcode to their predicted effect on the stack size. The table is made
-     * up of 4 bit entries stored in 32 bit blocks. These 4 bit entries represent a number between
-     * -8 and 7 with the 4th bit denoting whether the number is signed. The number -8 is reserved
-     * and denotes opcodes whose effect on the stack are not predictable.
-     *
-     */
-    private static final int STACK_SIZE_MODIFIER_TABLE[] = {
-        0x11111110, 0x22111221, 0x12121111, 0x22111112,
-        0x22111122, 0x11111122, 0xef111111, 0xefffffef,
-        0xeffffeee, 0xeffffeee, 0xfeeeeded, 0x0222111e,
-        0xefefefef, 0xefefefef, 0x0000efef, 0xefefefef,
-        0x1010efef, 0x0f1100ff, 0xdffd000f, 0xeffffffd,
-        0x0eeeeeee, 0x8888ff01, 0x88888888, 0x80001888,
-        0xff88ff00, 0x88888010, 0x88888888, 0x88888888,
-        0x88888888, 0x88888888, 0x88888888, 0x00888888
-    };
-
     /*
      *
      */
@@ -258,19 +237,6 @@ public abstract class Instruction {
      */
     public static byte indexType(int opcode) {
         return (byte) ((INSTRUCTION_TYPE_TABLE[(opcode &= 0xff) / 8] >> ((opcode % 8) * 4)) & 0xf);
-    }
-
-    /**
-     *
-     *
-     * @return
-     */
-    public byte getStackModifier() {
-        final int opcode = this.opcode & 0xff;
-        byte value = (byte) ((STACK_SIZE_MODIFIER_TABLE[opcode / 8] >> ((opcode % 8) * 4)) & 0xf);
-        if((value & 0x8) != 0)
-            value |= 0xf0;
-        return value;
     }
 
     /**

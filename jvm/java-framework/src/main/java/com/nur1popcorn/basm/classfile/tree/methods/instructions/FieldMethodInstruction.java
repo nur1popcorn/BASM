@@ -49,7 +49,7 @@ public abstract class FieldMethodInstruction extends CPInstruction {
      *
      * @throws MalformedClassFileException
      */
-    @Override
+    /*@Override
     public byte getStackModifier() {
         byte result = 0;
         switch(opcode) {
@@ -79,5 +79,5 @@ public abstract class FieldMethodInstruction extends CPInstruction {
                 throw new MalformedClassFileException(
                     "The opcode provided is invalid: opcode=" + Integer.toHexString(opcode));
         }
-    }
+    }*/
 }

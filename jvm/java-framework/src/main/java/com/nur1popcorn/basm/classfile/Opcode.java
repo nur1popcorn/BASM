@@ -34,6 +34,7 @@ public enum Opcode {
      *                                  |  Op  |    Mnemonic    |  +Op  | -Stack | +Stack     *
      *                                  |      |                |       |        |            *
      *                             <----+------+----------------+-------+--------+-------->   */
+    INVALID                             (-0x1,  "invalid",       -0x1,   -0x1,   -0x1),
 
     /**
      * <b>Description</b>
@@ -52,8 +53,8 @@ public enum Opcode {
      *    for <q>no operation</q>.</p>
      * Puts a null reference on the stack.
      * <b>Type</b>
-     * <p>The <i>ICONST_&lt;i&gt;</i> instruction is part of the no parameter family, as the parameter is
-     *    embedded within the instruction itself.</p>
+     * <p>The <i>ICONST_&lt;i&gt;</i> instruction is part of the no parameter family, as the parameter
+     *    is embedded within the instruction itself.</p>
      * <b>Stack</b>
      * <table border="1">
      *     <tbody>
@@ -86,8 +87,8 @@ public enum Opcode {
      *    <i>bipush</i> instruction only differing in one regard that being the parameterlessness of
      *    the <i>ICONST_&lt;i&gt;</i> instructions.</p>
      * <b>Type</b>
-     * <p>The <i>ICONST_&lt;i&gt;</i> instruction is part of the no parameter family, as the parameter is
-     *    embedded within the instruction itself.</p>
+     * <p>The <i>ICONST_&lt;i&gt;</i> instruction is part of the no parameter family, as the parameter
+     *    is embedded within the instruction itself.</p>
      * <b>Stack</b>
      * <table border="1">
      *     <tbody>
@@ -121,11 +122,10 @@ public enum Opcode {
     /**
      * <b>Description</b>
      * <p>The <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.lconst_l"><i>LCONST_&lt;l&gt;</i></a>
-     *    instructions push their respective <i>&lt;l&gt;</i> &isin; { 0, 1 } value
-     *    onto the stack.</p>
+     *    instructions push their respective <i>&lt;l&gt;</i> &isin; { 0, 1 } value onto the stack.</p>
      * <b>Type</b>
-     * <p>The <i>LCONST_&lt;l&gt;</i> instruction is part of the no parameter family, as the parameter is
-     *    embedded within the instruction itself.</p>
+     * <p>The <i>LCONST_&lt;l&gt;</i> instruction is part of the no parameter family, as the parameter
+     *    is embedded within the instruction itself.</p>
      * <b>Stack</b>
      * <table border="1">
      *     <tbody>
@@ -154,11 +154,10 @@ public enum Opcode {
     /**
      * <b>Description</b>
      * <p>The <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.fconst_f"><i>FCONST_&lt;f&gt;</i></a>
-     *    instructions push their respective <i>&lt;f&gt;</i> &isin; { 0.0, 1.0, 2.0 } value
-     *    onto the stack.</p>
+     *    instructions push their respective <i>&lt;f&gt;</i> &isin; { 0.0, 1.0, 2.0 } value onto the stack.</p>
      * <b>Type</b>
-     * <p>The <i>FCONST_&lt;f&gt;</i> instruction is part of the no parameter family, as the parameter is
-     *    embedded within the instruction itself.</p>
+     * <p>The <i>FCONST_&lt;f&gt;</i> instruction is part of the no parameter family, as the parameter
+     *    is embedded within the instruction itself.</p>
      * <b>Stack</b>
      * <table border="1">
      *     <tbody>
@@ -188,11 +187,10 @@ public enum Opcode {
     /**
      * <b>Description</b>
      * <p>The <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.dconst_d"><i>DCONST_&lt;d&gt;</i></a>
-     *    instructions push their respective <i>&lt;d&gt;</i> &isin; { 0.0, 1.0 } value
-     *    onto the stack.</p>
+     *    instructions push their respective <i>&lt;d&gt;</i> &isin; { 0.0, 1.0 } value onto the stack.</p>
      * <b>Type</b>
-     * <p>The <i>DCONST_&lt;d&gt;</i> instruction is part of the no parameter family, as the parameter is
-     *    embedded within the instruction itself.</p>
+     * <p>The <i>DCONST_&lt;d&gt;</i> instruction is part of the no parameter family, as the parameter
+     *    is embedded within the instruction itself.</p>
      * <b>Stack</b>
      * <table border="1">
      *     <tbody>
@@ -382,11 +380,16 @@ public enum Opcode {
 
     /**
      * <b>Description</b>
-     * <p>The <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.iconst_i"><i>&lt;t&gt;LOAD</i></a>
-     *    instructions push the <i>&lt;i&gt;</i><sup>th</sup> local variable of type int, long, float, double or a reference
+     * <p>The <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.iload"><i>ILOAD</i></a>,
+     *        <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.lload"><i>LLOAD</i></a>,
+     *        <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.fload"><i>FLOAD</i></a>,
+     *        <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.dload"><i>DLOAD</i></a> and
+     *        <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.aload"><i>ALOAD</i></a>
+     *    instructions push the <i>&lt;i&gt;</i><sup>th</sup> local variable of type int, long, float, double or reference
      *    onto the stack. The parameter <i>&lt;i&gt;</i> is embedded within the instruction using a single byte.</p>
      * <b>Type</b>
-     * <p>The <i>&lt;t&gt;LOAD</i> instructions are part of the local variable instruction family.</p>
+     * <p>The <i>ILOAD</i>, <i>LLOAD</i>, <i>FLOAD</i>, <i>DLOAD</i> and <i>ALOAD</i> instructions are part
+     *    of the local variable instruction family.</p>
      * <b>Stack</b>
      * <table border="1">
      *     <tbody>
@@ -418,8 +421,8 @@ public enum Opcode {
     /**
      * <b>Description</b>
      * <p>The <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.iconst_i"><i>ILOAD&lt;i&gt;</i></a>
-     *    instructions push the <i>&lt;i&gt;</i> &isin; { 0, 1, 2, 3 } local variable of type int onto the stack.
-     *    The parameter <i>&lt;i&gt;</i> is embedded within the instruction using a single byte.</p>
+     *    instructions push the <i>&lt;i&gt;</i><sup>th</sup> &isin; { 0, 1, 2, 3 } local variable of type int
+     *    onto the stack.</p>
      * <b>Type</b>
      * <p>The <i>ILOAD&lt;i&gt;</i> instruction is part of the no parameter family, as the parameter is
      *    embedded within the instruction itself.</p>
@@ -449,6 +452,146 @@ public enum Opcode {
     ILOAD_1                             (0x1b, "iload_1",         0x0,    0x0,    0x1),
     ILOAD_2                             (0x1c, "iload_2",         0x0,    0x0,    0x1),
     ILOAD_3                             (0x1d, "iload_3",         0x0,    0x0,    0x1),
+
+    /**
+     * <b>Description</b>
+     * <p>The <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.lload_n"><i>LLOAD&lt;i&gt;</i></a>
+     *    instructions push the <i>&lt;i&gt;</i><sup>th</sup> &isin; { 0, 1, 2, 3 } local variable of type
+     *    long onto the stack. </p>
+     * <b>Type</b>
+     * <p>The <i>LLOAD&lt;i&gt;</i> instruction is part of the no parameter family, as the parameter is
+     *    embedded within the instruction itself.</p>
+     * <b>Stack</b>
+     * <table border="1">
+     *     <tbody>
+     *         <tr>
+     *             <td>
+     *                 <b>Before</b>
+     *             </td>
+     *             <td>
+     *                 <b>After</b>
+     *             </td>
+     *         </tr>
+     *         <tr>
+     *             <td>
+     *                 <p>...</p>
+     *             </td>
+     *             <td>
+     *                 <i>locals<sub>&lt;i&gt;</sub></i>
+     *             </td>
+     *         </tr>
+     *     </tbody>
+     * </table>
+     */
+    LLOAD_0                             (0x1e, "lload_0",         0x0,    0x0,    0x2),
+    LLOAD_1                             (0x1f, "lload_1",         0x0,    0x0,    0x2),
+    LLOAD_2                             (0x20, "lload_2",         0x0,    0x0,    0x2),
+    LLOAD_3                             (0x21, "lload_3",         0x0,    0x0,    0x2),
+
+    /**
+     * <b>Description</b>
+     * <p>The <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.fload_n"><i>FLOAD&lt;i&gt;</i></a>
+     *    instructions push the <i>&lt;i&gt;</i><sup>th</sup> &isin; { 0, 1, 2, 3 } local variable of type
+     *    float onto the stack.</p>
+     * <b>Type</b>
+     * <p>The <i>FLOAD&lt;i&gt;</i> instruction is part of the no parameter family, as the parameter is
+     *    embedded within the instruction itself.</p>
+     * <b>Stack</b>
+     * <table border="1">
+     *     <tbody>
+     *         <tr>
+     *             <td>
+     *                 <b>Before</b>
+     *             </td>
+     *             <td>
+     *                 <b>After</b>
+     *             </td>
+     *         </tr>
+     *         <tr>
+     *             <td>
+     *                 <p>...</p>
+     *             </td>
+     *             <td>
+     *                 <i>locals<sub>&lt;i&gt;</sub></i>
+     *             </td>
+     *         </tr>
+     *     </tbody>
+     * </table>
+     */
+    FLOAD_0                             (0x22, "fload_0",         0x0,    0x0,    0x1),
+    FLOAD_1                             (0x23, "fload_1",         0x0,    0x0,    0x1),
+    FLOAD_2                             (0x24, "fload_2",         0x0,    0x0,    0x1),
+    FLOAD_3                             (0x25, "fload_3",         0x0,    0x0,    0x1),
+
+    /**
+     * <b>Description</b>
+     * <p>The <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.fload_n"><i>DLOAD&lt;i&gt;</i></a>
+     *    instructions push the <i>&lt;i&gt;</i><sup>th</sup> &isin; { 0, 1, 2, 3 } local variable of type
+     *    double onto the stack.</p>
+     * <b>Type</b>
+     * <p>The <i>DLOAD&lt;i&gt;</i> instruction is part of the no parameter family, as the parameter is
+     *    embedded within the instruction itself.</p>
+     * <b>Stack</b>
+     * <table border="1">
+     *     <tbody>
+     *         <tr>
+     *             <td>
+     *                 <b>Before</b>
+     *             </td>
+     *             <td>
+     *                 <b>After</b>
+     *             </td>
+     *         </tr>
+     *         <tr>
+     *             <td>
+     *                 <p>...</p>
+     *             </td>
+     *             <td>
+     *                 <i>locals<sub>&lt;i&gt;</sub></i>
+     *             </td>
+     *         </tr>
+     *     </tbody>
+     * </table>
+     */
+    DLOAD_0                             (0x26, "dload_0",         0x0,    0x0,    0x2),
+    DLOAD_1                             (0x27, "dload_1",         0x0,    0x0,    0x2),
+    DLOAD_2                             (0x28, "dload_2",         0x0,    0x0,    0x2),
+    DLOAD_3                             (0x29, "dload_3",         0x0,    0x0,    0x2),
+
+    /**
+     * <b>Description</b>
+     * <p>The <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.fload_n"><i>ALOAD&lt;i&gt;</i></a>
+     *    instructions push the <i>&lt;i&gt;</i><sup>th</sup> &isin; { 0, 1, 2, 3 } local variable of type
+     *    reference onto the stack.</p>
+     * <b>Type</b>
+     * <p>The <i>ALOAD&lt;i&gt;</i> instruction is part of the no parameter family, as the parameter is
+     *    embedded within the instruction itself.</p>
+     * <b>Stack</b>
+     * <table border="1">
+     *     <tbody>
+     *         <tr>
+     *             <td>
+     *                 <b>Before</b>
+     *             </td>
+     *             <td>
+     *                 <b>After</b>
+     *             </td>
+     *         </tr>
+     *         <tr>
+     *             <td>
+     *                 <p>...</p>
+     *             </td>
+     *             <td>
+     *                 <i>locals<sub>&lt;i&gt;</sub></i>
+     *             </td>
+     *         </tr>
+     *     </tbody>
+     * </table>
+     */
+    ALOAD_0                             (0x2a, "aload_0",         0x0,    0x0,    0x1),
+    ALOAD_1                             (0x2b, "aload_1",         0x0,    0x0,    0x1),
+    ALOAD_2                             (0x2c, "aload_2",         0x0,    0x0,    0x1),
+    ALOAD_3                             (0x2d, "aload_3",         0x0,    0x0,    0x1),
 
     IINC                                (0x84, "iinc",            0x2,    0x0,    0x0),
 
@@ -482,7 +625,7 @@ public enum Opcode {
     public static Opcode valueOf(byte opcode) {
         final Opcode opcodes[] = values();
 
-        int low = 0;
+        int low = 1;
         int high = opcodes.length - 1;
         while(low <= high) {
             final int mid = (low + high) >>> 1;
@@ -496,8 +639,7 @@ public enum Opcode {
             else
                 return opcodes[mid];
         }
-
-        return null;
+        return INVALID;
     }
 
     /**

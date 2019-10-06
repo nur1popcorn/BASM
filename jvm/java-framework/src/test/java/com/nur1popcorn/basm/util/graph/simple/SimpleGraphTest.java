@@ -16,21 +16,17 @@
  *
  */
 
-package com.nur1popcorn.basm.util.graph;
+package com.nur1popcorn.basm.util.graph.simple;
 
-import com.nur1popcorn.basm.utils.graph.SimpleEdge;
 import com.nur1popcorn.basm.utils.graph.SimpleGraph;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static junit.framework.TestCase.*;
 
-public abstract class SimpleGraphTest<V, E extends SimpleEdge<V>> {
+public abstract class SimpleGraphTest<V, E> {
     protected SimpleGraph<V, E> graph;
 
     /**
@@ -65,9 +61,68 @@ public abstract class SimpleGraphTest<V, E extends SimpleEdge<V>> {
     }
 
     @Test
-    public void testAddEdge() {
+    public void testRemoveVertex() {
+        final List<V> vertices = new LinkedList<>();
+        for(int i = 0; i < 100; i++) {
+            final V v = createVertex();
+            vertices.add(v);
+            graph.addVertex(v);
+        }
+
+        final Random random = new Random();
+        final List<V> removed = new LinkedList<>();
+        final ListIterator<V> iterator = vertices.listIterator();
+        while(iterator.hasNext()) {
+            final V v = iterator.next();
+
+            if(random.nextBoolean()) {
+                iterator.remove();
+                removed.add(v);
+                graph.removeVertex(v);
+            }
+        }
+
+        System.out.println(removed);
+        for(V v : removed) {
+            System.out.println(v);
+            assertFalse(graph.hasVertex(v));
+        }
+    }
+
+    @Test
+    public void testRemoveAll() {
         V v = createVertex();
-        V w = createVertex();
+        graph.addVertex(v);
+        graph.removeVertex(v);
+        assertFalse(graph.hasVertex(v));
+    }
+
+    @Test
+    public void testRemoveAdd() {
+
+    }
+
+    public void testRemoveEdge() {
+
+    }
+
+    @Test
+    public void testHasVertex() {
+        V v = createVertex();
+        graph.addVertex(v);
+        assertTrue(graph.hasVertex(v));
+
+        v = createVertex();
+        assertFalse(graph.hasVertex(v));
+
+        graph.addVertex(v);
+        assertTrue(graph.hasVertex(v));
+    }
+
+    @Test
+    public void testAddEdge() {
+        final V v = createVertex();
+        final V w = createVertex();
 
         graph.addVertex(v);
         graph.addVertex(w);
@@ -81,14 +136,14 @@ public abstract class SimpleGraphTest<V, E extends SimpleEdge<V>> {
 
     @Test(expected = IllegalArgumentException.class)
     public void testAddLoop() {
-        V v = createVertex();
+        final V v = createVertex();
         graph.addVertex(v);
         graph.addEdge(v, v);
     }
 
     @Test
     public void testDegreeCircle() {
-        V first = createVertex();
+        final V first = createVertex();
         graph.addVertex(first);
 
         V v = first;
@@ -107,7 +162,7 @@ public abstract class SimpleGraphTest<V, E extends SimpleEdge<V>> {
 
     @Test
     public void testGetNeighbours() {
-        V root = createVertex();
+        final V root = createVertex();
 
         final Set<V> vertices = new HashSet<>();
         for(int i = 0; i < 10; i++) {
@@ -120,25 +175,6 @@ public abstract class SimpleGraphTest<V, E extends SimpleEdge<V>> {
         assertTrue(vertices.containsAll(graph.getNeighbours(root)));
     }
 
-
-    @Test
-    public void testGetEdges() {
-        V root = createVertex();
-
-        final Set<V> vertices = new HashSet<>();
-        for(int i = 0; i < 10; i++) {
-            V v = createVertex();
-            vertices.add(v);
-            graph.addVertex(v);
-            graph.addEdge(root, v);
-        }
-
-        final Set<E> edges = graph.getEdges(root);
-        for(E e : edges) {
-            assertEquals(root, e.getFrom());
-            assertTrue(vertices.contains(e.getTo()));
-        }
-    }
 
     /**
      * Creates a tree of depth degree.
@@ -177,7 +213,7 @@ public abstract class SimpleGraphTest<V, E extends SimpleEdge<V>> {
 
     @Test
     public void testTree() {
-        V root = createVertex();
+        final V root = createVertex();
         spawn(root, 3);
         transverse(root, root);
     }

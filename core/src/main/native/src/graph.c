@@ -19,7 +19,6 @@
 #include "graph.h"
 
 #include <limits.h>
-#include <assert.h>
 
 #include "globals.h"
 #include "linked_list.h"

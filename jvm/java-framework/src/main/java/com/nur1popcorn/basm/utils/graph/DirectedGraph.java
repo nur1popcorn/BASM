@@ -18,16 +18,43 @@
 
 package com.nur1popcorn.basm.utils.graph;
 
-import java.util.Collection;
+import java.util.Set;
 
-public interface DirectedGraph<V, E extends SimpleEdge<V>> extends SimpleGraph<V, E> {
+/**
+ * The {@link DirectedGraph} has sense of edge direction and can deal with self loops.
+ *
+ * @param <V> The type of vertex.
+ * @param <E> The type of edge.
+ *
+ * @author nur1popcorn
+ * @since 1.1.0-alpha
+ */
+public interface DirectedGraph<V, E> extends SimpleGraph<V, E> {
     /**
+     * <i>NOTE: </i> Self loops are counted in the in and out degree.
      *
+     * @param v The vertex whose "in" degree should be computed.
+     * @return The "in" degree of the given vertex.
      */
-    Collection<E> getOutEdges(V v);
+    int getInDegree(V v);
 
     /**
+     * <i>NOTE: </i> Self loops are counted in the in and out degree.
      *
+     * @param v The vertex whose "in" degree should be computed.
+     * @return The "in" degree of the given vertex.
      */
-    Collection<E> getInEdges(V v);
+    int getOutDegree(V v);
+
+    /**
+     * @param v The vertex whose "in" neighbours should be listed.
+     * @return All "in" neighbours of the given vertex.
+     */
+    Set<V> getInNeighbours(V v);
+
+    /**
+     * @param v The vertex whose "out" neighbours should be listed.
+     * @return All "out" neighbours of the given vertex.
+     */
+    Set<V> getOutNeighbours(V v);
 }

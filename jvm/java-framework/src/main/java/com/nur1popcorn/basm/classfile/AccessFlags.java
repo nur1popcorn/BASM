@@ -119,7 +119,7 @@ public abstract class AccessFlags {
         "synthetic", "annotation", "enum"
     };
 
-    protected int access;
+    private int access;
 
     /**
      * @param access

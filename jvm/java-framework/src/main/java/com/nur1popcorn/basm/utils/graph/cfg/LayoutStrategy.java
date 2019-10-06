@@ -16,28 +16,11 @@
  *
  */
 
-package com.nur1popcorn.basm.util.graph;
+package com.nur1popcorn.basm.utils.graph.cfg;
 
-import com.nur1popcorn.basm.utils.graph.AdjacencyMatrixGraph;
-import com.nur1popcorn.basm.utils.graph.SimpleEdge;
-import com.nur1popcorn.basm.utils.graph.SimpleGraph;
-import org.junit.Test;
 
-public final class AdjacencyMatrixGraphTest extends SimpleGraphTest<Integer, SimpleEdge<Integer>> {
-    private int current;
+import java.awt.geom.Rectangle2D;
 
-    @Override
-    protected SimpleGraph<Integer, SimpleEdge<Integer>> createGraph() {
-        return new AdjacencyMatrixGraph<>();
-    }
-
-    @Override
-    protected Integer createVertex() {
-        return current++;
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void testAdd() {
-        graph.hasEdge(null, null);
-    }
+public interface LayoutStrategy {
+    //void reposition(DirectedGraph<Rectangle2D, SimpleEdge<Rectangle2D>> graph, Rectangle2D start);
 }

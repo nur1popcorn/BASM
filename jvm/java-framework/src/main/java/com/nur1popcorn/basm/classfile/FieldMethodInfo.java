@@ -77,10 +77,10 @@ public final class FieldMethodInfo extends AccessFlags {
      * @throws IOException
      */
     public void write(DataOutputStream os) throws IOException {
-        os.writeShort(access);
+        os.writeShort(getAccessFlags());
         os.writeShort(nameIndex);
         os.writeShort(descIndex);
-        
+
         os.writeShort(attributes.length);
         for(AttributeInfo attributeInfo : attributes)
             attributeInfo.write(os, constantPool);

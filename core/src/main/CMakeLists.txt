@@ -36,7 +36,6 @@ add_library(basm_agent
             ./native/include/graph.h
             ./native/include/linked_list.h
             ./native/include/instruction.h
-            ./native/include/iterator.h
             ./native/include/socket.h
             ./native/include/x64_assembler.h
            )

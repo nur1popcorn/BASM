@@ -30,8 +30,8 @@ public final class MultiANewArrayInstruction extends Instruction {
     /**
      * {@inheritDoc}
      */
-    @Override
+    /*@Override
     public byte getStackModifier() {
         return dimensions;
-    }
+    }*/
 }

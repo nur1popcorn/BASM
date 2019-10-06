@@ -31,7 +31,7 @@ import static com.nur1popcorn.basm.utils.graph.SimpleGraph.CountIterator;
  * @author nur1popcorn
  * @since 1.1.0-alpha
  */
-public final class ApproximateEditDistance<V, E extends SimpleEdge<V>> implements EditDistanceStrategy<SimpleGraph<V, E>> {
+public final class ApproximateEditDistance<V, E> implements EditDistanceStrategy<SimpleGraph<V, E>> {
     private final int edgeIns, edgeDel, edgeSub;
     private final int nodeIns, nodeDel, nodeSub;
 
@@ -57,34 +57,42 @@ public final class ApproximateEditDistance<V, E extends SimpleEdge<V>> implement
     }
 
     /**
-     * @param e The 1st edge which should be compared to the 2nd.
-     * @param f The 2nd edge which should be compared to the 1st.
+     * @param v The 1st pivot vertex.
+     * @param u The 1st pivot neighbour.
+     *
+     * @param w The 2nd pivot vertex.
+     * @param t The 2nd pivot neighbour.
      *
      * @return The cost of substituting one edge for the other.
      */
-    private int getEdgeSubCost(E e, E f) {
-        return e.equals(f) ? 0 : edgeSub;
+    private int getEdgeSubCost(V v, V u, V w, V t) {
+        return (v == w && u == t) ||
+               (v == t && u == w) ?
+            0 : edgeSub;
     }
 
     /**
-     * @param a The 1st set of edges.
-     * @param b The 2nd set of edges.
+     * @param v The 1st starting vertex.
+     * @param a The 1st of neighbours.
+     *
+     * @param w The 2nd starting vertex.
+     * @param b The 2nd of neighbours.
      *
      * @return The edge cost matrix.
      */
-    private double[][] createEdgeCostMatrix(Set<E> a, Set<E> b) {
+    private double[][] createEdgeCostMatrix(V v, Set<V> a, V w, Set<V> b) {
         final int m = a.size();
         final int n = b.size();
 
         final double matrix[][] = new double[m + n][m + n];
 
         // substitute cost.
-        for(CountIterator<E> ita = new CountIterator<>(a.iterator()); ita.hasNext(); ) {
-            final E e = ita.next();
-            for(CountIterator<E> itb = new CountIterator<>(b.iterator()); itb.hasNext(); ) {
-                final E f = itb.next();
+        for(CountIterator<V> ita = new CountIterator<>(a.iterator()); ita.hasNext(); ) {
+            final V u = ita.next();
+            for(CountIterator<V> itb = new CountIterator<>(b.iterator()); itb.hasNext(); ) {
+                final V t = itb.next();
                 matrix[ita.count()][itb.count()] =
-                    getEdgeSubCost(e, f);
+                    getEdgeSubCost(v, u, w, t);
             }
         }
 
@@ -108,19 +116,22 @@ public final class ApproximateEditDistance<V, E extends SimpleEdge<V>> implement
     }
 
     /**
-     * @param a The 1st set of edges.
-     * @param b The 2nd set of edges.
+     * @param v The 1st starting vertex.
+     * @param a The 1st of neighbours.
+     *
+     * @param w The 2nd starting vertex.
+     * @param b The 2nd of neighbours.
      *
      * @return The approximate cost of substituting the 1st set of edges for th 2nd.
      */
-    private int getEdgeEditCost(Set<E> a, Set<E> b) {
+    private int getEdgeEditCost(V v, Set<V> a, V w, Set<V> b) {
         final int m = a.size();
         final int n = b.size();
 
         if(m == 0 || n == 0)
             return Math.max(m, n);
 
-        final double[][] matrix = createEdgeCostMatrix(a, b);
+        final double[][] matrix = createEdgeCostMatrix(v, a, w, b);
         final int assignment[] = new HungarianAlgorithm(matrix)
             .compute();
 
@@ -160,8 +171,8 @@ public final class ApproximateEditDistance<V, E extends SimpleEdge<V>> implement
                 final V w = itb.next();
                 matrix[ita.count()][itb.count()] =
                     getSubCost(v, w) +
-                    getEdgeEditCost(a.getEdges(v),
-                                    b.getEdges(w));
+                    getEdgeEditCost(v, a.getNeighbours(v),
+                                    w, b.getNeighbours(w));
             }
         }
 
