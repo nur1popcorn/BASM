@@ -72,9 +72,11 @@ public final class SimpleAdjacencyMatrixGraph<V> extends AdjacencyMatrixGraph<V>
         vertexMap.remove(v);
 
         final V w = indexMap.remove(size - 1);
-        indexMap.set(vi, w);
+        if(v != w) {
+            indexMap.set(vi, w);
+            vertexMap.put(w, vi);
+        }
 
-        vertexMap.put(w, vi);
         size--;
     }
 

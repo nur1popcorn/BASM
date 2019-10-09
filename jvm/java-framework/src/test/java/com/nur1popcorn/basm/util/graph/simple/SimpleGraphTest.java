@@ -18,6 +18,7 @@
 
 package com.nur1popcorn.basm.util.graph.simple;
 
+import com.nur1popcorn.basm.util.graph.GraphTest;
 import com.nur1popcorn.basm.utils.graph.SimpleGraph;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,99 +27,7 @@ import java.util.*;
 
 import static junit.framework.TestCase.*;
 
-public abstract class SimpleGraphTest<V, E> {
-    protected SimpleGraph<V, E> graph;
-
-    /**
-     * A factory method to create the different types of graphs.
-     * @return The graph which should be tested.
-     */
-    protected abstract SimpleGraph<V, E> createGraph();
-
-    /**
-     * A factory method which creates vertices.
-     * @return A vertex which can be used for testing.
-     */
-    protected abstract V createVertex();
-
-    @Before
-    public void setup() {
-        graph = createGraph();
-    }
-
-    @Test
-    public void testAddVertex() {
-        final List<V> vertices = new LinkedList<>();
-        for(int i = 0; i < 100; i++) {
-            final V v = createVertex();
-            vertices.add(v);
-            graph.addVertex(v);
-        }
-
-        final Set<V> result = graph.getVertices();
-        for(V v : vertices)
-            assertTrue(result.contains(v));
-    }
-
-    @Test
-    public void testRemoveVertex() {
-        final List<V> vertices = new LinkedList<>();
-        for(int i = 0; i < 100; i++) {
-            final V v = createVertex();
-            vertices.add(v);
-            graph.addVertex(v);
-        }
-
-        final Random random = new Random();
-        final List<V> removed = new LinkedList<>();
-        final ListIterator<V> iterator = vertices.listIterator();
-        while(iterator.hasNext()) {
-            final V v = iterator.next();
-
-            if(random.nextBoolean()) {
-                iterator.remove();
-                removed.add(v);
-                graph.removeVertex(v);
-            }
-        }
-
-        System.out.println(removed);
-        for(V v : removed) {
-            System.out.println(v);
-            assertFalse(graph.hasVertex(v));
-        }
-    }
-
-    @Test
-    public void testRemoveAll() {
-        V v = createVertex();
-        graph.addVertex(v);
-        graph.removeVertex(v);
-        assertFalse(graph.hasVertex(v));
-    }
-
-    @Test
-    public void testRemoveAdd() {
-
-    }
-
-    public void testRemoveEdge() {
-
-    }
-
-    @Test
-    public void testHasVertex() {
-        V v = createVertex();
-        graph.addVertex(v);
-        assertTrue(graph.hasVertex(v));
-
-        v = createVertex();
-        assertFalse(graph.hasVertex(v));
-
-        graph.addVertex(v);
-        assertTrue(graph.hasVertex(v));
-    }
-
+public abstract class SimpleGraphTest<V, E> extends GraphTest<V, E> {
     @Test
     public void testAddEdge() {
         final V v = createVertex();
