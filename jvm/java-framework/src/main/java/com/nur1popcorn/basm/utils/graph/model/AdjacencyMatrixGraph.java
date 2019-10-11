@@ -112,7 +112,10 @@ public abstract class AdjacencyMatrixGraph<V> extends AbstractGraph<V, Boolean> 
     }
 
     @Override
-    public void addEdge(V v, V w) {
+    public void addEdge(V v, V w, Boolean e) {
+        if(!e)
+            return;
+
         addVertex(v);
         addVertex(w);
 

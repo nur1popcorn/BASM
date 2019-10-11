@@ -55,7 +55,7 @@ public interface SimpleGraph<V, E> extends Iterable<V> {
      * @param v The start vertex.
      * @param w The end vertex.
      */
-    void addEdge(V v, V w);
+    void addEdge(V v, V w, E e);
 
     /**
      * Removes the given edge from the graph.
