@@ -16,7 +16,7 @@ public final class ImmutableGraphAdapter<V, E> extends GraphAdapter<V, E> {
     }
 
     @Override
-    public void addEdge(V v, V w) {
+    public void addEdge(V v, V w, E e) {
         throw new UnsupportedOperationException();
     }
 

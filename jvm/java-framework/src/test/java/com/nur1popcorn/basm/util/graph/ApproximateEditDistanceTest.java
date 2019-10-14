@@ -23,13 +23,13 @@ public final class ApproximateEditDistanceTest {
         g1.addVertex(0);
         g1.addVertex(1);
 
-        g1.addEdge(0, 1);
+        g1.addEdge(0, 1, true);
 
         g2.addVertex(0);
         g2.addVertex(1);
         g2.addVertex(2);
 
-        g2.addEdge(0, 1);
+        g2.addEdge(0, 1, true);
 
         assertEquals(1, ged.distance(g1, g2));
         assertEquals(1, ged.distance(g2, g1));
@@ -46,9 +46,9 @@ public final class ApproximateEditDistanceTest {
         for(int i = 0; i < 5; i++)
             g1.addVertex(i);
         for(int i = 0; i < 4; i += 2)
-            g1.addEdge(i, i + 1);
+            g1.addEdge(i, i + 1, true);
         for(int i = 0; i < 4; i += 2)
-            g1.addEdge(i, i + 2);
+            g1.addEdge(i, i + 2, true);
 
         /* x-x
          * |
@@ -59,9 +59,9 @@ public final class ApproximateEditDistanceTest {
         for(int i = 0; i < 6; i++)
             g2.addVertex(i);
         for(int i = 0; i < 6; i += 2)
-            g2.addEdge(i, i + 1);
+            g2.addEdge(i, i + 1, true);
         for(int i = 0; i < 4; i += 2)
-            g2.addEdge(i, i + 2);
+            g2.addEdge(i, i + 2, true);
 
         assertEquals(2, ged.distance(g1, g2));
         assertEquals(2, ged.distance(g2, g1));

@@ -19,8 +19,6 @@
 package com.nur1popcorn.basm.util.graph.simple;
 
 import com.nur1popcorn.basm.util.graph.GraphTest;
-import com.nur1popcorn.basm.utils.graph.SimpleGraph;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.util.*;
@@ -38,7 +36,7 @@ public abstract class SimpleGraphTest<V, E> extends GraphTest<V, E> {
         assertFalse(graph.hasEdge(v, w));
         assertFalse(graph.hasEdge(w, v));
 
-        graph.addEdge(v, w);
+        graph.addEdge(v, w, createEdge());
         assertTrue(graph.hasEdge(v, w));
         assertTrue(graph.hasEdge(w, v));
     }
@@ -47,7 +45,7 @@ public abstract class SimpleGraphTest<V, E> extends GraphTest<V, E> {
     public void testAddLoop() {
         final V v = createVertex();
         graph.addVertex(v);
-        graph.addEdge(v, v);
+        graph.addEdge(v, v, createEdge());
     }
 
     @Test
@@ -59,11 +57,11 @@ public abstract class SimpleGraphTest<V, E> extends GraphTest<V, E> {
         for(int i = 0; i < 10; i++) {
             V w = createVertex();
             graph.addVertex(w);
-            graph.addEdge(v, w);
+            graph.addEdge(v, w, createEdge());
             v = w;
         }
 
-        graph.addEdge(v, first);
+        graph.addEdge(v, first, createEdge());
 
         for(V i : graph)
             assertEquals(2, graph.degree(i));
@@ -78,7 +76,7 @@ public abstract class SimpleGraphTest<V, E> extends GraphTest<V, E> {
             V v = createVertex();
             vertices.add(v);
             graph.addVertex(v);
-            graph.addEdge(root, v);
+            graph.addEdge(root, v, createEdge());
         }
 
         assertTrue(vertices.containsAll(graph.getNeighbours(root)));
@@ -97,7 +95,7 @@ public abstract class SimpleGraphTest<V, E> extends GraphTest<V, E> {
 
         for(int i = 0; i < degree; i++) {
             V next = createVertex();
-            graph.addEdge(root, next);
+            graph.addEdge(root, next, createEdge());
             spawn(next, degree - 1);
         }
     }

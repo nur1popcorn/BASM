@@ -18,8 +18,45 @@
 
 package com.nur1popcorn.basm.utils.graph.model;
 
-import com.nur1popcorn.basm.utils.graph.SimpleGraph;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
-public abstract class AdjacencyListGraph<V, E> implements SimpleGraph<V, E> {
+public abstract class AdjacencyListGraph<V, E> extends AbstractGraph<V, E> {
+    protected final Map<V, Map<V, E>> adjList = new HashMap<>();
 
+    @Override
+    public void addVertex(V v) {
+        adjList.putIfAbsent(v, new HashMap<>());
+    }
+
+    @Override
+    public void removeVertex(V v) {
+        adjList.remove(v);
+        for(Map<V, E> w : adjList.values())
+            w.remove(v);
+    }
+
+    @Override
+    public boolean hasVertex(V v) {
+        return adjList.containsKey(v);
+    }
+
+    @Override
+    public int size() {
+        return adjList.size();
+    }
+
+    @Override
+    public Set<V> getNeighbours(V v) {
+        return Collections.unmodifiableSet(
+            adjList.get(v)
+                .keySet());
+    }
+
+    @Override
+    public Set<V> getVertices() {
+        return adjList.keySet();
+    }
 }

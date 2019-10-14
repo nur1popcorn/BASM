@@ -25,8 +25,8 @@ public class DirectedGraphAdapter<V, E> implements DirectedGraph<V, E> {
     }
 
     @Override
-    public void addEdge(V v, V w) {
-        graph.addEdge(v, w);
+    public void addEdge(V v, V w, E e) {
+        graph.addEdge(v, w, e);
     }
 
     @Override

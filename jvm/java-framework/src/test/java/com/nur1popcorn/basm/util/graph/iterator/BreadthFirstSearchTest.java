@@ -17,10 +17,10 @@ public final class BreadthFirstSearchTest {
         graph.addVertex(4);
         graph.addVertex(5);
 
-        graph.addEdge(1, 2);
-        graph.addEdge(2, 3);
-        graph.addEdge(3, 5);
-        graph.addEdge(2, 4);
+        graph.addEdge(1, 2, true);
+        graph.addEdge(2, 3, true);
+        graph.addEdge(3, 5, true);
+        graph.addEdge(2, 4, true);
 
         final BreadthFirstSearch<Integer, Boolean> bfs =
             new BreadthFirstSearch<>(graph, 1);

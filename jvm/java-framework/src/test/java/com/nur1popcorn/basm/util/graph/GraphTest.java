@@ -24,6 +24,12 @@ public abstract class GraphTest<V, E> {
      */
     protected abstract V createVertex();
 
+    /**
+     * A factory method which creates edges.
+     * @return A edge which can be used for testing.
+     */
+    protected abstract E createEdge();
+
     @Before
     public void setup() {
         graph = createGraph();
@@ -93,7 +99,7 @@ public abstract class GraphTest<V, E> {
         final V v = createVertex();
         final V w = createVertex();
         assertFalse(graph.hasEdge(v, w));
-        graph.addEdge(v, w);
+        graph.addEdge(v, w, createEdge());
         assertTrue(graph.hasEdge(v, w));
     }
 

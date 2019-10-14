@@ -33,4 +33,9 @@ public final class SimpleAdjacencyMatrixGraphTest extends SimpleGraphTest<Intege
     protected Integer createVertex() {
         return current++;
     }
+
+    @Override
+    protected Boolean createEdge() {
+        return true;
+    }
 }

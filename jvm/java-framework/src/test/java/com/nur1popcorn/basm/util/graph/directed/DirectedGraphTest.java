@@ -16,7 +16,7 @@ public abstract class DirectedGraphTest<V, E> extends GraphTest<V, E> {
         graph.addVertex(w);
         assertFalse(graph.hasEdge(v, w));
 
-        graph.addEdge(v, w);
+        graph.addEdge(v, w, createEdge());
         assertTrue(graph.hasEdge(v, w));
     }
 }

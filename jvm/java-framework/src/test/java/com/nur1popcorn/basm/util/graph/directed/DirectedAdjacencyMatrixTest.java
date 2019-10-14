@@ -15,4 +15,9 @@ public final class DirectedAdjacencyMatrixTest extends DirectedGraphTest<Integer
     protected Integer createVertex() {
         return current++;
     }
+
+    @Override
+    protected Boolean createEdge() {
+        return true;
+    }
 }

@@ -122,6 +122,9 @@ public final class HungarianAlgorithmTest {
 
     /**
      * A simple brute force solution for the optimization problem (not intended to be actually used).
+     *
+     * @param matrix The matrix for which the optimal assignment should be computed.
+     * @return The optimal assignment for this matrix.
      */
     private static int[] optimize(double matrix[][]) {
         int res[] = new int[matrix.length];

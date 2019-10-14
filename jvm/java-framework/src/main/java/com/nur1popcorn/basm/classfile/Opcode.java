@@ -629,8 +629,8 @@ public enum Opcode {
         int high = opcodes.length - 1;
         while(low <= high) {
             final int mid = (low + high) >>> 1;
-            final byte op = opcodes[mid]
-                .getOpcode();
+            final int op = opcodes[mid]
+                .getOpcode() & 0xff;
 
             if(opcode < op)
                 high = mid - 1;

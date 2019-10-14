@@ -18,5 +18,76 @@
 
 package com.nur1popcorn.basm.utils.graph.model.directed;
 
-public final class DirectedAdjacencyListGraph<V, E> {
+import com.nur1popcorn.basm.utils.graph.DirectedGraph;
+import com.nur1popcorn.basm.utils.graph.model.AdjacencyListGraph;
+
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+public final class DirectedAdjacencyListGraph<V, E> extends AdjacencyListGraph<V, E> implements DirectedGraph<V, E> {
+    @Override
+    public void addEdge(V v, V w, E e) {
+        addVertex(v);
+        addVertex(w);
+
+        adjList.get(v)
+               .put(w, e);
+    }
+
+    @Override
+    public void removeEdge(V v, V w) {
+        final Map<V, E> a = adjList.get(v);
+        if(a != null)
+            a.remove(w);
+    }
+
+    @Override
+    public boolean hasEdge(V v, V w) {
+        return adjList.get(v).containsKey(w);
+    }
+
+    @Override
+    public E getEdge(V v, V w) {
+        return adjList.get(v)
+                      .get(w);
+    }
+
+    @Override
+    public int degree(V v) {
+        return getInDegree(v) +
+               getOutDegree(v);
+    }
+
+    @Override
+    public int getInDegree(V v) {
+        int degree = 0;
+        for(Map<V, E> map : adjList.values())
+            if(map.containsKey(v))
+                degree++;
+        return degree;
+    }
+
+    @Override
+    public int getOutDegree(V v) {
+        return adjList.get(v)
+            .size();
+    }
+
+    @Override
+    public Set<V> getInNeighbours(V v) {
+        final Set<V> neighbours = new HashSet<>();
+        for(Map.Entry<V, Map<V, E>> entry : adjList.entrySet())
+            if(entry.getValue()
+                    .containsKey(v))
+                neighbours.add(entry.getKey());
+        return neighbours;
+    }
+
+    @Override
+    public Set<V> getOutNeighbours(V v) {
+        return Collections.unmodifiableSet(
+            adjList.get(v).keySet());
+    }
 }
