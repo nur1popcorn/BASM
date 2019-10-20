@@ -20,11 +20,15 @@ package com.nur1popcorn.basm.utils.graph.model.simple;
 
 import com.nur1popcorn.basm.utils.graph.model.AdjacencyListGraph;
 
+import java.util.Collections;
 import java.util.Map;
 
 public final class SimpleAdjacencyListGraph<V, E> extends AdjacencyListGraph<V, E> {
     @Override
     public void addEdge(V v, V w, E e) {
+        if(v == w)
+            throw new IllegalArgumentException("Simple graphs don't contain self loops.");
+
         addVertex(v);
         addVertex(w);
 
@@ -48,8 +52,10 @@ public final class SimpleAdjacencyListGraph<V, E> extends AdjacencyListGraph<V, 
 
     @Override
     public boolean hasEdge(V v, V w) {
-        return adjList.get(v).containsKey(w) ||
-               adjList.get(w).containsKey(v);
+        return adjList.getOrDefault(
+            v, Collections.emptyMap()).containsKey(w) ||
+               adjList.getOrDefault(
+            w, Collections.emptyMap()).containsKey(v);
     }
 
     @Override

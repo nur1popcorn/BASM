@@ -45,13 +45,18 @@ public final class DirectedAdjacencyListGraph<V, E> extends AdjacencyListGraph<V
 
     @Override
     public boolean hasEdge(V v, V w) {
-        return adjList.get(v).containsKey(w);
+        final Map<V, E> target = adjList.get(v);
+        if(target != null)
+            return target.containsKey(w);
+        return false;
     }
 
     @Override
     public E getEdge(V v, V w) {
-        return adjList.get(v)
-                      .get(w);
+        final Map<V, E> target = adjList.get(v);
+        if(target != null)
+            return target.get(w);
+        return null;
     }
 
     @Override

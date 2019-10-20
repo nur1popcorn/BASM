@@ -107,7 +107,7 @@ public abstract class SimpleGraphTest<V, E> extends GraphTest<V, E> {
      * @param current The vertex which is currently being inspected.
      */
     private void transverse(V root, V current) {
-        final Set<V> neighbours = graph.getNeighbours(current);
+        final Set<V> neighbours = new HashSet<>(graph.getNeighbours(current));
         if(neighbours.size() <= 1)
             return;
 
