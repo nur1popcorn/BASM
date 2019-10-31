@@ -29,16 +29,21 @@ public final class BaryCenterReduction<V, E> implements CrossingReduction<V, E> 
     @Override
     public void reduce(DirectedGraph<V, E> graph, List<List<V>> vertices) {
         final Map<V, Float> map = new HashMap<>();
-        for(List<V> vs : vertices)
+        for(List<V> vs : vertices) {
             for(V v : vs) {
                 final Set<V> neighbours = graph.getInNeighbours(v);
                 float bary = 0;
                 for(V n : neighbours)
-                    bary += map.get(v);
-                map.put(v, bary / neighbours.size());
+                    bary += map.get(n);
+                final int nc = neighbours.size();
+                map.put(v, bary / nc);
             }
 
-        for(List<V> vs : vertices)
             vs.sort((v, w) -> Float.compare(map.get(v), map.get(w)));
+
+            float i = 0;
+            for(V v : vs)
+                map.put(v, i++);
+        }
     }
 }
