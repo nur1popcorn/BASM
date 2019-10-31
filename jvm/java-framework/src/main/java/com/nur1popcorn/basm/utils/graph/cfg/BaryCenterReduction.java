@@ -20,6 +20,25 @@ package com.nur1popcorn.basm.utils.graph.cfg;
 
 import com.nur1popcorn.basm.utils.graph.DirectedGraph;
 
-public interface LayoutStrategy<V, E> {
-    void reposition(DirectedGraph<V, E> graph, V start);
+import java.util.*;
+
+/**
+ * http://www.diva-portal.org/smash/get/diva2:796984/FULLTEXT01.pdf
+ */
+public final class BaryCenterReduction<V, E> implements CrossingReduction<V, E> {
+    @Override
+    public void reduce(DirectedGraph<V, E> graph, List<List<V>> vertices) {
+        final Map<V, Float> map = new HashMap<>();
+        for(List<V> vs : vertices)
+            for(V v : vs) {
+                final Set<V> neighbours = graph.getInNeighbours(v);
+                float bary = 0;
+                for(V n : neighbours)
+                    bary += map.get(v);
+                map.put(v, bary / neighbours.size());
+            }
+
+        for(List<V> vs : vertices)
+            vs.sort((v, w) -> Float.compare(map.get(v), map.get(w)));
+    }
 }

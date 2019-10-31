@@ -30,7 +30,7 @@ import java.util.*;
  * @author nur1popcorn
  * @since 1.1.0-alpha
  */
-public final class ModifiedBreadthFirstSearch<V, E> extends AbstractBreadthFirstSearch<V, E> {
+public final class ModifiedBreadthFirstSearch<V, E> extends AbstractGraphSearch<V, E> {
     public ModifiedBreadthFirstSearch(DirectedGraph<V, E> graph, V start) {
         super(graph, start);
     }

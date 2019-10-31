@@ -20,6 +20,8 @@ package com.nur1popcorn.basm.utils.graph.cfg;
 
 import com.nur1popcorn.basm.utils.graph.DirectedGraph;
 
-public interface LayoutStrategy<V, E> {
-    void reposition(DirectedGraph<V, E> graph, V start);
+import java.util.List;
+
+public interface LayerAssignment<V, E> {
+    List<List<V>> assign(DirectedGraph<V, E> graph, V start);
 }
