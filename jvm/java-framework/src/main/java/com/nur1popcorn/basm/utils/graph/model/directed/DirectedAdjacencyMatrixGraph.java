@@ -25,6 +25,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public final class DirectedAdjacencyMatrixGraph<V> extends AdjacencyMatrixGraph<V> implements DirectedGraph<V, Boolean> {
+    //TODO: still some bugs in this noticed when i tried the transpose reduction test.
     @Override
     protected int edgeIndex(int v, int w) {
         return size * v + w;

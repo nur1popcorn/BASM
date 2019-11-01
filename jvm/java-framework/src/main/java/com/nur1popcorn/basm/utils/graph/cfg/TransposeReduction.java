@@ -53,24 +53,20 @@ public final class TransposeReduction<V, E> implements CrossingReduction<V, E> {
      * @param b The lower layer (higher depth).
      */
     private static <V, E> void transpose(DirectedGraph<V, E> graph, List<V> a, List<V> b) {
-        final Set<V> as = new HashSet<>(a);
-
         boolean changed = true;
         while(changed) {
             changed = false;
-            final ListIterator<V> iterator = a.listIterator();
+            final ListIterator<V> iterator = b.listIterator();
             while(iterator.hasNext()) {
                 final V v = iterator.next();
+                if(!iterator.hasNext())
+                    break;
+
                 final V w = iterator.next();
 
                 // only collect the neighbours that would be affected by a swap.
-                final List<V> neighbours = new LinkedList<>();
-                neighbours.addAll(graph.getInNeighbours(v));
-                neighbours.addAll(graph.getInNeighbours(w));
-                neighbours.removeIf(u -> !as.contains(u));
-
-                if(countCrossings(graph, neighbours, List.of(v, w)) >
-                   countCrossings(graph, neighbours, List.of(w, v))) {
+                if(countCrossings(graph, a, v, w) >
+                   countCrossings(graph, a, w, v)) {
                     // swap the two members to reduce the number of edge crossings.
                     iterator.set(v);
                     iterator.previous();
@@ -92,26 +88,20 @@ public final class TransposeReduction<V, E> implements CrossingReduction<V, E> {
      * that such a connection would cause.
      *
      * @param graph The graph in which the edge crossings are to be counted.
-     * @param a The upper layer (lower depth).
-     * @param b The lower layer (higher depth).
+     * @param v The 1st of the two target vertices.
+     * @param w The 2nd of the two target vertices.
      *
      * @return The number of edge crossings.
      */
-    private static <V, E> int countCrossings(DirectedGraph<V, E> graph, List<V> a, List<V> b) {
-        final int costs[] = new int[b.size()];
+    private static <V, E> int countCrossings(DirectedGraph<V, E> graph, List<V> a, V v, V w) {
+        int cost = 0;
         int count = 0;
-
-        for(V v : a)
-            for(V w : b)
-                if(graph.hasEdge(v, w)) {
-                    int i = 0;
-                    for(V u : b) {
-                        if(w == u)
-                            break;
-                        costs[i]++;
-                    }
-                    count += costs[i];
-                }
+        for(V u : a) {
+            if(graph.hasEdge(u, v))
+                count += cost;
+            if(graph.hasEdge(u, w))
+                cost++;
+        }
         return count;
     }
 }
