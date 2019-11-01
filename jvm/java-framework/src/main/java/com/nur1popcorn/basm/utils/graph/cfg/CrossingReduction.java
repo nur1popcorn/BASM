@@ -24,11 +24,4 @@ import java.util.List;
 
 public interface CrossingReduction<V, E> {
     void reduce(DirectedGraph<V, E> graph, List<List<V>> vertices);
-
-    /**
-     * https://link.springer.com/content/pdf/10.1007%2F3-540-58950-3_371.pdf
-     */
-    default int countCrossings(DirectedGraph<V, E> graph, List<List<V>> vertices) {
-        return 0;
-    }
 }
