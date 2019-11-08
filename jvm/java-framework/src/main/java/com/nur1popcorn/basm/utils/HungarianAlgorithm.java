@@ -43,7 +43,7 @@ public final class HungarianAlgorithm {
     private final int n;
 
     /**
-     * @param matrix the nxn matrix which should be optimized.
+     * @param matrix The nxn matrix which should be optimized.
      */
     public HungarianAlgorithm(double matrix[][]) {
         this.n = matrix.length;
