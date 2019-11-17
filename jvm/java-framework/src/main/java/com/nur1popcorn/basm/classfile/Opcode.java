@@ -593,12 +593,209 @@ public enum Opcode {
     ALOAD_2                             (0x2c, "aload_2",         0x0,    0x0,    0x1),
     ALOAD_3                             (0x2d, "aload_3",         0x0,    0x0,    0x1),
 
+    IALOAD                              (0x2e, "iaload",          0x0,    0x2,    0x1),
+    LALOAD                              (0x2f, "laload",          0x0,    0x2,    0x2),
+    FALOAD                              (0x30, "faload",          0x0,    0x2,    0x1),
+    DALOAD                              (0x31, "daload",          0x0,    0x2,    0x2),
+    AALOAD                              (0x32, "aaload",          0x0,    0x2,    0x1),
+    BALOAD                              (0x33, "baload",          0x0,    0x2,    0x1),
+    CALOAD                              (0x34, "caload",          0x0,    0x2,    0x1),
+    SALOAD                              (0x35, "saload",          0x0,    0x2,    0x1),
+
+    ISTORE                              (0x36, "istore",          0x1,    0x1,    0x0),
+    LSTORE                              (0x37, "lstore",          0x1,    0x2,    0x0),
+    FSTORE                              (0x38, "fstore",          0x1,    0x1,    0x0),
+    DSTORE                              (0x39, "dstore",          0x1,    0x2,    0x0),
+    ASTORE                              (0x3a, "astore",          0x1,    0x1,    0x0),
+
+    ISTORE_0                            (0x3b, "istore_0",        0x0,    0x1,    0x0),
+    ISTORE_1                            (0x3c, "istore_1",        0x0,    0x1,    0x0),
+    ISTORE_2                            (0x3d, "istore_2",        0x0,    0x1,    0x0),
+    ISTORE_3                            (0x3e, "istore_3",        0x0,    0x1,    0x0),
+
+    LSTORE_0                            (0x3f, "lstore_0",        0x0,    0x2,    0x0),
+    LSTORE_1                            (0x40, "lstore_1",        0x0,    0x2,    0x0),
+    LSTORE_2                            (0x41, "lstore_2",        0x0,    0x2,    0x0),
+    LSTORE_3                            (0x42, "lstore_3",        0x0,    0x2,    0x0),
+
+    FSTORE_0                            (0x43, "fstore_0",        0x0,    0x1,    0x0),
+    FSTORE_1                            (0x44, "fstore_1",        0x0,    0x1,    0x0),
+    FSTORE_2                            (0x45, "fstore_2",        0x0,    0x1,    0x0),
+    FSTORE_3                            (0x46, "fstore_3",        0x0,    0x1,    0x0),
+
+    DSTORE_0                            (0x47, "dstore_0",        0x0,    0x2,    0x0),
+    DSTORE_1                            (0x48, "dstore_1",        0x0,    0x2,    0x0),
+    DSTORE_2                            (0x49, "dstore_2",        0x0,    0x2,    0x0),
+    DSTORE_3                            (0x4a, "dstore_3",        0x0,    0x2,    0x0),
+
+    ASTORE_0                            (0x4b, "astore_0",        0x0,    0x1,    0x0),
+    ASTORE_1                            (0x4c, "astore_1",        0x0,    0x1,    0x0),
+    ASTORE_2                            (0x4d, "astore_2",        0x0,    0x1,    0x0),
+    ASTORE_3                            (0x4e, "astore_3",        0x0,    0x1,    0x0),
+
+    IASTORE                             (0x4f, "iastore",         0x0,    0x3,    0x0),
+    LASTORE                             (0x50, "lastore",         0x0,    0x4,    0x0),
+    FASTORE                             (0x51, "fastore",         0x0,    0x3,    0x0),
+    DASTORE                             (0x52, "dastore",         0x0,    0x4,    0x0),
+    AASTORE                             (0x53, "aastore",         0x0,    0x3,    0x0),
+    BASTORE                             (0x54, "bastore",         0x0,    0x3,    0x0),
+    CASTORE                             (0x55, "castore",         0x0,    0x3,    0x0),
+    SASTORE                             (0x56, "sastore",         0x0,    0x3,    0x0),
+
+    POP                                 (0x57, "pop",             0x0,    0x1,    0x0),
+    POP2                                (0x58, "pop2",            0x0,    0x2,    0x0),
+
+    DUP                                 (0x59, "dup",             0x0,    0x1,    0x2),
+    DUP_X1                              (0x5a, "dup_x1",          0x0,    0x2,    0x3),
+    DUP_X2                              (0x5b, "dup_x2",          0x0,    0x3,    0x4),
+
+    DUP2                                (0x5c, "dup2",            0x0,    0x2,    0x4),
+    DUP2_X1                             (0x5d, "dup2_x1",         0x0,    0x3,    0x5),
+    DUP2_X2                             (0x5e, "dup2_x2",         0x0,    0x4,    0x6),
+
+    SWAP                                (0x5f, "swap",            0x0,    0x2,    0x2),
+
+    IADD                                (0x60, "iadd",            0x0,    0x2,    0x1),
+    LADD                                (0x61, "ladd",            0x0,    0x4,    0x2),
+    FADD                                (0x62, "fadd",            0x0,    0x2,    0x1),
+    DADD                                (0x63, "dadd",            0x0,    0x4,    0x2),
+
+    ISUB                                (0x64, "isub",            0x0,    0x2,    0x1),
+    LSUB                                (0x65, "lsub",            0x0,    0x4,    0x2),
+    FSUB                                (0x66, "fsub",            0x0,    0x2,    0x1),
+    DSUB                                (0x67, "dsub",            0x0,    0x4,    0x2),
+
+    IMUL                                (0x68, "imul",            0x0,    0x2,    0x1),
+    LMUL                                (0x69, "lmul",            0x0,    0x4,    0x2),
+    FMUL                                (0x6a, "fmul",            0x0,    0x2,    0x1),
+    DMUL                                (0x6b, "dmul",            0x0,    0x4,    0x2),
+
+    IDIV                                (0x6c, "idiv",            0x0,    0x2,    0x1),
+    LDIV                                (0x6d, "ldiv",            0x0,    0x4,    0x2),
+    FDIV                                (0x6e, "fdiv",            0x0,    0x2,    0x1),
+    DDIV                                (0x6f, "ddiv",            0x0,    0x4,    0x2),
+
+    IREM                                (0x70, "irem",            0x0,    0x2,    0x1),
+    LREM                                (0x71, "lrem",            0x0,    0x4,    0x2),
+    FREM                                (0x72, "frem",            0x0,    0x2,    0x1),
+    DREM                                (0x73, "drem",            0x0,    0x4,    0x2),
+
+    INEG                                (0x74, "ineg",            0x0,    0x1,    0x1),
+    LNEG                                (0x75, "lneg",            0x0,    0x2,    0x2),
+    FNEG                                (0x76, "fneg",            0x0,    0x1,    0x1),
+    DNEG                                (0x77, "dneg",            0x0,    0x2,    0x2),
+
+    ISHL                                (0x78, "ishl",            0x0,    0x2,    0x1),
+    LSHL                                (0x79, "lshl",            0x0,    0x3,    0x2),
+    ISHR                                (0x7a, "ishr",            0x0,    0x2,    0x1),
+    LSHR                                (0x7b, "lshr",            0x0,    0x3,    0x2),
+
+    IUSHR                               (0x7c, "iushr",           0x0,    0x2,    0x1),
+    LUSHR                               (0x7d, "lushr",           0x0,    0x3,    0x2),
+
+    IAND                                (0x7e, "iand",            0x0,    0x2,    0x1),
+    LAND                                (0x7f, "land",            0x0,    0x4,    0x2),
+
+    IOR                                 (0x80, "ior",             0x0,    0x2,    0x1),
+    LOR                                 (0x81, "lor",             0x0,    0x4,    0x2),
+
+    IXOR                                (0x82, "ixor",            0x0,    0x2,    0x1),
+    LXOR                                (0x83, "lxor",            0x0,    0x4,    0x2),
+
     IINC                                (0x84, "iinc",            0x2,    0x0,    0x0),
 
-    WIDE                                (0xc4, "wide",           -0x1,   -0x1,   -0x1),
+    I2L                                 (0x85, "i2l",             0x0,    0x1,    0x2),
+    I2F                                 (0x86, "i2f",             0x0,    0x1,    0x1),
+    I2D                                 (0x87, "i2d",             0x0,    0x1,    0x2),
 
-    TABLESWITCH                         (0xaa, "tableswitch",    -0x1,    0x0,    0x0),
-    LOOKUPSWITCH                        (0xab, "lookupswitch",   -0x1,    0x1,    0x0);
+    L2I                                 (0x88, "l2i",             0x0,    0x2,    0x1),
+    L2F                                 (0x89, "l2f",             0x0,    0x2,    0x1),
+    L2D                                 (0x8a, "l2d",             0x0,    0x2,    0x2),
+
+    F2I                                 (0x8b, "f2i",             0x0,    0x1,    0x1),
+    F2L                                 (0x8c, "f2l",             0x0,    0x1,    0x2),
+    F2D                                 (0x8d, "f2d",             0x0,    0x1,    0x2),
+
+    D2I                                 (0x8e, "d2i",             0x0,    0x2,    0x1),
+    D2L                                 (0x8f, "d2l",             0x0,    0x2,    0x2),
+    D2F                                 (0x90, "d2f",             0x0,    0x2,    0x1),
+
+    I2B                                 (0x91, "i2b",             0x0,    0x1,    0x1),
+    I2C                                 (0x92, "i2c",             0x0,    0x1,    0x1),
+    I2S                                 (0x93, "i2s",             0x0,    0x1,    0x1),
+
+    LCMP                                (0x94, "lcmp",            0x0,    0x4,    0x1),
+
+    FCMPL                               (0x95, "fcmpl",           0x0,    0x2,    0x1),
+    FCMPG                               (0x96, "fcmpg",           0x0,    0x2,    0x1),
+
+    DCMPL                               (0x97, "dcmpl",           0x0,    0x4,    0x1),
+    DCMPG                               (0x98, "dcmpg",           0x0,    0x4,    0x1),
+
+    IFEQ                                (0x99, "ifeq",            0x2,    0x1,    0x0),
+    IFNE                                (0x9a, "ifne",            0x2,    0x1,    0x0),
+    IFLT                                (0x9b, "iflt",            0x2,    0x1,    0x0),
+    IFGE                                (0x9c, "ifge",            0x2,    0x1,    0x0),
+    IFGT                                (0x9d, "ifgt",            0x2,    0x1,    0x0),
+    IFLE                                (0x9e, "ifle",            0x2,    0x1,    0x0),
+
+    IF_ICMPEQ                           (0x9f, "if_icmpeq",       0x2,    0x2,    0x0),
+    IF_ICMPNE                           (0xa0, "if_icmpne",       0x2,    0x2,    0x0),
+    IF_ICMPLT                           (0xa1, "if_icmplt",       0x2,    0x2,    0x0),
+    IF_ICMPGE                           (0xa2, "if_icmpge",       0x2,    0x2,    0x0),
+    IF_ICMPGT                           (0xa3, "if_icmpgt",       0x2,    0x2,    0x0),
+    IF_ICMPLE                           (0xa4, "if_icmple",       0x2,    0x2,    0x0),
+    IF_ACMPEQ                           (0xa5, "if_acmpeq",       0x2,    0x2,    0x0),
+    IF_ACMPNQ                           (0xa6, "if_acmpne",       0x2,    0x2,    0x0),
+
+    GOTO                                (0xa7, "goto",            0x2,    0x0,    0x0),
+    JSR                                 (0xa8, "jsr",             0x2,    0x0,    0x1),
+    RET                                 (0xa9, "ret",             0x1,    0x0,    0x0),
+
+    TABLESWITCH                         (0xaa, "tableswitch",    -0x1,    0x1,    0x0),
+    LOOKUPSWITCH                        (0xab, "lookupswitch",   -0x1,    0x1,    0x0),
+
+    IRETURN                             (0xac, "ireturn",         0x0,    0x1,    0x0),
+    LRETURN                             (0xad, "lreturn",         0x0,    0x2,    0x0),
+    FRETURN                             (0xae, "freturn",         0x0,    0x1,    0x0),
+    DRETURN                             (0xaf, "dreturn",         0x0,    0x2,    0x0),
+    ARETURN                             (0xb0, "areturn",         0x0,    0x1,    0x0),
+    RETURN                              (0xb1, "return",          0x0,    0x0,    0x0),
+
+    GETSTATIC                           (0xb2, "getstatic",       0x2,    0x0,   -0x1),
+    PUTSTATIC                           (0xb3, "putstatic",       0x2,   -0x1,    0x0),
+
+    GETFIELD                            (0xb4, "getfield",        0x2,    0x1,   -0x1),
+    PUTFIELD                            (0xb5, "putfield",        0x2,   -0x1,    0x0),
+
+    INVOKEVIRTUAL                       (0xb6, "invokevirtual",   0x2,   -0x1,   -0x1),
+    INVOKESPECIAL                       (0xb7, "invokespecial",   0x2,   -0x1,   -0x1),
+    INVOKESTATIC                        (0xb8, "invokestatic",    0x2,   -0x1,   -0x1),
+    INVOKEINTERFACE                     (0xb9, "invokeinterface", 0x4,   -0x1,   -0x1),
+    INVOKEDYNAMIC                       (0xba, "invokedynamic",   0x4,   -0x1,   -0x1),
+
+    NEW                                 (0xbb, "new",             0x2,    0x0,    0x1),
+    NEWARRAY                            (0xbc, "newarray",        0x1,    0x1,    0x1),
+    ANEWARRAY                           (0xbd, "anewarray",       0x2,    0x1,    0x1),
+
+    ARRAYLENGTH                         (0xbe, "arraylength",     0x0,    0x1,    0x1),
+    ATHROW                              (0xbf, "athrow",          0x0,    0x1,    0x1),
+    CHECKCAST                           (0xc0, "checkcast",       0x2,    0x1,    0x1),
+    INSTANCEOF                          (0xc1, "instanceof",      0x2,    0x1,    0x1),
+    MONITORENTER                        (0xc2, "monitorenter",    0x0,    0x1,    0x0),
+    MONITOREXIT                         (0xc3, "monitorexit",     0x0,    0x1,    0x0),
+
+    WIDE                                (0xc4, "wide",           -0x1,    0x0,    0x0),
+    MULTIANEWARRAY                      (0xc5, "multianewarray",  0x3,   -0x1,    0x1),
+
+    IFNULL                              (0xc6, "ifnull",          0x2,    0x1,    0x0),
+    IFNONNULL                           (0xc7, "ifnonnull",       0x2,    0x1,    0x0),
+    GOTO_W                              (0xc8, "goto_w",          0x4,    0x0,    0x0),
+    JSR_W                               (0xc9, "jsr_w",           0x4,    0x0,    0x1),
+
+    BREAKPOINT                          (0xca, "breakpoint",      0x0,    0x0,    0x0),
+    IMPDEP1                             (0xfe, "impdep1",         0x0,   -0x1,   -0x1),
+    IMPDEP2                             (0xff, "impdep2",         0x0,   -0x1,   -0x1);
 
     private final byte opcode;
     private final String mnemonic;
