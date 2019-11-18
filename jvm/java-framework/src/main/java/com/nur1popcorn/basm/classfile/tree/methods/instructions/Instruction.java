@@ -275,6 +275,7 @@ public abstract class Instruction {
      * @return
      */
     public static Instruction read(ByteDataInputStream in, ConstantPool cp) throws IOException {
+        final int offset = in.position();
         final byte opcode = in.readByte();
         switch(indexType(opcode)) {
             case NO_PARAM_INS:
@@ -311,15 +312,18 @@ public abstract class Instruction {
                     // https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.jsr_w
                     case GOTO_W:
                     case JSR_W:
-                        return new JumpInstruction(opcode, in.readInt());
+                        return new JumpInstruction(opcode,
+                            in.getIndex(offset + in.readInt()));
                     default:
-                        return new JumpInstruction(opcode, in.readShort());
+                        return new JumpInstruction(opcode,
+                            in.getIndex(offset + in.readShort()));
                 }
             }
             case SWITCH_INS: {
                 // skip padding bytes and read default index.
                 in.skipBytes(-in.position() & 0x3);
-                final int defaultIndex = in.readInt();
+                final int defaultTarget = offset + in.readInt();
+                final int defaultIndex = in.getIndex(defaultTarget);
                 switch(opcode) {
                     case TABLESWITCH: {
                         final int low = in.readInt();
@@ -331,7 +335,7 @@ public abstract class Instruction {
                         for(int i = 0; i < length; i++) {
                             indices[i] = new KeyIndexPair(
                                 low + i,
-                                in.readInt()
+                                in.getIndex(offset + in.readInt())
                             );
                         }
 
@@ -344,7 +348,7 @@ public abstract class Instruction {
                         for(int i = 0; i < length; i++) {
                             indices[i] = new KeyIndexPair(
                                 in.readInt(),
-                                in.readInt()
+                                in.getIndex(offset + in.readInt())
                             );
                         }
                         return new SwitchInstruction(

@@ -819,8 +819,9 @@ public enum Opcode {
      * @param opcode The opcode which should be returned.
      * @return The {@link Opcode} with the value which was provided or null if the value is invalid.
      */
-    public static Opcode valueOf(byte opcode) {
+    public static Opcode valueOf(byte o) {
         final Opcode opcodes[] = values();
+        final int opcode = o & 0xff;
 
         int low = 1;
         int high = opcodes.length - 1;
