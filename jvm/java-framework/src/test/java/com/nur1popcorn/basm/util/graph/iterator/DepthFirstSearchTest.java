@@ -3,7 +3,6 @@ package com.nur1popcorn.basm.util.graph.iterator;
 import com.nur1popcorn.basm.utils.graph.DirectedGraph;
 import com.nur1popcorn.basm.utils.graph.iterator.DepthFirstSearch;
 import com.nur1popcorn.basm.utils.graph.model.directed.DirectedAdjacencyMatrixGraph;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Set;

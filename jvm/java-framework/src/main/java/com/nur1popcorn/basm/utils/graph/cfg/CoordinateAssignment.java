@@ -18,5 +18,6 @@
 
 package com.nur1popcorn.basm.utils.graph.cfg;
 
-public interface CoordinateAssignment {
+public interface CoordinateAssignment<V, E> {
+    //public
 }

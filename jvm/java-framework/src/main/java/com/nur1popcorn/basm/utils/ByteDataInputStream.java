@@ -28,7 +28,7 @@ import static com.nur1popcorn.basm.classfile.Opcode.IINC;
 
 public final class ByteDataInputStream extends DataInputStream {
     private ByteArrayInputStreamDelegate in;
-    private final int code_data[];
+    private final int instructions[];
 
     public ByteDataInputStream(byte buffer[]) throws IOException {
         this(new ByteArrayInputStreamDelegate(buffer));
@@ -37,12 +37,12 @@ public final class ByteDataInputStream extends DataInputStream {
     private ByteDataInputStream(ByteArrayInputStreamDelegate in) throws IOException {
         super(in);
         this.in = in;
-        code_data = new int[in.length()];
+        instructions = new int[in.length()];
         for(int i = 0, offset = 0; available() != 0; i++) {
             skip(Opcode.valueOf(readByte()));
-            code_data[offset] = i;
+            instructions[offset] = i;
             while(++offset < position())
-                code_data[offset] = -1; /* illegal location */
+                instructions[offset] = -1; /* illegal location */
         }
         reset();
     }
@@ -79,10 +79,9 @@ public final class ByteDataInputStream extends DataInputStream {
     }
 
     public int getIndex(int offset) {
-        if(offset >= 0 && offset < in.length() && code_data[offset] >= 0)
-            return code_data[offset];
-        else
-            throw new RuntimeException("Illegal target of jump or branch" + offset);
+        if(offset < 0 || offset >= in.length() || instructions[offset] < 0)
+            throw new IllegalArgumentException("Illegal target of jump or branch: " + offset);
+        return instructions[offset];
     }
 
     private static final class ByteArrayInputStreamDelegate extends ByteArrayInputStream {

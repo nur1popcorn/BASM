@@ -11,6 +11,7 @@ public final class DepthFirstSearch<V, E> extends AbstractGraphSearch<V, E> {
 
     @Override
     public V next() {
+        // TODO: found a bug concerning the depth with this implementation of the algorithm.
         if(--count <= 0) {
             count = queue.size();
             depth++;
