@@ -19,11 +19,12 @@
 package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
 import com.nur1popcorn.basm.classfile.ConstantPool;
+import com.nur1popcorn.basm.classfile.Opcode;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import static com.nur1popcorn.basm.Constants.INVOKEINTERFACE;
+import static com.nur1popcorn.basm.classfile.Opcode.INVOKEINTERFACE;
 
 public final class MethodInstruction extends FieldMethodInstruction {
     private int count;
@@ -33,7 +34,7 @@ public final class MethodInstruction extends FieldMethodInstruction {
      * @param opcode
      * @param index
      */
-    MethodInstruction(byte opcode, int index, ConstantPool cp) {
+    MethodInstruction(Opcode opcode, int index, ConstantPool cp) {
         super(opcode, index, cp);
     }
 

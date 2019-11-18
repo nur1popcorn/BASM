@@ -20,6 +20,7 @@ package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
 import com.nur1popcorn.basm.classfile.ConstantPool;
 import com.nur1popcorn.basm.classfile.MalformedClassFileException;
+import com.nur1popcorn.basm.classfile.Opcode;
 import com.nur1popcorn.basm.classfile.constants.ConstantInfo;
 import com.nur1popcorn.basm.classfile.constants.IConstantPoolPointer;
 
@@ -54,7 +55,7 @@ public abstract class CPInstruction extends Instruction implements IConstantPool
      * @param index
      * @param cp
      */
-    CPInstruction(byte opcode, int index, ConstantPool cp) {
+    CPInstruction(Opcode opcode, int index, ConstantPool cp) {
         super(opcode);
         this.index = index;
         this.cp = cp;

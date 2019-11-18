@@ -21,6 +21,7 @@ package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 import com.nur1popcorn.basm.classfile.ConstantPool;
 import com.nur1popcorn.basm.classfile.IClassVersionProvider;
 import com.nur1popcorn.basm.classfile.MalformedClassFileException;
+import com.nur1popcorn.basm.classfile.Opcode;
 import com.nur1popcorn.basm.classfile.constants.ConstantInfo;
 import com.nur1popcorn.basm.classfile.constants.ConstantInteger;
 import com.nur1popcorn.basm.classfile.constants.ConstantLong;
@@ -33,6 +34,8 @@ import java.io.IOException;
 import static com.nur1popcorn.basm.Constants.*;
 import static com.nur1popcorn.basm.classfile.IClassVersionProvider.JAVA_5;
 import static com.nur1popcorn.basm.classfile.IClassVersionProvider.JAVA_7;
+import static com.nur1popcorn.basm.classfile.Opcode.LDC;
+import static com.nur1popcorn.basm.classfile.Opcode.LDC_W;
 
 /**
  * The {@link LDCInstruction}
@@ -50,7 +53,7 @@ public final class LDCInstruction extends CPInstruction {
      * @param index
      * @param cp
      */
-    LDCInstruction(byte opcode, int index, ConstantPool cp) {
+    LDCInstruction(Opcode opcode, int index, ConstantPool cp) {
         super(opcode, index, cp);
     }
 
@@ -93,7 +96,7 @@ public final class LDCInstruction extends CPInstruction {
         switch(opcode) {
             case LDC:
                 if(index < 0x100) {
-                    os.writeByte(opcode);
+                    os.writeByte(opcode.getOpcode());
                     os.writeByte(index);
                     break;
                 }
@@ -101,7 +104,7 @@ public final class LDCInstruction extends CPInstruction {
                 // fallthrough.
             case LDC_W:
             case LDC2_W:
-                os.writeByte(opcode);
+                os.writeByte(opcode.getOpcode());
                 os.writeShort(index);
                 break;
             default:
@@ -189,7 +192,7 @@ public final class LDCInstruction extends CPInstruction {
             default:
                 throw new MalformedClassFileException(
                     "The instruction's opcode is invalid: opcode=" +
-                    Integer.toHexString(opcode & 0xff)
+                    opcode
                 );
         }
     }

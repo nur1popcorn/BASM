@@ -18,14 +18,16 @@
 
 package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
+import com.nur1popcorn.basm.classfile.Opcode;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import static com.nur1popcorn.basm.Constants.IINC;
-import static com.nur1popcorn.basm.Constants.WIDE;
+import static com.nur1popcorn.basm.classfile.Opcode.IINC;
+import static com.nur1popcorn.basm.classfile.Opcode.WIDE;
 
 public final class WideInstruction extends Instruction {
-    private byte opcode;
+    private Opcode opcode;
     private int index, constant;
 
     /**
@@ -39,7 +41,7 @@ public final class WideInstruction extends Instruction {
     /**
      * @param opcode
      */
-    WideInstruction(byte opcode, int index) {
+    WideInstruction(Opcode opcode, int index) {
         super(WIDE);
         this.opcode = opcode;
         this.index = index;
@@ -53,13 +55,13 @@ public final class WideInstruction extends Instruction {
     @Override
     public void write(DataOutputStream os) throws IOException {
         super.write(os);
-        os.writeByte(opcode);
+        os.writeByte(opcode.getOpcode());
         os.writeShort(index);
         if(opcode == IINC)
             os.writeShort(constant);
     }
 
-    public byte getOpcodeParameter() {
+    public Opcode getOpcodeParameter() {
         return opcode;
     }
 }

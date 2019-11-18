@@ -18,11 +18,10 @@
 
 package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
+import com.nur1popcorn.basm.classfile.Opcode;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
-
-import static com.nur1popcorn.basm.Constants.GOTO_W;
-import static com.nur1popcorn.basm.Constants.JSR_W;
 
 public final class JumpInstruction extends Instruction {
     private int offset;
@@ -30,7 +29,7 @@ public final class JumpInstruction extends Instruction {
     /**
      * @param opcode
      */
-    JumpInstruction(byte opcode, int offset) {
+    JumpInstruction(Opcode opcode, int offset) {
         super(opcode);
         this.offset = offset;
     }

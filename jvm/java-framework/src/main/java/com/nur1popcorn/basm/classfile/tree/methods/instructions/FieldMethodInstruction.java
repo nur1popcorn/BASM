@@ -2,6 +2,7 @@ package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
 import com.nur1popcorn.basm.classfile.ConstantPool;
 import com.nur1popcorn.basm.classfile.MalformedClassFileException;
+import com.nur1popcorn.basm.classfile.Opcode;
 import com.nur1popcorn.basm.classfile.constants.ConstantMethodRef;
 import com.nur1popcorn.basm.classfile.constants.ConstantNameAndType;
 import com.nur1popcorn.basm.classfile.tree.Type;
@@ -14,7 +15,7 @@ public abstract class FieldMethodInstruction extends CPInstruction {
      * @param opcode
      * @param index
      */
-    FieldMethodInstruction(byte opcode, int index, ConstantPool cp) {
+    FieldMethodInstruction(Opcode opcode, int index, ConstantPool cp) {
         super(opcode, index, cp);
     }
 

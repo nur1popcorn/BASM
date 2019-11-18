@@ -3,7 +3,7 @@ package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import static com.nur1popcorn.basm.Constants.MULTIANEWARRAY;
+import static com.nur1popcorn.basm.classfile.Opcode.MULTIANEWARRAY;
 
 public final class MultiANewArrayInstruction extends Instruction {
     private int index;

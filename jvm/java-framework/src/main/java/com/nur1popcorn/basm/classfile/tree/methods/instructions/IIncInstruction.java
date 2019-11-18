@@ -18,6 +18,8 @@
 
 package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
+import com.nur1popcorn.basm.classfile.Opcode;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
 
@@ -32,7 +34,7 @@ public final class IIncInstruction extends LocalVariableInstruction {
      * @param index
      * @param
      */
-    IIncInstruction(byte opcode, byte index, byte constant) {
+    IIncInstruction(Opcode opcode, byte index, byte constant) {
         super(opcode, index);
         this.constant = constant;
     }

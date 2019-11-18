@@ -19,6 +19,7 @@
 package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
 import com.nur1popcorn.basm.classfile.ConstantPool;
+import com.nur1popcorn.basm.classfile.Opcode;
 
 public final class FieldInstruction extends FieldMethodInstruction {
     /**
@@ -26,7 +27,7 @@ public final class FieldInstruction extends FieldMethodInstruction {
      * @param opcode
      * @param index
      */
-    FieldInstruction(byte opcode, int index, ConstantPool cp) {
+    FieldInstruction(Opcode opcode, int index, ConstantPool cp) {
         super(opcode, index, cp);
     }
 

@@ -20,6 +20,7 @@ package com.nur1popcorn.basm.classfile.tree.methods;
 
 import com.nur1popcorn.basm.classfile.ConstantPool;
 import com.nur1popcorn.basm.classfile.MalformedClassFileException;
+import com.nur1popcorn.basm.classfile.Opcode;
 import com.nur1popcorn.basm.classfile.tree.methods.instructions.IInstructionVisitor;
 import com.nur1popcorn.basm.classfile.tree.methods.instructions.Instruction;
 import com.nur1popcorn.basm.classfile.tree.methods.instructions.SwitchInstruction;
@@ -30,10 +31,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.*;
 
-import static com.nur1popcorn.basm.Constants.*;
-import static com.nur1popcorn.basm.Constants.OPCODE_MNEMONICS;
-import static com.nur1popcorn.basm.classfile.tree.methods.instructions.Instruction.SWITCH_INS;
-import static com.nur1popcorn.basm.classfile.tree.methods.instructions.Instruction.WIDE_INS;
+import static com.nur1popcorn.basm.classfile.Opcode.IINC;
+import static com.nur1popcorn.basm.classfile.Opcode.TABLESWITCH;
 
 public final class InstructionList extends AbstractSequentialList<Instruction> {
     private Node head, tail;
@@ -212,8 +211,8 @@ public final class InstructionList extends AbstractSequentialList<Instruction> {
     }
 
     private static int getLength(Instruction handle, int offset) {
-        final byte opcode = handle.getOpcode();
-        switch(handle.getType()) {
+        final Opcode opcode = handle.getOpcode();
+        switch(opcode.getType()) {
             case SWITCH_INS: {
                 final SwitchInstruction instruction = (SwitchInstruction) handle;
                 return opcode == TABLESWITCH ?
@@ -224,10 +223,10 @@ public final class InstructionList extends AbstractSequentialList<Instruction> {
                 return ((WideInstruction) handle)
                     .getOpcodeParameter() == IINC ? 6 : 4;
             default: {
-                final int parameters = OPCODE_PARAMETERS[opcode & 0xff];
-                if(parameters == UNKNOWN_PARAMETERS)
+                final int parameters = opcode.getParameter();
+                if(parameters == -0x1)
                     throw new MalformedClassFileException(
-                        "The opcode=" + OPCODE_MNEMONICS[opcode & 0xff] + " is invalid."
+                        "The opcode=" + opcode.getMnemonic() + " is invalid."
                     );
                 return parameters + 1;
             }

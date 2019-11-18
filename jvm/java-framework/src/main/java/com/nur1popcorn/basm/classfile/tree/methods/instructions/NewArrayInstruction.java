@@ -5,7 +5,7 @@ import com.nur1popcorn.basm.classfile.tree.Type;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import static com.nur1popcorn.basm.Constants.NEWARRAY;
+import static com.nur1popcorn.basm.classfile.Opcode.NEWARRAY;
 
 public final class NewArrayInstruction extends Instruction {
     private Type type;

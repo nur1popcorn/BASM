@@ -1,12 +1,13 @@
 package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
 import com.nur1popcorn.basm.classfile.ConstantPool;
+import com.nur1popcorn.basm.classfile.Opcode;
 
 public final class ClassInstruction extends CPInstruction {
     /**
      * @param opcode
      */
-    ClassInstruction(byte opcode, int index, ConstantPool cp) {
+    ClassInstruction(Opcode opcode, int index, ConstantPool cp) {
         super(opcode, index, cp);
     }
 

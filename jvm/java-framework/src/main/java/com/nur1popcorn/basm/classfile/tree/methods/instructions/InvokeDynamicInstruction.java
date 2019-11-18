@@ -5,7 +5,7 @@ import com.nur1popcorn.basm.classfile.ConstantPool;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import static com.nur1popcorn.basm.Constants.INVOKEDYNAMIC;
+import static com.nur1popcorn.basm.classfile.Opcode.INVOKEDYNAMIC;
 
 public final class InvokeDynamicInstruction extends CPInstruction {
     InvokeDynamicInstruction(int index, ConstantPool cp) {

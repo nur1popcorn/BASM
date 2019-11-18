@@ -18,14 +18,13 @@
 
 package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
+import com.nur1popcorn.basm.classfile.Opcode;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import static com.nur1popcorn.basm.Constants.LOOKUPSWITCH;
-import static com.nur1popcorn.basm.Constants.TABLESWITCH;
 
 public final class SwitchInstruction extends Instruction {
     private int defaultIndex;
@@ -34,7 +33,7 @@ public final class SwitchInstruction extends Instruction {
     /**
      * @param opcode
      */
-    SwitchInstruction(byte opcode, int defaultIndex, KeyIndexPair indices[]) {
+    SwitchInstruction(Opcode opcode, int defaultIndex, KeyIndexPair indices[]) {
         super(opcode);
         this.defaultIndex = defaultIndex;
         this.indices = new ArrayList<>(indices.length);

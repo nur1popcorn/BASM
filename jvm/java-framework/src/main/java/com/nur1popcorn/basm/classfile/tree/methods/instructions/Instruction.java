@@ -18,10 +18,9 @@
 
 package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
-import com.nur1popcorn.basm.classfile.ConstantPool;
-import com.nur1popcorn.basm.classfile.IClassVersionProvider;
-import com.nur1popcorn.basm.classfile.MalformedClassFileException;
+import com.nur1popcorn.basm.classfile.*;
 import com.nur1popcorn.basm.classfile.tree.Type;
+import com.nur1popcorn.basm.classfile.tree.methods.InstructionType;
 import com.nur1popcorn.basm.classfile.tree.methods.instructions.SwitchInstruction.KeyIndexPair;
 import com.nur1popcorn.basm.utils.ByteDataInputStream;
 
@@ -29,8 +28,8 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import static com.nur1popcorn.basm.Constants.*;
-import static com.nur1popcorn.basm.classfile.tree.methods.instructions.InstructionFactory.INSTRUCTIONS;
+import static com.nur1popcorn.basm.classfile.Opcode.IINC;
+import static com.nur1popcorn.basm.classfile.Opcode.INVOKEINTERFACE;
 
 /**
  * The {@link Instruction} is the abstract super class which all other {@link Instruction}s are derived from.
@@ -62,147 +61,15 @@ import static com.nur1popcorn.basm.classfile.tree.methods.instructions.Instructi
  *
  */
 public abstract class Instruction {
-    /**
-     * This constant denotes instructions, which are not implemented by the JVM. These instructions
-     * are associated with opcodes ranging from xCB to xFD and are reserved for future use.
-     *
-     * TODO: mention quick instructions ?
-     */
-    public static final byte NOT_AN_INS = 0x0;
-
-    /**
-     * This constant denotes instructions, which solely consist of their opcode, they therefore tend
-     * to also have a very predictable effect on the stack.
-     */
-    public static final byte NO_PARAM_INS = 0x1;
-
-    /**
-     * <p>This constant denotes instructions, which sign-extend their parameters and push onto the stack.
-     *    The constant is employed by the following 2 instructions: </p>
-     * <ul>
-     *     <li>
-     *         <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.bipush">
-     *             bipush
-     *         </a>
-     *     </li>
-     *     <li>
-     *         <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.sipush">
-     *             sipush
-     *         </a>
-     *     </li>
-     * </ul>
-     */
-    public static final byte PUSH_INS = 0x2;
-
-    /**
-     * <p>This constant denotes instructions, which push entries from the constant pool onto the stack.
-     *    The constant is employed by the following 3 instructions: </p>
-     * <ul>
-     *     <li>
-     *         <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.ldc">
-     *             ldc
-     *         </a>
-     *     </li>
-     *     <li>
-     *         <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.ldc_w">
-     *             ldc_w
-     *         </a>
-     *     </li>
-     *     <li>
-     *         <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.ldc2_w">
-     *             ldc2_w
-     *         </a>
-     *     </li>
-     * </ul>
-     * <p>The instructions are very predictable in terms of their effect on the stack ldc & ldc_w will
-     *    increment the stack size by 1 while ldc2_w will only increment it by 2.</p>
-     */
-    public static final byte LDC_INS = 0x3;
-
-    /**
-     * This constant denotes instruction, which require a local variable index to be present as a parameter.
-     */
-    public static final byte LOCAL_VARIABLE_INS = 0x4;
-
-    /**
-     *
-     */
-    public static final byte IINC_INS = 0x5;
-
-    /**
-     *
-     */
-    public static final byte JUMP_INS = 0x6;
-
-    /**
-     *
-     */
-    public static final byte SWITCH_INS = 0x7;
-
-    /**
-     *
-     */
-    public static final byte FIELD_INS = 0x8;
-
-    /**
-     *
-     */
-    public static final byte METHOD_INS = 0x9;
-
-    /**
-     *
-     */
-    public static final byte INVOKEDYNAMIC_INS = 0xa;
-
-    /**
-     *
-     */
-    public static final byte CLASS_INS = 0xb;
-
-    /**
-     *
-     */
-    public static final byte NEWARRAY_INS = 0xc;
-
-    /**
-     *
-     */
-    public static final byte WIDE_INS = 0xd;
-
-    /**
-     *
-     */
-    public static final byte MULTIANEWARRAY_INS = 0xe;
-
-    /**
-     *
-     */
-    public static final byte RESERVED_INS = 0xf;
-
-    /* This table maps each opcode to their type. The table is made up of 4 bit entries stored in
-     * 32 bit blocks. These 4 bit entries denote the type of instruction.
-     *
-     */
-    private static final int INSTRUCTION_TYPE_TABLE[] = {
-        0x11111111, 0x11111111, 0x44433322, 0x11111144,
-        0x11111111, 0x11111111, 0x44111111, 0x11111444,
-        0x11111111, 0x11111111, 0x11111111, 0x11111111,
-        0x11111111, 0x11111111, 0x11111111, 0x11111111,
-        0x11151111, 0x11111111, 0x11111111, 0x66666661,
-        0x66666666, 0x11117746, 0x99888811, 0x11bcba99,
-        0x66ed11bb, 0x00000166, 0x00000000, 0x00000000,
-        0x00000000, 0x00000000, 0x00000000, 0x11000000,
-    };
-
     /*
      *
      */
-    protected byte opcode;
+    protected Opcode opcode;
 
     /**
      * @param opcode
      */
-    Instruction(byte opcode) {
+    Instruction(Opcode opcode) {
         this.opcode = opcode;
     }
 
@@ -227,23 +94,14 @@ public abstract class Instruction {
      * @throws IOException
      */
     public void write(DataOutputStream os) throws IOException {
-        os.writeByte(opcode);
-    }
-
-    /**
-     * @param opcode
-     *
-     * @return
-     */
-    public static byte indexType(int opcode) {
-        return (byte) ((INSTRUCTION_TYPE_TABLE[(opcode &= 0xff) / 8] >> ((opcode % 8) * 4)) & 0xf);
+        os.writeByte(opcode.getOpcode());
     }
 
     /**
      * @return
      */
-    public final byte getType() {
-        return indexType(opcode);
+    public final InstructionType getType() {
+        return opcode.getType();
     }
 
     /**
@@ -251,8 +109,8 @@ public abstract class Instruction {
      *
      * @throws MalformedClassFileException
      */
-    public void setOpcode(byte opcode) {
-        if(getType() != indexType(opcode))
+    public void setOpcode(Opcode opcode) {
+        if(getType() != opcode.getType())
             // TODO: desc
             throw new MalformedClassFileException();
         this.opcode = opcode;
@@ -261,7 +119,7 @@ public abstract class Instruction {
     /**
      * @return
      */
-    public final byte getOpcode() {
+    public final Opcode getOpcode() {
         return opcode;
     }
 
@@ -276,10 +134,10 @@ public abstract class Instruction {
      */
     public static Instruction read(ByteDataInputStream in, ConstantPool cp) throws IOException {
         final int offset = in.position();
-        final byte opcode = in.readByte();
-        switch(indexType(opcode)) {
+        final Opcode opcode = Opcode.valueOf(in.readByte());
+        switch(opcode.getType()) {
             case NO_PARAM_INS:
-                return INSTRUCTIONS[opcode & 0xff];
+                return new NoParameterInstruction(opcode);
             case PUSH_INS:
                 switch(opcode) {
                     case BIPUSH:
@@ -383,7 +241,7 @@ public abstract class Instruction {
                     Type.getType(in.readByte()));
             case WIDE_INS: {
                 // https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.wide
-                final byte wopcode = in.readByte();
+                final Opcode wopcode = Opcode.valueOf(in.readByte());
                 if(wopcode == IINC)
                     return new WideInstruction(
                         in.readUnsignedShort(), in.readUnsignedShort());

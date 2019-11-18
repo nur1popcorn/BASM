@@ -18,11 +18,13 @@
 
 package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
+import com.nur1popcorn.basm.classfile.Opcode;
+
 public final class NoParameterInstruction extends Instruction {
     /**
      * @param opcode
      */
-    NoParameterInstruction(byte opcode) {
+    NoParameterInstruction(Opcode opcode) {
         super(opcode);
     }
 
