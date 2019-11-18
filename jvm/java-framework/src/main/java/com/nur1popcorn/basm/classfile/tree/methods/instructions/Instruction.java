@@ -20,13 +20,15 @@ package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
 import com.nur1popcorn.basm.classfile.*;
 import com.nur1popcorn.basm.classfile.tree.Type;
-import com.nur1popcorn.basm.classfile.tree.methods.InstructionType;
+import com.nur1popcorn.basm.classfile.tree.methods.IInstructionPointer;
 import com.nur1popcorn.basm.classfile.tree.methods.instructions.SwitchInstruction.KeyIndexPair;
 import com.nur1popcorn.basm.utils.ByteDataInputStream;
+import com.nur1popcorn.basm.utils.WeakHashSet;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.Set;
 
 import static com.nur1popcorn.basm.classfile.Opcode.IINC;
 import static com.nur1popcorn.basm.classfile.Opcode.INVOKEINTERFACE;
@@ -66,6 +68,14 @@ public abstract class Instruction {
      */
     protected Opcode opcode;
 
+    /*
+     *
+     */
+    private Set<IInstructionPointer> pointers;
+
+    public Instruction next,
+                       prev;
+
     /**
      * @param opcode
      */
@@ -98,19 +108,12 @@ public abstract class Instruction {
     }
 
     /**
-     * @return
-     */
-    public final InstructionType getType() {
-        return opcode.getType();
-    }
-
-    /**
      * @param opcode
      *
      * @throws MalformedClassFileException
      */
     public void setOpcode(Opcode opcode) {
-        if(getType() != opcode.getType())
+        if(this.opcode.getType() != opcode.getType())
             // TODO: desc
             throw new MalformedClassFileException();
         this.opcode = opcode;
@@ -121,6 +124,41 @@ public abstract class Instruction {
      */
     public final Opcode getOpcode() {
         return opcode;
+    }
+
+    /**
+     * @param pointer
+     */
+    public void addPointer(IInstructionPointer pointer) {
+        if(pointers == null)
+            pointers = new WeakHashSet<>();
+        pointers.add(pointer);
+    }
+
+    /**
+     * @param pointer
+     */
+    public void removePointer(IInstructionPointer pointer) {
+        pointers.remove(pointer);
+    }
+
+    /**
+     * @return
+     */
+    public boolean hasPointers() {
+        return pointers != null &&
+            pointers.size() != 0;
+    }
+
+    /**
+     * @return
+     */
+    public IInstructionPointer[] getPointers() {
+        if(pointers == null)
+            return new IInstructionPointer[0];
+        final IInstructionPointer arr[] = new IInstructionPointer[pointers.size()];
+        pointers.toArray(arr);
+        return arr;
     }
 
     /**

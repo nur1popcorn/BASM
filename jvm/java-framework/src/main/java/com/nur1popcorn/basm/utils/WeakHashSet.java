@@ -28,7 +28,7 @@ import java.util.WeakHashMap;
  * on iteration order or the order in which objects are stored. The class is mostly used to
  * cleanup straggler pointers to a specific object.
  *
- * @see com.nur1popcorn.basm.classfile.tree.methods.InstructionHandle
+ * @see com.nur1popcorn.basm.classfile.tree.methods.Instruction
  * @see com.nur1popcorn.basm.classfile.constants.ConstantInfo
  *
  * @author nur1popcorn

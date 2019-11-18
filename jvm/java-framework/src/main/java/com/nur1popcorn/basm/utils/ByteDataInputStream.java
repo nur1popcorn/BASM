@@ -84,6 +84,10 @@ public final class ByteDataInputStream extends DataInputStream {
         return instructions[offset];
     }
 
+    public int numberOfInstructions() {
+        return instructions.length;
+    }
+
     private static final class ByteArrayInputStreamDelegate extends ByteArrayInputStream {
         private ByteArrayInputStreamDelegate(byte[] buffer) {
             super(buffer);
