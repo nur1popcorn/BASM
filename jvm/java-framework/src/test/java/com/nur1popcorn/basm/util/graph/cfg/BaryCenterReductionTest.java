@@ -1,8 +1,8 @@
 package com.nur1popcorn.basm.util.graph.cfg;
 
 import com.nur1popcorn.basm.utils.graph.DirectedGraph;
-import com.nur1popcorn.basm.utils.graph.cfg.BaryCenterReduction;
-import com.nur1popcorn.basm.utils.graph.cfg.CrossingReduction;
+import com.nur1popcorn.basm.utils.graph.cfg.crossings.BaryCenterReduction;
+import com.nur1popcorn.basm.utils.graph.cfg.crossings.CrossingReduction;
 import com.nur1popcorn.basm.utils.graph.model.directed.DirectedAdjacencyMatrixGraph;
 import org.junit.Test;
 

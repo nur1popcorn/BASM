@@ -19,28 +19,27 @@
 package com.nur1popcorn.basm.utils.graph.cfg;
 
 import com.nur1popcorn.basm.utils.graph.DirectedGraph;
+import com.nur1popcorn.basm.utils.graph.cfg.crossings.CrossingReduction;
 import com.nur1popcorn.basm.utils.graph.iterator.BreadthFirstSearch;
-import com.nur1popcorn.basm.utils.graph.iterator.GraphIterator;
 
-import java.awt.*;
-import java.awt.geom.Rectangle2D;
 import java.util.LinkedList;
 import java.util.List;
 
 public final class LayoutSugiyama<V, E> implements LayoutStrategy<V, E> {
-    private static final Rectangle2D DUMMY_NODE = new Rectangle(0, 0, 0, 0);
-
     private final LayerAssignment<V, E> layering;
     private final List<CrossingReduction<V, E>> reduction = new LinkedList<>();
-    //private final CoordinateAssignment assignment;
 
-    public LayoutSugiyama(int hg, int vg, GraphIterator<Rectangle2D> layerIterator) {
+    public LayoutSugiyama(int hg, int vg) {
         this.layering = new LayerSearchAssignment<>(BreadthFirstSearch::new);
-        //reduction.add(new )
     }
 
     @Override
     public void reposition(DirectedGraph<V, E> graph, V start) {
         final List<List<V>> layered = layering.assign(graph, start);
+
+        for(CrossingReduction<V, E> method : reduction)
+            method.reduce(graph, layered);
+
+
     }
 }

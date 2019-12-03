@@ -16,7 +16,7 @@
  *
  */
 
-package com.nur1popcorn.basm.utils.graph.cfg;
+package com.nur1popcorn.basm.utils.graph.cfg.crossings;
 
 import com.nur1popcorn.basm.utils.graph.DirectedGraph;
 
@@ -37,10 +37,12 @@ public final class TransposeReduction<V, E> implements CrossingReduction<V, E> {
         if(!iterator.hasNext())
             return;
 
+        final CrossingMatrix<V, E> matrix = new CrossingMatrix<>();
+
         List<V> a = iterator.next();
         while(iterator.hasNext()) {
             final List<V> b = iterator.next();
-            transpose(graph, a, b);
+            transpose(matrix, graph, a, b);
             a = b;
         }
     }
@@ -52,7 +54,9 @@ public final class TransposeReduction<V, E> implements CrossingReduction<V, E> {
      * @param a The upper layer (lower depth).
      * @param b The lower layer (higher depth).
      */
-    private static <V, E> void transpose(DirectedGraph<V, E> graph, List<V> a, List<V> b) {
+    private static <V, E> void transpose(CrossingMatrix<V, E> matrix, DirectedGraph<V, E> graph, List<V> a, List<V> b) {
+        matrix.compute(graph, a, b);
+
         boolean changed = true;
         while(changed) {
             changed = false;
@@ -63,10 +67,8 @@ public final class TransposeReduction<V, E> implements CrossingReduction<V, E> {
                     break;
 
                 final V w = iterator.next();
-
-                // only collect the neighbours that would be affected by a swap.
-                if(countCrossings(graph, a, v, w) >
-                   countCrossings(graph, a, w, v)) {
+                if(matrix.crossings(v, w) >
+                   matrix.crossings(w, v)) {
                     // swap the two members to reduce the number of edge crossings.
                     iterator.set(v);
                     iterator.previous();
@@ -79,29 +81,5 @@ public final class TransposeReduction<V, E> implements CrossingReduction<V, E> {
                 }
             }
         }
-    }
-
-    /**
-     * A simple way of counting the edge crossings in one section that I came up with.
-     * The algorithm works by assigning each vertex a cost for being reached by another
-     * vertex from the right. The cost is based on the number of barrier (edge) crossings
-     * that such a connection would cause.
-     *
-     * @param graph The graph in which the edge crossings are to be counted.
-     * @param v The 1st of the two target vertices.
-     * @param w The 2nd of the two target vertices.
-     *
-     * @return The number of edge crossings.
-     */
-    private static <V, E> int countCrossings(DirectedGraph<V, E> graph, List<V> a, V v, V w) {
-        int cost = 0;
-        int count = 0;
-        for(V u : a) {
-            if(graph.hasEdge(u, v))
-                count += cost;
-            if(graph.hasEdge(u, w))
-                cost++;
-        }
-        return count;
     }
 }

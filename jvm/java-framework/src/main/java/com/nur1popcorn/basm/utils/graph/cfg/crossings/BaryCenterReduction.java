@@ -16,7 +16,7 @@
  *
  */
 
-package com.nur1popcorn.basm.utils.graph.cfg;
+package com.nur1popcorn.basm.utils.graph.cfg.crossings;
 
 import com.nur1popcorn.basm.utils.graph.DirectedGraph;
 

@@ -25,18 +25,24 @@ import java.io.IOException;
 
 import static com.nur1popcorn.basm.Constants.MAGIC;
 
+/**
+ * The {@link ClassWriter} is a {@link IClassVisitor} which writes the visited class file to the
+ * given {@link DataOutputStream}.
+ *
+ * @author nur1popcorn
+ * @since 1.0.0-alpha
+ */
 public final class ClassWriter implements IClassVisitor {
     private final DataOutputStream out;
-
     private ConstantPool constantPool;
 
+    /**
+     * @param out The {@link DataOutputStream} to which the classfile should be written to.
+     */
     public ClassWriter(DataOutputStream out) {
         this.out = out;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void visitHead(int minorVersion, int majorVersion, ConstantPool constantPool) throws IOException {
         // write out file header 0xcafebabe.
@@ -49,9 +55,6 @@ public final class ClassWriter implements IClassVisitor {
             .write(out);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void visitBody(int access, int thisClass, int superClass, int[] interfaces) throws IOException {
         out.writeShort(access);
@@ -64,9 +67,6 @@ public final class ClassWriter implements IClassVisitor {
             out.writeShort(index);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void visitFields(FieldMethodInfo[] fields) throws IOException {
         out.writeShort(fields.length);
@@ -74,9 +74,6 @@ public final class ClassWriter implements IClassVisitor {
             fieldInfo.write(out);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void visitMethods(FieldMethodInfo[] methods) throws IOException {
         out.writeShort(methods.length);
@@ -84,9 +81,6 @@ public final class ClassWriter implements IClassVisitor {
             methodInfo.write(out);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void visitFooter(AttributeInfo[] attributes) throws IOException {
         out.writeShort(attributes.length);

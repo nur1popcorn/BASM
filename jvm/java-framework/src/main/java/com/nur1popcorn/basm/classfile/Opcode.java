@@ -995,7 +995,6 @@ public enum Opcode {
             final int mid = (low + high) >>> 1;
             final int op = opcodes[mid]
                 .getOpcode() & 0xff;
-
             if(o < op)
                 high = mid - 1;
             else if(o > op)
