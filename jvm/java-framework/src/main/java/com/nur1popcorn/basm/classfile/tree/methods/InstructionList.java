@@ -196,9 +196,6 @@ public final class InstructionList extends AbstractList<Instruction> implements 
                 .next = element)
                 .next = instructions[index + 1])
                 .prev = element;
-        for(int i = index + 1; i < size; i++)
-            for(IInstructionPointer pointer : instructions[i].getPointers())
-                pointer.update(i - 1, i);
     }
 
     /**
@@ -227,9 +224,6 @@ public final class InstructionList extends AbstractList<Instruction> implements 
                 first = element;
             if((element.next = old.next) == null)
                 last = element;
-            for(int i = index; i < size; i++)
-                for(IInstructionPointer pointer : instructions[i].getPointers())
-                    pointer.update(i + 1, i);
         }
         if(old.hasPointers())
             throw new InstructionLostException(old.getPointers());

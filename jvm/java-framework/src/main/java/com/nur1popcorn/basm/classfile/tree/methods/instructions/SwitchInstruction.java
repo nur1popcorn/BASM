@@ -29,7 +29,8 @@ import java.util.Collections;
 import java.util.List;
 
 public final class SwitchInstruction extends Instruction implements IInstructionPointer {
-    public int defaultIndex;
+    private int defaultIndex;
+    private Instruction defaultTarget;
     private final List<KeyIndexPair> indices;
 
     /**
@@ -72,7 +73,7 @@ public final class SwitchInstruction extends Instruction implements IInstruction
         */
         while((os.size() & 0x3) != 0)
             os.writeByte(0);
-        os.writeInt(os.getOffset(defaultIndex) - offset);
+        os.writeInt(os.getOffset(defaultTarget) - offset);
         switch(opcode) {
             case TABLESWITCH:
                 // https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.tableswitch
@@ -81,13 +82,13 @@ public final class SwitchInstruction extends Instruction implements IInstruction
                 os.writeInt(low);
                 os.writeInt(high);
                 for(KeyIndexPair pair : indices)
-                    os.writeInt(os.getOffset(pair.index) - offset);
+                    os.writeInt(os.getOffset(pair.target) - offset);
                 break;
             case LOOKUPSWITCH:
                 os.writeInt(getCount());
                 for(KeyIndexPair pair : indices) {
                     os.writeInt(pair.key);
-                    os.writeInt(os.getOffset(pair.index) - offset);
+                    os.writeInt(os.getOffset(pair.target) - offset);
                 }
                 break;
         }
@@ -100,6 +101,7 @@ public final class SwitchInstruction extends Instruction implements IInstruction
     public static class KeyIndexPair {
         public int key;
         public int index;
+        public Instruction target;
 
         public KeyIndexPair(int key, int index) {
             this.key = key;
@@ -112,10 +114,11 @@ public final class SwitchInstruction extends Instruction implements IInstruction
      */
     @Override
     public void attach(InstructionList instructions) {
-        indexDefault(instructions)
+        (defaultTarget = instructions.get(defaultIndex))
             .addPointer(this);
-        indexTargets(instructions)
-            .forEach(h -> h.addPointer(this));
+        for(KeyIndexPair pair : indices)
+            (pair.target = instructions.get(pair.index))
+                .addPointer(this);
     }
 
     /**
@@ -123,42 +126,8 @@ public final class SwitchInstruction extends Instruction implements IInstruction
      */
     @Override
     public void dispose(InstructionList instructions) {
-        indexDefault(instructions)
-            .removePointer(this);
-        indexTargets(instructions)
-            .forEach(h -> h.removePointer(this));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void update(int oldIndex, int newIndex) {
-        if(defaultIndex == oldIndex)
-            defaultIndex = newIndex;
+        defaultTarget.removePointer(this);
         for(KeyIndexPair pair : indices)
-            if(pair.index == oldIndex)
-                pair.index = newIndex;
-    }
-
-    /**
-     * @param instructions
-     *
-     * @return
-     */
-    public Instruction indexDefault(InstructionList instructions) {
-        return instructions.get(defaultIndex);
-    }
-
-    /**
-     * @param instructions
-     *
-     * @return
-     */
-    public List<Instruction> indexTargets(InstructionList instructions) {
-        final List<Instruction> targets = new ArrayList<>(indices.size());
-        for(KeyIndexPair pair : indices)
-            targets.add(instructions.get(pair.index));
-        return targets;
+           pair.target.removePointer(this);
     }
 }

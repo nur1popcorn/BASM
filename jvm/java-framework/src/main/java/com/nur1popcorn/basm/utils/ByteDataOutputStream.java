@@ -23,24 +23,23 @@ import com.nur1popcorn.basm.classfile.tree.methods.instructions.Instruction;
 
 import java.io.DataOutputStream;
 import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ByteDataOutputStream extends DataOutputStream {
-    private final int offsets[];
+    private final Map<Instruction, Integer> offsets;
 
     public ByteDataOutputStream(InstructionList il, OutputStream out) {
         super(out);
-        offsets = new int[il.size()];
+        offsets = new HashMap<>();
         int offset = 0;
-        for(int i = 0; i < offsets.length; i++) {
-            final Instruction instruction = il.get(i);
-            offsets[i] = offset;
+        for(Instruction instruction : il) {
+            offsets.put(instruction, offset);
             offset += instruction.getLength(offset);
         }
     }
 
-    public int getOffset(int index) {
-        if(index < 0 || index >= offsets.length || offsets[index] < 0)
-            throw new IllegalArgumentException("Illegal target of jump or branch: " + index);
-        return offsets[index];
+    public int getOffset(Instruction instruction) {
+        return offsets.get(instruction);
     }
 }

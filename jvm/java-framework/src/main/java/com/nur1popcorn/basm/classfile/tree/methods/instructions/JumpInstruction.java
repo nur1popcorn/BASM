@@ -26,14 +26,15 @@ import com.nur1popcorn.basm.utils.ByteDataOutputStream;
 import java.io.IOException;
 
 public final class JumpInstruction extends Instruction  implements IInstructionPointer {
-    private int target;
+    private int targetIndex;
+    private Instruction target;
 
     /**
      * @param opcode
      */
-    JumpInstruction(Opcode opcode, int target) {
+    JumpInstruction(Opcode opcode, int targetIndex) {
         super(opcode);
-        this.target = target;
+        this.targetIndex = targetIndex;
     }
 
     /**
@@ -68,7 +69,7 @@ public final class JumpInstruction extends Instruction  implements IInstructionP
      */
     @Override
     public void attach(InstructionList instructions) {
-        indexTarget(instructions)
+        (target = instructions.get(targetIndex))
             .addPointer(this);
     }
 
@@ -77,23 +78,6 @@ public final class JumpInstruction extends Instruction  implements IInstructionP
      */
     @Override
     public void dispose(InstructionList instructions) {
-        indexTarget(instructions)
-            .removePointer(this);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void update(int oldIndex, int newIndex) {
-        if(target == oldIndex)
-            target = newIndex;
-    }
-
-    /**
-     * @return
-     */
-    public Instruction indexTarget(InstructionList instructions) {
-        return instructions.get(target);
+        target.removePointer(this);
     }
 }
