@@ -1,6 +1,7 @@
 package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
-import java.io.DataOutputStream;
+import com.nur1popcorn.basm.utils.ByteDataOutputStream;
+
 import java.io.IOException;
 
 import static com.nur1popcorn.basm.classfile.Opcode.MULTIANEWARRAY;
@@ -21,7 +22,7 @@ public final class MultiANewArrayInstruction extends Instruction {
     }
 
     @Override
-    public void write(DataOutputStream os) throws IOException {
+    public void write(ByteDataOutputStream os) throws IOException {
         super.write(os);
         os.writeShort(index);
         os.writeByte(dimensions);

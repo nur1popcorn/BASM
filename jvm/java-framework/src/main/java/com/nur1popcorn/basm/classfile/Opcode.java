@@ -663,6 +663,8 @@ public enum Opcode {
     LASTORE                  ( 0x50, "lastore",                   0x0,    0x4,     0x0,    NO_PARAM_INS),
     /* of type float. */
     FASTORE                  ( 0x51, "fastore",                   0x0,    0x3,     0x0,    NO_PARAM_INS),
+    /* of type double. */
+    DASTORE                  ( 0x52, "dastore",                   0x0,    0x4,     0x0,    NO_PARAM_INS),
     /* stores object reference. */
     AASTORE                  ( 0x53, "aastore",                   0x0,    0x3,     0x0,    NO_PARAM_INS),
     /* of type bool. */

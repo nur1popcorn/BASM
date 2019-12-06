@@ -19,19 +19,21 @@
 package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
 import com.nur1popcorn.basm.classfile.Opcode;
+import com.nur1popcorn.basm.classfile.tree.methods.IInstructionPointer;
+import com.nur1popcorn.basm.classfile.tree.methods.InstructionList;
+import com.nur1popcorn.basm.utils.ByteDataOutputStream;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
 
-public final class JumpInstruction extends Instruction {
-    private int offset;
+public final class JumpInstruction extends Instruction  implements IInstructionPointer {
+    private int target;
 
     /**
      * @param opcode
      */
-    JumpInstruction(Opcode opcode, int offset) {
+    JumpInstruction(Opcode opcode, int target) {
         super(opcode);
-        this.offset = offset;
+        this.target = target;
     }
 
     /**
@@ -46,16 +48,52 @@ public final class JumpInstruction extends Instruction {
      * {@inheritDoc}
      */
     @Override
-    public void write(DataOutputStream os) throws IOException {
-        super.write(os);
+    public void write(ByteDataOutputStream os) throws IOException {
+        final int offset = os.size();
+        os.writeByte(opcode.getOpcode());
+        final int length = os.getOffset(target) - offset;
         switch(opcode) {
             case GOTO_W:
             case JSR_W:
-                os.writeInt(offset);
+                os.writeInt(length);
                 break;
             default:
-                os.writeShort(offset);
+                os.writeShort(length);
                 break;
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void attach(InstructionList instructions) {
+        indexTarget(instructions)
+            .addPointer(this);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void dispose(InstructionList instructions) {
+        indexTarget(instructions)
+            .removePointer(this);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void update(int oldIndex, int newIndex) {
+        if(target == oldIndex)
+            target = newIndex;
+    }
+
+    /**
+     * @return
+     */
+    public Instruction indexTarget(InstructionList instructions) {
+        return instructions.get(target);
     }
 }

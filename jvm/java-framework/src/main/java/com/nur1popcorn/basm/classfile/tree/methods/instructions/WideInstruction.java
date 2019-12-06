@@ -19,8 +19,8 @@
 package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
 import com.nur1popcorn.basm.classfile.Opcode;
+import com.nur1popcorn.basm.utils.ByteDataOutputStream;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
 
 import static com.nur1popcorn.basm.classfile.Opcode.IINC;
@@ -53,7 +53,7 @@ public final class WideInstruction extends Instruction {
     }
 
     @Override
-    public void write(DataOutputStream os) throws IOException {
+    public void write(ByteDataOutputStream os) throws IOException {
         super.write(os);
         os.writeByte(opcode.getOpcode());
         os.writeShort(index);

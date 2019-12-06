@@ -27,8 +27,8 @@ import com.nur1popcorn.basm.classfile.constants.ConstantInteger;
 import com.nur1popcorn.basm.classfile.constants.ConstantLong;
 import com.nur1popcorn.basm.classfile.constants.ConstantName;
 import com.nur1popcorn.basm.classfile.tree.ConstantPoolGenerator;
+import com.nur1popcorn.basm.utils.ByteDataOutputStream;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
 
 import static com.nur1popcorn.basm.Constants.*;
@@ -92,7 +92,7 @@ public final class LDCInstruction extends CPInstruction {
      * {@inheritDoc}
      */
     @Override
-    public void write(DataOutputStream os) throws IOException {
+    public void write(ByteDataOutputStream os) throws IOException {
         switch(opcode) {
             case LDC:
                 if(index < 0x100) {

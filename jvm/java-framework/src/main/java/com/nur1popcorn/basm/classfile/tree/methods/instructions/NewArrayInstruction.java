@@ -1,8 +1,8 @@
 package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
 import com.nur1popcorn.basm.classfile.tree.Type;
+import com.nur1popcorn.basm.utils.ByteDataOutputStream;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
 
 import static com.nur1popcorn.basm.classfile.Opcode.NEWARRAY;
@@ -24,7 +24,7 @@ public final class NewArrayInstruction extends Instruction {
     }
 
     @Override
-    public void write(DataOutputStream os) throws IOException {
+    public void write(ByteDataOutputStream os) throws IOException {
         super.write(os);
         os.writeByte(type.getType());
     }

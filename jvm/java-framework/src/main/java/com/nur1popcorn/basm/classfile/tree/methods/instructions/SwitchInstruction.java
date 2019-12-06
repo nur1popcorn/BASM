@@ -19,15 +19,17 @@
 package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
 import com.nur1popcorn.basm.classfile.Opcode;
+import com.nur1popcorn.basm.classfile.tree.methods.IInstructionPointer;
+import com.nur1popcorn.basm.classfile.tree.methods.InstructionList;
+import com.nur1popcorn.basm.utils.ByteDataOutputStream;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public final class SwitchInstruction extends Instruction {
-    private int defaultIndex;
+public final class SwitchInstruction extends Instruction implements IInstructionPointer {
+    public int defaultIndex;
     private final List<KeyIndexPair> indices;
 
     /**
@@ -52,8 +54,9 @@ public final class SwitchInstruction extends Instruction {
      * {@inheritDoc}
      */
     @Override
-    public void write(DataOutputStream os) throws IOException {
-        super.write(os);
+    public void write(ByteDataOutputStream os) throws IOException {
+        final int offset = os.size();
+        os.writeByte(opcode.getOpcode());
         /*
             ^
           3 | \    \
@@ -69,7 +72,7 @@ public final class SwitchInstruction extends Instruction {
         */
         while((os.size() & 0x3) != 0)
             os.writeByte(0);
-        os.writeInt(defaultIndex);
+        os.writeInt(os.getOffset(defaultIndex) - offset);
         switch(opcode) {
             case TABLESWITCH:
                 // https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.tableswitch
@@ -78,13 +81,13 @@ public final class SwitchInstruction extends Instruction {
                 os.writeInt(low);
                 os.writeInt(high);
                 for(KeyIndexPair pair : indices)
-                    os.writeInt(pair.index);
+                    os.writeInt(os.getOffset(pair.index) - offset);
                 break;
             case LOOKUPSWITCH:
                 os.writeInt(getCount());
                 for(KeyIndexPair pair : indices) {
                     os.writeInt(pair.key);
-                    os.writeInt(pair.index);
+                    os.writeInt(os.getOffset(pair.index) - offset);
                 }
                 break;
         }
@@ -102,5 +105,60 @@ public final class SwitchInstruction extends Instruction {
             this.key = key;
             this.index = index;
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void attach(InstructionList instructions) {
+        indexDefault(instructions)
+            .addPointer(this);
+        indexTargets(instructions)
+            .forEach(h -> h.addPointer(this));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void dispose(InstructionList instructions) {
+        indexDefault(instructions)
+            .removePointer(this);
+        indexTargets(instructions)
+            .forEach(h -> h.removePointer(this));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void update(int oldIndex, int newIndex) {
+        if(defaultIndex == oldIndex)
+            defaultIndex = newIndex;
+        for(KeyIndexPair pair : indices)
+            if(pair.index == oldIndex)
+                pair.index = newIndex;
+    }
+
+    /**
+     * @param instructions
+     *
+     * @return
+     */
+    public Instruction indexDefault(InstructionList instructions) {
+        return instructions.get(defaultIndex);
+    }
+
+    /**
+     * @param instructions
+     *
+     * @return
+     */
+    public List<Instruction> indexTargets(InstructionList instructions) {
+        final List<Instruction> targets = new ArrayList<>(indices.size());
+        for(KeyIndexPair pair : indices)
+            targets.add(instructions.get(pair.index));
+        return targets;
     }
 }

@@ -23,6 +23,7 @@ import com.nur1popcorn.basm.classfile.MalformedClassFileException;
 import com.nur1popcorn.basm.classfile.tree.methods.instructions.IInstructionVisitor;
 import com.nur1popcorn.basm.classfile.tree.methods.instructions.Instruction;
 import com.nur1popcorn.basm.utils.ByteDataInputStream;
+import com.nur1popcorn.basm.utils.ByteDataOutputStream;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -78,6 +79,10 @@ public final class InstructionList extends AbstractList<Instruction> implements 
         instructions = new Instruction[length];
         for(int i = 0; i < length; i++)
             add(Instruction.read(in, constantPool));
+        stream()
+            .filter(IInstructionPointer.class::isInstance)
+            .map(IInstructionPointer.class::cast)
+            .forEach(pointer -> pointer.attach(this));
     }
 
     /**
@@ -102,8 +107,9 @@ public final class InstructionList extends AbstractList<Instruction> implements 
      * @throws IOException If an error occurs during the process of writing to the {@link DataOutputStream}.
      */
     public void write(DataOutputStream os) throws IOException {
+        final ByteDataOutputStream bdos = new ByteDataOutputStream(this, os);
         for(Instruction instruction : this)
-            instruction.write(os);
+            instruction.write(bdos);
     }
 
     /**
@@ -192,7 +198,7 @@ public final class InstructionList extends AbstractList<Instruction> implements 
                 .prev = element;
         for(int i = index + 1; i < size; i++)
             for(IInstructionPointer pointer : instructions[i].getPointers())
-                pointer.update(i);
+                pointer.update(i - 1, i);
     }
 
     /**
@@ -223,7 +229,7 @@ public final class InstructionList extends AbstractList<Instruction> implements 
                 last = element;
             for(int i = index; i < size; i++)
                 for(IInstructionPointer pointer : instructions[i].getPointers())
-                    pointer.update(i);
+                    pointer.update(i + 1, i);
         }
         if(old.hasPointers())
             throw new InstructionLostException(old.getPointers());

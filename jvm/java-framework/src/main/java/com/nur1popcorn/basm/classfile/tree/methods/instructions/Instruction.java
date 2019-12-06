@@ -23,15 +23,13 @@ import com.nur1popcorn.basm.classfile.tree.Type;
 import com.nur1popcorn.basm.classfile.tree.methods.IInstructionPointer;
 import com.nur1popcorn.basm.classfile.tree.methods.instructions.SwitchInstruction.KeyIndexPair;
 import com.nur1popcorn.basm.utils.ByteDataInputStream;
+import com.nur1popcorn.basm.utils.ByteDataOutputStream;
 import com.nur1popcorn.basm.utils.WeakHashSet;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Set;
 
-import static com.nur1popcorn.basm.classfile.Opcode.IINC;
-import static com.nur1popcorn.basm.classfile.Opcode.INVOKEINTERFACE;
+import static com.nur1popcorn.basm.classfile.Opcode.*;
 
 /**
  * The {@link Instruction} is the abstract super class which all other {@link Instruction}s are derived from.
@@ -103,7 +101,7 @@ public abstract class Instruction {
      *
      * @throws IOException
      */
-    public void write(DataOutputStream os) throws IOException {
+    public void write(ByteDataOutputStream os) throws IOException {
         os.writeByte(opcode.getOpcode());
     }
 
@@ -218,8 +216,7 @@ public abstract class Instruction {
             case SWITCH_INS: {
                 // skip padding bytes and read default index.
                 in.skipBytes(-in.position() & 0x3);
-                final int defaultTarget = offset + in.readInt();
-                final int defaultIndex = in.getIndex(defaultTarget);
+                final int defaultTarget = in.getIndex(offset + in.readInt());
                 switch(opcode) {
                     case TABLESWITCH: {
                         final int low = in.readInt();
@@ -229,26 +226,29 @@ public abstract class Instruction {
 
                         final KeyIndexPair[] indices = new KeyIndexPair[length];
                         for(int i = 0; i < length; i++) {
+                            final int target = in.getIndex(offset + in.readInt());
                             indices[i] = new KeyIndexPair(
                                 low + i,
-                                in.getIndex(offset + in.readInt())
+                                target
                             );
                         }
 
                         return new SwitchInstruction(
-                            opcode, defaultIndex, indices);
+                            opcode, defaultTarget, indices);
                     }
                     case LOOKUPSWITCH: {
                         final int length = in.readInt();
                         final KeyIndexPair[] indices = new KeyIndexPair[length];
                         for(int i = 0; i < length; i++) {
+                            final int key = in.readInt();
+                            final int target = in.getIndex(offset + in.readInt());
                             indices[i] = new KeyIndexPair(
-                                in.readInt(),
-                                in.getIndex(offset + in.readInt())
+                                key,
+                                target
                             );
                         }
                         return new SwitchInstruction(
-                            opcode, defaultIndex, indices);
+                            opcode, defaultTarget, indices);
                     }
                 }
             }
@@ -292,6 +292,26 @@ public abstract class Instruction {
                     in.readUnsignedShort(), in.readByte());
             default:
                 throw new MalformedClassFileException();
+        }
+    }
+
+    public int getLength(int offset) {
+        switch(opcode.getType()) {
+            case SWITCH_INS:
+                final SwitchInstruction switchInsn = (SwitchInstruction)this;
+                return opcode == TABLESWITCH ?
+                    ((-1 - offset) & 0x3) + 13 + (switchInsn.getCount() << 2) :
+                    ((-1 - offset) & 0x3) + 9 + (switchInsn.getCount() << 3);
+            case WIDE_INS:
+                return ((WideInstruction)this)
+                    .getOpcodeParameter() == IINC ? 6 : 4;
+            default:
+                final int parameters = opcode.getParameter();
+                if(parameters == -0x1)
+                    throw new MalformedClassFileException(
+                        "The opcode=" + opcode.getMnemonic() + " is invalid."
+                    );
+                return parameters + 1;
         }
     }
 }

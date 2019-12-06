@@ -29,6 +29,7 @@ import static com.nur1popcorn.basm.classfile.Opcode.IINC;
 public final class ByteDataInputStream extends DataInputStream {
     private ByteArrayInputStreamDelegate in;
     private final int instructions[];
+    private int count;
 
     public ByteDataInputStream(byte buffer[]) throws IOException {
         this(new ByteArrayInputStreamDelegate(buffer));
@@ -38,9 +39,9 @@ public final class ByteDataInputStream extends DataInputStream {
         super(in);
         this.in = in;
         instructions = new int[in.length()];
-        for(int i = 0, offset = 0; available() != 0; i++) {
+        for(int offset = 0; available() != 0; count++) {
             skip(Opcode.valueOf(readByte()));
-            instructions[offset] = i;
+            instructions[offset] = count;
             while(++offset < position())
                 instructions[offset] = -1; /* illegal location */
         }
@@ -85,7 +86,7 @@ public final class ByteDataInputStream extends DataInputStream {
     }
 
     public int numberOfInstructions() {
-        return instructions.length;
+        return count;
     }
 
     private static final class ByteArrayInputStreamDelegate extends ByteArrayInputStream {
