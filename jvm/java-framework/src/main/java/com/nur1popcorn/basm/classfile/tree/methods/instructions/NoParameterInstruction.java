@@ -24,7 +24,7 @@ public final class NoParameterInstruction extends Instruction {
     /**
      * @param opcode
      */
-    NoParameterInstruction(Opcode opcode) {
+    public NoParameterInstruction(Opcode opcode) {
         super(opcode);
     }
 

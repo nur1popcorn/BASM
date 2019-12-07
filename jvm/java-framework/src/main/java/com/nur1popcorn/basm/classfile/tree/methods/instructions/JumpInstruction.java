@@ -21,8 +21,8 @@ package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 import com.nur1popcorn.basm.classfile.Opcode;
 import com.nur1popcorn.basm.classfile.tree.methods.IInstructionPointer;
 import com.nur1popcorn.basm.classfile.tree.methods.InstructionList;
-import com.nur1popcorn.basm.utils.ByteDataOutputStream;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
 
 public final class JumpInstruction extends Instruction  implements IInstructionPointer {
@@ -37,6 +37,12 @@ public final class JumpInstruction extends Instruction  implements IInstructionP
         this.targetIndex = targetIndex;
     }
 
+    public JumpInstruction(Opcode opcode, Instruction target) {
+        super(opcode);
+        (this.target = target)
+            .addPointer(this);
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -49,10 +55,9 @@ public final class JumpInstruction extends Instruction  implements IInstructionP
      * {@inheritDoc}
      */
     @Override
-    public void write(ByteDataOutputStream os) throws IOException {
-        final int offset = os.size();
-        os.writeByte(opcode.getOpcode());
-        final int length = os.getOffset(target) - offset;
+    public void write(DataOutputStream os) throws IOException {
+        super.write(os);
+        final int length = target.offset - offset;
         switch(opcode) {
             case GOTO_W:
             case JSR_W:

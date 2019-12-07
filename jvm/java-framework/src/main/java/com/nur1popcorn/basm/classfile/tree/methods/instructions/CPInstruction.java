@@ -23,8 +23,8 @@ import com.nur1popcorn.basm.classfile.MalformedClassFileException;
 import com.nur1popcorn.basm.classfile.Opcode;
 import com.nur1popcorn.basm.classfile.constants.ConstantInfo;
 import com.nur1popcorn.basm.classfile.constants.IConstantPoolPointer;
-import com.nur1popcorn.basm.utils.ByteDataOutputStream;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
 
 /**
@@ -65,7 +65,7 @@ public abstract class CPInstruction extends Instruction implements IConstantPool
      * {@inheritDoc}
      */
     @Override
-    public void write(ByteDataOutputStream os) throws IOException {
+    public void write(DataOutputStream os) throws IOException {
         super.write(os);
         os.writeShort(index);
     }

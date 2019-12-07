@@ -21,8 +21,8 @@ package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 import com.nur1popcorn.basm.classfile.Opcode;
 import com.nur1popcorn.basm.classfile.tree.methods.IInstructionPointer;
 import com.nur1popcorn.basm.classfile.tree.methods.InstructionList;
-import com.nur1popcorn.basm.utils.ByteDataOutputStream;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -43,6 +43,13 @@ public final class SwitchInstruction extends Instruction implements IInstruction
         Collections.addAll(this.indices, indices);
     }
 
+    public SwitchInstruction(Opcode opcode, Instruction defaultTarget, KeyIndexPair... indices) {
+        super(opcode);
+        this.defaultTarget = defaultTarget;
+        this.indices = new ArrayList<>(indices.length);
+        Collections.addAll(this.indices, indices);
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -55,9 +62,8 @@ public final class SwitchInstruction extends Instruction implements IInstruction
      * {@inheritDoc}
      */
     @Override
-    public void write(ByteDataOutputStream os) throws IOException {
-        final int offset = os.size();
-        os.writeByte(opcode.getOpcode());
+    public void write(DataOutputStream os) throws IOException {
+        super.write(os);
         /*
             ^
           3 | \    \
@@ -73,7 +79,7 @@ public final class SwitchInstruction extends Instruction implements IInstruction
         */
         while((os.size() & 0x3) != 0)
             os.writeByte(0);
-        os.writeInt(os.getOffset(defaultTarget) - offset);
+        os.writeInt(defaultTarget.offset - offset);
         switch(opcode) {
             case TABLESWITCH:
                 // https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.tableswitch
@@ -82,13 +88,13 @@ public final class SwitchInstruction extends Instruction implements IInstruction
                 os.writeInt(low);
                 os.writeInt(high);
                 for(KeyIndexPair pair : indices)
-                    os.writeInt(os.getOffset(pair.target) - offset);
+                    os.writeInt(pair.target.offset - offset);
                 break;
             case LOOKUPSWITCH:
                 os.writeInt(getCount());
                 for(KeyIndexPair pair : indices) {
                     os.writeInt(pair.key);
-                    os.writeInt(os.getOffset(pair.target) - offset);
+                    os.writeInt(pair.target.offset - offset);
                 }
                 break;
         }

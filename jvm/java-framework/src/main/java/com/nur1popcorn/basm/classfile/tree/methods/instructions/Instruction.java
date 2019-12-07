@@ -23,9 +23,9 @@ import com.nur1popcorn.basm.classfile.tree.Type;
 import com.nur1popcorn.basm.classfile.tree.methods.IInstructionPointer;
 import com.nur1popcorn.basm.classfile.tree.methods.instructions.SwitchInstruction.KeyIndexPair;
 import com.nur1popcorn.basm.utils.ByteDataInputStream;
-import com.nur1popcorn.basm.utils.ByteDataOutputStream;
 import com.nur1popcorn.basm.utils.WeakHashSet;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Set;
 
@@ -61,6 +61,8 @@ import static com.nur1popcorn.basm.classfile.Opcode.*;
  *
  */
 public abstract class Instruction {
+    public int offset;
+
     /*
      *
      */
@@ -101,7 +103,7 @@ public abstract class Instruction {
      *
      * @throws IOException
      */
-    public void write(ByteDataOutputStream os) throws IOException {
+    public void write(DataOutputStream os) throws IOException {
         os.writeByte(opcode.getOpcode());
     }
 
@@ -295,7 +297,7 @@ public abstract class Instruction {
         }
     }
 
-    public int getLength(int offset) {
+    public int getLength() {
         switch(opcode.getType()) {
             case SWITCH_INS:
                 final SwitchInstruction switchInsn = (SwitchInstruction)this;
