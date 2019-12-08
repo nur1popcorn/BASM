@@ -27,8 +27,6 @@ import java.io.IOException;
 public final class DeprecatedFactory implements IAttributeInfoFactory<AttributeDeprecated> {
     @Override
     public AttributeDeprecated createAttribute(DataInputStream in, int nameIndex, int attributeLength, ConstantPool cp) throws IOException {
-        final byte info[] = new byte[attributeLength];
-        in.readFully(info);
-        return new AttributeDeprecated(nameIndex, attributeLength, info);
+        return new AttributeDeprecated(nameIndex, attributeLength);
     }
 }

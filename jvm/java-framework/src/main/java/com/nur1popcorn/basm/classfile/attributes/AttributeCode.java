@@ -70,7 +70,7 @@ public final class AttributeCode extends AttributeInfo {
         os.writeShort(maxLocals);
 
         os.writeInt(code.length);
-        os.write(code, 0, code.length);
+        os.write(code);
 
         os.writeShort(exceptionTable.length);
         for(ExceptionTableEntry entry : exceptionTable)
