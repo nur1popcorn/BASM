@@ -291,9 +291,8 @@ public abstract class Instruction {
     }
 
     public int getLength() {
+        if(this instanceof Label) return 0;
         switch(opcode.getType()) {
-            case LABEL_INS:
-                return 0;
             case SWITCH_INS:
                 final SwitchInstruction switchInsn = (SwitchInstruction)this;
                 return opcode == TABLESWITCH ?

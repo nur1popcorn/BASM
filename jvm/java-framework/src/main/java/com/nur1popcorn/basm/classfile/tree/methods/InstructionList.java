@@ -81,11 +81,9 @@ public final class InstructionList extends AbstractList<Instruction> implements 
         final Label labels[] = in.getLabels();
         int count = 0;
         for(int i = 0; i < labels.length; i++)
-            if(labels[i] != null) {
-                final Label label = labels[i];
-                add(in.getIndex(i) + count, label);
-                count++;
-            }
+            if(labels[i] != null)
+                add(in.getIndex(i) + count++,
+                    labels[i]);
     }
 
     /**

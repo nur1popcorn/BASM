@@ -23,11 +23,11 @@ import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import static com.nur1popcorn.basm.classfile.Opcode.LABEL;
+import static com.nur1popcorn.basm.classfile.Opcode.INVALID;
 
 public class Label extends Instruction {
     public Label() {
-        super(LABEL);
+        super(INVALID);
     }
 
     @Override
