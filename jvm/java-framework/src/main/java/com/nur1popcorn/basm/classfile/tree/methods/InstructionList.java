@@ -165,12 +165,12 @@ public final class InstructionList extends AbstractList<Instruction> implements 
             last = element;
         else
             element.next.prev = element;
-        element.offset = old.offset;
+        element.setOffset(old.getOffset());
         final int diff = element.getLength() - old.getLength();
         if(diff != 0)
             for(int i = index + 1; i < size; i++) {
                 final Instruction instruction = instructions[i];
-                instruction.offset = instruction.prev.offset + instruction.prev.getLength();
+                instruction.setOffset(instruction.prev.getOffset() + instruction.prev.getLength());
             }
         return old;
     }
@@ -197,7 +197,7 @@ public final class InstructionList extends AbstractList<Instruction> implements 
             final Instruction prev = instructions[index - 1];
             last = (element.prev = prev)
                 .next = element;
-            element.offset = prev.offset + prev.getLength();
+            element.setOffset(prev.getOffset() + prev.getLength());
         } else if(index == 0)
             first = (element.next = first)
                 .prev = element;
@@ -207,11 +207,11 @@ public final class InstructionList extends AbstractList<Instruction> implements 
                 .next = element)
                 .next = instructions[index + 1])
                 .prev = element;
-            element.offset = prev.offset + prev.getLength();
+            element.setOffset(prev.getOffset() + prev.getLength());
         }
         for(int i = index + 1; i < size; i++) {
             final Instruction instruction = instructions[i];
-            instruction.offset = instruction.prev.offset + instruction.prev.getLength();
+            instruction.setOffset(instruction.prev.getOffset() + instruction.prev.getLength());
         }
     }
 
@@ -248,7 +248,7 @@ public final class InstructionList extends AbstractList<Instruction> implements 
                 element.prev.next = element;
             for(int i = index; i < size; i++) {
                 final Instruction instruction = instructions[i];
-                instruction.offset = instruction.prev.offset + instruction.prev.getLength();
+                instruction.setOffset(instruction.prev.getOffset() + instruction.prev.getLength());
             }
         }
         if(old.hasPointers())

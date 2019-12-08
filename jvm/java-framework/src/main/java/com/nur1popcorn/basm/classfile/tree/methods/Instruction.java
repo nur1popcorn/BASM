@@ -64,7 +64,7 @@ public abstract class Instruction {
     /*
      *
      */
-    int offset;
+    private int offset;
 
     /*
      *
@@ -317,5 +317,9 @@ public abstract class Instruction {
 
     public int getOffset() {
         return offset;
+    }
+
+    public void setOffset(int offset) {
+        this.offset = offset;
     }
 }
