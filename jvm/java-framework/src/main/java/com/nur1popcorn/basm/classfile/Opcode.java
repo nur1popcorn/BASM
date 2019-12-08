@@ -971,8 +971,9 @@ public enum Opcode {
     /**
      * @param opcode The opcode of the instruction.
      * @param mnemonic The mnemonic of the instruction.
-     * @param stackPop The number of slots that will be popped from the stack
+     * @param stackPop The number of slots that will be popped from the stack.
      * @param stackPush The number of slots that will be pushed onto the stack.
+     * @param type The type of the instruction.
      */
     Opcode(int opcode, String mnemonic, int parameter, int stackPop, int stackPush, InstructionType type) {
         this.opcode = (byte) opcode;
@@ -1044,6 +1045,9 @@ public enum Opcode {
         return stackPush;
     }
 
+    /**
+     * @return The type of the instruction.
+     */
     public InstructionType getType() {
         return type;
     }

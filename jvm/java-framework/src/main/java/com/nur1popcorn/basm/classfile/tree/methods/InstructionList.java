@@ -236,22 +236,22 @@ public final class InstructionList extends AbstractList<Instruction> implements 
                 instructions, index, moved
             );
         instructions[--size] = null;
-        if(size != 0) {
-            if(index != size) {
-                final Instruction element = instructions[index];
-                if ((element.prev = old.prev) == null)
-                    first = element;
-                else
-                    element.prev.next = element;
-                for(int i = index; i < size; i++) {
-                    final Instruction instruction = instructions[i];
-                    instruction.offset = instruction.prev.offset + instruction.prev.getLength();
-                }
-            } else
-                (last = instructions[index - 1])
-                    .next = null;
-        } else
+        if(size == 0)
             first = last = null;
+        else if(size == index)
+            (last = instructions[index - 1])
+                .next = null;
+        else {
+            final Instruction element = instructions[index];
+            if ((element.prev = old.prev) == null)
+                first = element;
+            else
+                element.prev.next = element;
+            for(int i = index; i < size; i++) {
+                final Instruction instruction = instructions[i];
+                instruction.offset = instruction.prev.offset + instruction.prev.getLength();
+            }
+        }
         if(old.hasPointers())
             throw new InstructionLostException(old.getPointers());
         return old;
