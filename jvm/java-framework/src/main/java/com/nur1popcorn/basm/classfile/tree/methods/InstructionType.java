@@ -133,5 +133,7 @@ public enum InstructionType {
     /**
      *
      */
-    RESERVED_INS
+    RESERVED_INS,
+
+    LABEL_INS
 }

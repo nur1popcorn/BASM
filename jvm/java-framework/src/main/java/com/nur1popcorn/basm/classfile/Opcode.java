@@ -40,6 +40,8 @@ public enum Opcode {
      *                  <----+------+---------------------------+-------+--------+--------+------------------+---->   */
     INVALID                  (-0x1,  "invalid",                  -0x1,   -0x1,    -0x1,    NOT_AN_INS),
 
+    LABEL                    (-0x1,  "label",                    -0x1,   -0x1,    -0x1,    LABEL_INS),
+
     /**
      * <b>Description</b>
      * <p>The <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.nop"><i>NOP</i></a>

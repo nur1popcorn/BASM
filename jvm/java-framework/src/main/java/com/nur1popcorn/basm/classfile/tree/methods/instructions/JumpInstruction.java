@@ -27,21 +27,15 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 public final class JumpInstruction extends Instruction implements IInstructionPointer {
-    private int targetIndex;
-    private Instruction target;
+    private Label target;
 
     /**
      * @param opcode
      */
-    public JumpInstruction(Opcode opcode, int targetIndex) {
-        super(opcode);
-        this.targetIndex = targetIndex;
-    }
-
-    public JumpInstruction(Opcode opcode, Instruction target) {
+    public JumpInstruction(Opcode opcode, Label target) {
         super(opcode);
         (this.target = target)
-            .addPointer(this);
+            .addPointer(this);;
     }
 
     /**
@@ -74,16 +68,7 @@ public final class JumpInstruction extends Instruction implements IInstructionPo
      * {@inheritDoc}
      */
     @Override
-    public void attach(InstructionList instructions) {
-        (target = instructions.get(targetIndex))
-            .addPointer(this);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void dispose(InstructionList instructions) {
+    public void dispose() {
         target.removePointer(this);
     }
 }

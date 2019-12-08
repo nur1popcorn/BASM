@@ -21,7 +21,6 @@ package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 import com.nur1popcorn.basm.classfile.Opcode;
 import com.nur1popcorn.basm.classfile.tree.methods.IInstructionPointer;
 import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
-import com.nur1popcorn.basm.classfile.tree.methods.InstructionList;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -29,26 +28,22 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public final class SwitchInstruction extends Instruction implements IInstructionPointer {
-    private int defaultIndex;
-    private Instruction defaultTarget;
+public final class SwitchInstruction extends Instruction implements IInstructionPointer  {
+    private Label defaultTarget;
     private final List<KeyIndexPair> indices;
 
     /**
      * @param opcode
      */
-    public SwitchInstruction(Opcode opcode, int defaultIndex, KeyIndexPair indices[]) {
+    public SwitchInstruction(Opcode opcode, Label defaultTarget, KeyIndexPair indices[]) {
         super(opcode);
-        this.defaultIndex = defaultIndex;
+        (this.defaultTarget = defaultTarget)
+            .addPointer(this);
         this.indices = new ArrayList<>(indices.length);
-        Collections.addAll(this.indices, indices);
-    }
-
-    public SwitchInstruction(Opcode opcode, Instruction defaultTarget, KeyIndexPair... indices) {
-        super(opcode);
-        this.defaultTarget = defaultTarget;
-        this.indices = new ArrayList<>(indices.length);
-        Collections.addAll(this.indices, indices);
+        for(KeyIndexPair element : indices) {
+            element.target.addPointer(this);
+            this.indices.add(element);
+        }
     }
 
     /**
@@ -107,12 +102,11 @@ public final class SwitchInstruction extends Instruction implements IInstruction
 
     public static class KeyIndexPair {
         public int key;
-        public int index;
-        public Instruction target;
+        public Label target;
 
-        public KeyIndexPair(int key, int index) {
+        public KeyIndexPair(int key, Label target) {
             this.key = key;
-            this.index = index;
+            this.target = target;
         }
     }
 
@@ -120,19 +114,7 @@ public final class SwitchInstruction extends Instruction implements IInstruction
      * {@inheritDoc}
      */
     @Override
-    public void attach(InstructionList instructions) {
-        (defaultTarget = instructions.get(defaultIndex))
-            .addPointer(this);
-        for(KeyIndexPair pair : indices)
-            (pair.target = instructions.get(pair.index))
-                .addPointer(this);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void dispose(InstructionList instructions) {
+    public void dispose() {
         defaultTarget.removePointer(this);
         for(KeyIndexPair pair : indices)
            pair.target.removePointer(this);

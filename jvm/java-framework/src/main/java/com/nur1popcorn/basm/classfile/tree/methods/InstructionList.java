@@ -21,6 +21,7 @@ package com.nur1popcorn.basm.classfile.tree.methods;
 import com.nur1popcorn.basm.classfile.ConstantPool;
 import com.nur1popcorn.basm.classfile.MalformedClassFileException;
 import com.nur1popcorn.basm.classfile.tree.methods.instructions.IInstructionVisitor;
+import com.nur1popcorn.basm.classfile.tree.methods.instructions.Label;
 import com.nur1popcorn.basm.utils.ByteDataInputStream;
 
 import java.io.DataOutputStream;
@@ -77,10 +78,14 @@ public final class InstructionList extends AbstractList<Instruction> implements 
         instructions = new Instruction[length];
         for(int i = 0; i < length; i++)
             add(Instruction.read(in, constantPool));
-        stream()
-            .filter(IInstructionPointer.class::isInstance)
-            .map(IInstructionPointer.class::cast)
-            .forEach(pointer -> pointer.attach(this));
+        final Label labels[] = in.labels;
+        int count = 0;
+        for(int i = 0; i < labels.length; i++)
+            if(labels[i] != null) {
+                final Label label = labels[i];
+                add(in.getIndex(i) + count, label);
+                count++;
+            }
     }
 
     /**

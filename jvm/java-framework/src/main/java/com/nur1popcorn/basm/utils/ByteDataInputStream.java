@@ -19,6 +19,7 @@
 package com.nur1popcorn.basm.utils;
 
 import com.nur1popcorn.basm.classfile.Opcode;
+import com.nur1popcorn.basm.classfile.tree.methods.instructions.Label;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
@@ -30,6 +31,7 @@ public final class ByteDataInputStream extends DataInputStream {
     private ByteArrayInputStreamDelegate in;
     private final int instructions[];
     private int count;
+    public final Label labels[];
 
     public ByteDataInputStream(byte buffer[]) throws IOException {
         this(new ByteArrayInputStreamDelegate(buffer));
@@ -39,49 +41,70 @@ public final class ByteDataInputStream extends DataInputStream {
         super(in);
         this.in = in;
         instructions = new int[in.length()];
-        for(int offset = 0; available() != 0; count++) {
-            skip(Opcode.valueOf(readByte()));
-            instructions[offset] = count;
-            while(++offset < position())
-                instructions[offset] = -1; /* illegal location */
+        labels = new Label[in.length()];
+        for(int o = 0; available() != 0; count++) {
+            final int offset = position();
+            final Opcode opcode = Opcode.valueOf(readByte());
+            switch(opcode.getType()) {
+                case JUMP_INS:
+                    switch(opcode) {
+                        case GOTO_W:
+                        case JSR_W:
+                            readLabel(offset + readInt());
+                            break;
+                        default:
+                            readLabel(offset + readShort());
+                            break;
+                    }
+                    break;
+                case SWITCH_INS:
+                    skipBytes(-position() & 0x3);
+                    readLabel(offset + readInt());
+                    switch(opcode) {
+                        case TABLESWITCH:
+                            final int low = readInt();
+                            final int high = readInt();
+                            for(int i = 0; i < high - low + 1; i++)
+                                readLabel(offset + readInt());
+                            break;
+                        case LOOKUPSWITCH:
+                            final int length = readInt();
+                            for(int i = 0; i < length; i++) {
+                                skipBytes(4);
+                                readLabel(offset + readInt());
+                            }
+                            break;
+                    }
+                    break;
+                case WIDE_INS:
+                    skipBytes(
+                        readByte() == IINC.getOpcode() ?
+                            4 : 2);
+                    break;
+                default:
+                    skipBytes(opcode.getParameter());
+                    break;
+            }
+            instructions[o] = count;
+            while(++o < position())
+                instructions[o] = -1; /* illegal location */
         }
         reset();
+    }
+
+    public Label readLabel(int index) {
+        if(labels[index] == null)
+            labels[index] = new Label();
+        return labels[index];
     }
 
     public int position() {
         return in.position();
     }
 
-    public void skip(Opcode opcode) throws IOException {
-        switch(opcode) {
-            case TABLESWITCH: {
-                // skip padding bytes and skip default index.
-                skipBytes(-position() & 0x3);
-                skipBytes(4);
-                final int low = readInt();
-                final int high = readInt();
-                skipBytes((high - low + 1) << 2);
-            }   break;
-            case LOOKUPSWITCH:
-                // skip padding bytes and skip default index.
-                skipBytes(-position() & 0x3);
-                skipBytes(4);
-                skipBytes(readInt() << 3);
-                break;
-            case WIDE: {
-                skipBytes(
-                    readByte() == IINC.getOpcode() ?
-                        4 : 2);
-            }   break;
-            default:
-                skipBytes(opcode.getParameter());
-                break;
-        }
-    }
-
     public int getIndex(int offset) {
         if(offset < 0 || offset >= in.length() || instructions[offset] < 0)
-            throw new IllegalArgumentException("Illegal target of jump or branch: " + offset);
+            throw new IllegalArgumentException();
         return instructions[offset];
     }
 

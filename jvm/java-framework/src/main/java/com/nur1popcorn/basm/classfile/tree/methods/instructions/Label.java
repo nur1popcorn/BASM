@@ -16,8 +16,27 @@
  *
  */
 
-package com.nur1popcorn.basm.classfile.tree.methods;
+package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
-public interface IInstructionPointer {
-    void dispose();
+import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
+
+import java.io.DataOutputStream;
+import java.io.IOException;
+
+import static com.nur1popcorn.basm.classfile.Opcode.LABEL;
+
+public class Label extends Instruction {
+    public Label() {
+        super(LABEL);
+    }
+
+    @Override
+    public void accept(IInstructionVisitor visitor) {
+
+    }
+
+    @Override
+    public void write(DataOutputStream os) throws IOException {
+        //Do not do anything
+    }
 }

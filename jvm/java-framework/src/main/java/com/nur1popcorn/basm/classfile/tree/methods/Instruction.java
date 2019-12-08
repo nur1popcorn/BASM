@@ -205,22 +205,22 @@ public abstract class Instruction {
                 return new IIncInstruction(
                     opcode, in.readByte(), in.readByte());
             case JUMP_INS:
-                switch (opcode) {
+                switch(opcode) {
                     // a 4 byte index must be constructed for the goto_w & jsr_w opcodes.
                     // https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.goto_w
                     // https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.jsr_w
                     case GOTO_W:
                     case JSR_W:
                         return new JumpInstruction(opcode,
-                            in.getIndex(offset + in.readInt()));
+                            in.readLabel(offset + in.readInt()));
                     default:
                         return new JumpInstruction(opcode,
-                            in.getIndex(offset + in.readShort()));
+                            in.readLabel(offset + in.readShort()));
                 }
             case SWITCH_INS:
                 // skip padding bytes and read default index.
                 in.skipBytes(-in.position() & 0x3);
-                final int defaultTarget = in.getIndex(offset + in.readInt());
+                final Label defaultTarget = in.readLabel(offset + in.readInt());
                 switch(opcode) {
                     case TABLESWITCH: {
                         final int low = in.readInt();
@@ -229,13 +229,11 @@ public abstract class Instruction {
                         final int length = high - low + 1;
 
                         final KeyIndexPair[] indices = new KeyIndexPair[length];
-                        for(int i = 0; i < length; i++) {
-                            final int target = in.getIndex(offset + in.readInt());
+                        for(int i = 0; i < length; i++)
                             indices[i] = new KeyIndexPair(
                                 low + i,
-                                target
+                                in.readLabel(offset + in.readInt())
                             );
-                        }
 
                         return new SwitchInstruction(
                             opcode, defaultTarget, indices);
@@ -243,14 +241,11 @@ public abstract class Instruction {
                     case LOOKUPSWITCH: {
                         final int length = in.readInt();
                         final KeyIndexPair[] indices = new KeyIndexPair[length];
-                        for(int i = 0; i < length; i++) {
-                            final int key = in.readInt();
-                            final int target = in.getIndex(offset + in.readInt());
+                        for(int i = 0; i < length; i++)
                             indices[i] = new KeyIndexPair(
-                                key,
-                                target
+                                in.readInt(),
+                                in.readLabel(offset + in.readInt())
                             );
-                        }
                         return new SwitchInstruction(
                             opcode, defaultTarget, indices);
                     }
@@ -297,6 +292,8 @@ public abstract class Instruction {
 
     public int getLength() {
         switch(opcode.getType()) {
+            case LABEL_INS:
+                return 0;
             case SWITCH_INS:
                 final SwitchInstruction switchInsn = (SwitchInstruction)this;
                 return opcode == TABLESWITCH ?
