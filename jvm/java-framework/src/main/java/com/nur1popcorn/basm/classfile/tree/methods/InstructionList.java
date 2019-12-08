@@ -78,7 +78,7 @@ public final class InstructionList extends AbstractList<Instruction> implements 
         instructions = new Instruction[length];
         for(int i = 0; i < length; i++)
             add(Instruction.read(in, constantPool));
-        final Label labels[] = in.labels;
+        final Label labels[] = in.getLabels();
         int count = 0;
         for(int i = 0; i < labels.length; i++)
             if(labels[i] != null) {
@@ -214,10 +214,11 @@ public final class InstructionList extends AbstractList<Instruction> implements 
                 .prev = element;
             element.setOffset(prev.getOffset() + prev.getLength());
         }
-        for(int i = index + 1; i < size; i++) {
-            final Instruction instruction = instructions[i];
-            instruction.setOffset(instruction.prev.getOffset() + instruction.prev.getLength());
-        }
+        if(element.getLength() != 0)
+            for(int i = index + 1; i < size; i++) {
+                final Instruction instruction = instructions[i];
+                instruction.setOffset(instruction.prev.getOffset() + instruction.prev.getLength());
+            }
     }
 
     /**

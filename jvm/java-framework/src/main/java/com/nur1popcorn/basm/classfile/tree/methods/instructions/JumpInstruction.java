@@ -35,7 +35,7 @@ public final class JumpInstruction extends Instruction implements IInstructionPo
     public JumpInstruction(Opcode opcode, Label target) {
         super(opcode);
         (this.target = target)
-            .addPointer(this);;
+            .addPointer(this);
     }
 
     /**

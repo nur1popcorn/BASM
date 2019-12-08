@@ -29,9 +29,9 @@ import static com.nur1popcorn.basm.classfile.Opcode.IINC;
 
 public final class ByteDataInputStream extends DataInputStream {
     private ByteArrayInputStreamDelegate in;
-    private final int instructions[];
+    private final int indices[];
     private int count;
-    public final Label labels[];
+    private final Label labels[];
 
     public ByteDataInputStream(byte buffer[]) throws IOException {
         this(new ByteArrayInputStreamDelegate(buffer));
@@ -40,9 +40,9 @@ public final class ByteDataInputStream extends DataInputStream {
     private ByteDataInputStream(ByteArrayInputStreamDelegate in) throws IOException {
         super(in);
         this.in = in;
-        instructions = new int[in.length()];
+        indices = new int[in.length()];
         labels = new Label[in.length()];
-        for(int o = 0; available() != 0; count++) {
+        for(int position = 0; available() != 0; count++) {
             final int offset = position();
             final Opcode opcode = Opcode.valueOf(readByte());
             switch(opcode.getType()) {
@@ -85,9 +85,9 @@ public final class ByteDataInputStream extends DataInputStream {
                     skipBytes(opcode.getParameter());
                     break;
             }
-            instructions[o] = count;
-            while(++o < position())
-                instructions[o] = -1; /* illegal location */
+            indices[position] = count;
+            while(++position < position())
+                indices[position] = -1; /* illegal location */
         }
         reset();
     }
@@ -103,13 +103,17 @@ public final class ByteDataInputStream extends DataInputStream {
     }
 
     public int getIndex(int offset) {
-        if(offset < 0 || offset >= in.length() || instructions[offset] < 0)
+        if(offset < 0 || offset >= in.length() || indices[offset] < 0)
             throw new IllegalArgumentException();
-        return instructions[offset];
+        return indices[offset];
     }
 
     public int numberOfInstructions() {
         return count;
+    }
+
+    public Label[] getLabels() {
+        return labels;
     }
 
     private static final class ByteArrayInputStreamDelegate extends ByteArrayInputStream {
