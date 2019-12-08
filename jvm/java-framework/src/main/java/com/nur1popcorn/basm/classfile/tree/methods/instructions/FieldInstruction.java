@@ -27,7 +27,7 @@ public final class FieldInstruction extends FieldMethodInstruction {
      * @param opcode
      * @param index
      */
-    FieldInstruction(Opcode opcode, int index, ConstantPool cp) {
+    public FieldInstruction(Opcode opcode, int index, ConstantPool cp) {
         super(opcode, index, cp);
     }
 

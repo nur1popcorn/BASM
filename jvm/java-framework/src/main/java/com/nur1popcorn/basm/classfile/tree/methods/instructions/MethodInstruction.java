@@ -34,11 +34,11 @@ public final class MethodInstruction extends FieldMethodInstruction {
      * @param opcode
      * @param index
      */
-    MethodInstruction(Opcode opcode, int index, ConstantPool cp) {
+    public MethodInstruction(Opcode opcode, int index, ConstantPool cp) {
         super(opcode, index, cp);
     }
 
-    MethodInstruction(int index, int count, ConstantPool cp) {
+    public MethodInstruction(int index, int count, ConstantPool cp) {
         super(INVOKEINTERFACE, index, cp);
         this.count = count;
     }

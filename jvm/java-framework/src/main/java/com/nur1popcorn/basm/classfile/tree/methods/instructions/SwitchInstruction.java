@@ -20,6 +20,7 @@ package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
 import com.nur1popcorn.basm.classfile.Opcode;
 import com.nur1popcorn.basm.classfile.tree.methods.IInstructionPointer;
+import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
 import com.nur1popcorn.basm.classfile.tree.methods.InstructionList;
 
 import java.io.DataOutputStream;
@@ -36,7 +37,7 @@ public final class SwitchInstruction extends Instruction implements IInstruction
     /**
      * @param opcode
      */
-    SwitchInstruction(Opcode opcode, int defaultIndex, KeyIndexPair indices[]) {
+    public SwitchInstruction(Opcode opcode, int defaultIndex, KeyIndexPair indices[]) {
         super(opcode);
         this.defaultIndex = defaultIndex;
         this.indices = new ArrayList<>(indices.length);
@@ -79,7 +80,7 @@ public final class SwitchInstruction extends Instruction implements IInstruction
         */
         while((os.size() & 0x3) != 0)
             os.writeByte(0);
-        os.writeInt(defaultTarget.offset - offset);
+        os.writeInt(defaultTarget.getOffset() - getOffset());
         switch(opcode) {
             case TABLESWITCH:
                 // https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.tableswitch
@@ -88,13 +89,13 @@ public final class SwitchInstruction extends Instruction implements IInstruction
                 os.writeInt(low);
                 os.writeInt(high);
                 for(KeyIndexPair pair : indices)
-                    os.writeInt(pair.target.offset - offset);
+                    os.writeInt(pair.target.getOffset() - getOffset());
                 break;
             case LOOKUPSWITCH:
                 os.writeInt(getCount());
                 for(KeyIndexPair pair : indices) {
                     os.writeInt(pair.key);
-                    os.writeInt(pair.target.offset - offset);
+                    os.writeInt(pair.target.getOffset() - getOffset());
                 }
                 break;
         }

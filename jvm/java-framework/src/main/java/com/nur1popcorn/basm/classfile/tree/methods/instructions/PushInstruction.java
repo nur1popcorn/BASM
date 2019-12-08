@@ -19,6 +19,7 @@
 package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
 import com.nur1popcorn.basm.classfile.Opcode;
+import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -34,7 +35,7 @@ public final class PushInstruction extends Instruction {
     /**
      * @param opcode
      */
-    PushInstruction(Opcode opcode, short value) {
+    public PushInstruction(Opcode opcode, short value) {
         super(opcode);
         this.value = value;
     }

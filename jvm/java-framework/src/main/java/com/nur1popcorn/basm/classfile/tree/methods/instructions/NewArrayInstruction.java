@@ -1,6 +1,7 @@
 package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
 import com.nur1popcorn.basm.classfile.tree.Type;
+import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -13,7 +14,7 @@ public final class NewArrayInstruction extends Instruction {
     /**
      * @param type
      */
-    NewArrayInstruction(Type type) {
+    public NewArrayInstruction(Type type) {
         super(NEWARRAY);
         this.type = type;
     }

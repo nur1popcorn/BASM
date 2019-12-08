@@ -7,7 +7,7 @@ public final class ClassInstruction extends CPInstruction {
     /**
      * @param opcode
      */
-    ClassInstruction(Opcode opcode, int index, ConstantPool cp) {
+    public ClassInstruction(Opcode opcode, int index, ConstantPool cp) {
         super(opcode, index, cp);
     }
 

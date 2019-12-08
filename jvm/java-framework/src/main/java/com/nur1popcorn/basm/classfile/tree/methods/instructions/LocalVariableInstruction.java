@@ -19,6 +19,7 @@
 package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
 import com.nur1popcorn.basm.classfile.Opcode;
+import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -32,7 +33,7 @@ public class LocalVariableInstruction extends Instruction {
     /**
      * @param opcode
      */
-    LocalVariableInstruction(Opcode opcode, byte index) {
+    public LocalVariableInstruction(Opcode opcode, byte index) {
         super(opcode);
         this.index = index;
     }

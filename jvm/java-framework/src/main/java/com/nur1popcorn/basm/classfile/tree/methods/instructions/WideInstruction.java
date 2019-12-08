@@ -19,6 +19,7 @@
 package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
 import com.nur1popcorn.basm.classfile.Opcode;
+import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -33,7 +34,7 @@ public final class WideInstruction extends Instruction {
     /**
      * @param index
      */
-    WideInstruction(int index, int constant) {
+    public WideInstruction(int index, int constant) {
         this(IINC, index);
         this.constant = constant;
     }

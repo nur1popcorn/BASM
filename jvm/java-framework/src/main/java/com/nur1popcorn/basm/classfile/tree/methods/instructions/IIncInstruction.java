@@ -34,7 +34,7 @@ public final class IIncInstruction extends LocalVariableInstruction {
      * @param index
      * @param
      */
-    IIncInstruction(Opcode opcode, byte index, byte constant) {
+    public IIncInstruction(Opcode opcode, byte index, byte constant) {
         super(opcode, index);
         this.constant = constant;
     }

@@ -23,6 +23,7 @@ import com.nur1popcorn.basm.classfile.MalformedClassFileException;
 import com.nur1popcorn.basm.classfile.Opcode;
 import com.nur1popcorn.basm.classfile.constants.ConstantInfo;
 import com.nur1popcorn.basm.classfile.constants.IConstantPoolPointer;
+import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
 
 import java.io.DataOutputStream;
 import java.io.IOException;

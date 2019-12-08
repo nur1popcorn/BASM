@@ -27,6 +27,7 @@ import com.nur1popcorn.basm.classfile.constants.ConstantInteger;
 import com.nur1popcorn.basm.classfile.constants.ConstantLong;
 import com.nur1popcorn.basm.classfile.constants.ConstantName;
 import com.nur1popcorn.basm.classfile.tree.ConstantPoolGenerator;
+import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -53,7 +54,7 @@ public final class LDCInstruction extends CPInstruction {
      * @param index
      * @param cp
      */
-    LDCInstruction(Opcode opcode, int index, ConstantPool cp) {
+    public LDCInstruction(Opcode opcode, int index, ConstantPool cp) {
         super(opcode, index, cp);
     }
 

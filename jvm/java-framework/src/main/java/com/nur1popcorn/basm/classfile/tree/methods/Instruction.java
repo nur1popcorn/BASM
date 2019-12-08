@@ -16,11 +16,11 @@
  *
  */
 
-package com.nur1popcorn.basm.classfile.tree.methods.instructions;
+package com.nur1popcorn.basm.classfile.tree.methods;
 
 import com.nur1popcorn.basm.classfile.*;
 import com.nur1popcorn.basm.classfile.tree.Type;
-import com.nur1popcorn.basm.classfile.tree.methods.IInstructionPointer;
+import com.nur1popcorn.basm.classfile.tree.methods.instructions.*;
 import com.nur1popcorn.basm.classfile.tree.methods.instructions.SwitchInstruction.KeyIndexPair;
 import com.nur1popcorn.basm.utils.ByteDataInputStream;
 import com.nur1popcorn.basm.utils.WeakHashSet;
@@ -61,7 +61,10 @@ import static com.nur1popcorn.basm.classfile.Opcode.*;
  *
  */
 public abstract class Instruction {
-    public int offset;
+    /*
+     *
+     */
+    int offset;
 
     /*
      *
@@ -73,13 +76,13 @@ public abstract class Instruction {
      */
     private Set<IInstructionPointer> pointers;
 
-    public Instruction next,
-                       prev;
+    Instruction next,
+                prev;
 
     /**
      * @param opcode
      */
-    Instruction(Opcode opcode) {
+    protected Instruction(Opcode opcode) {
         this.opcode = opcode;
     }
 
@@ -201,7 +204,7 @@ public abstract class Instruction {
             case IINC_INS:
                 return new IIncInstruction(
                     opcode, in.readByte(), in.readByte());
-            case JUMP_INS: {
+            case JUMP_INS:
                 switch (opcode) {
                     // a 4 byte index must be constructed for the goto_w & jsr_w opcodes.
                     // https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.goto_w
@@ -214,8 +217,7 @@ public abstract class Instruction {
                         return new JumpInstruction(opcode,
                             in.getIndex(offset + in.readShort()));
                 }
-            }
-            case SWITCH_INS: {
+            case SWITCH_INS:
                 // skip padding bytes and read default index.
                 in.skipBytes(-in.position() & 0x3);
                 final int defaultTarget = in.getIndex(offset + in.readInt());
@@ -253,11 +255,10 @@ public abstract class Instruction {
                             opcode, defaultTarget, indices);
                     }
                 }
-            }
             case FIELD_INS:
                 return new FieldInstruction(
                     opcode, in.readUnsignedShort(), cp);
-            case METHOD_INS: {
+            case METHOD_INS:
                 if (opcode == INVOKEINTERFACE) {
                     final int index = in.readUnsignedShort();
                     final int count = in.readUnsignedByte();
@@ -267,19 +268,17 @@ public abstract class Instruction {
                 }
                 return new MethodInstruction(
                     opcode, in.readUnsignedShort(), cp);
-            }
-            case INVOKEDYNAMIC_INS: {
+            case INVOKEDYNAMIC_INS:
                 final int index = in.readUnsignedShort();
                 in.skipBytes(2);
                 return new InvokeDynamicInstruction(index, cp);
-            }
             case CLASS_INS:
                 return new ClassInstruction(
                     opcode, in.readUnsignedShort(), cp);
             case NEWARRAY_INS:
                 return new NewArrayInstruction(
                     Type.getType(in.readByte()));
-            case WIDE_INS: {
+            case WIDE_INS:
                 // https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.wide
                 final Opcode wopcode = Opcode.valueOf(in.readByte());
                 if(wopcode == IINC)
@@ -288,7 +287,6 @@ public abstract class Instruction {
                 else
                     return new WideInstruction(
                         wopcode, in.readUnsignedShort());
-            }
             case MULTIANEWARRAY_INS:
                 return new MultiANewArrayInstruction(
                     in.readUnsignedShort(), in.readByte());
@@ -315,5 +313,9 @@ public abstract class Instruction {
                     );
                 return parameters + 1;
         }
+    }
+
+    public int getOffset() {
+        return offset;
     }
 }
