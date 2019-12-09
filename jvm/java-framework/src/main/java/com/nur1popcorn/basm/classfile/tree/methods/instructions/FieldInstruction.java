@@ -21,6 +21,8 @@ package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 import com.nur1popcorn.basm.classfile.ConstantPool;
 import com.nur1popcorn.basm.classfile.Opcode;
 
+import static com.nur1popcorn.basm.classfile.tree.methods.InstructionType.FIELD_INS;
+
 public final class FieldInstruction extends FieldMethodInstruction {
     /**
      * @param cp
@@ -29,6 +31,8 @@ public final class FieldInstruction extends FieldMethodInstruction {
      */
     public FieldInstruction(Opcode opcode, int index, ConstantPool cp) {
         super(opcode, index, cp);
+        if(opcode.getType() != FIELD_INS)
+            throw new IllegalArgumentException();
     }
 
     @Override

@@ -21,6 +21,7 @@ package com.nur1popcorn.basm.classfile.tree.methods;
 import com.nur1popcorn.basm.classfile.ConstantPool;
 import com.nur1popcorn.basm.classfile.MalformedClassFileException;
 import com.nur1popcorn.basm.classfile.tree.methods.instructions.IInstructionVisitor;
+import com.nur1popcorn.basm.classfile.tree.methods.instructions.InstructionFactory;
 import com.nur1popcorn.basm.classfile.tree.methods.instructions.Label;
 import com.nur1popcorn.basm.utils.ByteDataInputStream;
 
@@ -67,7 +68,7 @@ public final class InstructionList extends AbstractList<Instruction> implements 
      * @param code The serialized {@link Instruction}s which should be read and added to the list.
      * @param constantPool The {@link ConstantPool} referenced by the read {@link Instruction}s.
      *
-     * @see Instruction#read(ByteDataInputStream, ConstantPool)
+     * @see InstructionFactory#read(ByteDataInputStream, ConstantPool)
      *
      * @throws IOException If an error occurs during the process of reading from the {@link ByteDataInputStream}.
      * @throws MalformedClassFileException If an {@link Instruction} is unknown or malformed.
@@ -77,7 +78,7 @@ public final class InstructionList extends AbstractList<Instruction> implements 
         final int length = in.numberOfInstructions();
         instructions = new Instruction[length];
         for(int i = 0; i < length; i++)
-            add(Instruction.read(in, constantPool));
+            add(InstructionFactory.read(in, constantPool));
         final Label labels[] = in.getLabels();
         int count = 0;
         for(int i = 0; i < labels.length; i++)

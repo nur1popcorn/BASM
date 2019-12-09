@@ -25,6 +25,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 import static com.nur1popcorn.basm.classfile.Opcode.INVOKEINTERFACE;
+import static com.nur1popcorn.basm.classfile.tree.methods.InstructionType.METHOD_INS;
 
 public final class MethodInstruction extends FieldMethodInstruction {
     private int count;
@@ -36,6 +37,8 @@ public final class MethodInstruction extends FieldMethodInstruction {
      */
     public MethodInstruction(Opcode opcode, int index, ConstantPool cp) {
         super(opcode, index, cp);
+        if(opcode.getType() != METHOD_INS)
+            throw new IllegalArgumentException();
     }
 
     public MethodInstruction(int index, int count, ConstantPool cp) {
@@ -54,7 +57,7 @@ public final class MethodInstruction extends FieldMethodInstruction {
     @Override
     public void write(DataOutputStream os) throws IOException {
         super.write(os);
-        if(opcode == INVOKEINTERFACE) {
+        if(getOpcode() == INVOKEINTERFACE) {
             os.writeByte(count);
             os.writeByte(0);
         }

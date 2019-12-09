@@ -39,4 +39,9 @@ public class Label extends Instruction {
     public void write(DataOutputStream os) throws IOException {
         //Do not do anything
     }
+
+    @Override
+    public int getLength() {
+        return 0;
+    }
 }

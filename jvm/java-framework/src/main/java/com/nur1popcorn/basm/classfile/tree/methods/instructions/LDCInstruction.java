@@ -37,6 +37,7 @@ import static com.nur1popcorn.basm.classfile.IClassVersionProvider.JAVA_5;
 import static com.nur1popcorn.basm.classfile.IClassVersionProvider.JAVA_7;
 import static com.nur1popcorn.basm.classfile.Opcode.LDC;
 import static com.nur1popcorn.basm.classfile.Opcode.LDC_W;
+import static com.nur1popcorn.basm.classfile.tree.methods.InstructionType.LDC_INS;
 
 /**
  * The {@link LDCInstruction}
@@ -56,6 +57,8 @@ public final class LDCInstruction extends CPInstruction {
      */
     public LDCInstruction(Opcode opcode, int index, ConstantPool cp) {
         super(opcode, index, cp);
+        if(opcode.getType() != LDC_INS)
+            throw new IllegalArgumentException();
     }
 
     /**
@@ -73,8 +76,8 @@ public final class LDCInstruction extends CPInstruction {
      */
     @Override
     public void ensureVersion(IClassVersionProvider provider) {
-        if(opcode == LDC ||
-           opcode == LDC_W) {
+        if(getOpcode() == LDC ||
+           getOpcode() == LDC_W) {
             // https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.9.1-120-D
             switch(cp.getEntry(index)
                      .getTag()) {
@@ -94,19 +97,18 @@ public final class LDCInstruction extends CPInstruction {
      */
     @Override
     public void write(DataOutputStream os) throws IOException {
-        switch(opcode) {
+        switch(getOpcode()) {
             case LDC:
                 if(index < 0x100) {
-                    os.writeByte(opcode.getOpcode());
+                    os.writeByte(getOpcode().getOpcode());
                     os.writeByte(index);
                     break;
                 }
-                opcode = LDC_W;
+                setOpcode(LDC_W);
                 // fallthrough.
             case LDC_W:
             case LDC2_W:
-                os.writeByte(opcode.getOpcode());
-                os.writeShort(index);
+                super.write(os);
                 break;
             default:
                 break;
@@ -119,9 +121,9 @@ public final class LDCInstruction extends CPInstruction {
     @Override
     public void update(int oldIndex, int newIndex) {
         index = newIndex;
-        if(opcode == LDC &&
+        if(getOpcode() == LDC &&
            index > 0xff)
-            opcode = LDC_W;
+            setOpcode(LDC_W);
         // TODO: remove useless check.
         if(cp.getEntry(newIndex) == null)
             throw new MalformedClassFileException(
@@ -139,7 +141,7 @@ public final class LDCInstruction extends CPInstruction {
             throw new MalformedClassFileException(
                 "The CONSTANT_Info at index: index=" + index + " is null");
         final byte tag = info.getTag();
-        switch(opcode) {
+        switch(getOpcode()) {
             case LDC:
             case LDC_W:
                 // https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.9.1-120-D
@@ -193,7 +195,7 @@ public final class LDCInstruction extends CPInstruction {
             default:
                 throw new MalformedClassFileException(
                     "The instruction's opcode is invalid: opcode=" +
-                    opcode
+                    getOpcode()
                 );
         }
     }

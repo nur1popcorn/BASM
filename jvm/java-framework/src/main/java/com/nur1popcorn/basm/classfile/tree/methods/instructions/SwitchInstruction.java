@@ -25,8 +25,10 @@ import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+
+import static com.nur1popcorn.basm.classfile.Opcode.TABLESWITCH;
+import static com.nur1popcorn.basm.classfile.tree.methods.InstructionType.SWITCH_INS;
 
 public final class SwitchInstruction extends Instruction implements IInstructionPointer  {
     private Label defaultTarget;
@@ -37,6 +39,8 @@ public final class SwitchInstruction extends Instruction implements IInstruction
      */
     public SwitchInstruction(Opcode opcode, Label defaultTarget, KeyIndexPair indices[]) {
         super(opcode);
+        if(opcode.getType() != SWITCH_INS)
+            throw new IllegalArgumentException();
         (this.defaultTarget = defaultTarget)
             .addPointer(this);
         this.indices = new ArrayList<>(indices.length);
@@ -76,28 +80,24 @@ public final class SwitchInstruction extends Instruction implements IInstruction
         while((os.size() & 0x3) != 0)
             os.writeByte(0);
         os.writeInt(defaultTarget.getOffset() - getOffset());
-        switch(opcode) {
+        switch(getOpcode()) {
             case TABLESWITCH:
                 // https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.tableswitch
                 final int low = indices.get(0).key;
-                final int high = low + getCount() - 1;
+                final int high = low + indices.size() - 1;
                 os.writeInt(low);
                 os.writeInt(high);
                 for(KeyIndexPair pair : indices)
                     os.writeInt(pair.target.getOffset() - getOffset());
                 break;
             case LOOKUPSWITCH:
-                os.writeInt(getCount());
+                os.writeInt(indices.size());
                 for(KeyIndexPair pair : indices) {
                     os.writeInt(pair.key);
                     os.writeInt(pair.target.getOffset() - getOffset());
                 }
                 break;
         }
-    }
-
-    public int getCount() {
-        return indices.size();
     }
 
     public static class KeyIndexPair {
@@ -118,5 +118,20 @@ public final class SwitchInstruction extends Instruction implements IInstruction
         defaultTarget.removePointer(this);
         for(KeyIndexPair pair : indices)
            pair.target.removePointer(this);
+    }
+
+    public Label getDefaultTarget() {
+        return defaultTarget;
+    }
+
+    public void setDefaultTarget(Label defaultTarget) {
+        this.defaultTarget = defaultTarget;
+    }
+
+    @Override
+    public int getLength() {
+        return getOpcode() == TABLESWITCH ?
+            ((-1 - getOffset()) & 0x3) + 13 + (indices.size() << 2) :
+            ((-1 - getOffset()) & 0x3) + 9 + (indices.size() << 3);
     }
 }

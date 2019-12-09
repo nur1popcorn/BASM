@@ -21,12 +21,16 @@ package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 import com.nur1popcorn.basm.classfile.Opcode;
 import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
 
+import static com.nur1popcorn.basm.classfile.tree.methods.InstructionType.NO_PARAM_INS;
+
 public final class NoParameterInstruction extends Instruction {
     /**
      * @param opcode
      */
     public NoParameterInstruction(Opcode opcode) {
         super(opcode);
+        if(opcode.getType() != NO_PARAM_INS)
+            throw new IllegalArgumentException();
     }
 
     /**

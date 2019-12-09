@@ -21,10 +21,11 @@ package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 import com.nur1popcorn.basm.classfile.Opcode;
 import com.nur1popcorn.basm.classfile.tree.methods.IInstructionPointer;
 import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
-import com.nur1popcorn.basm.classfile.tree.methods.InstructionList;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+
+import static com.nur1popcorn.basm.classfile.tree.methods.InstructionType.JUMP_INS;
 
 public final class JumpInstruction extends Instruction implements IInstructionPointer {
     private Label target;
@@ -34,6 +35,8 @@ public final class JumpInstruction extends Instruction implements IInstructionPo
      */
     public JumpInstruction(Opcode opcode, Label target) {
         super(opcode);
+        if(opcode.getType() != JUMP_INS)
+            throw new IllegalArgumentException();
         (this.target = target)
             .addPointer(this);
     }
@@ -53,7 +56,7 @@ public final class JumpInstruction extends Instruction implements IInstructionPo
     public void write(DataOutputStream os) throws IOException {
         super.write(os);
         final int length = target.getOffset() - getOffset();
-        switch(opcode) {
+        switch(getOpcode()) {
             case GOTO_W:
             case JSR_W:
                 os.writeInt(length);
@@ -70,5 +73,13 @@ public final class JumpInstruction extends Instruction implements IInstructionPo
     @Override
     public void dispose() {
         target.removePointer(this);
+    }
+
+    public Label getTarget() {
+        return target;
+    }
+
+    public void setTarget(Label target) {
+        this.target = target;
     }
 }

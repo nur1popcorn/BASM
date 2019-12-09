@@ -24,6 +24,8 @@ import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
+import static com.nur1popcorn.basm.classfile.tree.methods.InstructionType.LOCAL_VARIABLE_INS;
+
 public class LocalVariableInstruction extends Instruction {
     /*
      *
@@ -35,6 +37,8 @@ public class LocalVariableInstruction extends Instruction {
      */
     public LocalVariableInstruction(Opcode opcode, byte index) {
         super(opcode);
+        if(opcode.getType() != LOCAL_VARIABLE_INS)
+            throw new IllegalArgumentException();
         this.index = index;
     }
 

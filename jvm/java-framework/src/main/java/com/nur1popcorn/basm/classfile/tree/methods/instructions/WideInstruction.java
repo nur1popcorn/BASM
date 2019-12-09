@@ -28,7 +28,7 @@ import static com.nur1popcorn.basm.classfile.Opcode.IINC;
 import static com.nur1popcorn.basm.classfile.Opcode.WIDE;
 
 public final class WideInstruction extends Instruction {
-    private Opcode opcode;
+    private Opcode opcodeParameter;
     private int index, constant;
 
     /**
@@ -40,11 +40,11 @@ public final class WideInstruction extends Instruction {
     }
 
     /**
-     * @param opcode
+     * @param opcodeParameter
      */
-    public WideInstruction(Opcode opcode, int index) {
+    public WideInstruction(Opcode opcodeParameter, int index) {
         super(WIDE);
-        this.opcode = opcode;
+        this.opcodeParameter = opcodeParameter;
         this.index = index;
     }
 
@@ -56,13 +56,18 @@ public final class WideInstruction extends Instruction {
     @Override
     public void write(DataOutputStream os) throws IOException {
         super.write(os);
-        os.writeByte(opcode.getOpcode());
+        os.writeByte(opcodeParameter.getOpcode());
         os.writeShort(index);
-        if(opcode == IINC)
+        if(opcodeParameter == IINC)
             os.writeShort(constant);
     }
 
+    @Override
+    public int getLength() {
+        return opcodeParameter == IINC ? 6 : 4;
+    }
+
     public Opcode getOpcodeParameter() {
-        return opcode;
+        return opcodeParameter;
     }
 }
