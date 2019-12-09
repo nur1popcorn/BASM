@@ -29,7 +29,6 @@ import static com.nur1popcorn.basm.classfile.Opcode.IINC;
 
 public final class ByteDataInputStream extends DataInputStream {
     private ByteArrayInputStreamDelegate in;
-    private final int indices[];
     private int count;
     private final Label labels[];
 
@@ -40,9 +39,8 @@ public final class ByteDataInputStream extends DataInputStream {
     private ByteDataInputStream(ByteArrayInputStreamDelegate in) throws IOException {
         super(in);
         this.in = in;
-        indices = new int[in.length()];
         labels = new Label[in.length()];
-        for(int position = 0; available() != 0; count++) {
+        for(;available() != 0; count++) {
             final int offset = position();
             final Opcode opcode = Opcode.valueOf(readByte());
             switch(opcode.getType()) {
@@ -85,27 +83,18 @@ public final class ByteDataInputStream extends DataInputStream {
                     skipBytes(opcode.getParameter());
                     break;
             }
-            indices[position] = count;
-            while(++position < position())
-                indices[position] = -1; /* illegal location */
         }
         reset();
     }
 
-    public Label readLabel(int index) {
-        if(labels[index] == null)
-            labels[index] = new Label();
-        return labels[index];
+    public Label readLabel(int offset) {
+        if(labels[offset] == null)
+            labels[offset] = new Label();
+        return labels[offset];
     }
 
     public int position() {
         return in.position();
-    }
-
-    public int getIndex(int offset) {
-        if(offset < 0 || offset >= in.length() || indices[offset] < 0)
-            throw new IllegalArgumentException();
-        return indices[offset];
     }
 
     public int numberOfInstructions() {
