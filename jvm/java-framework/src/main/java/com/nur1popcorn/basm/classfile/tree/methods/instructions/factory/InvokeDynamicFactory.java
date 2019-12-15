@@ -16,30 +16,22 @@
  *
  */
 
-package com.nur1popcorn.basm.classfile.tree.methods.instructions;
+package com.nur1popcorn.basm.classfile.tree.methods.instructions.factory;
 
 import com.nur1popcorn.basm.classfile.ConstantPool;
 import com.nur1popcorn.basm.classfile.Opcode;
-import com.nur1popcorn.basm.classfile.constants.ConstantMethodRef;
+import com.nur1popcorn.basm.classfile.tree.methods.instructions.InvokeDynamicInstruction;
+import com.nur1popcorn.basm.utils.ByteDataInputStream;
 
-import static com.nur1popcorn.basm.classfile.tree.methods.InstructionType.FIELD_INS;
+import java.io.IOException;
 
-public final class FieldInstruction extends FieldMethodInstruction {
-    /**
-     * @param opcode
-     * @param info
-     * @param cp
-     */
-    public FieldInstruction(Opcode opcode, ConstantMethodRef info, ConstantPool cp) {
-        super(opcode, info, cp);
-        if(opcode.getType() != FIELD_INS)
-            throw new IllegalArgumentException();
-    }
+import static com.nur1popcorn.basm.Constants.CONSTANT_INVOKEDYNAMIC;
 
+public class InvokeDynamicFactory implements IInstructionFactory<InvokeDynamicInstruction> {
     @Override
-    public void accept(IInstructionVisitor visitor) {
-        visitor.visitCPInstruction(this);
-        visitor.visitFieldMethodInstruction(this);
-        visitor.visitFieldInstruction(this);
+    public InvokeDynamicInstruction createInstruction(ByteDataInputStream in, int offset, Opcode opcode, ConstantPool cp) throws IOException {
+        final int index = in.readUnsignedShort();
+        in.skipBytes(2);
+        return new InvokeDynamicInstruction(cp.getEntry(index, CONSTANT_INVOKEDYNAMIC), cp);
     }
 }

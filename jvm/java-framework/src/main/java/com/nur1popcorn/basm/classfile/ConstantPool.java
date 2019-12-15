@@ -216,6 +216,20 @@ public class ConstantPool implements Iterable<ConstantInfo> {
         return cpEntries.length;
     }
 
+    public int indexOf(ConstantInfo info) {
+        for(int i = 1 /* the cp's size is 1 less than given */; i < cpEntries.length; i++) {
+            final ConstantInfo entry = cpEntries[i];
+            if(entry.equals(info))
+                return i;
+            // longs and doubles take up 2 spaces in the constant pool.
+            final int tag = entry.getTag();
+            if(tag == CONSTANT_LONG ||
+                tag == CONSTANT_DOUBLE)
+                i++ /* padding */;
+        }
+        return -1;
+    }
+
     @Override
     public final Iterator<ConstantInfo> iterator() {
         return new Iterator<>() {

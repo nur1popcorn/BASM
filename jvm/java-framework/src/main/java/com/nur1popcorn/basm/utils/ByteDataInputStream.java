@@ -26,79 +26,51 @@ import java.io.DataInputStream;
 import java.io.IOException;
 
 import static com.nur1popcorn.basm.classfile.Opcode.IINC;
+import static com.nur1popcorn.basm.classfile.Opcode.TABLESWITCH;
 
 public final class ByteDataInputStream extends DataInputStream {
     private ByteArrayInputStreamDelegate in;
-    private int count;
     private final Label labels[];
 
-    public ByteDataInputStream(byte buffer[]) throws IOException {
+    public ByteDataInputStream(byte buffer[]) {
         this(new ByteArrayInputStreamDelegate(buffer));
     }
 
-    private ByteDataInputStream(ByteArrayInputStreamDelegate in) throws IOException {
+    private ByteDataInputStream(ByteArrayInputStreamDelegate in) {
         super(in);
         this.in = in;
         labels = new Label[in.length()];
-        for(;available() != 0; count++) {
-            final int offset = position();
-            final Opcode opcode = Opcode.valueOf(readByte());
-            switch(opcode.getType()) {
-                case JUMP_INS:
-                    switch(opcode) {
-                        case GOTO_W:
-                        case JSR_W:
-                            readLabel(offset + readInt());
-                            break;
-                        default:
-                            readLabel(offset + readShort());
-                            break;
-                    }
-                    break;
-                case SWITCH_INS:
-                    skipBytes(-position() & 0x3);
-                    readLabel(offset + readInt());
-                    switch(opcode) {
-                        case TABLESWITCH:
-                            final int low = readInt();
-                            final int high = readInt();
-                            for(int i = 0; i < high - low + 1; i++)
-                                readLabel(offset + readInt());
-                            break;
-                        case LOOKUPSWITCH:
-                            final int length = readInt();
-                            for(int i = 0; i < length; i++) {
-                                skipBytes(4);
-                                readLabel(offset + readInt());
-                            }
-                            break;
-                    }
-                    break;
-                case WIDE_INS:
-                    skipBytes(
-                        readByte() == IINC.getOpcode() ?
-                            4 : 2);
-                    break;
-                default:
-                    skipBytes(opcode.getParameter());
-                    break;
-            }
-        }
-        reset();
     }
 
-    public Label readLabel(int offset) {
-        if(labels[offset] == null)
-            labels[offset] = new Label();
-        return labels[offset];
+    public void skip(Opcode opcode) throws IOException {
+        switch(opcode.getType()) {
+            case SWITCH_INS:
+                // skip padding bytes and skip default index.
+                skipBytes((-position() & 0x3) + 4);
+                final int length = readInt();
+                skipBytes(opcode == TABLESWITCH ?
+                    (readInt() - length + 1) << 2 :
+                                 length << 3);
+                break;
+            case WIDE_INS:
+                skipBytes(
+                    readByte() == IINC.getOpcode() ?
+                        4 : 2);
+                break;
+            default:
+                skipBytes(opcode.getParameter());
+                break;
+        }
     }
 
     public int position() {
         return in.position();
     }
 
-    public int numberOfInstructions() {
-        return count;
+    public Label readLabel(int offset) {
+        if(labels[offset] == null)
+            labels[offset] = new Label();
+        return labels[offset];
     }
 
     public Label[] getLabels() {

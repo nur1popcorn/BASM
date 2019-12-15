@@ -33,8 +33,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 import static com.nur1popcorn.basm.Constants.*;
-import static com.nur1popcorn.basm.classfile.IClassVersionProvider.JAVA_5;
-import static com.nur1popcorn.basm.classfile.IClassVersionProvider.JAVA_7;
+import static com.nur1popcorn.basm.classfile.IClassVersionProvider.*;
 import static com.nur1popcorn.basm.classfile.Opcode.LDC;
 import static com.nur1popcorn.basm.classfile.Opcode.LDC_W;
 import static com.nur1popcorn.basm.classfile.tree.methods.InstructionType.LDC_INS;
@@ -52,11 +51,11 @@ import static com.nur1popcorn.basm.classfile.tree.methods.InstructionType.LDC_IN
 public final class LDCInstruction extends CPInstruction {
     /**
      * @param opcode
-     * @param index
+     * @param info
      * @param cp
      */
-    public LDCInstruction(Opcode opcode, int index, ConstantPool cp) {
-        super(opcode, index, cp);
+    public LDCInstruction(Opcode opcode, ConstantInfo info, ConstantPool cp) {
+        super(opcode, info, cp);
         if(opcode.getType() != LDC_INS)
             throw new IllegalArgumentException();
     }
@@ -66,7 +65,6 @@ public final class LDCInstruction extends CPInstruction {
      */
     @Override
     public void accept(IInstructionVisitor visitor) {
-        visitor.visitCPPointer(this);
         visitor.visitCPInstruction(this);
         visitor.visitLDCInstruction(this);
     }
@@ -79,8 +77,7 @@ public final class LDCInstruction extends CPInstruction {
         if(getOpcode() == LDC ||
            getOpcode() == LDC_W) {
             // https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.9.1-120-D
-            switch(cp.getEntry(index)
-                     .getTag()) {
+            switch(info.getTag()) {
                 case CONSTANT_CLASS:
                     provider.ensureMajorVersion(JAVA_5);
                     break;
@@ -99,6 +96,7 @@ public final class LDCInstruction extends CPInstruction {
     public void write(DataOutputStream os) throws IOException {
         switch(getOpcode()) {
             case LDC:
+                final int index = cp.indexOf(info);
                 if(index < 0x100) {
                     os.writeByte(getOpcode().getOpcode());
                     os.writeByte(index);
@@ -116,30 +114,14 @@ public final class LDCInstruction extends CPInstruction {
     }
 
     /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void update(int oldIndex, int newIndex) {
-        index = newIndex;
-        if(getOpcode() == LDC &&
-           index > 0xff)
-            setOpcode(LDC_W);
-        // TODO: remove useless check.
-        if(cp.getEntry(newIndex) == null)
-            throw new MalformedClassFileException(
-                "The CONSTANT_Info at index: index=" + index + " is null");
-    }
-
-    /**
      * @param cp
      *
      * @return
      */
     public Object getValue(ConstantPool cp) {
-        final ConstantInfo info = cp.getEntry(index);
         if(info == null)
             throw new MalformedClassFileException(
-                "The CONSTANT_Info at index: index=" + index + " is null");
+                "The CONSTANT_Info at index: index=" + " is null");
         final byte tag = info.getTag();
         switch(getOpcode()) {
             case LDC:
@@ -163,7 +145,7 @@ public final class LDCInstruction extends CPInstruction {
                         return info;
                     default:
                         throw new MalformedClassFileException(
-                            "The CONSTANT_Info at given index has an invalid tag: index=" + index +
+                            "The CONSTANT_Info at given index has an invalid tag: index=" +
                                 ", expected_tag="
                                 + "{" +
                                     CONSTANT_INTEGER + "|" + CONSTANT_FLOAT + "|" +
@@ -184,7 +166,7 @@ public final class LDCInstruction extends CPInstruction {
                             .asDouble();
                     default:
                         throw new MalformedClassFileException(
-                            "The CONSTANT_Info at given index has an invalid tag: index=" + index +
+                            "The CONSTANT_Info at given index has an invalid tag: index=" +
                                 ", expected_tag="
                                 + "{" +
                                     CONSTANT_LONG + "|" + CONSTANT_DOUBLE

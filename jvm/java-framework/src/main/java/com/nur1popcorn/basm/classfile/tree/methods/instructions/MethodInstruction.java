@@ -20,6 +20,7 @@ package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
 import com.nur1popcorn.basm.classfile.ConstantPool;
 import com.nur1popcorn.basm.classfile.Opcode;
+import com.nur1popcorn.basm.classfile.constants.ConstantMethodRef;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -31,24 +32,23 @@ public final class MethodInstruction extends FieldMethodInstruction {
     private int count;
 
     /**
-     * @param cp
      * @param opcode
-     * @param index
+     * @param info
+     * @param cp
      */
-    public MethodInstruction(Opcode opcode, int index, ConstantPool cp) {
-        super(opcode, index, cp);
+    public MethodInstruction(Opcode opcode, ConstantMethodRef info, ConstantPool cp) {
+        super(opcode, info, cp);
         if(opcode.getType() != METHOD_INS)
             throw new IllegalArgumentException();
     }
 
-    public MethodInstruction(int index, int count, ConstantPool cp) {
-        super(INVOKEINTERFACE, index, cp);
+    public MethodInstruction(ConstantMethodRef info, int count, ConstantPool cp) {
+        super(INVOKEINTERFACE, info, cp);
         this.count = count;
     }
 
     @Override
     public void accept(IInstructionVisitor visitor) {
-        visitor.visitCPPointer(this);
         visitor.visitCPInstruction(this);
         visitor.visitFieldMethodInstruction(this);
         visitor.visitMethodInstruction(this);

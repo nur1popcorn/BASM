@@ -20,8 +20,9 @@ package com.nur1popcorn.basm.classfile.tree.methods;
 
 import com.nur1popcorn.basm.classfile.ConstantPool;
 import com.nur1popcorn.basm.classfile.MalformedClassFileException;
+import com.nur1popcorn.basm.classfile.Opcode;
 import com.nur1popcorn.basm.classfile.tree.methods.instructions.IInstructionVisitor;
-import com.nur1popcorn.basm.classfile.tree.methods.instructions.InstructionFactory;
+import com.nur1popcorn.basm.classfile.tree.methods.instructions.factory.InstructionFactory;
 import com.nur1popcorn.basm.classfile.tree.methods.instructions.Label;
 import com.nur1popcorn.basm.utils.ByteDataInputStream;
 
@@ -75,10 +76,15 @@ public final class InstructionList extends AbstractList<Instruction> implements 
      */
     InstructionList(byte code[], ConstantPool constantPool) throws IOException {
         final ByteDataInputStream in = new ByteDataInputStream(code);
-        final int length = in.numberOfInstructions();
+        int length = 0;
+        for(;in.available() != 0; length++)
+            in.skip(Opcode.valueOf(in.readByte()));
+        in.reset();
+
         instructions = new Instruction[length];
         for(int i = 0; i < length; i++)
             add(InstructionFactory.read(in, constantPool));
+
         final Label labels[] = in.getLabels();
         for(int i = 0, count = 0; i < length; i++) {
             final Instruction instruction = instructions[i + count];
@@ -159,24 +165,24 @@ public final class InstructionList extends AbstractList<Instruction> implements 
         rangeCheck(index);
         final Instruction old = instructions[index];
         instructions[index] = element;
-        final IInstructionPointer pointers[] = old.getPointers();
-        for(IInstructionPointer pointer : pointers)
-            element.addPointer(pointer);
+        if(old instanceof Label && element instanceof Label) {
+            final IInstructionPointer pointers[] = ((Label)old).getPointers();
+            for(IInstructionPointer pointer : pointers)
+                ((Label)element).addPointer(pointer);
+        }
         if((element.prev = old.prev) == null)
             first = element;
-        else
+        else {
+            element.updateOffset();
             element.prev.next = element;
+        }
         if((element.next = old.next) == null)
             last = element;
         else
             element.next.prev = element;
-        element.setOffset(old.getOffset());
-        final int diff = element.getLength() - old.getLength();
-        if(diff != 0)
-            for(int i = index + 1; i < size; i++) {
-                final Instruction instruction = instructions[i];
-                instruction.setOffset(instruction.prev.getOffset() + instruction.prev.getLength());
-            }
+        if(element.getLength() - old.getLength() != 0)
+            for(int i = index + 1; i < size; i++)
+                instructions[i].updateOffset();
         return old;
     }
 
@@ -199,26 +205,22 @@ public final class InstructionList extends AbstractList<Instruction> implements 
         if(oldSize == 0)
             last = first = element;
         else if(oldSize == index) {
-            final Instruction prev = instructions[index - 1];
-            last = (element.prev = prev)
+            last = (element.prev = instructions[index - 1])
                 .next = element;
-            element.setOffset(prev.getOffset() + prev.getLength());
+            element.updateOffset();
         } else if(index == 0)
             first = (element.next = first)
                 .prev = element;
         else {
-            final Instruction prev = instructions[index - 1];
-            (((element.prev = prev)
+            (((element.prev = instructions[index - 1])
                 .next = element)
                 .next = instructions[index + 1])
                 .prev = element;
-            element.setOffset(prev.getOffset() + prev.getLength());
+            element.updateOffset();
         }
         if(element.getLength() != 0)
-            for(int i = index + 1; i < size; i++) {
-                final Instruction instruction = instructions[i];
-                instruction.setOffset(instruction.prev.getOffset() + instruction.prev.getLength());
-            }
+            for(int i = index + 1; i < size; i++)
+                instructions[i].updateOffset();
     }
 
     /**
@@ -234,6 +236,9 @@ public final class InstructionList extends AbstractList<Instruction> implements 
         modCount++;
         rangeCheck(index);
         final Instruction old = instructions[index];
+        if(old instanceof Label)
+            throw new InstructionLostException(
+                ((Label)old).getPointers());
         final int moved = size - index - 1;
         if(moved > 0)
             System.arraycopy(
@@ -252,13 +257,9 @@ public final class InstructionList extends AbstractList<Instruction> implements 
                 first = element;
             else
                 element.prev.next = element;
-            for(int i = index; i < size; i++) {
-                final Instruction instruction = instructions[i];
-                instruction.setOffset(instruction.prev.getOffset() + instruction.prev.getLength());
-            }
+            for(int i = index; i < size; i++)
+                instructions[i].updateOffset();
         }
-        if(old.hasPointers())
-            throw new InstructionLostException(old.getPointers());
         return old;
     }
 

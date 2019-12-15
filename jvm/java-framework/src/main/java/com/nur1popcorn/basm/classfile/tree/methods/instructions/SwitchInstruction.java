@@ -130,8 +130,9 @@ public final class SwitchInstruction extends Instruction implements IInstruction
 
     @Override
     public int getLength() {
-        return getOpcode() == TABLESWITCH ?
-            ((-1 - getOffset()) & 0x3) + 13 + (indices.size() << 2) :
-            ((-1 - getOffset()) & 0x3) + 9 + (indices.size() << 3);
+        return ((-1 - getOffset()) & 0x3) + 9 +
+            (getOpcode() == TABLESWITCH ?
+                4 + (indices.size() << 2) :
+                     indices.size() << 3);
     }
 }

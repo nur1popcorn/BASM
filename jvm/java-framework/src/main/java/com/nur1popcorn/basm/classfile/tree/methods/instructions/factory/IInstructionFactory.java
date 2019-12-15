@@ -16,47 +16,15 @@
  *
  */
 
-package com.nur1popcorn.basm.classfile.tree.methods.instructions;
+package com.nur1popcorn.basm.classfile.tree.methods.instructions.factory;
 
 import com.nur1popcorn.basm.classfile.ConstantPool;
 import com.nur1popcorn.basm.classfile.Opcode;
-import com.nur1popcorn.basm.classfile.constants.ConstantInfo;
 import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
+import com.nur1popcorn.basm.utils.ByteDataInputStream;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
 
-/**
- * The {@link CPInstruction} is an {@link Instruction} which makes use of the constantpool.
- *
- * @see Instruction
- *
- * @see ConstantPool
- * @see ConstantInfo
- *
- * @author nur1popcorn
- * @since 1.0.0-alpha
- */
-public abstract class CPInstruction extends Instruction {
-    /*
-     *
-     */
-    protected final ConstantPool cp;
-
-    protected ConstantInfo info;
-
-    CPInstruction(Opcode opcode, ConstantInfo info, ConstantPool cp) {
-        super(opcode);
-        this.info = info;
-        this.cp = cp;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void write(DataOutputStream os) throws IOException {
-        super.write(os);
-        os.writeShort(cp.indexOf(info));
-    }
+public interface IInstructionFactory<T extends Instruction> {
+    T createInstruction(ByteDataInputStream in, int offset, Opcode opcode, ConstantPool cp) throws IOException;
 }

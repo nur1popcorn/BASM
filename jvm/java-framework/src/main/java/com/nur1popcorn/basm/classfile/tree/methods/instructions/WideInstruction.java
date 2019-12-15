@@ -70,4 +70,8 @@ public final class WideInstruction extends Instruction {
     public Opcode getOpcodeParameter() {
         return opcodeParameter;
     }
+
+    public void setOpcodeParameter(Opcode opcodeParameter) {
+        this.opcodeParameter = opcodeParameter;
+    }
 }

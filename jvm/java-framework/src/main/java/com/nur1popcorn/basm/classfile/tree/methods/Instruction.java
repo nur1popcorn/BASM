@@ -20,11 +20,9 @@ package com.nur1popcorn.basm.classfile.tree.methods;
 
 import com.nur1popcorn.basm.classfile.*;
 import com.nur1popcorn.basm.classfile.tree.methods.instructions.IInstructionVisitor;
-import com.nur1popcorn.basm.utils.WeakHashSet;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.Set;
 
 /**
  * The {@link Instruction} is the abstract super class which all other {@link Instruction}s are derived from.
@@ -65,11 +63,6 @@ public abstract class Instruction {
      *
      */
     private Opcode opcode;
-
-    /*
-     *
-     */
-    private Set<IInstructionPointer> pointers;
 
     Instruction next,
                 prev;
@@ -132,42 +125,7 @@ public abstract class Instruction {
         return offset;
     }
 
-    void setOffset(int offset) {
-        this.offset = offset;
-    }
-
-    /**
-     * @param pointer
-     */
-    public void addPointer(IInstructionPointer pointer) {
-        if(pointers == null)
-            pointers = new WeakHashSet<>();
-        pointers.add(pointer);
-    }
-
-    /**
-     * @param pointer
-     */
-    public void removePointer(IInstructionPointer pointer) {
-        pointers.remove(pointer);
-    }
-
-    /**
-     * @return
-     */
-    public boolean hasPointers() {
-        return pointers != null &&
-            pointers.size() != 0;
-    }
-
-    /**
-     * @return
-     */
-    public IInstructionPointer[] getPointers() {
-        if(pointers == null)
-            return new IInstructionPointer[0];
-        final IInstructionPointer arr[] = new IInstructionPointer[pointers.size()];
-        pointers.toArray(arr);
-        return arr;
+    void updateOffset() {
+        offset = prev.offset + prev.getLength();
     }
 }

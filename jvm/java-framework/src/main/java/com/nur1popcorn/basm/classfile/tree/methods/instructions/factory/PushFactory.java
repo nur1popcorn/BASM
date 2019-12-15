@@ -16,30 +16,23 @@
  *
  */
 
-package com.nur1popcorn.basm.classfile.tree.methods.instructions;
+package com.nur1popcorn.basm.classfile.tree.methods.instructions.factory;
 
 import com.nur1popcorn.basm.classfile.ConstantPool;
 import com.nur1popcorn.basm.classfile.Opcode;
-import com.nur1popcorn.basm.classfile.constants.ConstantMethodRef;
+import com.nur1popcorn.basm.classfile.tree.methods.instructions.PushInstruction;
+import com.nur1popcorn.basm.utils.ByteDataInputStream;
 
-import static com.nur1popcorn.basm.classfile.tree.methods.InstructionType.FIELD_INS;
+import java.io.IOException;
 
-public final class FieldInstruction extends FieldMethodInstruction {
-    /**
-     * @param opcode
-     * @param info
-     * @param cp
-     */
-    public FieldInstruction(Opcode opcode, ConstantMethodRef info, ConstantPool cp) {
-        super(opcode, info, cp);
-        if(opcode.getType() != FIELD_INS)
-            throw new IllegalArgumentException();
-    }
+import static com.nur1popcorn.basm.classfile.Opcode.BIPUSH;
 
+public class PushFactory implements IInstructionFactory<PushInstruction> {
     @Override
-    public void accept(IInstructionVisitor visitor) {
-        visitor.visitCPInstruction(this);
-        visitor.visitFieldMethodInstruction(this);
-        visitor.visitFieldInstruction(this);
+    public PushInstruction createInstruction(ByteDataInputStream in, int offset, Opcode opcode, ConstantPool cp) throws IOException {
+        return new PushInstruction(opcode,
+            opcode == BIPUSH ?
+                in.readByte() :
+                in.readShort());
     }
 }

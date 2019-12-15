@@ -16,30 +16,19 @@
  *
  */
 
-package com.nur1popcorn.basm.classfile.tree.methods.instructions;
+package com.nur1popcorn.basm.classfile.tree.methods.instructions.factory;
 
 import com.nur1popcorn.basm.classfile.ConstantPool;
 import com.nur1popcorn.basm.classfile.Opcode;
-import com.nur1popcorn.basm.classfile.constants.ConstantMethodRef;
+import com.nur1popcorn.basm.classfile.tree.methods.instructions.LocalVariableInstruction;
+import com.nur1popcorn.basm.utils.ByteDataInputStream;
 
-import static com.nur1popcorn.basm.classfile.tree.methods.InstructionType.FIELD_INS;
+import java.io.IOException;
 
-public final class FieldInstruction extends FieldMethodInstruction {
-    /**
-     * @param opcode
-     * @param info
-     * @param cp
-     */
-    public FieldInstruction(Opcode opcode, ConstantMethodRef info, ConstantPool cp) {
-        super(opcode, info, cp);
-        if(opcode.getType() != FIELD_INS)
-            throw new IllegalArgumentException();
-    }
-
+public class LocalVariableFactory implements IInstructionFactory<LocalVariableInstruction> {
     @Override
-    public void accept(IInstructionVisitor visitor) {
-        visitor.visitCPInstruction(this);
-        visitor.visitFieldMethodInstruction(this);
-        visitor.visitFieldInstruction(this);
+    public LocalVariableInstruction createInstruction(ByteDataInputStream in, int offset, Opcode opcode, ConstantPool cp) throws IOException {
+        return new LocalVariableInstruction(
+            opcode, in.readByte());
     }
 }

@@ -18,14 +18,22 @@
 
 package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
+import com.nur1popcorn.basm.classfile.tree.methods.IInstructionPointer;
 import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
+import com.nur1popcorn.basm.utils.WeakHashSet;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.Set;
 
 import static com.nur1popcorn.basm.classfile.Opcode.INVALID;
 
 public class Label extends Instruction {
+    /*
+     *
+     */
+    private Set<IInstructionPointer> pointers;
+
     public Label() {
         super(INVALID);
     }
@@ -43,5 +51,40 @@ public class Label extends Instruction {
     @Override
     public int getLength() {
         return 0;
+    }
+
+    /**
+     * @param pointer
+     */
+    public void addPointer(IInstructionPointer pointer) {
+        if(pointers == null)
+            pointers = new WeakHashSet<>();
+        pointers.add(pointer);
+    }
+
+    /**
+     * @param pointer
+     */
+    public void removePointer(IInstructionPointer pointer) {
+        pointers.remove(pointer);
+    }
+
+    /**
+     * @return
+     */
+    public boolean hasPointers() {
+        return pointers != null &&
+            pointers.size() != 0;
+    }
+
+    /**
+     * @return
+     */
+    public IInstructionPointer[] getPointers() {
+        if(pointers == null)
+            return new IInstructionPointer[0];
+        final IInstructionPointer arr[] = new IInstructionPointer[pointers.size()];
+        pointers.toArray(arr);
+        return arr;
     }
 }
