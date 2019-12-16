@@ -125,9 +125,7 @@ public abstract class Instruction {
         return offset;
     }
 
-    void updateOffset() {
-        offset = prev == null ?
-            0 :
-            prev.offset + prev.getLength();
+    void setOffset(int offset) {
+        this.offset = offset;
     }
 }
