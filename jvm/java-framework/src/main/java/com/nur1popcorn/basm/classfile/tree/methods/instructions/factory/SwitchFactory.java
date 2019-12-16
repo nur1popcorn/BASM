@@ -41,7 +41,7 @@ public class SwitchFactory implements IInstructionFactory<SwitchInstruction> {
                 in.readInt() - length + 1 :
                 length];
         for(int i = 0; i < indices.length; i++)
-            indices[i] = new SwitchInstruction.KeyIndexPair(
+            indices[i] = new KeyIndexPair(
                 opcode == TABLESWITCH ?
                     length + i : in.readInt(),
                 in.readLabel(offset + in.readInt())

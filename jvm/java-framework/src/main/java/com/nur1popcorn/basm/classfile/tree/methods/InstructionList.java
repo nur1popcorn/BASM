@@ -178,11 +178,12 @@ public final class InstructionList extends AbstractList<Instruction> implements 
         }
         if((element.next = old.next) == null)
             last = element;
-        else
+        else {
             element.next.prev = element;
-        if(element.getLength() - old.getLength() != 0)
-            for(int i = index + 1; i < size; i++)
-                instructions[i].updateOffset();
+            if(element.getLength() - old.getLength() != 0)
+                for(int i = index + 1; i < size; i++)
+                    instructions[i].updateOffset();
+        }
         return old;
     }
 
@@ -236,9 +237,12 @@ public final class InstructionList extends AbstractList<Instruction> implements 
         modCount++;
         rangeCheck(index);
         final Instruction old = instructions[index];
-        if(old instanceof Label)
-            throw new InstructionLostException(
-                ((Label)old).getPointers());
+        if(old instanceof Label) {
+            final Label label = (Label)old;
+            if(label.hasPointers())
+                throw new InstructionLostException(
+                    label.getPointers());
+        }
         final int moved = size - index - 1;
         if(moved > 0)
             System.arraycopy(
@@ -257,8 +261,9 @@ public final class InstructionList extends AbstractList<Instruction> implements 
                 first = element;
             else
                 element.prev.next = element;
-            for(int i = index; i < size; i++)
-                instructions[i].updateOffset();
+            if(old.getLength() != 0)
+                for(int i = index; i < size; i++)
+                    instructions[i].updateOffset();
         }
         return old;
     }

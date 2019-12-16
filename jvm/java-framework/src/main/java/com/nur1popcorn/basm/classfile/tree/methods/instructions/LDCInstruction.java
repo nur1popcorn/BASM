@@ -33,7 +33,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 import static com.nur1popcorn.basm.Constants.*;
-import static com.nur1popcorn.basm.classfile.IClassVersionProvider.*;
+import static com.nur1popcorn.basm.classfile.IClassVersionProvider.JAVA_5;
+import static com.nur1popcorn.basm.classfile.IClassVersionProvider.JAVA_7;
 import static com.nur1popcorn.basm.classfile.Opcode.LDC;
 import static com.nur1popcorn.basm.classfile.Opcode.LDC_W;
 import static com.nur1popcorn.basm.classfile.tree.methods.InstructionType.LDC_INS;
