@@ -26,6 +26,10 @@ public interface IClassVersionProvider {
      * Sadly, I couldn't find an official reference which compiles all of these constants, so
      * wikipedia will have to suffice: https://en.wikipedia.org/wiki/Java_class_file
      */
+    public static final int JAVA_14 = 0x3a;
+    public static final int JAVA_13 = 0x39;
+    public static final int JAVA_12 = 0x38;
+    public static final int JAVA_11 = 0x37;
     public static final int JAVA_10 = 0x36;
     public static final int JAVA_9 = 0x35;
     public static final int JAVA_8 = 0x34;

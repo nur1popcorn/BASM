@@ -18,22 +18,26 @@
 
 package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
+import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-public final class IIncInstruction extends LocalVariableInstruction {
+import static com.nur1popcorn.basm.classfile.Opcode.IINC;
+
+public final class IIncInstruction extends Instruction {
     /*
      *
      */
-    public byte constant;
+    private byte index, constant;
 
     /**
-     * @param opcode
      * @param index
-     * @param
+     * @param constant
      */
-    IIncInstruction(byte opcode, byte index, byte constant) {
-        super(opcode, index);
+    public IIncInstruction(byte index, byte constant) {
+        super(IINC);
+        this.index = index;
         this.constant = constant;
     }
 
@@ -42,7 +46,6 @@ public final class IIncInstruction extends LocalVariableInstruction {
      */
     @Override
     public void accept(IInstructionVisitor visitor) {
-        visitor.visitLocalVariableInstruction(this);
         visitor.visitIIncInstruction(this);
     }
 
@@ -52,6 +55,23 @@ public final class IIncInstruction extends LocalVariableInstruction {
     @Override
     public void write(DataOutputStream os) throws IOException {
         super.write(os);
+        os.writeByte(index);
         os.writeByte(constant);
+    }
+
+    public byte getIndex() {
+        return index;
+    }
+
+    public void setIndex(byte index) {
+        this.index = index;
+    }
+
+    public byte getConstant() {
+        return constant;
+    }
+
+    public void setConstant(byte constant) {
+        this.constant = constant;
     }
 }

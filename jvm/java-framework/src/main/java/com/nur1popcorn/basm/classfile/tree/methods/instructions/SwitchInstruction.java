@@ -18,27 +18,36 @@
 
 package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
+import com.nur1popcorn.basm.classfile.Opcode;
+import com.nur1popcorn.basm.classfile.tree.methods.IInstructionPointer;
+import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-import static com.nur1popcorn.basm.Constants.LOOKUPSWITCH;
-import static com.nur1popcorn.basm.Constants.TABLESWITCH;
+import static com.nur1popcorn.basm.classfile.Opcode.TABLESWITCH;
+import static com.nur1popcorn.basm.classfile.tree.methods.InstructionType.SWITCH_INS;
 
-public final class SwitchInstruction extends Instruction {
-    private int defaultIndex;
+public final class SwitchInstruction extends Instruction implements IInstructionPointer  {
+    private Label defaultTarget;
     private final List<KeyIndexPair> indices;
 
     /**
      * @param opcode
      */
-    SwitchInstruction(byte opcode, int defaultIndex, KeyIndexPair indices[]) {
+    public SwitchInstruction(Opcode opcode, Label defaultTarget, KeyIndexPair indices[]) {
         super(opcode);
-        this.defaultIndex = defaultIndex;
+        if(opcode.getType() != SWITCH_INS)
+            throw new IllegalArgumentException();
+        (this.defaultTarget = defaultTarget)
+            .addPointer(this);
         this.indices = new ArrayList<>(indices.length);
-        Collections.addAll(this.indices, indices);
+        for(KeyIndexPair element : indices) {
+            element.target.addPointer(this);
+            this.indices.add(element);
+        }
     }
 
     /**
@@ -70,38 +79,60 @@ public final class SwitchInstruction extends Instruction {
         */
         while((os.size() & 0x3) != 0)
             os.writeByte(0);
-        os.writeInt(defaultIndex);
-        switch(opcode) {
+        os.writeInt(defaultTarget.getOffset() - getOffset());
+        switch(getOpcode()) {
             case TABLESWITCH:
                 // https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.tableswitch
                 final int low = indices.get(0).key;
-                final int high = low + getCount() - 1;
+                final int high = low + indices.size() - 1;
                 os.writeInt(low);
                 os.writeInt(high);
                 for(KeyIndexPair pair : indices)
-                    os.writeInt(pair.index);
+                    os.writeInt(pair.target.getOffset() - getOffset());
                 break;
             case LOOKUPSWITCH:
-                os.writeInt(getCount());
+                os.writeInt(indices.size());
                 for(KeyIndexPair pair : indices) {
                     os.writeInt(pair.key);
-                    os.writeInt(pair.index);
+                    os.writeInt(pair.target.getOffset() - getOffset());
                 }
                 break;
         }
     }
 
-    public int getCount() {
-        return indices.size();
-    }
-
     public static class KeyIndexPair {
         public int key;
-        public int index;
+        public Label target;
 
-        public KeyIndexPair(int key, int index) {
+        public KeyIndexPair(int key, Label target) {
             this.key = key;
-            this.index = index;
+            this.target = target;
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void dispose() {
+        defaultTarget.removePointer(this);
+        for(KeyIndexPair pair : indices)
+           pair.target.removePointer(this);
+    }
+
+    public Label getDefaultTarget() {
+        return defaultTarget;
+    }
+
+    public void setDefaultTarget(Label defaultTarget) {
+        this.defaultTarget = defaultTarget;
+    }
+
+    @Override
+    public int getLength() {
+        return ((-1 - getOffset()) & 0x3) + 9 +
+            (getOpcode() == TABLESWITCH ?
+                4 + (indices.size() << 2) :
+                     indices.size() << 3);
     }
 }

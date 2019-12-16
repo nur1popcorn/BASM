@@ -25,7 +25,7 @@ public final class BreadthFirstSearchTest {
         final BreadthFirstSearch<Integer, Boolean> bfs =
             new BreadthFirstSearch<>(graph, 1);
         for(int i = 0; bfs.hasNext(); i++) {
-            Assert.assertEquals((int) bfs.next(), i + 1);
+            Assert.assertEquals(i + 1, (int) bfs.next());
             Assert.assertEquals(bfs.getDepth(),
                 new int[] { 0, 1, 2, 2, 3 }[i]);
         }

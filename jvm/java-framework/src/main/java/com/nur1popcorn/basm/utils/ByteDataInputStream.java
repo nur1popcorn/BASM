@@ -19,15 +19,18 @@
 package com.nur1popcorn.basm.utils;
 
 import com.nur1popcorn.basm.classfile.Opcode;
+import com.nur1popcorn.basm.classfile.tree.methods.instructions.Label;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 
 import static com.nur1popcorn.basm.classfile.Opcode.IINC;
+import static com.nur1popcorn.basm.classfile.Opcode.TABLESWITCH;
 
 public final class ByteDataInputStream extends DataInputStream {
     private ByteArrayInputStreamDelegate in;
+    private final Label labels[];
 
     public ByteDataInputStream(byte buffer[]) {
         this(new ByteArrayInputStreamDelegate(buffer));
@@ -36,46 +39,55 @@ public final class ByteDataInputStream extends DataInputStream {
     private ByteDataInputStream(ByteArrayInputStreamDelegate in) {
         super(in);
         this.in = in;
-    }
-
-    public int position() {
-        return in.position();
+        labels = new Label[in.length()];
     }
 
     public void skip(Opcode opcode) throws IOException {
-        switch(opcode) {
-            case TABLESWITCH: {
+        switch(opcode.getType()) {
+            case SWITCH_INS:
                 // skip padding bytes and skip default index.
-                skipBytes(-position() & 0x3);
-                skipBytes(4);
-                final int low = readInt();
-                final int high = readInt();
-                skipBytes((high - low + 1) << 2);
-            }   break;
-            case LOOKUPSWITCH:
-                // skip padding bytes and skip default index.
-                skipBytes(-position() & 0x3);
-                skipBytes(4);
-                skipBytes(readInt() << 3);
+                skipBytes((-position() & 0x3) + 4);
+                final int length = readInt();
+                skipBytes(opcode == TABLESWITCH ?
+                    (readInt() - length + 1) << 2 :
+                                 length << 3);
                 break;
-            case WIDE: {
+            case WIDE_INS:
                 skipBytes(
                     readByte() == IINC.getOpcode() ?
                         4 : 2);
-            }   break;
+                break;
             default:
                 skipBytes(opcode.getParameter());
                 break;
         }
     }
 
+    public int position() {
+        return in.position();
+    }
+
+    public Label readLabel(int offset) {
+        if(labels[offset] == null)
+            labels[offset] = new Label();
+        return labels[offset];
+    }
+
+    public Label[] getLabels() {
+        return labels;
+    }
+
     private static final class ByteArrayInputStreamDelegate extends ByteArrayInputStream {
-        public ByteArrayInputStreamDelegate(byte[] buffer) {
+        private ByteArrayInputStreamDelegate(byte[] buffer) {
             super(buffer);
         }
 
-        public int position() {
+        private int position() {
             return pos;
+        }
+
+        private int length() {
+            return buf.length;
         }
     }
 }

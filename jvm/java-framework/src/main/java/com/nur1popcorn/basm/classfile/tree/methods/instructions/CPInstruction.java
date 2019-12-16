@@ -19,9 +19,9 @@
 package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
 import com.nur1popcorn.basm.classfile.ConstantPool;
-import com.nur1popcorn.basm.classfile.MalformedClassFileException;
+import com.nur1popcorn.basm.classfile.Opcode;
 import com.nur1popcorn.basm.classfile.constants.ConstantInfo;
-import com.nur1popcorn.basm.classfile.constants.IConstantPoolPointer;
+import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -37,26 +37,17 @@ import java.io.IOException;
  * @author nur1popcorn
  * @since 1.0.0-alpha
  */
-public abstract class CPInstruction extends Instruction implements IConstantPoolPointer {
+public abstract class CPInstruction extends Instruction {
     /*
      *
      */
     protected final ConstantPool cp;
 
-    /*
-     *
-     */
-    protected int index;
+    protected ConstantInfo info;
 
-    /**
-     *
-     * @param opcode
-     * @param index
-     * @param cp
-     */
-    CPInstruction(byte opcode, int index, ConstantPool cp) {
+    CPInstruction(Opcode opcode, ConstantInfo info, ConstantPool cp) {
         super(opcode);
-        this.index = index;
+        this.info = info;
         this.cp = cp;
     }
 
@@ -66,42 +57,6 @@ public abstract class CPInstruction extends Instruction implements IConstantPool
     @Override
     public void write(DataOutputStream os) throws IOException {
         super.write(os);
-        os.writeShort(index);
-    }
-
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void attach(ConstantPool constantPool) {
-        getConstant().addPointer(this);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void dispose(ConstantPool constantPool) {
-        getConstant().removePointer(this);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void update(int oldIndex, int newIndex) {
-        index = newIndex;
-    }
-
-    /**
-     * @return
-     */
-    public ConstantInfo getConstant() {
-        final ConstantInfo info = cp.getEntry(index);
-        if(info == null)
-            throw new MalformedClassFileException(
-                "The CONSTANT_Info at index: index=" + index + " is null");
-        return info;
+        os.writeShort(cp.indexOf(info));
     }
 }

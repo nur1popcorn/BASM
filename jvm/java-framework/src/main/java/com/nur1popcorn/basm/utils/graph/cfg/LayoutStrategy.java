@@ -18,9 +18,8 @@
 
 package com.nur1popcorn.basm.utils.graph.cfg;
 
+import com.nur1popcorn.basm.utils.graph.DirectedGraph;
 
-import java.awt.geom.Rectangle2D;
-
-public interface LayoutStrategy {
-    //void reposition(DirectedGraph<Rectangle2D, SimpleEdge<Rectangle2D>> graph, Rectangle2D start);
+public interface LayoutStrategy<V, E> {
+    void reposition(DirectedGraph<V, E> graph, V start);
 }

@@ -19,20 +19,25 @@
 package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
 import com.nur1popcorn.basm.classfile.ConstantPool;
+import com.nur1popcorn.basm.classfile.Opcode;
+import com.nur1popcorn.basm.classfile.constants.ConstantMethodRef;
+
+import static com.nur1popcorn.basm.classfile.tree.methods.InstructionType.FIELD_INS;
 
 public final class FieldInstruction extends FieldMethodInstruction {
     /**
-     * @param cp
      * @param opcode
-     * @param index
+     * @param info
+     * @param cp
      */
-    FieldInstruction(byte opcode, int index, ConstantPool cp) {
-        super(opcode, index, cp);
+    public FieldInstruction(Opcode opcode, ConstantMethodRef info, ConstantPool cp) {
+        super(opcode, info, cp);
+        if(opcode.getType() != FIELD_INS)
+            throw new IllegalArgumentException();
     }
 
     @Override
     public void accept(IInstructionVisitor visitor) {
-        visitor.visitCPPointer(this);
         visitor.visitCPInstruction(this);
         visitor.visitFieldMethodInstruction(this);
         visitor.visitFieldInstruction(this);

@@ -2,20 +2,19 @@ package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
 import com.nur1popcorn.basm.classfile.ConstantPool;
 import com.nur1popcorn.basm.classfile.MalformedClassFileException;
+import com.nur1popcorn.basm.classfile.Opcode;
 import com.nur1popcorn.basm.classfile.constants.ConstantMethodRef;
 import com.nur1popcorn.basm.classfile.constants.ConstantNameAndType;
 import com.nur1popcorn.basm.classfile.tree.Type;
 
-import static com.nur1popcorn.basm.Constants.*;
-
 public abstract class FieldMethodInstruction extends CPInstruction {
     /**
-     * @param cp
      * @param opcode
-     * @param index
+     * @param info
+     * @param cp
      */
-    FieldMethodInstruction(byte opcode, int index, ConstantPool cp) {
-        super(opcode, index, cp);
+    FieldMethodInstruction(Opcode opcode, ConstantMethodRef info, ConstantPool cp) {
+        super(opcode, info, cp);
     }
 
     /**
@@ -23,7 +22,7 @@ public abstract class FieldMethodInstruction extends CPInstruction {
      */
     public Type getDesc() {
         final ConstantMethodRef methodRed =
-            (ConstantMethodRef) cp.getEntry(index);
+            (ConstantMethodRef) info;
         final ConstantNameAndType nameAndType =
             methodRed.indexNameAndType(cp);
         return Type.getType(
@@ -37,7 +36,7 @@ public abstract class FieldMethodInstruction extends CPInstruction {
      */
     public String getName() {
         final ConstantMethodRef methodRed =
-            (ConstantMethodRef) cp.getEntry(index);
+            (ConstantMethodRef) info;
         final ConstantNameAndType nameAndType =
             methodRed.indexNameAndType(cp);
         return nameAndType.indexName(cp)

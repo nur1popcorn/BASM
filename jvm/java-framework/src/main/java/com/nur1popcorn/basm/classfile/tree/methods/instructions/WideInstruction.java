@@ -18,30 +18,33 @@
 
 package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
+import com.nur1popcorn.basm.classfile.Opcode;
+import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import static com.nur1popcorn.basm.Constants.IINC;
-import static com.nur1popcorn.basm.Constants.WIDE;
+import static com.nur1popcorn.basm.classfile.Opcode.IINC;
+import static com.nur1popcorn.basm.classfile.Opcode.WIDE;
 
 public final class WideInstruction extends Instruction {
-    private byte opcode;
+    private Opcode opcodeParameter;
     private int index, constant;
 
     /**
      * @param index
      */
-    WideInstruction(int index, int constant) {
+    public WideInstruction(int index, int constant) {
         this(IINC, index);
         this.constant = constant;
     }
 
     /**
-     * @param opcode
+     * @param opcodeParameter
      */
-    WideInstruction(byte opcode, int index) {
+    public WideInstruction(Opcode opcodeParameter, int index) {
         super(WIDE);
-        this.opcode = opcode;
+        this.opcodeParameter = opcodeParameter;
         this.index = index;
     }
 
@@ -53,13 +56,22 @@ public final class WideInstruction extends Instruction {
     @Override
     public void write(DataOutputStream os) throws IOException {
         super.write(os);
-        os.writeByte(opcode);
+        os.writeByte(opcodeParameter.getOpcode());
         os.writeShort(index);
-        if(opcode == IINC)
+        if(opcodeParameter == IINC)
             os.writeShort(constant);
     }
 
-    public byte getOpcodeParameter() {
-        return opcode;
+    @Override
+    public int getLength() {
+        return opcodeParameter == IINC ? 6 : 4;
+    }
+
+    public Opcode getOpcodeParameter() {
+        return opcodeParameter;
+    }
+
+    public void setOpcodeParameter(Opcode opcodeParameter) {
+        this.opcodeParameter = opcodeParameter;
     }
 }

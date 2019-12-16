@@ -18,22 +18,28 @@
 
 package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
+import com.nur1popcorn.basm.classfile.Opcode;
+import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import static com.nur1popcorn.basm.Constants.BIPUSH;
+import static com.nur1popcorn.basm.classfile.Opcode.BIPUSH;
+import static com.nur1popcorn.basm.classfile.tree.methods.InstructionType.PUSH_INS;
 
 public final class PushInstruction extends Instruction {
     /*
      *
      */
-    public short value;
+    private short value;
 
     /**
      * @param opcode
      */
-    PushInstruction(byte opcode, short value) {
+    public PushInstruction(Opcode opcode, short value) {
         super(opcode);
+        if(opcode.getType() != PUSH_INS)
+            throw new IllegalArgumentException();
         this.value = value;
     }
 
@@ -51,9 +57,17 @@ public final class PushInstruction extends Instruction {
     @Override
     public void write(DataOutputStream os) throws IOException {
         super.write(os);
-        if(opcode == BIPUSH)
+        if(getOpcode() == BIPUSH)
             os.writeByte(value);
-        else //if(opcode == SIPUSH)
+        else //if(getOpcode() == SIPUSH)
             os.writeShort(value);
+    }
+
+    public short getValue() {
+        return value;
+    }
+
+    public void setValue(short value) {
+        this.value = value;
     }
 }

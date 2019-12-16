@@ -24,16 +24,12 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 public final class AttributeDeprecated extends AttributeInfo {
-    private final byte info[];
-
     /**
      * @param nameIndex The index of the CONSTANT_UTF8 which identifies the type of {@link AttributeInfo}.
      * @param attributeLength The {@link AttributeInfo}'s length in bytes.
-     * @param info The bytes which make up the deprecated attribute.
      */
-    public AttributeDeprecated(int nameIndex, int attributeLength, byte info[]) {
+    public AttributeDeprecated(int nameIndex, int attributeLength) {
         super(nameIndex, attributeLength);
-        this.info = info;
     }
 
     @Override
@@ -44,13 +40,5 @@ public final class AttributeDeprecated extends AttributeInfo {
     @Override
     public void write(DataOutputStream os, ConstantPool cp) throws IOException {
         super.write(os, cp);
-        os.write(info);
-    }
-
-    /**
-     * @return The bytes which make up the {@link AttributeDeprecated}.
-     */
-    public byte[] getInfo() {
-        return info;
     }
 }

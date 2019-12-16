@@ -19,7 +19,5 @@
 package com.nur1popcorn.basm.classfile.tree.methods;
 
 public interface IInstructionPointer {
-    void attach(InstructionList instructions);
-    void dispose(InstructionList instructions);
-    void update(int newIndex);
+    void dispose();
 }

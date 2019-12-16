@@ -18,8 +18,13 @@
 
 package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
+import com.nur1popcorn.basm.classfile.Opcode;
+import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
+
+import static com.nur1popcorn.basm.classfile.tree.methods.InstructionType.LOCAL_VARIABLE_INS;
 
 public class LocalVariableInstruction extends Instruction {
     /*
@@ -30,8 +35,10 @@ public class LocalVariableInstruction extends Instruction {
     /**
      * @param opcode
      */
-    LocalVariableInstruction(byte opcode, byte index) {
+    public LocalVariableInstruction(Opcode opcode, byte index) {
         super(opcode);
+        if(opcode.getType() != LOCAL_VARIABLE_INS)
+            throw new IllegalArgumentException();
         this.index = index;
     }
 

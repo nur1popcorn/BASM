@@ -18,21 +18,27 @@
 
 package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
+import com.nur1popcorn.basm.classfile.Opcode;
+import com.nur1popcorn.basm.classfile.tree.methods.IInstructionPointer;
+import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import static com.nur1popcorn.basm.Constants.GOTO_W;
-import static com.nur1popcorn.basm.Constants.JSR_W;
+import static com.nur1popcorn.basm.classfile.tree.methods.InstructionType.JUMP_INS;
 
-public final class JumpInstruction extends Instruction {
-    private int offset;
+public final class JumpInstruction extends Instruction implements IInstructionPointer {
+    private Label target;
 
     /**
      * @param opcode
      */
-    JumpInstruction(byte opcode, int offset) {
+    public JumpInstruction(Opcode opcode, Label target) {
         super(opcode);
-        this.offset = offset;
+        if(opcode.getType() != JUMP_INS)
+            throw new IllegalArgumentException();
+        (this.target = target)
+            .addPointer(this);
     }
 
     /**
@@ -49,14 +55,31 @@ public final class JumpInstruction extends Instruction {
     @Override
     public void write(DataOutputStream os) throws IOException {
         super.write(os);
-        switch(opcode) {
+        final int length = target.getOffset() - getOffset();
+        switch(getOpcode()) {
             case GOTO_W:
             case JSR_W:
-                os.writeInt(offset);
+                os.writeInt(length);
                 break;
             default:
-                os.writeShort(offset);
+                os.writeShort(length);
                 break;
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void dispose() {
+        target.removePointer(this);
+    }
+
+    public Label getTarget() {
+        return target;
+    }
+
+    public void setTarget(Label target) {
+        this.target = target;
     }
 }
