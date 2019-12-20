@@ -29,7 +29,7 @@ import static com.nur1popcorn.basm.Constants.CONSTANT_CLASS;
 
 public class ClassFactory implements IInstructionFactory<ClassInstruction> {
     @Override
-    public ClassInstruction createInstruction(ByteDataInputStream in, int offset, Opcode opcode, ConstantPool cp) throws IOException {
+    public ClassInstruction createInstruction(ByteDataInputStream in, Opcode opcode, ConstantPool cp) throws IOException {
         return new ClassInstruction(
             opcode, cp.getEntry(in.readUnsignedShort(), CONSTANT_CLASS), cp);
     }

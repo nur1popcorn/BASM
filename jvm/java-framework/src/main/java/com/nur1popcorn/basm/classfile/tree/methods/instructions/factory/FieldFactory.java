@@ -29,7 +29,7 @@ import static com.nur1popcorn.basm.Constants.CONSTANT_FIELD_REF;
 
 public class FieldFactory implements IInstructionFactory<FieldInstruction> {
     @Override
-    public FieldInstruction createInstruction(ByteDataInputStream in, int offset, Opcode opcode, ConstantPool cp) throws IOException {
+    public FieldInstruction createInstruction(ByteDataInputStream in, Opcode opcode, ConstantPool cp) throws IOException {
         return new FieldInstruction(
             opcode, cp.getEntry(in.readUnsignedShort(), CONSTANT_FIELD_REF), cp);
     }

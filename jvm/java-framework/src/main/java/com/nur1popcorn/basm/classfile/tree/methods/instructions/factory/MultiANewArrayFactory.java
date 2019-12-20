@@ -27,7 +27,7 @@ import java.io.IOException;
 
 public class MultiANewArrayFactory implements IInstructionFactory<MultiANewArrayInstruction> {
     @Override
-    public MultiANewArrayInstruction createInstruction(ByteDataInputStream in, int offset, Opcode opcode, ConstantPool cp) throws IOException {
+    public MultiANewArrayInstruction createInstruction(ByteDataInputStream in, Opcode opcode, ConstantPool cp) throws IOException {
         return new MultiANewArrayInstruction(
             in.readUnsignedShort(), in.readByte());
     }

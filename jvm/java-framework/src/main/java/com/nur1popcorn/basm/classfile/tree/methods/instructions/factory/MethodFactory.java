@@ -31,7 +31,7 @@ import static com.nur1popcorn.basm.classfile.Opcode.INVOKEINTERFACE;
 
 public class MethodFactory implements IInstructionFactory<MethodInstruction> {
     @Override
-    public MethodInstruction createInstruction(ByteDataInputStream in, int offset, Opcode opcode, ConstantPool cp) throws IOException {
+    public MethodInstruction createInstruction(ByteDataInputStream in, Opcode opcode, ConstantPool cp) throws IOException {
         if (opcode == INVOKEINTERFACE) {
             final int index = in.readUnsignedShort();
             final int count = in.readUnsignedByte();

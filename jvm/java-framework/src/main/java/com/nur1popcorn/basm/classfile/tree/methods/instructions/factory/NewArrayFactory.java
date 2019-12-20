@@ -28,7 +28,7 @@ import java.io.IOException;
 
 public class NewArrayFactory implements IInstructionFactory<NewArrayInstruction> {
     @Override
-    public NewArrayInstruction createInstruction(ByteDataInputStream in, int offset, Opcode opcode, ConstantPool cp) throws IOException {
+    public NewArrayInstruction createInstruction(ByteDataInputStream in, Opcode opcode, ConstantPool cp) throws IOException {
         return new NewArrayInstruction(
             Type.getType(in.readByte()));
     }

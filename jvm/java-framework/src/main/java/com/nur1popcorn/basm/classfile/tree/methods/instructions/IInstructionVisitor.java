@@ -42,4 +42,6 @@ public interface IInstructionVisitor {
     default void visitClassInstruction(ClassInstruction instruction) {}
 
     default void visitWideInstruction(WideInstruction instruction) {}
+
+    default void visitUnkownInstruction(UnknownInstruction instruction) {}
 }

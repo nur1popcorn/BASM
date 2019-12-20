@@ -26,5 +26,5 @@ import com.nur1popcorn.basm.utils.ByteDataInputStream;
 import java.io.IOException;
 
 public interface IInstructionFactory<T extends Instruction> {
-    T createInstruction(ByteDataInputStream in, int offset, Opcode opcode, ConstantPool cp) throws IOException;
+    T createInstruction(ByteDataInputStream in, Opcode opcode, ConstantPool cp) throws IOException;
 }

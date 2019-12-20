@@ -24,13 +24,15 @@ import com.nur1popcorn.basm.classfile.tree.methods.instructions.Label;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.nur1popcorn.basm.classfile.Opcode.IINC;
 import static com.nur1popcorn.basm.classfile.Opcode.TABLESWITCH;
 
 public final class ByteDataInputStream extends DataInputStream {
+    private final Map<Integer, Label> labelMap = new HashMap<>();
     private ByteArrayInputStreamDelegate in;
-    private final Label labels[];
 
     public ByteDataInputStream(byte buffer[]) {
         this(new ByteArrayInputStreamDelegate(buffer));
@@ -39,7 +41,6 @@ public final class ByteDataInputStream extends DataInputStream {
     private ByteDataInputStream(ByteArrayInputStreamDelegate in) {
         super(in);
         this.in = in;
-        labels = new Label[in.length()];
     }
 
     public void skip(Opcode opcode) throws IOException {
@@ -68,13 +69,11 @@ public final class ByteDataInputStream extends DataInputStream {
     }
 
     public Label readLabel(int offset) {
-        if(labels[offset] == null)
-            labels[offset] = new Label();
-        return labels[offset];
+        return labelMap.computeIfAbsent(offset, Label::new);
     }
 
-    public Label[] getLabels() {
-        return labels;
+    public Label getLabel(int offset) {
+        return labelMap.get(offset);
     }
 
     private static final class ByteArrayInputStreamDelegate extends ByteArrayInputStream {

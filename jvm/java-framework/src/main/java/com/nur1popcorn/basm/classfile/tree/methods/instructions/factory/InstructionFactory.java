@@ -62,10 +62,9 @@ public final class InstructionFactory {
      * @return
      */
     public static Instruction read(ByteDataInputStream in, ConstantPool cp) throws IOException {
-        final int offset = in.position();
         final Opcode opcode = Opcode.valueOf(in.readByte());
         return INSTRUCTION_FACTORY_MAP
             .getOrDefault(opcode.getType(), null)
-            .createInstruction(in, offset, opcode, cp);
+            .createInstruction(in, opcode, cp);
     }
 }

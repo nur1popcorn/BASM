@@ -27,7 +27,7 @@ import java.io.IOException;
 
 public class NoParameterFactory implements IInstructionFactory<NoParameterInstruction> {
     @Override
-    public NoParameterInstruction createInstruction(ByteDataInputStream in, int offset, Opcode opcode, ConstantPool cp) throws IOException {
+    public NoParameterInstruction createInstruction(ByteDataInputStream in, Opcode opcode, ConstantPool cp) {
         return new NoParameterInstruction(opcode);
     }
 }

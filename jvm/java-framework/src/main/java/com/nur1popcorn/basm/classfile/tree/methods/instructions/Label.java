@@ -28,11 +28,15 @@ import java.util.Set;
 
 import static com.nur1popcorn.basm.classfile.Opcode.INVALID;
 
-public class Label extends Instruction {
+public final class Label extends Instruction {
     /*
      *
      */
     private Set<IInstructionPointer> pointers;
+
+    public Label(int offset) {
+        super(INVALID, offset);
+    }
 
     public Label() {
         super(INVALID);

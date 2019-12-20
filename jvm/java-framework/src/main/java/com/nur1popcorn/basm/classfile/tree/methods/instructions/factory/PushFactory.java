@@ -29,7 +29,7 @@ import static com.nur1popcorn.basm.classfile.Opcode.BIPUSH;
 
 public class PushFactory implements IInstructionFactory<PushInstruction> {
     @Override
-    public PushInstruction createInstruction(ByteDataInputStream in, int offset, Opcode opcode, ConstantPool cp) throws IOException {
+    public PushInstruction createInstruction(ByteDataInputStream in, Opcode opcode, ConstantPool cp) throws IOException {
         return new PushInstruction(opcode,
             opcode == BIPUSH ?
                 in.readByte() :

@@ -31,9 +31,12 @@ import static com.nur1popcorn.basm.classfile.tree.methods.instructions.SwitchIns
 
 public class SwitchFactory implements IInstructionFactory<SwitchInstruction> {
     @Override
-    public SwitchInstruction createInstruction(ByteDataInputStream in, int offset, Opcode opcode, ConstantPool cp) throws IOException {
+    public SwitchInstruction createInstruction(ByteDataInputStream in, Opcode opcode, ConstantPool cp) throws IOException {
+        final int offset = in.position() - 1;
+
         // skip padding bytes and read default index.
         in.skipBytes(-in.position() & 0x3);
+
         final Label defaultTarget = in.readLabel(offset + in.readInt());
         final int length = in.readInt();
         final KeyIndexPair[] indices = new KeyIndexPair[

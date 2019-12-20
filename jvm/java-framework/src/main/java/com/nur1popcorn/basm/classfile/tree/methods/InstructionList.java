@@ -85,10 +85,9 @@ public final class InstructionList extends AbstractList<Instruction> implements 
         for(int i = 0; i < length; i++)
             add(InstructionFactory.read(in, constantPool));
 
-        final Label labels[] = in.getLabels();
         for(int i = 0, count = 0; i < length; i++) {
             final Instruction instruction = instructions[i + count];
-            final Label label = labels[instruction.getOffset()];
+            final Label label = in.getLabel(instruction.getOffset());
             if(label != null)
                 add(i + count++, label);
         }

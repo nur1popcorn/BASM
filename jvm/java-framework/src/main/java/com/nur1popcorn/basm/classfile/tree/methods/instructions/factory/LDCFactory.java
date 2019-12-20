@@ -29,7 +29,7 @@ import static com.nur1popcorn.basm.classfile.Opcode.LDC;
 
 public class LDCFactory implements IInstructionFactory<LDCInstruction> {
     @Override
-    public LDCInstruction createInstruction(ByteDataInputStream in, int offset, Opcode opcode, ConstantPool cp) throws IOException {
+    public LDCInstruction createInstruction(ByteDataInputStream in, Opcode opcode, ConstantPool cp) throws IOException {
         return new LDCInstruction(
             opcode, cp.getEntry(
                 opcode == LDC ?

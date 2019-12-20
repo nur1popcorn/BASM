@@ -74,6 +74,11 @@ public abstract class Instruction {
         this.opcode = opcode;
     }
 
+    protected Instruction(Opcode opcode, int offset) {
+        this.opcode = opcode;
+        this.offset = offset;
+    }
+
     /**
      * @param visitor
      */

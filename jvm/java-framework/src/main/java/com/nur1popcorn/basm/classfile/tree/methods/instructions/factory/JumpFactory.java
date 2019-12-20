@@ -27,7 +27,8 @@ import java.io.IOException;
 
 public class JumpFactory implements IInstructionFactory<JumpInstruction> {
     @Override
-    public JumpInstruction createInstruction(ByteDataInputStream in, int offset, Opcode opcode, ConstantPool cp) throws IOException {
+    public JumpInstruction createInstruction(ByteDataInputStream in, Opcode opcode, ConstantPool cp) throws IOException {
+        final int offset = in.position() - 1;
         switch(opcode) {
             // a 4 byte index must be constructed for the goto_w & jsr_w opcodes.
             // https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.goto_w

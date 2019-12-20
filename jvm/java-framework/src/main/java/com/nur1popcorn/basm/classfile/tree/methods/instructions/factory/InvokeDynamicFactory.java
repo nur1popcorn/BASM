@@ -29,7 +29,7 @@ import static com.nur1popcorn.basm.Constants.CONSTANT_INVOKEDYNAMIC;
 
 public class InvokeDynamicFactory implements IInstructionFactory<InvokeDynamicInstruction> {
     @Override
-    public InvokeDynamicInstruction createInstruction(ByteDataInputStream in, int offset, Opcode opcode, ConstantPool cp) throws IOException {
+    public InvokeDynamicInstruction createInstruction(ByteDataInputStream in, Opcode opcode, ConstantPool cp) throws IOException {
         final int index = in.readUnsignedShort();
         in.skipBytes(2);
         return new InvokeDynamicInstruction(cp.getEntry(index, CONSTANT_INVOKEDYNAMIC), cp);

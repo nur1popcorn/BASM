@@ -29,7 +29,7 @@ import static com.nur1popcorn.basm.classfile.Opcode.IINC;
 
 public class WideFactory implements IInstructionFactory<WideInstruction> {
     @Override
-    public WideInstruction createInstruction(ByteDataInputStream in, int offset, Opcode opcode, ConstantPool cp) throws IOException {
+    public WideInstruction createInstruction(ByteDataInputStream in, Opcode opcode, ConstantPool cp) throws IOException {
         // https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.wide
         final Opcode wopcode = Opcode.valueOf(in.readByte());
         if(wopcode == IINC)

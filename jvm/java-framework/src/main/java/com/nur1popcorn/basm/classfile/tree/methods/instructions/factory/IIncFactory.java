@@ -27,7 +27,7 @@ import java.io.IOException;
 
 public class IIncFactory implements IInstructionFactory<IIncInstruction> {
     @Override
-    public IIncInstruction createInstruction(ByteDataInputStream in, int offset, Opcode opcode, ConstantPool cp) throws IOException {
+    public IIncInstruction createInstruction(ByteDataInputStream in, Opcode opcode, ConstantPool cp) throws IOException {
         return new IIncInstruction(
             in.readByte(), in.readByte());
     }

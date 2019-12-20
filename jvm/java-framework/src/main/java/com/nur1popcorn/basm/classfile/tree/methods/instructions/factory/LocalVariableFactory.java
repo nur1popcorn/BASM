@@ -27,7 +27,7 @@ import java.io.IOException;
 
 public class LocalVariableFactory implements IInstructionFactory<LocalVariableInstruction> {
     @Override
-    public LocalVariableInstruction createInstruction(ByteDataInputStream in, int offset, Opcode opcode, ConstantPool cp) throws IOException {
+    public LocalVariableInstruction createInstruction(ByteDataInputStream in, Opcode opcode, ConstantPool cp) throws IOException {
         return new LocalVariableInstruction(
             opcode, in.readByte());
     }
