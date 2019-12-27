@@ -18,15 +18,17 @@
 
 package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
+import com.nur1popcorn.basm.classfile.Opcode;
 import com.nur1popcorn.basm.classfile.tree.methods.IInstructionPointer;
 import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
+import com.nur1popcorn.basm.classfile.tree.methods.InstructionType;
 import com.nur1popcorn.basm.utils.WeakHashSet;
 
 import java.io.DataOutputStream;
-import java.io.IOException;
 import java.util.Set;
 
 import static com.nur1popcorn.basm.classfile.Opcode.INVALID;
+import static com.nur1popcorn.basm.classfile.tree.methods.InstructionType.LABEL;
 
 public final class Label extends Instruction {
     /*
@@ -43,12 +45,17 @@ public final class Label extends Instruction {
     }
 
     @Override
+    public void setOpcode(Opcode opcode) {
+        // Do not do anything
+    }
+
+    @Override
     public void accept(IInstructionVisitor visitor) {
 
     }
 
     @Override
-    public void write(DataOutputStream os) throws IOException {
+    public void write(DataOutputStream os) {
         //Do not do anything
     }
 
@@ -90,5 +97,10 @@ public final class Label extends Instruction {
         final IInstructionPointer arr[] = new IInstructionPointer[pointers.size()];
         pointers.toArray(arr);
         return arr;
+    }
+
+    @Override
+    public InstructionType getType() {
+        return LABEL;
     }
 }

@@ -20,12 +20,14 @@ package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
 import com.nur1popcorn.basm.classfile.Opcode;
 import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
+import com.nur1popcorn.basm.classfile.tree.methods.InstructionType;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
 
 import static com.nur1popcorn.basm.classfile.Opcode.IINC;
 import static com.nur1popcorn.basm.classfile.Opcode.WIDE;
+import static com.nur1popcorn.basm.classfile.tree.methods.InstructionType.WIDE_INS;
 
 public final class WideInstruction extends Instruction {
     private Opcode opcodeParameter;
@@ -73,5 +75,10 @@ public final class WideInstruction extends Instruction {
 
     public void setOpcodeParameter(Opcode opcodeParameter) {
         this.opcodeParameter = opcodeParameter;
+    }
+
+    @Override
+    public InstructionType getType() {
+        return WIDE_INS;
     }
 }

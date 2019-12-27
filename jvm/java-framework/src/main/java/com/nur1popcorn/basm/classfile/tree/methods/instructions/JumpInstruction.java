@@ -21,6 +21,7 @@ package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 import com.nur1popcorn.basm.classfile.Opcode;
 import com.nur1popcorn.basm.classfile.tree.methods.IInstructionPointer;
 import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
+import com.nur1popcorn.basm.classfile.tree.methods.InstructionType;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -35,8 +36,6 @@ public final class JumpInstruction extends Instruction implements IInstructionPo
      */
     public JumpInstruction(Opcode opcode, Label target) {
         super(opcode);
-        if(opcode.getType() != JUMP_INS)
-            throw new IllegalArgumentException();
         (this.target = target)
             .addPointer(this);
     }
@@ -81,5 +80,10 @@ public final class JumpInstruction extends Instruction implements IInstructionPo
 
     public void setTarget(Label target) {
         this.target = target;
+    }
+
+    @Override
+    public InstructionType getType() {
+        return JUMP_INS;
     }
 }

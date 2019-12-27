@@ -20,6 +20,7 @@ package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
 import com.nur1popcorn.basm.classfile.Opcode;
 import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
+import com.nur1popcorn.basm.classfile.tree.methods.InstructionType;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -37,8 +38,6 @@ public class LocalVariableInstruction extends Instruction {
      */
     public LocalVariableInstruction(Opcode opcode, byte index) {
         super(opcode);
-        if(opcode.getType() != LOCAL_VARIABLE_INS)
-            throw new IllegalArgumentException();
         this.index = index;
     }
 
@@ -65,5 +64,10 @@ public class LocalVariableInstruction extends Instruction {
     public void write(DataOutputStream os) throws IOException {
         super.write(os);
         os.writeByte(index);
+    }
+
+    @Override
+    public InstructionType getType() {
+        return LOCAL_VARIABLE_INS;
     }
 }

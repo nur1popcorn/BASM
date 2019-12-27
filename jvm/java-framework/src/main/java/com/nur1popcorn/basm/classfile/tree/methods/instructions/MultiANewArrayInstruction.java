@@ -1,11 +1,13 @@
 package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
 import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
+import com.nur1popcorn.basm.classfile.tree.methods.InstructionType;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
 
 import static com.nur1popcorn.basm.classfile.Opcode.MULTIANEWARRAY;
+import static com.nur1popcorn.basm.classfile.tree.methods.InstructionType.MULTIANEWARRAY_INS;
 
 public final class MultiANewArrayInstruction extends Instruction {
     private int index;
@@ -32,5 +34,10 @@ public final class MultiANewArrayInstruction extends Instruction {
     @Override
     public int getConsumeStack() {
         return dimensions;
+    }
+
+    @Override
+    public InstructionType getType() {
+        return MULTIANEWARRAY_INS;
     }
 }

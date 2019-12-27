@@ -30,6 +30,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.*;
 
+import static com.nur1popcorn.basm.classfile.tree.methods.InstructionType.LABEL;
+
 /**
  * The {@link InstructionList} class is derived from the abstract {@link AbstractList} class and
  * implements a resizeable array and linked list made up of {@link Instruction}s. These
@@ -164,7 +166,7 @@ public final class InstructionList extends AbstractList<Instruction> implements 
         rangeCheck(index);
         final Instruction old = instructions[index];
         instructions[index] = element;
-        if(old instanceof Label && element instanceof Label) {
+        if(old.getType() == LABEL && element.getType() == LABEL) {
             final IInstructionPointer pointers[] = ((Label)old).getPointers();
             for(IInstructionPointer pointer : pointers)
                 ((Label)element).addPointer(pointer);
@@ -235,7 +237,7 @@ public final class InstructionList extends AbstractList<Instruction> implements 
         modCount++;
         rangeCheck(index);
         final Instruction old = instructions[index];
-        if(old instanceof Label) {
+        if(old.getType() == LABEL) {
             final Label label = (Label)old;
             if(label.hasPointers())
                 throw new InstructionLostException(

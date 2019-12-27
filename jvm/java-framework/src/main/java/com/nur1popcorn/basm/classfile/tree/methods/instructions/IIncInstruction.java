@@ -19,11 +19,13 @@
 package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
 import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
+import com.nur1popcorn.basm.classfile.tree.methods.InstructionType;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
 
 import static com.nur1popcorn.basm.classfile.Opcode.IINC;
+import static com.nur1popcorn.basm.classfile.tree.methods.InstructionType.IINC_INS;
 
 public final class IIncInstruction extends Instruction {
     /*
@@ -73,5 +75,10 @@ public final class IIncInstruction extends Instruction {
 
     public void setConstant(byte constant) {
         this.constant = constant;
+    }
+
+    @Override
+    public InstructionType getType() {
+        return IINC_INS;
     }
 }

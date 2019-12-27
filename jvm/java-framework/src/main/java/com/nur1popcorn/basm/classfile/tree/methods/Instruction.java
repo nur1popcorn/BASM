@@ -71,11 +71,11 @@ public abstract class Instruction {
      * @param opcode
      */
     protected Instruction(Opcode opcode) {
-        this.opcode = opcode;
+        setOpcode(opcode);
     }
 
     protected Instruction(Opcode opcode, int offset) {
-        this.opcode = opcode;
+        this(opcode);
         this.offset = offset;
     }
 
@@ -116,7 +116,7 @@ public abstract class Instruction {
      * @throws MalformedClassFileException
      */
     public void setOpcode(Opcode opcode) {
-        if(this.opcode.getType() != opcode.getType())
+        if(getType() != opcode.getType())
             throw new IllegalArgumentException();
         this.opcode = opcode;
     }
@@ -132,6 +132,8 @@ public abstract class Instruction {
     public int getProduceStack() {
         return opcode.getStackPush();
     }
+
+    public abstract InstructionType getType();
 
     public int getOffset() {
         return offset;

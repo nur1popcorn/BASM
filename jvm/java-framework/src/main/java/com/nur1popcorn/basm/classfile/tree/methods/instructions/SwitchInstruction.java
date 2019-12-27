@@ -21,6 +21,7 @@ package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 import com.nur1popcorn.basm.classfile.Opcode;
 import com.nur1popcorn.basm.classfile.tree.methods.IInstructionPointer;
 import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
+import com.nur1popcorn.basm.classfile.tree.methods.InstructionType;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -39,8 +40,6 @@ public final class SwitchInstruction extends Instruction implements IInstruction
      */
     public SwitchInstruction(Opcode opcode, Label defaultTarget, KeyIndexPair indices[]) {
         super(opcode);
-        if(opcode.getType() != SWITCH_INS)
-            throw new IllegalArgumentException();
         (this.defaultTarget = defaultTarget)
             .addPointer(this);
         this.indices = new ArrayList<>(indices.length);
@@ -134,5 +133,10 @@ public final class SwitchInstruction extends Instruction implements IInstruction
             (getOpcode() == TABLESWITCH ?
                 4 + (indices.size() << 2) :
                      indices.size() << 3);
+    }
+
+    @Override
+    public InstructionType getType() {
+        return SWITCH_INS;
     }
 }

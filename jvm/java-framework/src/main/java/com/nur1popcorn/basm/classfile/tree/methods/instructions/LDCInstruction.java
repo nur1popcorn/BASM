@@ -28,6 +28,7 @@ import com.nur1popcorn.basm.classfile.constants.ConstantLong;
 import com.nur1popcorn.basm.classfile.constants.ConstantName;
 import com.nur1popcorn.basm.classfile.tree.ConstantPoolGenerator;
 import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
+import com.nur1popcorn.basm.classfile.tree.methods.InstructionType;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -57,8 +58,6 @@ public final class LDCInstruction extends CPInstruction<ConstantInfo> {
      */
     public LDCInstruction(Opcode opcode, ConstantInfo info, ConstantPool cp) {
         super(opcode, info, cp);
-        if(opcode.getType() != LDC_INS)
-            throw new IllegalArgumentException();
     }
 
     /**
@@ -181,5 +180,10 @@ public final class LDCInstruction extends CPInstruction<ConstantInfo> {
                     getOpcode()
                 );
         }
+    }
+
+    @Override
+    public InstructionType getType() {
+        return LDC_INS;
     }
 }

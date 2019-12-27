@@ -20,6 +20,7 @@ package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
 import com.nur1popcorn.basm.classfile.Opcode;
 import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
+import com.nur1popcorn.basm.classfile.tree.methods.InstructionType;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -38,8 +39,6 @@ public final class PushInstruction extends Instruction {
      */
     public PushInstruction(Opcode opcode, short value) {
         super(opcode);
-        if(opcode.getType() != PUSH_INS)
-            throw new IllegalArgumentException();
         this.value = value;
     }
 
@@ -69,5 +68,10 @@ public final class PushInstruction extends Instruction {
 
     public void setValue(short value) {
         this.value = value;
+    }
+
+    @Override
+    public InstructionType getType() {
+        return PUSH_INS;
     }
 }

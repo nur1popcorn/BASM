@@ -23,6 +23,7 @@ import com.nur1popcorn.basm.classfile.MalformedClassFileException;
 import com.nur1popcorn.basm.classfile.Opcode;
 import com.nur1popcorn.basm.classfile.constants.ConstantMethodRef;
 import com.nur1popcorn.basm.classfile.tree.Type;
+import com.nur1popcorn.basm.classfile.tree.methods.InstructionType;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -40,8 +41,6 @@ public final class MethodInstruction extends FieldMethodInstruction {
      */
     public MethodInstruction(Opcode opcode, ConstantMethodRef info, ConstantPool cp) {
         super(opcode, info, cp);
-        if(opcode.getType() != METHOD_INS)
-            throw new IllegalArgumentException();
     }
 
     public MethodInstruction(ConstantMethodRef info, int count, ConstantPool cp) {
@@ -88,5 +87,10 @@ public final class MethodInstruction extends FieldMethodInstruction {
     public int getProduceStack() {
         return getDesc().getReturnType()
             .getStackModifier();
+    }
+
+    @Override
+    public InstructionType getType() {
+        return METHOD_INS;
     }
 }

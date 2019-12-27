@@ -21,6 +21,7 @@ package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 import com.nur1popcorn.basm.classfile.ConstantPool;
 import com.nur1popcorn.basm.classfile.Opcode;
 import com.nur1popcorn.basm.classfile.constants.ConstantMethodRef;
+import com.nur1popcorn.basm.classfile.tree.methods.InstructionType;
 
 import static com.nur1popcorn.basm.classfile.tree.methods.InstructionType.FIELD_INS;
 
@@ -32,8 +33,6 @@ public final class FieldInstruction extends FieldMethodInstruction {
      */
     public FieldInstruction(Opcode opcode, ConstantMethodRef info, ConstantPool cp) {
         super(opcode, info, cp);
-        if(opcode.getType() != FIELD_INS)
-            throw new IllegalArgumentException();
     }
 
     @Override
@@ -69,5 +68,10 @@ public final class FieldInstruction extends FieldMethodInstruction {
             default:
                 return super.getProduceStack();
         }
+    }
+
+    @Override
+    public InstructionType getType() {
+        return FIELD_INS;
     }
 }

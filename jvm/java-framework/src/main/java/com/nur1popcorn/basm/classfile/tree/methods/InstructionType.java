@@ -134,4 +134,6 @@ public enum InstructionType {
      *
      */
     RESERVED_INS,
+
+    LABEL
 }

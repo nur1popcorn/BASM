@@ -4,11 +4,13 @@ import com.nur1popcorn.basm.classfile.ConstantPool;
 import com.nur1popcorn.basm.classfile.constants.ConstantInvokeDynamic;
 import com.nur1popcorn.basm.classfile.constants.ConstantNameAndType;
 import com.nur1popcorn.basm.classfile.tree.Type;
+import com.nur1popcorn.basm.classfile.tree.methods.InstructionType;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
 
 import static com.nur1popcorn.basm.classfile.Opcode.INVOKEDYNAMIC;
+import static com.nur1popcorn.basm.classfile.tree.methods.InstructionType.INVOKEDYNAMIC_INS;
 
 public final class InvokeDynamicInstruction extends CPInstruction<ConstantInvokeDynamic> {
     public InvokeDynamicInstruction(ConstantInvokeDynamic info, ConstantPool cp) {
@@ -48,5 +50,10 @@ public final class InvokeDynamicInstruction extends CPInstruction<ConstantInvoke
             nameAndType.indexDesc(cp)
                 .bytes
         );
+    }
+
+    @Override
+    public InstructionType getType() {
+        return INVOKEDYNAMIC_INS;
     }
 }

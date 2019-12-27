@@ -8,6 +8,6 @@ import com.nur1popcorn.basm.utils.ByteDataInputStream;
 public final class UnknownFactory implements IInstructionFactory<UnknownInstruction> {
     @Override
     public UnknownInstruction createInstruction(ByteDataInputStream in, Opcode opcode, ConstantPool cp) {
-        return new UnknownInstruction(opcode);
+        return new UnknownInstruction();
     }
 }
