@@ -50,8 +50,7 @@ public final class MethodInstruction extends FieldMethodInstruction {
 
     @Override
     public void accept(IInstructionVisitor visitor) {
-        visitor.visitCPInstruction(this);
-        visitor.visitFieldMethodInstruction(this);
+        super.accept(visitor);
         visitor.visitMethodInstruction(this);
     }
 

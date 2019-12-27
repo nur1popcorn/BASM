@@ -36,10 +36,6 @@ public final class Label extends Instruction {
      */
     private Set<IInstructionPointer> pointers;
 
-    public Label(int offset) {
-        super(INVALID, offset);
-    }
-
     public Label() {
         super(INVALID);
     }
@@ -62,6 +58,21 @@ public final class Label extends Instruction {
     @Override
     public int getLength() {
         return 0;
+    }
+
+    @Override
+    public int getConsumeStack() {
+        return 0;
+    }
+
+    @Override
+    public int getProduceStack() {
+        return 0;
+    }
+
+    @Override
+    public InstructionType getType() {
+        return LABEL;
     }
 
     /**
@@ -97,10 +108,5 @@ public final class Label extends Instruction {
         final IInstructionPointer arr[] = new IInstructionPointer[pointers.size()];
         pointers.toArray(arr);
         return arr;
-    }
-
-    @Override
-    public InstructionType getType() {
-        return LABEL;
     }
 }

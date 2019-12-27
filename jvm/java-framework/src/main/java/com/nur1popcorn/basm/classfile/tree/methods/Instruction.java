@@ -74,11 +74,6 @@ public abstract class Instruction {
         setOpcode(opcode);
     }
 
-    protected Instruction(Opcode opcode, int offset) {
-        this(opcode);
-        this.offset = offset;
-    }
-
     /**
      * @param visitor
      */
@@ -113,7 +108,7 @@ public abstract class Instruction {
     /**
      * @param opcode
      *
-     * @throws MalformedClassFileException
+     * @throws IllegalArgumentException
      */
     public void setOpcode(Opcode opcode) {
         if(getType() != opcode.getType())

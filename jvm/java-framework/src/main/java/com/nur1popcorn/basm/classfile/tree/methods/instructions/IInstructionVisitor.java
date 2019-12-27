@@ -43,5 +43,7 @@ public interface IInstructionVisitor {
 
     default void visitWideInstruction(WideInstruction instruction) {}
 
+    default void visitInvokeDynamicInstruction(InvokeDynamicInstruction instruction) {}
+
     default void visitUnkownInstruction(UnknownInstruction instruction) {}
 }

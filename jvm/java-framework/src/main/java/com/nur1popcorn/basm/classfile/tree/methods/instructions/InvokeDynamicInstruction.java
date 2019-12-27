@@ -19,7 +19,8 @@ public final class InvokeDynamicInstruction extends CPInstruction<ConstantInvoke
 
     @Override
     public void accept(IInstructionVisitor visitor) {
-        // TODO: impl
+        super.accept(visitor);
+        visitor.visitInvokeDynamicInstruction(this);
     }
 
     @Override

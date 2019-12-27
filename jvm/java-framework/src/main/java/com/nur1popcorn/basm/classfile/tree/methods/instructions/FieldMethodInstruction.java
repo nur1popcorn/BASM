@@ -16,6 +16,12 @@ public abstract class FieldMethodInstruction extends CPInstruction<ConstantMetho
         super(opcode, info, cp);
     }
 
+    @Override
+    public void accept(IInstructionVisitor visitor) {
+        super.accept(visitor);
+        visitor.visitFieldMethodInstruction(this);
+    }
+
     /**
      * @return
      */

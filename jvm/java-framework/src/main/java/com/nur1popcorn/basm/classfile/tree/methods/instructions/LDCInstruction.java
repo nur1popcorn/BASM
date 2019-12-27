@@ -65,7 +65,7 @@ public final class LDCInstruction extends CPInstruction<ConstantInfo> {
      */
     @Override
     public void accept(IInstructionVisitor visitor) {
-        visitor.visitCPInstruction(this);
+        super.accept(visitor);
         visitor.visitLDCInstruction(this);
     }
 

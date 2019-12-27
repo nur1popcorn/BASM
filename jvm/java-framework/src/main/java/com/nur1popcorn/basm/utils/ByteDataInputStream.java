@@ -69,7 +69,12 @@ public final class ByteDataInputStream extends DataInputStream {
     }
 
     public Label readLabel(int offset) {
-        return labelMap.computeIfAbsent(offset, Label::new);
+        Label label = labelMap.get(offset);
+        if(label == null) {
+            label = new Label();
+            labelMap.put(offset, label);
+        }
+        return label;
     }
 
     public Label getLabel(int offset) {

@@ -37,8 +37,7 @@ public final class FieldInstruction extends FieldMethodInstruction {
 
     @Override
     public void accept(IInstructionVisitor visitor) {
-        visitor.visitCPInstruction(this);
-        visitor.visitFieldMethodInstruction(this);
+        super.accept(visitor);
         visitor.visitFieldInstruction(this);
     }
 

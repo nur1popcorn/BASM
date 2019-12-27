@@ -51,6 +51,11 @@ public abstract class CPInstruction<T extends ConstantInfo> extends Instruction 
         this.cp = cp;
     }
 
+    @Override
+    public void accept(IInstructionVisitor visitor) {
+        visitor.visitCPInstruction(this);
+    }
+
     /**
      * {@inheritDoc}
      */
