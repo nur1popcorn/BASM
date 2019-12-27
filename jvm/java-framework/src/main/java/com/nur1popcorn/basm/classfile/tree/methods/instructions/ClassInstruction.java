@@ -6,7 +6,7 @@ import com.nur1popcorn.basm.classfile.constants.ConstantName;
 
 import static com.nur1popcorn.basm.classfile.tree.methods.InstructionType.CLASS_INS;
 
-public final class ClassInstruction extends CPInstruction {
+public final class ClassInstruction extends CPInstruction<ConstantName> {
     /**
      * @param opcode
      */

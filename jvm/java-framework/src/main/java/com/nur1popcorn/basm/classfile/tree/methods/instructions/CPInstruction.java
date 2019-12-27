@@ -37,15 +37,15 @@ import java.io.IOException;
  * @author nur1popcorn
  * @since 1.0.0-alpha
  */
-public abstract class CPInstruction extends Instruction {
+public abstract class CPInstruction<T extends ConstantInfo> extends Instruction {
     /*
      *
      */
     protected final ConstantPool cp;
 
-    protected ConstantInfo info;
+    protected T info;
 
-    CPInstruction(Opcode opcode, ConstantInfo info, ConstantPool cp) {
+    CPInstruction(Opcode opcode, T info, ConstantPool cp) {
         super(opcode);
         this.info = info;
         this.cp = cp;

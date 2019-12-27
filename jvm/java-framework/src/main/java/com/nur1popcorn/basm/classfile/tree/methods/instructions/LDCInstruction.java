@@ -49,7 +49,7 @@ import static com.nur1popcorn.basm.classfile.tree.methods.InstructionType.LDC_IN
  * @author nur1popcorn
  * @since 1.0.0-alpha
  */
-public final class LDCInstruction extends CPInstruction {
+public final class LDCInstruction extends CPInstruction<ConstantInfo> {
     /**
      * @param opcode
      * @param info

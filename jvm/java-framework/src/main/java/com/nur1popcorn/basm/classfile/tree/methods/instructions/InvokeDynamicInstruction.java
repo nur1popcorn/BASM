@@ -10,7 +10,7 @@ import java.io.IOException;
 
 import static com.nur1popcorn.basm.classfile.Opcode.INVOKEDYNAMIC;
 
-public final class InvokeDynamicInstruction extends CPInstruction {
+public final class InvokeDynamicInstruction extends CPInstruction<ConstantInvokeDynamic> {
     public InvokeDynamicInstruction(ConstantInvokeDynamic info, ConstantPool cp) {
         super(INVOKEDYNAMIC, info, cp);
     }
@@ -42,10 +42,8 @@ public final class InvokeDynamicInstruction extends CPInstruction {
     }
 
     public Type getDesc() {
-        final ConstantInvokeDynamic methodRed =
-            (ConstantInvokeDynamic) info;
         final ConstantNameAndType nameAndType =
-            methodRed.indexNameAndType(cp);
+            info.indexNameAndType(cp);
         return Type.getType(
             nameAndType.indexDesc(cp)
                 .bytes
