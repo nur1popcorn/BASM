@@ -58,6 +58,7 @@ public final class AttributeSourceFile extends AttributeInfo {
     @Override
     public void write(DataOutputStream os, ConstantPool cp) throws IOException {
         super.write(os, cp);
+        os.writeShort(sourceFileIndex);
     }
 
     /**

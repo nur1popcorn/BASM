@@ -108,8 +108,6 @@ public final class LDCInstruction extends CPInstruction<ConstantInfo> {
             case LDC2_W:
                 super.write(os);
                 break;
-            default:
-                break;
         }
     }
 
