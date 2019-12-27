@@ -84,9 +84,5 @@ public final class ByteDataInputStream extends DataInputStream {
         private int position() {
             return pos;
         }
-
-        private int length() {
-            return buf.length;
-        }
     }
 }

@@ -19,8 +19,10 @@
 package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
 import com.nur1popcorn.basm.classfile.ConstantPool;
+import com.nur1popcorn.basm.classfile.MalformedClassFileException;
 import com.nur1popcorn.basm.classfile.Opcode;
 import com.nur1popcorn.basm.classfile.constants.ConstantMethodRef;
+import com.nur1popcorn.basm.classfile.tree.Type;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -61,5 +63,31 @@ public final class MethodInstruction extends FieldMethodInstruction {
             os.writeByte(count);
             os.writeByte(0);
         }
+    }
+
+    @Override
+    public int getConsumeStack() {
+        int result = 0;
+        switch(getOpcode()) {
+            case INVOKEVIRTUAL:
+            case INVOKESPECIAL:
+            case INVOKEINTERFACE:
+                result++;
+                // fallthrough.
+            case INVOKESTATIC:
+                for(Type parameter : getDesc().getParameters())
+                    result += parameter.getStackModifier();
+                return result;
+            default:
+                throw new MalformedClassFileException(
+                    "The opcode provided is invalid: opcode=" + getOpcode());
+        }
+    }
+
+    @Override
+    public int getProduceStack() {
+        final Type returnType = getDesc().getReturnType();
+        return returnType.getDescriptor().length() << 2
+            | returnType.getStackModifier();
     }
 }

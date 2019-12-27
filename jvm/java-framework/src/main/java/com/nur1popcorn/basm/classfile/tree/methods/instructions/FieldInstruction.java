@@ -42,4 +42,31 @@ public final class FieldInstruction extends FieldMethodInstruction {
         visitor.visitFieldMethodInstruction(this);
         visitor.visitFieldInstruction(this);
     }
+
+    @Override
+    public int getProduceStack() {
+        switch(getOpcode()) {
+            case GETFIELD:
+            case GETSTATIC:
+                return getDesc().getStackModifier();
+            default:
+                return super.getProduceStack();
+        }
+    }
+
+    @Override
+    public int getConsumeStack() {
+        int result = 0;
+        switch(getOpcode()) {
+            case PUTFIELD:
+                result++;
+                // fallthrough.
+            case PUTSTATIC:
+                result += getDesc()
+                    .getStackModifier();
+                return result;
+            default:
+                return super.getConsumeStack();
+        }
+    }
 }

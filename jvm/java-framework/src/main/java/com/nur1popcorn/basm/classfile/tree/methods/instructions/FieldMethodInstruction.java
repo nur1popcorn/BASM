@@ -42,41 +42,4 @@ public abstract class FieldMethodInstruction extends CPInstruction {
         return nameAndType.indexName(cp)
                           .bytes;
     }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @throws MalformedClassFileException
-     */
-    /*@Override
-    public byte getStackModifier() {
-        byte result = 0;
-        switch(opcode) {
-            case GETFIELD:
-            case PUTFIELD:
-                result--;
-                // fallthrough.
-            case GETSTATIC:
-            case PUTSTATIC:
-                result += getDesc()
-                    .getStackModifier();
-                return result;
-            case INVOKEVIRTUAL:
-            case INVOKESPECIAL:
-            case INVOKEINTERFACE:
-                result--;
-                // fallthrough.
-            case INVOKESTATIC: {
-                final Type desc = getDesc();
-                for(Type parameter : desc.getParameters())
-                    result += parameter.getStackModifier();
-                result += desc.getReturnType()
-                              .getStackModifier();
-                return result;
-            }
-            default:
-                throw new MalformedClassFileException(
-                    "The opcode provided is invalid: opcode=" + Integer.toHexString(opcode));
-        }
-    }*/
 }

@@ -324,7 +324,8 @@ public final class Type {
                 while(descriptor.charAt(end++) != ')');
                 // fallthrough.
             case '[':
-                while(descriptor.charAt(end++) == '[');
+                while(descriptor.charAt(end) == '[')
+                    end++;
                 if(descriptor.charAt(end++) != 'L')
                     break;
                 // fallthrough.

@@ -2,6 +2,8 @@ package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
 import com.nur1popcorn.basm.classfile.ConstantPool;
 import com.nur1popcorn.basm.classfile.constants.ConstantInvokeDynamic;
+import com.nur1popcorn.basm.classfile.constants.ConstantNameAndType;
+import com.nur1popcorn.basm.classfile.tree.Type;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -23,5 +25,31 @@ public final class InvokeDynamicInstruction extends CPInstruction {
         super.write(os);
         os.writeByte(0);
         os.writeByte(0);
+    }
+
+    @Override
+    public int getConsumeStack() {
+        int result = 0;
+        for(Type parameter : getDesc().getParameters())
+            result += parameter.getStackModifier();
+        return result;
+    }
+
+    @Override
+    public int getProduceStack() {
+        final Type returnType = getDesc().getReturnType();
+        return returnType.getDescriptor().length() << 2
+            | returnType.getStackModifier();
+    }
+
+    public Type getDesc() {
+        final ConstantInvokeDynamic methodRed =
+            (ConstantInvokeDynamic) info;
+        final ConstantNameAndType nameAndType =
+            methodRed.indexNameAndType(cp);
+        return Type.getType(
+            nameAndType.indexDesc(cp)
+                .bytes
+        );
     }
 }

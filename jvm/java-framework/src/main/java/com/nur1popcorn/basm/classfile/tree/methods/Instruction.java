@@ -117,13 +117,20 @@ public abstract class Instruction {
      */
     public void setOpcode(Opcode opcode) {
         if(this.opcode.getType() != opcode.getType())
-            // TODO: desc
             throw new IllegalArgumentException();
         this.opcode = opcode;
     }
 
     public int getLength() {
-        return opcode.getParameter() + 1;
+        return 1 + opcode.getParameter();
+    }
+
+    public int getConsumeStack() {
+        return opcode.getStackPop();
+    }
+
+    public int getProduceStack() {
+        return opcode.getStackPush();
     }
 
     public int getOffset() {
