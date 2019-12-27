@@ -37,9 +37,8 @@ public final class InvokeDynamicInstruction extends CPInstruction {
 
     @Override
     public int getProduceStack() {
-        final Type returnType = getDesc().getReturnType();
-        return returnType.getDescriptor().length() << 2
-            | returnType.getStackModifier();
+        return getDesc().getReturnType()
+            .getStackModifier();
     }
 
     public Type getDesc() {

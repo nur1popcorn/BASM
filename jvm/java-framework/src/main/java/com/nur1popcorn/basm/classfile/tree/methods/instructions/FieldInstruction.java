@@ -44,17 +44,6 @@ public final class FieldInstruction extends FieldMethodInstruction {
     }
 
     @Override
-    public int getProduceStack() {
-        switch(getOpcode()) {
-            case GETFIELD:
-            case GETSTATIC:
-                return getDesc().getStackModifier();
-            default:
-                return super.getProduceStack();
-        }
-    }
-
-    @Override
     public int getConsumeStack() {
         int result = 0;
         switch(getOpcode()) {
@@ -67,6 +56,18 @@ public final class FieldInstruction extends FieldMethodInstruction {
                 return result;
             default:
                 return super.getConsumeStack();
+        }
+    }
+
+    @Override
+    public int getProduceStack() {
+        switch(getOpcode()) {
+            case GETFIELD:
+            case GETSTATIC:
+                return getDesc()
+                    .getStackModifier();
+            default:
+                return super.getProduceStack();
         }
     }
 }
