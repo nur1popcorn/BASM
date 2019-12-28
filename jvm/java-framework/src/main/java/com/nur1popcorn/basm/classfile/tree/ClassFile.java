@@ -21,6 +21,7 @@ package com.nur1popcorn.basm.classfile.tree;
 import com.nur1popcorn.basm.classfile.*;
 import com.nur1popcorn.basm.classfile.attributes.AttributeInfo;
 import com.nur1popcorn.basm.classfile.constants.ConstantName;
+import com.nur1popcorn.basm.classfile.constants.ConstantUTF8;
 import com.nur1popcorn.basm.classfile.tree.fields.FieldNode;
 import com.nur1popcorn.basm.classfile.tree.methods.MethodNode;
 
@@ -30,6 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.nur1popcorn.basm.Constants.CONSTANT_CLASS;
+import static com.nur1popcorn.basm.Constants.CONSTANT_UTF8;
 import static com.nur1popcorn.basm.classfile.ClassReader.READ_ALL;
 
 /**
@@ -93,15 +95,29 @@ public final class ClassFile extends AccessFlags implements IClassVisitor, IClas
     }
 
     @Override
-    public void visitFields(FieldMethodInfo[] fields) {
-
+    public IFieldMethodNodeVisitor visitField(FieldMethodInfo field) {
+        final FieldNode fieldNode = new FieldNode(
+            field.getAccessFlags(),
+            ((ConstantUTF8)constantPool.getEntry(field.getNameIndex(), CONSTANT_UTF8))
+                .bytes,
+            ((ConstantUTF8)constantPool.getEntry(field.getDescIndex(), CONSTANT_UTF8))
+                .bytes,
+            constantPool);
+        fieldNodes.add(fieldNode);
+        return fieldNode;
     }
 
     @Override
-    public void visitMethod(int access, int nameIndex, int descIndex, ConstantPool consntantPool) {
-        final MethodNode methodNode = new MethodNode();
-        methodNode.visit(access, nameIndex, descIndex, constantPool);
+    public IFieldMethodNodeVisitor visitMethod(FieldMethodInfo method) {
+        final MethodNode methodNode = new MethodNode(
+            method.getAccessFlags(),
+            ((ConstantUTF8)constantPool.getEntry(method.getNameIndex(), CONSTANT_UTF8))
+                .bytes,
+            ((ConstantUTF8)constantPool.getEntry(method.getDescIndex(), CONSTANT_UTF8))
+                .bytes,
+            constantPool);
         methodNodes.add(methodNode);
+        return methodNode;
     }
 
     @Override
@@ -134,6 +150,8 @@ public final class ClassFile extends AccessFlags implements IClassVisitor, IClas
 
         for(MethodNode methodNode : methodNodes)
             methodNode.accept(visitor);
+        for(FieldNode fieldNode : fieldNodes)
+            fieldNode.accept(visitor);
     }
 
     public List<String> getInterfaces() {

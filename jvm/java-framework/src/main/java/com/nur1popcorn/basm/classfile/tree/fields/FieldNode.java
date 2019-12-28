@@ -20,8 +20,11 @@ package com.nur1popcorn.basm.classfile.tree.fields;
 
 import com.nur1popcorn.basm.classfile.ConstantPool;
 import com.nur1popcorn.basm.classfile.FieldMethodInfo;
+import com.nur1popcorn.basm.classfile.IClassVisitor;
+import com.nur1popcorn.basm.classfile.tree.ConstantPoolGenerator;
 import com.nur1popcorn.basm.classfile.tree.FieldMethodNode;
-import com.nur1popcorn.basm.classfile.tree.IFieldMethodNodeVisitor;
+
+import java.io.IOException;
 
 /**
  * The {@link FieldNode} provides an abstraction layer between the bytecode representation of a
@@ -37,4 +40,19 @@ import com.nur1popcorn.basm.classfile.tree.IFieldMethodNodeVisitor;
  * @since 1.0.0-alpha
  */
 public class FieldNode extends FieldMethodNode {
+    public FieldNode(int access, String name, String desc, ConstantPoolGenerator constantPool) {
+        super(access, name, desc, constantPool);
+    }
+
+    @Override
+    public void accept(IClassVisitor visitor) throws IOException {
+        final FieldMethodInfo fieldMethodInfo = new FieldMethodInfo(
+            getAccessFlags(),
+            constantPool.findUTF8(getName()),
+            constantPool.findUTF8(getDesc()),
+            null,
+            constantPool
+        );
+        visitor.visitField(fieldMethodInfo);
+    }
 }

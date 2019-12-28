@@ -20,6 +20,8 @@ package com.nur1popcorn.basm.classfile;
 
 import com.nur1popcorn.basm.classfile.attributes.AttributeInfo;
 import com.nur1popcorn.basm.classfile.tree.IFieldMethodNodeVisitor;
+import com.nur1popcorn.basm.classfile.tree.fields.FieldWriter;
+import com.nur1popcorn.basm.classfile.tree.methods.MethodWriter;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -36,6 +38,9 @@ import static com.nur1popcorn.basm.Constants.MAGIC;
 public final class ClassWriter implements IClassVisitor {
     private final DataOutputStream out;
     private ConstantPool constantPool;
+
+    private FieldWriter firstField, lastField;
+    private MethodWriter firstMethod, lastMethod;
 
     /**
      * @param out The {@link DataOutputStream} to which the classfile should be written to.
@@ -69,17 +74,13 @@ public final class ClassWriter implements IClassVisitor {
     }
 
     @Override
-    public void visitFields(FieldMethodInfo[] fields) throws IOException {
-        out.writeShort(fields.length);
-        for(FieldMethodInfo fieldInfo : fields)
-            fieldInfo.write(out);
+    public IFieldMethodNodeVisitor visitField(FieldMethodInfo field) throws IOException {
+        return new MethodWriter();
     }
 
     @Override
-    public void visitMethod(int access, int nameIndex, int descIndex, ConstantPool consntantPool) {
-        /*out.writeShort(methods.length);
-        for(FieldMethodInfo methodInfo : methods)
-            methodInfo.write(out);*/
+    public IFieldMethodNodeVisitor visitMethod(FieldMethodInfo method) throws IOException {
+        return new MethodWriter();
     }
 
     @Override

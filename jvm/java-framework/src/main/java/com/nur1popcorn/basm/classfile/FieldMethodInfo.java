@@ -87,10 +87,6 @@ public final class FieldMethodInfo extends AccessFlags implements IConstantPoolP
             attributeInfo.write(os, constantPool);
     }
 
-    public void accept(IClassVisitor visitor) {
-        visitor.visitMethod(getAccessFlags(), nameIndex, descIndex, constantPool);
-    }
-
     /**
      * @return
      */

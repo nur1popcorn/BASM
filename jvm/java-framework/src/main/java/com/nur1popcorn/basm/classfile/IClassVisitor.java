@@ -82,21 +82,22 @@ public interface IClassVisitor {
     /**
      * Visits the methods of the JavaClass.
      *
-     * @param methods
+     * @param method
      *
      * @throws IOException if an error occurs while reading the JavaClass.
      */
-    default void visitMethod(int access, int nameIndex, int descIndex, ConstantPool consntantPool) {}
+    default IFieldMethodNodeVisitor visitMethod(FieldMethodInfo method) throws IOException
+    { return null; }
 
     /**
      * Visits the fields of the JavaClass.
      *
-     * @param fields
+     * @param field
      *
      * @throws IOException if an error occurs while reading the JavaClass.
      */
-    default void visitFields(FieldMethodInfo fields[]) throws IOException
-    {}
+    default IFieldMethodNodeVisitor visitField(FieldMethodInfo field) throws IOException
+    { return null; }
 
     /**
      * Visits the footer part of the JavaClass.

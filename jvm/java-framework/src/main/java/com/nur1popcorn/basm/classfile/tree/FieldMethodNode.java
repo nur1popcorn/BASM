@@ -19,12 +19,9 @@
 package com.nur1popcorn.basm.classfile.tree;
 
 import com.nur1popcorn.basm.classfile.AccessFlags;
-import com.nur1popcorn.basm.classfile.ConstantPool;
-import com.nur1popcorn.basm.classfile.FieldMethodInfo;
 import com.nur1popcorn.basm.classfile.IClassVisitor;
-import com.nur1popcorn.basm.classfile.constants.ConstantUTF8;
 
-import static com.nur1popcorn.basm.Constants.CONSTANT_UTF8;
+import java.io.IOException;
 
 public abstract class FieldMethodNode extends AccessFlags implements IFieldMethodNodeVisitor {
     protected ConstantPoolGenerator constantPool;
@@ -32,24 +29,14 @@ public abstract class FieldMethodNode extends AccessFlags implements IFieldMetho
     private String name,
                    desc;
 
-    @Override
-    public void visit(int access, int nameIndex, int descIndex, ConstantPool constantPool) {
-        setAccessFlags(access);
-        name = ((ConstantUTF8)constantPool.getEntry(nameIndex, CONSTANT_UTF8))
-            .bytes;
-        desc = ((ConstantUTF8)constantPool.getEntry(descIndex, CONSTANT_UTF8))
-            .bytes;
-        this.constantPool = new ConstantPoolGenerator(constantPool.getEntries());
+    public FieldMethodNode(int access, String name, String desc, ConstantPoolGenerator constantPool) {
+        super(access);
+        this.name = name;
+        this.desc = desc;
+        this.constantPool = constantPool;
     }
 
-    public void accept(IClassVisitor visitor) {
-        visitor.visitMethod(
-            getAccessFlags(),
-            constantPool.findUTF8(name),
-            constantPool.findUTF8(desc),
-            constantPool
-        );
-    }
+    public abstract void accept(IClassVisitor visitor) throws IOException;
 
     /**
      * @return
