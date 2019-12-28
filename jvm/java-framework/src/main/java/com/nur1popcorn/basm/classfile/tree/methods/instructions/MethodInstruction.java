@@ -75,6 +75,7 @@ public final class MethodInstruction extends FieldMethodInstruction {
             case INVOKESTATIC:
                 for(Type parameter : getDesc().getParameters())
                     result += parameter.getStackModifier();
+                break;
         }
         return result;
     }

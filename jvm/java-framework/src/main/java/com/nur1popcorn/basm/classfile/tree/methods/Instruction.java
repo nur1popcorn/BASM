@@ -130,11 +130,11 @@ public abstract class Instruction {
 
     public abstract InstructionType getType();
 
-    public int getOffset() {
+    public final int getOffset() {
         return offset;
     }
 
-    void setOffset(int offset) {
+    final void setOffset(int offset) {
         this.offset = offset;
     }
 }

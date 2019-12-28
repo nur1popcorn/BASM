@@ -49,7 +49,8 @@ public final class InstructionFactory {
         entry(CLASS_INS, new ClassFactory()),
         entry(NEWARRAY_INS, new NewArrayFactory()),
         entry(WIDE_INS, new WideFactory()),
-        entry(MULTIANEWARRAY_INS, new MultiANewArrayFactory())
+        entry(MULTIANEWARRAY_INS, new MultiANewArrayFactory()),
+        entry(RESERVED_INS, new ReservedFactory())
     );
 
     /**

@@ -24,8 +24,6 @@ import com.nur1popcorn.basm.classfile.MalformedClassFileException;
 import com.nur1popcorn.basm.classfile.constants.*;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 import static com.nur1popcorn.basm.Constants.*;
 import static com.nur1popcorn.basm.classfile.IClassVersionProvider.JAVA_7;
@@ -53,7 +51,6 @@ import static com.nur1popcorn.basm.classfile.IClassVersionProvider.JAVA_9;
  *
  */
 public final class ConstantPoolGenerator extends ConstantPool {
-    private Map<ConstantInfo, Integer> lookup = new HashMap<>();
     private int index = cpEntries.length;
 
     private final IClassVersionProvider provider;
@@ -74,8 +71,8 @@ public final class ConstantPoolGenerator extends ConstantPool {
      * @return
      */
     private int findEntry(ConstantInfo info) {
-        final Integer integer = lookup.get(info);
-        if(integer != null)
+        final int integer = indexOf(info);
+        if(integer != -1)
             return integer;
         return 0;
     }
@@ -95,8 +92,7 @@ public final class ConstantPoolGenerator extends ConstantPool {
                 cpEntries,
                 index << 1
             );
-        cpEntries[ret = index++] = info;
-        lookup.put(info, ret);
+        cpEntries[index++] = info;
         if(info instanceof IConstantPoolPointer)
             ((IConstantPoolPointer) info)
                 .attach(this);

@@ -122,7 +122,15 @@ public final class ClassFile extends AccessFlags implements IClassVisitor, IClas
     }
 
     public void accept(IClassVisitor visitor) throws IOException {
+        visitor.visitHead(minorVersion, majorVersion, constantPool);
 
+        final int interfaces[] = new int[this.interfaces.size()];
+        for(int i = 0; i < interfaces.length; i++)
+            interfaces[i] = constantPool.findClass(this.interfaces.get(i));
+        visitor.visitBody(getAccessFlags(),
+            constantPool.findClass(thisClass),
+            constantPool.findClass(superClass),
+            interfaces);
     }
 
     public List<String> getInterfaces() {
