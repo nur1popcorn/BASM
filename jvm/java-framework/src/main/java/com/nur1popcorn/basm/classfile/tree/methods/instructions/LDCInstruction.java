@@ -22,10 +22,7 @@ import com.nur1popcorn.basm.classfile.ConstantPool;
 import com.nur1popcorn.basm.classfile.IClassVersionProvider;
 import com.nur1popcorn.basm.classfile.MalformedClassFileException;
 import com.nur1popcorn.basm.classfile.Opcode;
-import com.nur1popcorn.basm.classfile.constants.ConstantInfo;
-import com.nur1popcorn.basm.classfile.constants.ConstantInteger;
-import com.nur1popcorn.basm.classfile.constants.ConstantLong;
-import com.nur1popcorn.basm.classfile.constants.ConstantName;
+import com.nur1popcorn.basm.classfile.constants.*;
 import com.nur1popcorn.basm.classfile.tree.ConstantPoolGenerator;
 import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
 import com.nur1popcorn.basm.classfile.tree.methods.InstructionType;
@@ -134,13 +131,14 @@ public final class LDCInstruction extends CPInstruction<ConstantInfo> {
                             .asFloat();
                     case CONSTANT_STRING:
                     case CONSTANT_CLASS:
+                    case CONSTANT_METHOD_TYPE:
                         return ((ConstantName) info)
                             .indexName(cp)
                             .bytes;
-                    case CONSTANT_METHOD_TYPE:
                     case CONSTANT_METHOD_HANDLE:
-                        // TODO: handle method handle and method type.
-                        return info;
+                        //TODO: change this
+                        return ((ConstantMethodHandle)info)
+                            .indexRef(cp);
                     default:
                         throw new MalformedClassFileException(
                             "The CONSTANT_Info at given index has an invalid tag: index=" +

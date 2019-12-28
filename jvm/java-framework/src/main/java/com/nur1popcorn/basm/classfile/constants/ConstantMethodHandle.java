@@ -69,7 +69,7 @@ public final class ConstantMethodHandle extends ConstantInfo implements IConstan
     @Override
     public void write(DataOutputStream os) throws IOException {
         super.write(os);
-        os.writeByte(refIndex);
+        os.writeByte(refKind);
         os.writeShort(refIndex);
     }
 

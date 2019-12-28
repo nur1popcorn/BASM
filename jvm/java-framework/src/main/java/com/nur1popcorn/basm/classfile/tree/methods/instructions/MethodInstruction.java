@@ -75,11 +75,8 @@ public final class MethodInstruction extends FieldMethodInstruction {
             case INVOKESTATIC:
                 for(Type parameter : getDesc().getParameters())
                     result += parameter.getStackModifier();
-                return result;
-            default:
-                throw new MalformedClassFileException(
-                    "The opcode provided is invalid: opcode=" + getOpcode());
         }
+        return result;
     }
 
     @Override

@@ -76,7 +76,7 @@ public final class AttributeCode extends AttributeInfo {
         for(ExceptionTableEntry entry : exceptionTable)
             entry.write(os);
 
-        os.write(attributes.length);
+        os.writeShort(attributes.length);
         for(AttributeInfo info : attributes)
             info.write(os, cp);
     }
