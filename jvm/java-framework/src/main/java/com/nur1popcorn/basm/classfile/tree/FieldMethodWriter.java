@@ -29,8 +29,7 @@ public class FieldMethodWriter implements IFieldMethodNodeVisitor {
     private AttributeInfo[] attributes;
     private ConstantPool constantPool;
 
-    @Override
-    public void visit(int access, int nameIndex, int descIndex, AttributeInfo[] attributes, ConstantPool constantPool) {
+    public FieldMethodWriter(int access, int nameIndex, int descIndex, AttributeInfo[] attributes, ConstantPool constantPool) {
         this.access = access;
         this.nameIndex = nameIndex;
         this.descIndex = descIndex;

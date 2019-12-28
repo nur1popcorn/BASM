@@ -50,9 +50,7 @@ public class FieldNode extends FieldMethodNode {
             getAccessFlags(),
             constantPool.findUTF8(getName()),
             constantPool.findUTF8(getDesc()),
-            null,
-            constantPool
-        );
+            null);
         visitor.visitField(fieldMethodInfo);
     }
 }

@@ -68,8 +68,7 @@ public final class ClassWriter implements IClassVisitor {
 
     @Override
     public IFieldMethodNodeVisitor visitField(FieldMethodInfo field) {
-        final FieldWriter fieldWriter = new FieldWriter();
-        fieldWriter.visit(field.getAccessFlags(),
+        final FieldWriter fieldWriter = new FieldWriter(field.getAccessFlags(),
             field.getNameIndex(), field.getDescIndex(), field.getAttributes(), constantPool);
         fields.add(fieldWriter);
         return fieldWriter;
@@ -77,8 +76,7 @@ public final class ClassWriter implements IClassVisitor {
 
     @Override
     public IFieldMethodNodeVisitor visitMethod(FieldMethodInfo method) {
-        final MethodWriter methodWriter = new MethodWriter();
-        methodWriter.visit(method.getAccessFlags(),
+        final MethodWriter methodWriter = new MethodWriter(method.getAccessFlags(),
             method.getNameIndex(), method.getDescIndex(), method.getAttributes(), constantPool);
         methods.add(methodWriter);
         return methodWriter;

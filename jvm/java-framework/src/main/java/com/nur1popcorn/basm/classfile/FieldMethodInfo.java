@@ -22,17 +22,13 @@ import com.nur1popcorn.basm.classfile.attributes.factory.AttributeFactory;
 import com.nur1popcorn.basm.classfile.attributes.AttributeInfo;
 import com.nur1popcorn.basm.classfile.constants.ConstantUTF8;
 import com.nur1popcorn.basm.classfile.constants.IConstantPoolPointer;
-import com.nur1popcorn.basm.classfile.tree.IFieldMethodNodeVisitor;
 
 import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 
 import static com.nur1popcorn.basm.Constants.CONSTANT_UTF8;
 
 public final class FieldMethodInfo extends AccessFlags implements IConstantPoolPointer  {
-    private final ConstantPool constantPool;
-
     /*
      *
      */
@@ -48,14 +44,12 @@ public final class FieldMethodInfo extends AccessFlags implements IConstantPoolP
      * @param nameIndex
      * @param descIndex
      * @param attributes
-     * @param constantPool
      */
-    public FieldMethodInfo(int access, int nameIndex, int descIndex, AttributeInfo attributes[], ConstantPool constantPool) {
+    public FieldMethodInfo(int access, int nameIndex, int descIndex, AttributeInfo attributes[]) {
         super(access);
         this.nameIndex = nameIndex;
         this.descIndex = descIndex;
         this.attributes = attributes;
-        this.constantPool = constantPool;
     }
 
     /**
@@ -68,8 +62,7 @@ public final class FieldMethodInfo extends AccessFlags implements IConstantPoolP
         this(in.readUnsignedShort(),
              in.readUnsignedShort(),
              in.readUnsignedShort(),
-             AttributeFactory.read(in, constantPool),
-             constantPool);
+             AttributeFactory.read(in, constantPool));
     }
 
     /**

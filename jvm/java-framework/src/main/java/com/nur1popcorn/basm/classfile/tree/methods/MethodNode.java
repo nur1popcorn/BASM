@@ -34,9 +34,7 @@ public final class MethodNode extends FieldMethodNode {
             getAccessFlags(),
             constantPool.findUTF8(getName()),
             constantPool.findUTF8(getDesc()),
-            null,
-            constantPool
-        );
+            null);
         visitor.visitMethod(fieldMethodInfo);
     }
 }
