@@ -18,5 +18,33 @@
 
 package com.nur1popcorn.basm.classfile.tree;
 
+import com.nur1popcorn.basm.classfile.ConstantPool;
+import com.nur1popcorn.basm.classfile.attributes.AttributeInfo;
+
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 public class FieldMethodWriter implements IFieldMethodNodeVisitor {
+    private int access, nameIndex, descIndex;
+    private AttributeInfo[] attributes;
+    private ConstantPool constantPool;
+
+    @Override
+    public void visit(int access, int nameIndex, int descIndex, AttributeInfo[] attributes, ConstantPool constantPool) {
+        this.access = access;
+        this.nameIndex = nameIndex;
+        this.descIndex = descIndex;
+        this.attributes = attributes;
+        this.constantPool = constantPool;
+    }
+
+    public void write(DataOutputStream os) throws IOException {
+        os.writeShort(access);
+        os.writeShort(nameIndex);
+        os.writeShort(descIndex);
+
+        os.writeShort(attributes.length);
+        for(AttributeInfo attributeInfo : attributes)
+            attributeInfo.write(os, constantPool);
+    }
 }

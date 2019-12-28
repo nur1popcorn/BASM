@@ -25,6 +25,8 @@ import com.nur1popcorn.basm.classfile.tree.methods.MethodWriter;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.nur1popcorn.basm.Constants.MAGIC;
 
@@ -36,33 +38,66 @@ import static com.nur1popcorn.basm.Constants.MAGIC;
  * @since 1.0.0-alpha
  */
 public final class ClassWriter implements IClassVisitor {
-    private final DataOutputStream out;
+    private int minorVersion, majorVersion;
     private ConstantPool constantPool;
 
-    private FieldWriter firstField, lastField;
-    private MethodWriter firstMethod, lastMethod;
+    private int access, thisClass, superClass;
+    private int[] interfaces;
 
-    /**
-     * @param out The {@link DataOutputStream} to which the classfile should be written to.
-     */
-    public ClassWriter(DataOutputStream out) {
-        this.out = out;
+    private final List<MethodWriter> methods = new ArrayList<>();
+    private final List<FieldWriter> fields = new ArrayList<>();
+
+    private AttributeInfo[] attributes;
+
+    @Override
+    public void visitHead(int minorVersion, int majorVersion, ConstantPool constantPool) {
+        this.minorVersion = minorVersion;
+        this.majorVersion = majorVersion;
+
+        this.constantPool = constantPool;
     }
 
     @Override
-    public void visitHead(int minorVersion, int majorVersion, ConstantPool constantPool) throws IOException {
+    public void visitBody(int access, int thisClass, int superClass, int[] interfaces) {
+        this.access = access;
+        this.thisClass = thisClass;
+        this.superClass = superClass;
+
+        this.interfaces = interfaces;
+    }
+
+    @Override
+    public IFieldMethodNodeVisitor visitField(FieldMethodInfo field) {
+        final FieldWriter fieldWriter = new FieldWriter();
+        fieldWriter.visit(field.getAccessFlags(),
+            field.getNameIndex(), field.getDescIndex(), field.getAttributes(), constantPool);
+        fields.add(fieldWriter);
+        return fieldWriter;
+    }
+
+    @Override
+    public IFieldMethodNodeVisitor visitMethod(FieldMethodInfo method) {
+        final MethodWriter methodWriter = new MethodWriter();
+        methodWriter.visit(method.getAccessFlags(),
+            method.getNameIndex(), method.getDescIndex(), method.getAttributes(), constantPool);
+        methods.add(methodWriter);
+        return methodWriter;
+    }
+
+    @Override
+    public void visitFooter(AttributeInfo[] attributes) {
+        this.attributes = attributes;
+    }
+
+    //TODO: create flags
+    public void write(DataOutputStream out) throws IOException {
         // write out file header 0xcafebabe.
         out.writeInt(MAGIC);
 
         out.writeShort(minorVersion);
         out.writeShort(majorVersion);
+        constantPool.write(out);
 
-        (this.constantPool = constantPool)
-            .write(out);
-    }
-
-    @Override
-    public void visitBody(int access, int thisClass, int superClass, int[] interfaces) throws IOException {
         out.writeShort(access);
 
         out.writeShort(thisClass);
@@ -71,20 +106,15 @@ public final class ClassWriter implements IClassVisitor {
         out.writeShort(interfaces.length);
         for(int index : interfaces)
             out.writeShort(index);
-    }
 
-    @Override
-    public IFieldMethodNodeVisitor visitField(FieldMethodInfo field) throws IOException {
-        return new MethodWriter();
-    }
+        out.writeShort(methods.size());
+        for(MethodWriter method : methods)
+            method.write(out);
 
-    @Override
-    public IFieldMethodNodeVisitor visitMethod(FieldMethodInfo method) throws IOException {
-        return new MethodWriter();
-    }
+        out.writeShort(fields.size());
+        for(FieldWriter field : fields)
+            field.write(out);
 
-    @Override
-    public void visitFooter(AttributeInfo[] attributes) throws IOException {
         out.writeShort(attributes.length);
         for(AttributeInfo attribute : attributes)
             attribute.write(out, constantPool);

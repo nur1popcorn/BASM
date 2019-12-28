@@ -48,7 +48,7 @@ public interface IClassVisitor {
      *
      * @throws IOException if an error occurs while reading the JavaClass.
      */
-    default void visitHead(int minorVersion, int majorVersion, ConstantPool constantPool) throws IOException
+    default void visitHead(int minorVersion, int majorVersion, ConstantPool constantPool)
     {}
 
     /**
@@ -76,7 +76,7 @@ public interface IClassVisitor {
      *
      * @throws IOException if an error occurs while reading the JavaClass.
      */
-    default void visitBody(int access, int thisClass, int superClass, int interfaces[]) throws IOException
+    default void visitBody(int access, int thisClass, int superClass, int interfaces[])
     {}
 
     /**
@@ -86,7 +86,7 @@ public interface IClassVisitor {
      *
      * @throws IOException if an error occurs while reading the JavaClass.
      */
-    default IFieldMethodNodeVisitor visitMethod(FieldMethodInfo method) throws IOException
+    default IFieldMethodNodeVisitor visitMethod(FieldMethodInfo method)
     { return null; }
 
     /**
@@ -96,7 +96,7 @@ public interface IClassVisitor {
      *
      * @throws IOException if an error occurs while reading the JavaClass.
      */
-    default IFieldMethodNodeVisitor visitField(FieldMethodInfo field) throws IOException
+    default IFieldMethodNodeVisitor visitField(FieldMethodInfo field)
     { return null; }
 
     /**
@@ -106,6 +106,6 @@ public interface IClassVisitor {
      *
      * @throws IOException if an error occurs while reading the JavaClass.
      */
-    default void visitFooter(AttributeInfo attributes[]) throws IOException
+    default void visitFooter(AttributeInfo attributes[])
     {}
 }

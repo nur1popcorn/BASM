@@ -21,8 +21,6 @@ package com.nur1popcorn.basm.classfile.tree;
 import com.nur1popcorn.basm.classfile.AccessFlags;
 import com.nur1popcorn.basm.classfile.IClassVisitor;
 
-import java.io.IOException;
-
 public abstract class FieldMethodNode extends AccessFlags implements IFieldMethodNodeVisitor {
     protected ConstantPoolGenerator constantPool;
 
@@ -36,7 +34,7 @@ public abstract class FieldMethodNode extends AccessFlags implements IFieldMetho
         this.constantPool = constantPool;
     }
 
-    public abstract void accept(IClassVisitor visitor) throws IOException;
+    public abstract void accept(IClassVisitor visitor);
 
     /**
      * @return

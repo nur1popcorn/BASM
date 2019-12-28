@@ -137,7 +137,7 @@ public final class ClassFile extends AccessFlags implements IClassVisitor, IClas
             this.minorVersion = minorVersion;
     }
 
-    public void accept(IClassVisitor visitor) throws IOException {
+    public void accept(IClassVisitor visitor) {
         visitor.visitHead(minorVersion, majorVersion, constantPool);
 
         final int interfaces[] = new int[this.interfaces.size()];

@@ -23,15 +23,13 @@ import com.nur1popcorn.basm.classfile.IClassVisitor;
 import com.nur1popcorn.basm.classfile.tree.ConstantPoolGenerator;
 import com.nur1popcorn.basm.classfile.tree.FieldMethodNode;
 
-import java.io.IOException;
-
 public final class MethodNode extends FieldMethodNode {
     public MethodNode(int access, String name, String desc, ConstantPoolGenerator constantPool) {
         super(access, name, desc, constantPool);
     }
 
     @Override
-    public void accept(IClassVisitor visitor) throws IOException {
+    public void accept(IClassVisitor visitor) {
         final FieldMethodInfo fieldMethodInfo = new FieldMethodInfo(
             getAccessFlags(),
             constantPool.findUTF8(getName()),

@@ -73,21 +73,6 @@ public final class FieldMethodInfo extends AccessFlags implements IConstantPoolP
     }
 
     /**
-     * @param os
-     *
-     * @throws IOException
-     */
-    public void write(DataOutputStream os) throws IOException {
-        os.writeShort(getAccessFlags());
-        os.writeShort(nameIndex);
-        os.writeShort(descIndex);
-
-        os.writeShort(attributes.length);
-        for(AttributeInfo attributeInfo : attributes)
-            attributeInfo.write(os, constantPool);
-    }
-
-    /**
      * @return
      */
     public AttributeInfo[] getAttributes() {

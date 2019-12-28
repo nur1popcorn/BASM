@@ -45,7 +45,7 @@ public class FieldNode extends FieldMethodNode {
     }
 
     @Override
-    public void accept(IClassVisitor visitor) throws IOException {
+    public void accept(IClassVisitor visitor) {
         final FieldMethodInfo fieldMethodInfo = new FieldMethodInfo(
             getAccessFlags(),
             constantPool.findUTF8(getName()),
