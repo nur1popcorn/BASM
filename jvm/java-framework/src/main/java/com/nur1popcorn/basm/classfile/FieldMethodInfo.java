@@ -21,7 +21,8 @@ package com.nur1popcorn.basm.classfile;
 import com.nur1popcorn.basm.classfile.attributes.factory.AttributeFactory;
 import com.nur1popcorn.basm.classfile.attributes.AttributeInfo;
 import com.nur1popcorn.basm.classfile.constants.ConstantUTF8;
-import com.nur1popcorn.basm.classfile.tree.Type;
+import com.nur1popcorn.basm.classfile.constants.IConstantPoolPointer;
+import com.nur1popcorn.basm.classfile.tree.IFieldMethodNodeVisitor;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -29,7 +30,7 @@ import java.io.IOException;
 
 import static com.nur1popcorn.basm.Constants.CONSTANT_UTF8;
 
-public final class FieldMethodInfo extends AccessFlags {
+public final class FieldMethodInfo extends AccessFlags implements IConstantPoolPointer  {
     private final ConstantPool constantPool;
 
     /*
@@ -86,21 +87,67 @@ public final class FieldMethodInfo extends AccessFlags {
             attributeInfo.write(os, constantPool);
     }
 
-    /**
-     * @return
-     */
-    /*public AttributeCode getCode() {
-        for(AttributeInfo info : attributes)
-            if(info instanceof AttributeCode)
-                return (AttributeCode) info;
-        return null;
-    }*/
+    public void accept(IClassVisitor visitor) {
+        visitor.visitMethod(getAccessFlags(), nameIndex, descIndex, constantPool);
+    }
 
     /**
      * @return
      */
     public AttributeInfo[] getAttributes() {
         return attributes;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void attach(ConstantPool constantPool) {
+        indexName(constantPool)
+            .addPointer(this);
+        indexDesc(constantPool)
+            .addPointer(this);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void dispose(ConstantPool constantPool) {
+        indexName(constantPool)
+            .removePointer(this);
+        indexDesc(constantPool)
+            .removePointer(this);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void update(int oldIndex, int newIndex) {
+        if(oldIndex == nameIndex)
+            nameIndex = newIndex;
+        else //if(oldIndex == descIndex)
+            descIndex = newIndex;
+    }
+
+    /**
+     * @param constantPool
+     *
+     * @return
+     */
+    private ConstantUTF8 indexName(ConstantPool constantPool) {
+        return constantPool.getEntry(nameIndex, CONSTANT_UTF8);
+    }
+
+
+    /**
+     * @param constantPool
+     *
+     * @return
+     */
+    private ConstantUTF8 indexDesc(ConstantPool constantPool) {
+        return constantPool.getEntry(nameIndex, CONSTANT_UTF8);
     }
 
     /**
@@ -115,23 +162,5 @@ public final class FieldMethodInfo extends AccessFlags {
      */
     public int getDescIndex() {
         return descIndex;
-    }
-
-    /**
-     * @return
-     */
-    public String getName() {
-        final ConstantUTF8 name =
-            constantPool.getEntry(nameIndex, CONSTANT_UTF8);
-        return name.bytes;
-    }
-
-    /**
-     * @return
-     */
-    public Type getDesc() {
-        final ConstantUTF8 desc =
-            constantPool.getEntry(descIndex, CONSTANT_UTF8);
-        return Type.getType(desc.bytes);
     }
 }

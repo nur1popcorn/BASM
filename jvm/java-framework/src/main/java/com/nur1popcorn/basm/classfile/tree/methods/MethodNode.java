@@ -18,55 +18,10 @@
 
 package com.nur1popcorn.basm.classfile.tree.methods;
 
-import com.nur1popcorn.basm.classfile.ConstantPool;
 import com.nur1popcorn.basm.classfile.FieldMethodInfo;
 import com.nur1popcorn.basm.classfile.tree.FieldMethodNode;
-import com.nur1popcorn.basm.classfile.tree.IFieldMethodNodeVisitor;
 
 import java.io.IOException;
 
 public final class MethodNode extends FieldMethodNode {
-    //private final InstructionList instructionList;
-
-    /**
-     * @param access
-     * @param nameIndex
-     * @param descIndex
-     * @param constantPool
-     */
-    public MethodNode(int access, int nameIndex, int descIndex, ConstantPool constantPool) {
-        super(access, nameIndex, descIndex, constantPool);
-        //instructionList = null;//new InstructionList();
-    }
-
-    /**
-     * @param info
-     * @param constantPool
-     */
-    public MethodNode(FieldMethodInfo info, ConstantPool constantPool) throws IOException {
-        super(info, constantPool);
-        //TODO: remove this
-        //if (info.getCode() != null)
-            //instructionList = new InstructionList(
-            //    info.getCode().getByteCode(),
-            //    constantPool
-            //);
-        //else
-        //    instructionList = new InstructionList();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void accept(IFieldMethodNodeVisitor visitor) {
-        visitor.visitFieldMethodNode(this);
-        visitor.visitFieldMethodInfo(null);
-    }
-
-    public InstructionList getInstructionList() {
-        // TODO: remove
-        //return instructionList;
-        return null;
-    }
 }

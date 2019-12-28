@@ -94,18 +94,18 @@ public final class ClassFile extends AccessFlags implements IClassVisitor, IClas
 
     @Override
     public void visitFields(FieldMethodInfo[] fields) {
-        for(FieldMethodInfo fieldInfo : fields)
-            fieldNodes.add(new FieldNode(fieldInfo, constantPool));
+
     }
 
     @Override
-    public void visitMethods(FieldMethodInfo[] methods) throws IOException {
-        for(FieldMethodInfo methodInfo : methods)
-            methodNodes.add(new MethodNode(methodInfo, constantPool));
+    public void visitMethod(int access, int nameIndex, int descIndex, ConstantPool consntantPool) {
+        final MethodNode methodNode = new MethodNode();
+        methodNode.visit(access, nameIndex, descIndex, constantPool);
+        methodNodes.add(methodNode);
     }
 
     @Override
-    public void visitFooter(AttributeInfo[] attributes) throws IOException {
+    public void visitFooter(AttributeInfo[] attributes) {
 
     }
 
@@ -131,6 +131,9 @@ public final class ClassFile extends AccessFlags implements IClassVisitor, IClas
             constantPool.findClass(thisClass),
             constantPool.findClass(superClass),
             interfaces);
+
+        for(MethodNode methodNode : methodNodes)
+            methodNode.accept(visitor);
     }
 
     public List<String> getInterfaces() {

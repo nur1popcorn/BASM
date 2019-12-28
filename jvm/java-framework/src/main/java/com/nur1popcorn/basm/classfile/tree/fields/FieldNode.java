@@ -37,17 +37,4 @@ import com.nur1popcorn.basm.classfile.tree.IFieldMethodNodeVisitor;
  * @since 1.0.0-alpha
  */
 public class FieldNode extends FieldMethodNode {
-
-    public FieldNode(int access, int nameIndex, int descIndex, ConstantPool constantPool) {
-        super(access, nameIndex, descIndex, constantPool);
-    }
-
-    public FieldNode(FieldMethodInfo info, ConstantPool constantPool) {
-        super(info, constantPool);
-    }
-
-    @Override
-    public void accept(IFieldMethodNodeVisitor visitor) {
-
-    }
 }

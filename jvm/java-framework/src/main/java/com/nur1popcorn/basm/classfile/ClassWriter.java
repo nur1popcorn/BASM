@@ -19,6 +19,7 @@
 package com.nur1popcorn.basm.classfile;
 
 import com.nur1popcorn.basm.classfile.attributes.AttributeInfo;
+import com.nur1popcorn.basm.classfile.tree.IFieldMethodNodeVisitor;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -75,10 +76,10 @@ public final class ClassWriter implements IClassVisitor {
     }
 
     @Override
-    public void visitMethods(FieldMethodInfo[] methods) throws IOException {
-        out.writeShort(methods.length);
+    public void visitMethod(int access, int nameIndex, int descIndex, ConstantPool consntantPool) {
+        /*out.writeShort(methods.length);
         for(FieldMethodInfo methodInfo : methods)
-            methodInfo.write(out);
+            methodInfo.write(out);*/
     }
 
     @Override

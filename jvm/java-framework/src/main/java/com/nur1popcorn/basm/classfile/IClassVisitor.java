@@ -19,6 +19,7 @@
 package com.nur1popcorn.basm.classfile;
 
 import com.nur1popcorn.basm.classfile.attributes.AttributeInfo;
+import com.nur1popcorn.basm.classfile.tree.IFieldMethodNodeVisitor;
 
 import java.io.IOException;
 
@@ -85,8 +86,7 @@ public interface IClassVisitor {
      *
      * @throws IOException if an error occurs while reading the JavaClass.
      */
-    default void visitMethods(FieldMethodInfo methods[]) throws IOException
-    {}
+    default void visitMethod(int access, int nameIndex, int descIndex, ConstantPool consntantPool) {}
 
     /**
      * Visits the fields of the JavaClass.

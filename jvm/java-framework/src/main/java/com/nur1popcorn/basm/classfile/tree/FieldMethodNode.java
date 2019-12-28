@@ -21,112 +21,47 @@ package com.nur1popcorn.basm.classfile.tree;
 import com.nur1popcorn.basm.classfile.AccessFlags;
 import com.nur1popcorn.basm.classfile.ConstantPool;
 import com.nur1popcorn.basm.classfile.FieldMethodInfo;
+import com.nur1popcorn.basm.classfile.IClassVisitor;
 import com.nur1popcorn.basm.classfile.constants.ConstantUTF8;
-import com.nur1popcorn.basm.classfile.constants.IConstantPoolPointer;
 
 import static com.nur1popcorn.basm.Constants.CONSTANT_UTF8;
 
-public abstract class FieldMethodNode extends AccessFlags implements IConstantPoolPointer {
-    protected final ConstantPool constantPool;
+public abstract class FieldMethodNode extends AccessFlags implements IFieldMethodNodeVisitor {
+    protected ConstantPoolGenerator constantPool;
 
-    /*
-     *
-     */
-    protected int nameIndex,
-                  descIndex;
-    /**
-     * @param access
-     * @param nameIndex
-     * @param descIndex
-     * @param constantPool
-     */
-    protected FieldMethodNode(int access, int nameIndex, int descIndex, ConstantPool constantPool) {
-        super(access);
-        this.nameIndex = nameIndex;
-        this.descIndex = descIndex;
-        this.constantPool = constantPool;
-    }
+    private String name,
+                   desc;
 
-    /**
-     * @param info
-     * @param constantPool
-     */
-    protected FieldMethodNode(FieldMethodInfo info, ConstantPool constantPool) {
-        this(info.getAccessFlags(),
-             info.getNameIndex(),
-             info.getDescIndex(),
-             constantPool);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public void attach(ConstantPool constantPool) {
-        indexName(constantPool)
-            .addPointer(this);
-        indexDesc(constantPool)
-            .addPointer(this);
+    public void visit(int access, int nameIndex, int descIndex, ConstantPool constantPool) {
+        setAccessFlags(access);
+        name = ((ConstantUTF8)constantPool.getEntry(nameIndex, CONSTANT_UTF8))
+            .bytes;
+        desc = ((ConstantUTF8)constantPool.getEntry(descIndex, CONSTANT_UTF8))
+            .bytes;
+        this.constantPool = new ConstantPoolGenerator(constantPool.getEntries());
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void dispose(ConstantPool constantPool) {
-        indexName(constantPool)
-            .removePointer(this);
-        indexDesc(constantPool)
-            .removePointer(this);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void update(int oldIndex, int newIndex) {
-        if(oldIndex == nameIndex)
-            nameIndex = newIndex;
-        else //if(oldIndex == descIndex)
-            descIndex = newIndex;
-    }
-
-    public abstract void accept(IFieldMethodNodeVisitor visitor);
-
-    /**
-     * @param constantPool
-     *
-     * @return
-     */
-    private ConstantUTF8 indexName(ConstantPool constantPool) {
-        return constantPool.getEntry(nameIndex, CONSTANT_UTF8);
-    }
-
-
-    /**
-     * @param constantPool
-     *
-     * @return
-     */
-    private ConstantUTF8 indexDesc(ConstantPool constantPool) {
-        return constantPool.getEntry(nameIndex, CONSTANT_UTF8);
+    public void accept(IClassVisitor visitor) {
+        visitor.visitMethod(
+            getAccessFlags(),
+            constantPool.findUTF8(name),
+            constantPool.findUTF8(desc),
+            constantPool
+        );
     }
 
     /**
      * @return
      */
     public String getName() {
-        return indexName(constantPool)
-            .bytes;
+        return name;
     }
 
     /**
      * @return
      */
-    public Type getDesc() {
-        return Type.getType(
-            indexDesc(constantPool)
-                .bytes
-        );
+    public String getDesc() {
+        return desc;
     }
 }

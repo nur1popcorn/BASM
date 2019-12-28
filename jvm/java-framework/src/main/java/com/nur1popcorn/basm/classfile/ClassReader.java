@@ -495,7 +495,8 @@ public final class ClassReader {
 
         if((read & READ_METHODS) != 0) {
             readMethods();
-            visitor.visitMethods(methods);
+            for(FieldMethodInfo fieldMethodInfo : methods)
+                fieldMethodInfo.accept(visitor);
         } else
             skipFieldMethods();
 
