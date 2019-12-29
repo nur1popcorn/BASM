@@ -18,23 +18,55 @@
 
 package com.nur1popcorn.basm.classfile.tree.methods;
 
-import com.nur1popcorn.basm.classfile.FieldMethodInfo;
 import com.nur1popcorn.basm.classfile.IClassVisitor;
+import com.nur1popcorn.basm.classfile.attributes.*;
 import com.nur1popcorn.basm.classfile.tree.ConstantPoolGenerator;
 import com.nur1popcorn.basm.classfile.tree.FieldMethodNode;
 
-public final class MethodNode extends FieldMethodNode {
-    public MethodNode(int access, String name, String desc, ConstantPoolGenerator constantPool) {
-        super(access, name, desc, constantPool);
+import java.io.IOException;
+
+public final class MethodNode extends FieldMethodNode implements IMethodNodeVisitor {
+    private InstructionList instructionList = new InstructionList();
+
+    public MethodNode(int access, String name, String desc, AttributeInfo attributes[], ConstantPoolGenerator constantPool) {
+        super(access, name, desc, attributes, constantPool);
+    }
+
+    @Override
+    public void visit(AttributeCode attribute) {
+        try {
+            instructionList = new InstructionList(attribute.getCode(), constantPool);
+        } catch(IOException exception) {
+            throw new RuntimeException(exception);
+        }
+    }
+
+    @Override
+    public void visit(AttributeLineNumberTable attribute) {
+        for(LineNumberTableEntry lineNumberTableEntry : attribute.getTable()) {
+
+        }
+    }
+
+    @Override
+    public void visit(AttributeDeprecated attribute) {
+
     }
 
     @Override
     public void accept(IClassVisitor visitor) {
-        final FieldMethodInfo fieldMethodInfo = new FieldMethodInfo(
-            getAccessFlags(),
+        /*final List<AttributeInfo> attributes = new ArrayList<>();
+        if(instructionList.size() != 0) {
+            final AttributeCode code = new AttributeCode(constantPool.findUTF8("Code"));
+            attributes.add(code);
+        }*/
+        visitor.visitMethod(getAccessFlags(),
             constantPool.findUTF8(getName()),
             constantPool.findUTF8(getDesc()),
-            null);
-        visitor.visitMethod(fieldMethodInfo);
+            attributes);
+    }
+
+    public InstructionList getInstructionList() {
+        return instructionList;
     }
 }

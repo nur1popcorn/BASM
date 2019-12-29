@@ -19,10 +19,15 @@
 package com.nur1popcorn.basm.classfile.tree;
 
 import com.nur1popcorn.basm.classfile.*;
+import com.nur1popcorn.basm.classfile.attributes.AttributeDeprecated;
 import com.nur1popcorn.basm.classfile.attributes.AttributeInfo;
+import com.nur1popcorn.basm.classfile.attributes.AttributeSourceFile;
+import com.nur1popcorn.basm.classfile.attributes.IAttributeVisitor;
 import com.nur1popcorn.basm.classfile.constants.ConstantName;
 import com.nur1popcorn.basm.classfile.constants.ConstantUTF8;
 import com.nur1popcorn.basm.classfile.tree.fields.FieldNode;
+import com.nur1popcorn.basm.classfile.tree.fields.IFieldNodeVisitor;
+import com.nur1popcorn.basm.classfile.tree.methods.IMethodNodeVisitor;
 import com.nur1popcorn.basm.classfile.tree.methods.MethodNode;
 
 import java.io.IOException;
@@ -43,7 +48,7 @@ import static com.nur1popcorn.basm.classfile.ClassReader.READ_ALL;
  * @author nur1popcorn
  * @since 1.0.0-alpha
  */
-public final class ClassFile extends AccessFlags implements IClassVisitor, IClassVersionProvider {
+public final class ClassFile extends AccessFlags implements IClassVisitor, IClassVersionProvider, IAttributeVisitor {
     private ConstantPoolGenerator constantPool;
 
     private int minorVersion,
@@ -56,6 +61,8 @@ public final class ClassFile extends AccessFlags implements IClassVisitor, IClas
 
     private List<FieldNode> fieldNodes = new ArrayList<>();
     private List<MethodNode> methodNodes = new ArrayList<>();
+
+    private AttributeInfo[] attributes;
 
     public ClassFile(InputStream in) throws IOException {
         new ClassReader(in)
@@ -95,34 +102,46 @@ public final class ClassFile extends AccessFlags implements IClassVisitor, IClas
     }
 
     @Override
-    public IFieldMethodNodeVisitor visitField(FieldMethodInfo field) {
+    public IFieldNodeVisitor visitField(int access,
+                                        int nameIndex,
+                                        int descIndex,
+                                        AttributeInfo attributes[]) {
         final FieldNode fieldNode = new FieldNode(
-            field.getAccessFlags(),
-            ((ConstantUTF8)constantPool.getEntry(field.getNameIndex(), CONSTANT_UTF8))
+            access,
+            ((ConstantUTF8)constantPool.getEntry(nameIndex, CONSTANT_UTF8))
                 .bytes,
-            ((ConstantUTF8)constantPool.getEntry(field.getDescIndex(), CONSTANT_UTF8))
+            ((ConstantUTF8)constantPool.getEntry(descIndex, CONSTANT_UTF8))
                 .bytes,
-            constantPool);
+            attributes, constantPool);
+        for(AttributeInfo attribute : attributes)
+            attribute.accept(fieldNode);
         fieldNodes.add(fieldNode);
         return fieldNode;
     }
 
     @Override
-    public IFieldMethodNodeVisitor visitMethod(FieldMethodInfo method) {
+    public IMethodNodeVisitor visitMethod(int access,
+                                          int nameIndex,
+                                          int descIndex,
+                                          AttributeInfo attributes[]) {
         final MethodNode methodNode = new MethodNode(
-            method.getAccessFlags(),
-            ((ConstantUTF8)constantPool.getEntry(method.getNameIndex(), CONSTANT_UTF8))
+            access,
+            ((ConstantUTF8)constantPool.getEntry(nameIndex, CONSTANT_UTF8))
                 .bytes,
-            ((ConstantUTF8)constantPool.getEntry(method.getDescIndex(), CONSTANT_UTF8))
+            ((ConstantUTF8)constantPool.getEntry(descIndex, CONSTANT_UTF8))
                 .bytes,
-            constantPool);
+            attributes, constantPool);
+        for(AttributeInfo attribute : attributes)
+            attribute.accept(methodNode);
         methodNodes.add(methodNode);
         return methodNode;
     }
 
     @Override
     public void visitFooter(AttributeInfo[] attributes) {
-
+        this.attributes = attributes;
+        for(AttributeInfo attribute : attributes)
+            attribute.accept(this);
     }
 
     @Override
@@ -137,6 +156,16 @@ public final class ClassFile extends AccessFlags implements IClassVisitor, IClas
             this.minorVersion = minorVersion;
     }
 
+    @Override
+    public void visit(AttributeSourceFile attribute) {
+
+    }
+
+    @Override
+    public void visit(AttributeDeprecated attribute) {
+
+    }
+
     public void accept(IClassVisitor visitor) {
         visitor.visitHead(minorVersion, majorVersion, constantPool);
 
@@ -148,10 +177,12 @@ public final class ClassFile extends AccessFlags implements IClassVisitor, IClas
             constantPool.findClass(superClass),
             interfaces);
 
-        for(MethodNode methodNode : methodNodes)
-            methodNode.accept(visitor);
         for(FieldNode fieldNode : fieldNodes)
             fieldNode.accept(visitor);
+        for(MethodNode methodNode : methodNodes)
+            methodNode.accept(visitor);
+
+        visitor.visitFooter(attributes);
     }
 
     public List<String> getInterfaces() {

@@ -47,7 +47,7 @@ public final class Label extends Instruction {
 
     @Override
     public void accept(IInstructionVisitor visitor) {
-
+        visitor.visitLabel(this);
     }
 
     @Override
@@ -108,5 +108,10 @@ public final class Label extends Instruction {
         final IInstructionPointer arr[] = new IInstructionPointer[pointers.size()];
         pointers.toArray(arr);
         return arr;
+    }
+
+    @Override
+    public String toString() {
+        return "label";
     }
 }

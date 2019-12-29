@@ -20,17 +20,20 @@ package com.nur1popcorn.basm.classfile.tree;
 
 import com.nur1popcorn.basm.classfile.AccessFlags;
 import com.nur1popcorn.basm.classfile.IClassVisitor;
+import com.nur1popcorn.basm.classfile.attributes.AttributeInfo;
+import com.nur1popcorn.basm.classfile.attributes.IAttributeVisitor;
 
-public abstract class FieldMethodNode extends AccessFlags implements IFieldMethodNodeVisitor {
-    protected ConstantPoolGenerator constantPool;
-
+public abstract class FieldMethodNode extends AccessFlags implements IAttributeVisitor {
     private String name,
                    desc;
+    protected AttributeInfo attributes[];
+    protected ConstantPoolGenerator constantPool;
 
-    public FieldMethodNode(int access, String name, String desc, ConstantPoolGenerator constantPool) {
+    public FieldMethodNode(int access, String name, String desc, AttributeInfo attributes[], ConstantPoolGenerator constantPool) {
         super(access);
         this.name = name;
         this.desc = desc;
+        this.attributes = attributes;
         this.constantPool = constantPool;
     }
 

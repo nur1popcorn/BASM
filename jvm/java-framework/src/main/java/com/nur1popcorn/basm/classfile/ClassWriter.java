@@ -19,8 +19,9 @@
 package com.nur1popcorn.basm.classfile;
 
 import com.nur1popcorn.basm.classfile.attributes.AttributeInfo;
-import com.nur1popcorn.basm.classfile.tree.IFieldMethodNodeVisitor;
 import com.nur1popcorn.basm.classfile.tree.fields.FieldWriter;
+import com.nur1popcorn.basm.classfile.tree.fields.IFieldNodeVisitor;
+import com.nur1popcorn.basm.classfile.tree.methods.IMethodNodeVisitor;
 import com.nur1popcorn.basm.classfile.tree.methods.MethodWriter;
 
 import java.io.DataOutputStream;
@@ -44,8 +45,8 @@ public final class ClassWriter implements IClassVisitor {
     private int access, thisClass, superClass;
     private int[] interfaces;
 
-    private final List<MethodWriter> methods = new ArrayList<>();
     private final List<FieldWriter> fields = new ArrayList<>();
+    private final List<MethodWriter> methods = new ArrayList<>();
 
     private AttributeInfo[] attributes;
 
@@ -53,7 +54,6 @@ public final class ClassWriter implements IClassVisitor {
     public void visitHead(int minorVersion, int majorVersion, ConstantPool constantPool) {
         this.minorVersion = minorVersion;
         this.majorVersion = majorVersion;
-
         this.constantPool = constantPool;
     }
 
@@ -62,22 +62,27 @@ public final class ClassWriter implements IClassVisitor {
         this.access = access;
         this.thisClass = thisClass;
         this.superClass = superClass;
-
         this.interfaces = interfaces;
     }
 
     @Override
-    public IFieldMethodNodeVisitor visitField(FieldMethodInfo field) {
-        final FieldWriter fieldWriter = new FieldWriter(field.getAccessFlags(),
-            field.getNameIndex(), field.getDescIndex(), field.getAttributes(), constantPool);
+    public IFieldNodeVisitor visitField(int access,
+                                        int nameIndex,
+                                        int descIndex,
+                                        AttributeInfo attributes[]) {
+        final FieldWriter fieldWriter = new FieldWriter(access,
+            nameIndex, descIndex, attributes, constantPool);
         fields.add(fieldWriter);
         return fieldWriter;
     }
 
     @Override
-    public IFieldMethodNodeVisitor visitMethod(FieldMethodInfo method) {
-        final MethodWriter methodWriter = new MethodWriter(method.getAccessFlags(),
-            method.getNameIndex(), method.getDescIndex(), method.getAttributes(), constantPool);
+    public IMethodNodeVisitor visitMethod(int access,
+                                          int nameIndex,
+                                          int descIndex,
+                                          AttributeInfo attributes[]) {
+        final MethodWriter methodWriter = new MethodWriter(access,
+            nameIndex, descIndex, attributes, constantPool);
         methods.add(methodWriter);
         return methodWriter;
     }
@@ -105,13 +110,13 @@ public final class ClassWriter implements IClassVisitor {
         for(int index : interfaces)
             out.writeShort(index);
 
-        out.writeShort(methods.size());
-        for(MethodWriter method : methods)
-            method.write(out);
-
         out.writeShort(fields.size());
         for(FieldWriter field : fields)
             field.write(out);
+
+        out.writeShort(methods.size());
+        for(MethodWriter method : methods)
+            method.write(out);
 
         out.writeShort(attributes.length);
         for(AttributeInfo attribute : attributes)

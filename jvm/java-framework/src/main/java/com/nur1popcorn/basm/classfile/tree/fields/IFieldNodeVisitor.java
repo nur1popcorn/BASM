@@ -16,14 +16,7 @@
  *
  */
 
-package com.nur1popcorn.basm.classfile.tree.methods;
+package com.nur1popcorn.basm.classfile.tree.fields;
 
-import com.nur1popcorn.basm.classfile.ConstantPool;
-import com.nur1popcorn.basm.classfile.attributes.AttributeInfo;
-import com.nur1popcorn.basm.classfile.tree.FieldMethodWriter;
-
-public class MethodWriter extends FieldMethodWriter implements IMethodNodeVisitor {
-    public MethodWriter(int access, int nameIndex, int descIndex, AttributeInfo[] attributes, ConstantPool constantPool) {
-        super(access, nameIndex, descIndex, attributes, constantPool);
-    }
+public interface IFieldNodeVisitor {
 }

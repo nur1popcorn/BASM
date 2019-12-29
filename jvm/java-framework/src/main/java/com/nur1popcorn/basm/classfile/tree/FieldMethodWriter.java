@@ -24,7 +24,7 @@ import com.nur1popcorn.basm.classfile.attributes.AttributeInfo;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-public class FieldMethodWriter implements IFieldMethodNodeVisitor {
+public class FieldMethodWriter {
     private int access, nameIndex, descIndex;
     private AttributeInfo[] attributes;
     private ConstantPool constantPool;

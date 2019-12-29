@@ -21,7 +21,7 @@ public final class MultiANewArrayInstruction extends Instruction {
 
     @Override
     public void accept(IInstructionVisitor visitor) {
-
+        visitor.visitMultiANewArrayInstruction(this);
     }
 
     @Override

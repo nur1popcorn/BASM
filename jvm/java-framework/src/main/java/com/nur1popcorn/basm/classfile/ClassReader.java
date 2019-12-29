@@ -483,9 +483,12 @@ public final class ClassReader {
         }
 
         if((read & (READ_FIELDS)) != 0) {
-            readFields();
-            for(FieldMethodInfo field : fields)
-                visitor.visitField(field);
+            final int fieldsCount = in.readUnsignedShort();
+            for(int i = 0; i < fieldsCount; i++)
+                visitor.visitField(in.readUnsignedShort(),
+                    in.readUnsignedShort(),
+                    in.readUnsignedShort(),
+                    AttributeFactory.read(in, constantPool));
         } else
             skipFieldMethods();
 
@@ -495,9 +498,12 @@ public final class ClassReader {
         }
 
         if((read & READ_METHODS) != 0) {
-            readMethods();
-            for(FieldMethodInfo method: methods)
-                visitor.visitMethod(method);
+            final int methodsCount = in.readUnsignedShort();
+            for(int i = 0; i < methodsCount; i++)
+                visitor.visitMethod(in.readUnsignedShort(),
+                    in.readUnsignedShort(),
+                    in.readUnsignedShort(),
+                    AttributeFactory.read(in, constantPool));
         } else
             skipFieldMethods();
 

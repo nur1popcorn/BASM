@@ -23,7 +23,7 @@ public final class NewArrayInstruction extends Instruction {
 
     @Override
     public void accept(IInstructionVisitor visitor) {
-        // TODO: impl.
+        visitor.visitNewArrayInstruction(this);
     }
 
     @Override

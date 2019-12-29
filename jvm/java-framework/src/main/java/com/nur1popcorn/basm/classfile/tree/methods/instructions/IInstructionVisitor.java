@@ -45,5 +45,11 @@ public interface IInstructionVisitor {
 
     default void visitInvokeDynamicInstruction(InvokeDynamicInstruction instruction) {}
 
+    default void visitNewArrayInstruction(NewArrayInstruction instruction) {}
+
+    default void visitMultiANewArrayInstruction(MultiANewArrayInstruction instruction) {}
+
+    default void visitLabel(Label label) {}
+
     default void visitUnkownInstruction(UnknownInstruction instruction) {}
 }

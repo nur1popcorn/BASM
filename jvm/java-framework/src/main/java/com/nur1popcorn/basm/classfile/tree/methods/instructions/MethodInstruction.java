@@ -34,6 +34,10 @@ import static com.nur1popcorn.basm.classfile.tree.methods.InstructionType.METHOD
 public final class MethodInstruction extends FieldMethodInstruction {
     private int count;
 
+    public MethodInstruction(Opcode opcode, String owner, String name, String desc) {
+        super(opcode, null, null);
+    }
+
     /**
      * @param opcode
      * @param info

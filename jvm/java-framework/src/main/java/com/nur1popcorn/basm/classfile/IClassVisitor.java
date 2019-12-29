@@ -18,8 +18,9 @@
 
 package com.nur1popcorn.basm.classfile;
 
-import com.nur1popcorn.basm.classfile.attributes.AttributeInfo;
-import com.nur1popcorn.basm.classfile.tree.IFieldMethodNodeVisitor;
+import com.nur1popcorn.basm.classfile.attributes.AttributeInfo;;
+import com.nur1popcorn.basm.classfile.tree.fields.IFieldNodeVisitor;
+import com.nur1popcorn.basm.classfile.tree.methods.IMethodNodeVisitor;
 
 import java.io.IOException;
 
@@ -80,24 +81,26 @@ public interface IClassVisitor {
     {}
 
     /**
-     * Visits the methods of the JavaClass.
-     *
-     * @param method
-     *
-     * @throws IOException if an error occurs while reading the JavaClass.
-     */
-    default IFieldMethodNodeVisitor visitMethod(FieldMethodInfo method)
-    { return null; }
-
-    /**
      * Visits the fields of the JavaClass.
      *
      * @param field
      *
      * @throws IOException if an error occurs while reading the JavaClass.
      */
-    default IFieldMethodNodeVisitor visitField(FieldMethodInfo field)
-    { return null; }
+    default IFieldNodeVisitor visitField(int access, int nameIndex, int descIndex, AttributeInfo attributes[]) {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Visits the methods of the JavaClass.
+     *
+     * @param method
+     *
+     * @throws IOException if an error occurs while reading the JavaClass.
+     */
+    default IMethodNodeVisitor visitMethod(int access, int nameIndex, int descIndex, AttributeInfo attributes[]) {
+        throw new UnsupportedOperationException();
+    }
 
     /**
      * Visits the footer part of the JavaClass.

@@ -19,8 +19,10 @@
 package com.nur1popcorn.basm.classfile.tree.fields;
 
 import com.nur1popcorn.basm.classfile.ConstantPool;
-import com.nur1popcorn.basm.classfile.FieldMethodInfo;
 import com.nur1popcorn.basm.classfile.IClassVisitor;
+import com.nur1popcorn.basm.classfile.attributes.AttributeConstantValue;
+import com.nur1popcorn.basm.classfile.attributes.AttributeDeprecated;
+import com.nur1popcorn.basm.classfile.attributes.AttributeInfo;
 import com.nur1popcorn.basm.classfile.tree.ConstantPoolGenerator;
 import com.nur1popcorn.basm.classfile.tree.FieldMethodNode;
 
@@ -39,18 +41,26 @@ import java.io.IOException;
  * @author nur1popcorn
  * @since 1.0.0-alpha
  */
-public class FieldNode extends FieldMethodNode {
-    public FieldNode(int access, String name, String desc, ConstantPoolGenerator constantPool) {
-        super(access, name, desc, constantPool);
+public final class FieldNode extends FieldMethodNode implements IFieldNodeVisitor {
+    public FieldNode(int access, String name, String desc, AttributeInfo attributes[], ConstantPoolGenerator constantPool) {
+        super(access, name, desc, attributes, constantPool);
+    }
+
+    @Override
+    public void visit(AttributeConstantValue attribute) {
+
+    }
+
+    @Override
+    public void visit(AttributeDeprecated attribute) {
+
     }
 
     @Override
     public void accept(IClassVisitor visitor) {
-        final FieldMethodInfo fieldMethodInfo = new FieldMethodInfo(
-            getAccessFlags(),
+        visitor.visitField(getAccessFlags(),
             constantPool.findUTF8(getName()),
             constantPool.findUTF8(getDesc()),
-            null);
-        visitor.visitField(fieldMethodInfo);
+            attributes);
     }
 }

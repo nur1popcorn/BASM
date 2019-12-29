@@ -137,4 +137,9 @@ public abstract class Instruction {
     final void setOffset(int offset) {
         this.offset = offset;
     }
+
+    @Override
+    public String toString() {
+        return opcode.getMnemonic();
+    }
 }

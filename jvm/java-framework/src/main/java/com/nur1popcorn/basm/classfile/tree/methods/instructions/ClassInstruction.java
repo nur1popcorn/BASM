@@ -17,7 +17,7 @@ public final class ClassInstruction extends CPInstruction<ConstantName> {
 
     @Override
     public void accept(IInstructionVisitor visitor) {
-        visitor.visitCPInstruction(this);
+        super.accept(visitor);
         visitor.visitClassInstruction(this);
     }
 
