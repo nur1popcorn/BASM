@@ -26,6 +26,7 @@ import com.nur1popcorn.basm.classfile.tree.methods.MethodWriter;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -90,6 +91,10 @@ public final class ClassWriter implements IClassVisitor {
     @Override
     public void visitFooter(AttributeInfo[] attributes) {
         this.attributes = attributes;
+    }
+
+    public void write(OutputStream out) throws IOException {
+        write(new DataOutputStream(out));
     }
 
     //TODO: create flags
