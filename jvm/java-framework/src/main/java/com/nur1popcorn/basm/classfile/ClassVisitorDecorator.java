@@ -48,13 +48,13 @@ public abstract class ClassVisitorDecorator implements IClassVisitor {
     }
 
     @Override
-    public IFieldNodeVisitor visitField(int access, int nameIndex, int descIndex, AttributeInfo[] attributes) {
-        return parent.visitField(access, nameIndex, descIndex, attributes);
+    public void visitField(int access, int nameIndex, int descIndex, AttributeInfo[] attributes) {
+        parent.visitField(access, nameIndex, descIndex, attributes);
     }
 
     @Override
-    public IMethodNodeVisitor visitMethod(int access, int nameIndex, int descIndex, AttributeInfo[] attributes) {
-        return parent.visitMethod(access, nameIndex, descIndex, attributes);
+    public void visitMethod(int access, int nameIndex, int descIndex, AttributeInfo[] attributes) {
+        parent.visitMethod(access, nameIndex, descIndex, attributes);
     }
 
     @Override

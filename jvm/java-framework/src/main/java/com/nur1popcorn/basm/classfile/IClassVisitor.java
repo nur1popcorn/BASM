@@ -19,8 +19,6 @@
 package com.nur1popcorn.basm.classfile;
 
 import com.nur1popcorn.basm.classfile.attributes.AttributeInfo;;
-import com.nur1popcorn.basm.classfile.tree.fields.IFieldNodeVisitor;
-import com.nur1popcorn.basm.classfile.tree.methods.IMethodNodeVisitor;
 
 import java.io.IOException;
 
@@ -87,9 +85,8 @@ public interface IClassVisitor {
      *
      * @throws IOException if an error occurs while reading the JavaClass.
      */
-    default IFieldNodeVisitor visitField(int access, int nameIndex, int descIndex, AttributeInfo attributes[]) {
-        throw new UnsupportedOperationException();
-    }
+    default void visitField(int access, int nameIndex, int descIndex, AttributeInfo attributes[])
+    {}
 
     /**
      * Visits the methods of the JavaClass.
@@ -98,9 +95,8 @@ public interface IClassVisitor {
      *
      * @throws IOException if an error occurs while reading the JavaClass.
      */
-    default IMethodNodeVisitor visitMethod(int access, int nameIndex, int descIndex, AttributeInfo attributes[]) {
-        throw new UnsupportedOperationException();
-    }
+    default void visitMethod(int access, int nameIndex, int descIndex, AttributeInfo attributes[])
+    {}
 
     /**
      * Visits the footer part of the JavaClass.

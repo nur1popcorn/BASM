@@ -26,8 +26,6 @@ import com.nur1popcorn.basm.classfile.attributes.IAttributeVisitor;
 import com.nur1popcorn.basm.classfile.constants.ConstantName;
 import com.nur1popcorn.basm.classfile.constants.ConstantUTF8;
 import com.nur1popcorn.basm.classfile.tree.fields.FieldNode;
-import com.nur1popcorn.basm.classfile.tree.fields.IFieldNodeVisitor;
-import com.nur1popcorn.basm.classfile.tree.methods.IMethodNodeVisitor;
 import com.nur1popcorn.basm.classfile.tree.methods.MethodNode;
 
 import java.io.IOException;
@@ -76,7 +74,6 @@ public final class ClassFile extends AccessFlags implements IClassVisitor, IClas
     public void visitHead(int minorVersion, int majorVersion, ConstantPool constantPool) {
         this.minorVersion = minorVersion;
         this.majorVersion = majorVersion;
-        // TODO: fix
         this.constantPool = new ConstantPoolGenerator(constantPool.getEntries());
     }
 
@@ -102,10 +99,7 @@ public final class ClassFile extends AccessFlags implements IClassVisitor, IClas
     }
 
     @Override
-    public IFieldNodeVisitor visitField(int access,
-                                        int nameIndex,
-                                        int descIndex,
-                                        AttributeInfo attributes[]) {
+    public void visitField(int access, int nameIndex, int descIndex, AttributeInfo attributes[]) {
         final FieldNode fieldNode = new FieldNode(
             access,
             ((ConstantUTF8)constantPool.getEntry(nameIndex, CONSTANT_UTF8))
@@ -116,14 +110,10 @@ public final class ClassFile extends AccessFlags implements IClassVisitor, IClas
         for(AttributeInfo attribute : attributes)
             attribute.accept(fieldNode);
         fieldNodes.add(fieldNode);
-        return fieldNode;
     }
 
     @Override
-    public IMethodNodeVisitor visitMethod(int access,
-                                          int nameIndex,
-                                          int descIndex,
-                                          AttributeInfo attributes[]) {
+    public void visitMethod(int access, int nameIndex, int descIndex, AttributeInfo attributes[]) {
         final MethodNode methodNode = new MethodNode(
             access,
             ((ConstantUTF8)constantPool.getEntry(nameIndex, CONSTANT_UTF8))
@@ -134,7 +124,6 @@ public final class ClassFile extends AccessFlags implements IClassVisitor, IClas
         for(AttributeInfo attribute : attributes)
             attribute.accept(methodNode);
         methodNodes.add(methodNode);
-        return methodNode;
     }
 
     @Override

@@ -20,8 +20,6 @@ package com.nur1popcorn.basm.classfile;
 
 import com.nur1popcorn.basm.classfile.attributes.AttributeInfo;
 import com.nur1popcorn.basm.classfile.tree.fields.FieldWriter;
-import com.nur1popcorn.basm.classfile.tree.fields.IFieldNodeVisitor;
-import com.nur1popcorn.basm.classfile.tree.methods.IMethodNodeVisitor;
 import com.nur1popcorn.basm.classfile.tree.methods.MethodWriter;
 
 import java.io.DataOutputStream;
@@ -67,25 +65,17 @@ public final class ClassWriter implements IClassVisitor {
     }
 
     @Override
-    public IFieldNodeVisitor visitField(int access,
-                                        int nameIndex,
-                                        int descIndex,
-                                        AttributeInfo attributes[]) {
+    public void visitField(int access, int nameIndex, int descIndex, AttributeInfo attributes[]) {
         final FieldWriter fieldWriter = new FieldWriter(access,
             nameIndex, descIndex, attributes, constantPool);
         fields.add(fieldWriter);
-        return fieldWriter;
     }
 
     @Override
-    public IMethodNodeVisitor visitMethod(int access,
-                                          int nameIndex,
-                                          int descIndex,
-                                          AttributeInfo attributes[]) {
+    public void visitMethod(int access, int nameIndex, int descIndex, AttributeInfo attributes[]) {
         final MethodWriter methodWriter = new MethodWriter(access,
             nameIndex, descIndex, attributes, constantPool);
         methods.add(methodWriter);
-        return methodWriter;
     }
 
     @Override

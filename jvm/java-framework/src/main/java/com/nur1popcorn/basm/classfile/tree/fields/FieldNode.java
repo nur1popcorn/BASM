@@ -52,11 +52,6 @@ public final class FieldNode extends FieldMethodNode implements IFieldNodeVisito
     }
 
     @Override
-    public void visit(AttributeDeprecated attribute) {
-
-    }
-
-    @Override
     public void accept(IClassVisitor visitor) {
         visitor.visitField(getAccessFlags(),
             constantPool.findUTF8(getName()),

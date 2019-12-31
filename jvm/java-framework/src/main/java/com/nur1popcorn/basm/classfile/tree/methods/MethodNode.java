@@ -49,11 +49,6 @@ public final class MethodNode extends FieldMethodNode implements IMethodNodeVisi
     }
 
     @Override
-    public void visit(AttributeDeprecated attribute) {
-
-    }
-
-    @Override
     public void accept(IClassVisitor visitor) {
         /*final List<AttributeInfo> attributes = new ArrayList<>();
         if(instructionList.size() != 0) {

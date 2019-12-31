@@ -127,6 +127,10 @@ public final class SwitchInstruction extends Instruction implements IInstruction
         this.defaultTarget = defaultTarget;
     }
 
+    public List<KeyIndexPair> getTargets() {
+        return indices;
+    }
+
     @Override
     public int getLength() {
         return ((-1 - getOffset()) & 0x3) + 9 +
