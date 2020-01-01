@@ -29,13 +29,13 @@ import java.util.List;
 import static com.nur1popcorn.basm.Constants.MAGIC;
 
 /**
- * The {@link ClassWriter} is a {@link IClassVisitor} which writes the visited class file to the
+ * The {@link ClassWriter} is a {@link ClassVisitor} which writes the visited class file to the
  * given {@link DataOutputStream}.
  *
  * @author nur1popcorn
  * @since 1.0.0-alpha
  */
-public final class ClassWriter implements IClassVisitor {
+public final class ClassWriter implements ClassVisitor {
     private int minorVersion, majorVersion;
     private ConstantPool constantPool;
 
@@ -68,13 +68,13 @@ public final class ClassWriter implements IClassVisitor {
     }
 
     @Override
-    public IAttributeVisitor visitField(FieldMethodInfo field) {
+    public AttributeVisitor visitField(FieldMethodInfo field) {
         fields.add(field);
         return field;
     }
 
     @Override
-    public IAttributeVisitor visitMethod(FieldMethodInfo method) {
+    public AttributeVisitor visitMethod(FieldMethodInfo method) {
         methods.add(method);
         return method;
     }

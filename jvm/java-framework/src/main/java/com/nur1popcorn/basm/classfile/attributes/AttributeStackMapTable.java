@@ -28,7 +28,7 @@ public final class AttributeStackMapTable extends AttributeInfo {
     }
 
     @Override
-    public void accept(IAttributeVisitor v) {
+    public void accept(AttributeVisitor v) {
 
     }
 }

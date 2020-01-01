@@ -18,7 +18,7 @@
 
 package com.nur1popcorn.basm.classfile.attributes;
 
-public interface IAttributeVisitor {
+public interface AttributeVisitor {
     default void visit(AttributeUnknown attribute) {
         throw new UnsupportedOperationException();
     }

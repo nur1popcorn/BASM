@@ -29,7 +29,7 @@ import java.util.Map;
 import static com.nur1popcorn.basm.Constants.CONSTANT_UTF8;
 
 /**
- * The {@link AttributeFactory} class, not to be confused with the IAttributeInfoFactory interface, is
+ * The {@link AttributeFactory} class, not to be confused with the AttributeInfoFactory interface, is
  * responsible for bootstrapping the reading process of all {@link AttributeInfo}s.
  *
  * @author nur1popcorn
@@ -38,7 +38,7 @@ import static com.nur1popcorn.basm.Constants.CONSTANT_UTF8;
 public final class AttributeFactory {
     private static final UnknownFactory UNKNOWN_FACTORY = new UnknownFactory();
 
-    private static final Map<String, IAttributeInfoFactory<? extends AttributeInfo>> ATTRIBUTE_FACTORY_MAP = Map.of(
+    private static final Map<String, AttributeInfoFactory<? extends AttributeInfo>> ATTRIBUTE_FACTORY_MAP = Map.of(
         /* https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.2 */
         "ConstantValue", new ConstantValueFactory(),
         /* https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.3 */

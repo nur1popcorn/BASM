@@ -30,7 +30,7 @@ import java.io.IOException;
  * @author nur1popcorn
  * @since 1.1.0-alpha
  */
-final class ConstantValueFactory implements IAttributeInfoFactory<AttributeConstantValue> {
+final class ConstantValueFactory implements AttributeInfoFactory<AttributeConstantValue> {
     @Override
     public AttributeConstantValue createAttribute(DataInputStream in, int nameIndex, int attributeLength, ConstantPool cp) throws IOException {
         return new AttributeConstantValue(

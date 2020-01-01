@@ -31,7 +31,7 @@ import java.io.IOException;
  * @author nur1popcorn
  * @since 1.1.0-alpha
  */
-final class LineNumberTableFactory implements IAttributeInfoFactory<AttributeLineNumberTable> {
+final class LineNumberTableFactory implements AttributeInfoFactory<AttributeLineNumberTable> {
     @Override
     public AttributeLineNumberTable createAttribute(DataInputStream in, int nameIndex, int attributeLength, ConstantPool cp) throws IOException {
         final LineNumberTableEntry table[] = new LineNumberTableEntry[in.readUnsignedShort()];

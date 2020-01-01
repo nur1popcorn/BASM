@@ -54,7 +54,7 @@ public final class AttributeConstantValue extends AttributeInfo {
     }
 
     @Override
-    public void accept(IAttributeVisitor v) {
+    public void accept(AttributeVisitor v) {
         v.visit(this);
     }
 

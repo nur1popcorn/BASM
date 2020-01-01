@@ -84,7 +84,7 @@ public abstract class Instruction {
      *
      * @param provider
      */
-    public void ensureVersion(IClassVersionProvider provider)
+    public void ensureVersion(ClassVersionProvider provider)
     {
         // TODO: make into interface and add support for constant pool
     }

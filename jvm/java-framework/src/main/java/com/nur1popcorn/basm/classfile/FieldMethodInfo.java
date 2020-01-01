@@ -29,7 +29,7 @@ import java.util.List;
 
 import static com.nur1popcorn.basm.Constants.CONSTANT_UTF8;
 
-public final class FieldMethodInfo extends AccessFlags implements IConstantPoolPointer, IAttributeVisitor {
+public final class FieldMethodInfo extends AccessFlags implements IConstantPoolPointer, AttributeVisitor {
     /*
      *
      */

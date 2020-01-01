@@ -19,16 +19,16 @@
 package com.nur1popcorn.basm.classfile.tree;
 
 import com.nur1popcorn.basm.classfile.ConstantPool;
-import com.nur1popcorn.basm.classfile.IClassVersionProvider;
+import com.nur1popcorn.basm.classfile.ClassVersionProvider;
 import com.nur1popcorn.basm.classfile.MalformedClassFileException;
 import com.nur1popcorn.basm.classfile.constants.*;
 
 import java.util.Arrays;
 
 import static com.nur1popcorn.basm.Constants.*;
-import static com.nur1popcorn.basm.classfile.IClassVersionProvider.JAVA_7;
-import static com.nur1popcorn.basm.classfile.IClassVersionProvider.JAVA_8;
-import static com.nur1popcorn.basm.classfile.IClassVersionProvider.JAVA_9;
+import static com.nur1popcorn.basm.classfile.ClassVersionProvider.JAVA_7;
+import static com.nur1popcorn.basm.classfile.ClassVersionProvider.JAVA_8;
+import static com.nur1popcorn.basm.classfile.ClassVersionProvider.JAVA_9;
 
 /**
  * The {@link ConstantPoolGenerator} is used to build a {@link ConstantPool} without duplicates.
@@ -53,7 +53,7 @@ import static com.nur1popcorn.basm.classfile.IClassVersionProvider.JAVA_9;
 public final class ConstantPoolGenerator extends ConstantPool {
     private int index = cpEntries.length;
 
-    private final IClassVersionProvider provider;
+    private final ClassVersionProvider provider;
 
     /**
      * {@inheritDoc}

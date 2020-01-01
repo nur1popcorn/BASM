@@ -19,7 +19,7 @@
 package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
 import com.nur1popcorn.basm.classfile.Opcode;
-import com.nur1popcorn.basm.classfile.tree.methods.IInstructionPointer;
+import com.nur1popcorn.basm.classfile.tree.methods.InstructionPointer;
 import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
 import com.nur1popcorn.basm.classfile.tree.methods.InstructionType;
 
@@ -31,7 +31,7 @@ import java.util.List;
 import static com.nur1popcorn.basm.classfile.Opcode.TABLESWITCH;
 import static com.nur1popcorn.basm.classfile.tree.methods.InstructionType.SWITCH_INS;
 
-public final class SwitchInstruction extends Instruction implements IInstructionPointer  {
+public final class SwitchInstruction extends Instruction implements InstructionPointer {
     private Label defaultTarget;
     private final List<KeyIndexPair> indices;
 

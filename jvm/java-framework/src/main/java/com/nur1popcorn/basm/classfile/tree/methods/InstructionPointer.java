@@ -18,6 +18,6 @@
 
 package com.nur1popcorn.basm.classfile.tree.methods;
 
-public interface IInstructionPointer {
+public interface InstructionPointer {
     void dispose();
 }

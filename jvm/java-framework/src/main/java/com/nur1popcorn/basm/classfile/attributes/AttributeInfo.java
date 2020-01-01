@@ -61,12 +61,12 @@ public abstract class AttributeInfo {
     }
 
     /**
-     * Accepts a {@link IAttributeVisitor}, calls the for the {@link AttributeInfo} appropriate 'visitXXX()'
+     * Accepts a {@link AttributeVisitor}, calls the for the {@link AttributeInfo} appropriate 'visitXXX()'
      * methods to notify the visitor of what type of {@link AttributeInfo} is being entered.
      *
-     * @param v The {@link IAttributeVisitor} whom's callbacks will be invoked.
+     * @param v The {@link AttributeVisitor} whom's callbacks will be invoked.
      */
-    public abstract void accept(IAttributeVisitor v);
+    public abstract void accept(AttributeVisitor v);
 
     /**
      * @return The index of the CONSTANT_UTF8 which identifies the type of {@link AttributeInfo}.

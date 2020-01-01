@@ -30,7 +30,7 @@ import java.io.IOException;
  * @author nur1popcorn
  * @since 1.1.0-alpha
  */
-final class UnknownFactory implements IAttributeInfoFactory<AttributeUnknown> {
+final class UnknownFactory implements AttributeInfoFactory<AttributeUnknown> {
     @Override
     public AttributeUnknown createAttribute(DataInputStream in, int nameIndex, int attributeLength, ConstantPool cp) throws IOException {
         final byte info[] = new byte[attributeLength];

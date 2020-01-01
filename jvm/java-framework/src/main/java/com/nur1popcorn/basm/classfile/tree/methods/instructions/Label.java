@@ -19,7 +19,7 @@
 package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
 import com.nur1popcorn.basm.classfile.Opcode;
-import com.nur1popcorn.basm.classfile.tree.methods.IInstructionPointer;
+import com.nur1popcorn.basm.classfile.tree.methods.InstructionPointer;
 import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
 import com.nur1popcorn.basm.classfile.tree.methods.InstructionType;
 import com.nur1popcorn.basm.utils.WeakHashSet;
@@ -34,7 +34,7 @@ public final class Label extends Instruction {
     /*
      *
      */
-    private Set<IInstructionPointer> pointers;
+    private Set<InstructionPointer> pointers;
 
     public Label() {
         super(INVALID);
@@ -78,7 +78,7 @@ public final class Label extends Instruction {
     /**
      * @param pointer
      */
-    public void addPointer(IInstructionPointer pointer) {
+    public void addPointer(InstructionPointer pointer) {
         if(pointers == null)
             pointers = new WeakHashSet<>();
         pointers.add(pointer);
@@ -87,7 +87,7 @@ public final class Label extends Instruction {
     /**
      * @param pointer
      */
-    public void removePointer(IInstructionPointer pointer) {
+    public void removePointer(InstructionPointer pointer) {
         pointers.remove(pointer);
     }
 
@@ -102,10 +102,10 @@ public final class Label extends Instruction {
     /**
      * @return
      */
-    public IInstructionPointer[] getPointers() {
+    public InstructionPointer[] getPointers() {
         if(pointers == null)
-            return new IInstructionPointer[0];
-        final IInstructionPointer arr[] = new IInstructionPointer[pointers.size()];
+            return new InstructionPointer[0];
+        final InstructionPointer arr[] = new InstructionPointer[pointers.size()];
         pointers.toArray(arr);
         return arr;
     }

@@ -19,7 +19,7 @@
 package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
 import com.nur1popcorn.basm.classfile.Opcode;
-import com.nur1popcorn.basm.classfile.tree.methods.IInstructionPointer;
+import com.nur1popcorn.basm.classfile.tree.methods.InstructionPointer;
 import com.nur1popcorn.basm.classfile.tree.methods.Instruction;
 import com.nur1popcorn.basm.classfile.tree.methods.InstructionType;
 
@@ -28,7 +28,7 @@ import java.io.IOException;
 
 import static com.nur1popcorn.basm.classfile.tree.methods.InstructionType.JUMP_INS;
 
-public final class JumpInstruction extends Instruction implements IInstructionPointer {
+public final class JumpInstruction extends Instruction implements InstructionPointer {
     private Label target;
 
     /**

@@ -37,13 +37,13 @@ import static com.nur1popcorn.basm.classfile.ClassReader.READ_ALL;
 /**
  * The {@link ClassFile} provides an abstraction layer between bytecode and user.
  *
- * @see IClassVisitor
+ * @see ClassVisitor
  * @see ConstantPool
  *
  * @author nur1popcorn
  * @since 1.0.0-alpha
  */
-public final class ClassFile extends AccessFlags implements IClassVisitor, IClassVersionProvider {
+public final class ClassFile extends AccessFlags implements ClassVisitor, ClassVersionProvider {
     private ConstantPoolGenerator constantPool;
 
     private int minorVersion,
@@ -97,7 +97,7 @@ public final class ClassFile extends AccessFlags implements IClassVisitor, IClas
     }
 
     @Override
-    public IAttributeVisitor visitField(FieldMethodInfo info) {
+    public AttributeVisitor visitField(FieldMethodInfo info) {
         final FieldNode fieldNode = new FieldNode(
             info.getAccessFlags(),
             ((ConstantUTF8)constantPool.getEntry(info.getNameIndex(), CONSTANT_UTF8))
@@ -110,7 +110,7 @@ public final class ClassFile extends AccessFlags implements IClassVisitor, IClas
     }
 
     @Override
-    public IAttributeVisitor visitMethod(FieldMethodInfo method) {
+    public AttributeVisitor visitMethod(FieldMethodInfo method) {
         final MethodNode methodNode = new MethodNode(
             method.getAccessFlags(),
             ((ConstantUTF8)constantPool.getEntry(method.getNameIndex(), CONSTANT_UTF8))
@@ -149,7 +149,7 @@ public final class ClassFile extends AccessFlags implements IClassVisitor, IClas
         attributes.add(attribute);
     }
 
-    public void accept(IClassVisitor visitor) {
+    public void accept(ClassVisitor visitor) {
         visitor.visitHead(minorVersion, majorVersion, constantPool);
 
         visitor.visitBody(getAccessFlags(),

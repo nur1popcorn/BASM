@@ -24,7 +24,7 @@ import com.nur1popcorn.basm.classfile.attributes.AttributeDeprecated;
 import java.io.DataInputStream;
 import java.io.IOException;
 
-public final class DeprecatedFactory implements IAttributeInfoFactory<AttributeDeprecated> {
+public final class DeprecatedFactory implements AttributeInfoFactory<AttributeDeprecated> {
     @Override
     public AttributeDeprecated createAttribute(DataInputStream in, int nameIndex, int attributeLength, ConstantPool cp) throws IOException {
         return new AttributeDeprecated(nameIndex, attributeLength);

@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public final class Decompiler implements ITransformer {
+public final class Decompiler implements Transformer {
     @Override
     public void transform(InputStream in, OutputStream out) throws IOException {
         throw new RuntimeException("Not implemented.");

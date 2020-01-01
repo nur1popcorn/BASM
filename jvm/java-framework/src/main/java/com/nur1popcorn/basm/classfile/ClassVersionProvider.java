@@ -18,7 +18,7 @@
 
 package com.nur1popcorn.basm.classfile;
 
-public interface IClassVersionProvider {
+public interface ClassVersionProvider {
     // TODO: dont really like this class..
 
     /* These constants denote the version of the JDK used to compile the given class.

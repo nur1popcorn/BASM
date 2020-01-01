@@ -12,7 +12,7 @@ import java.io.IOException;
  * @author nur1popcorn
  * @since 1.1.0-alpha
  */
-public final class SourceFileFactory implements IAttributeInfoFactory<AttributeSourceFile> {
+public final class SourceFileFactory implements AttributeInfoFactory<AttributeSourceFile> {
     @Override
     public AttributeSourceFile createAttribute(DataInputStream in, int nameIndex, int attributeLength, ConstantPool cp) throws IOException {
         return new AttributeSourceFile(

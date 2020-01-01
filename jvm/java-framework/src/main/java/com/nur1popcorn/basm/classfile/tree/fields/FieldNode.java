@@ -20,10 +20,10 @@ package com.nur1popcorn.basm.classfile.tree.fields;
 
 import com.nur1popcorn.basm.classfile.ConstantPool;
 import com.nur1popcorn.basm.classfile.FieldMethodInfo;
-import com.nur1popcorn.basm.classfile.IClassVisitor;
+import com.nur1popcorn.basm.classfile.ClassVisitor;
 import com.nur1popcorn.basm.classfile.attributes.AttributeConstantValue;
 import com.nur1popcorn.basm.classfile.attributes.AttributeInfo;
-import com.nur1popcorn.basm.classfile.attributes.IAttributeVisitor;
+import com.nur1popcorn.basm.classfile.attributes.AttributeVisitor;
 import com.nur1popcorn.basm.classfile.tree.ConstantPoolGenerator;
 import com.nur1popcorn.basm.classfile.tree.FieldMethodNode;
 
@@ -51,8 +51,8 @@ public final class FieldNode extends FieldMethodNode {
     }
 
     @Override
-    public void accept(IClassVisitor visitor) {
-        final IAttributeVisitor fieldVisitor =
+    public void accept(ClassVisitor visitor) {
+        final AttributeVisitor fieldVisitor =
             visitor.visitField(new FieldMethodInfo(
                 getAccessFlags(),
                 constantPool.findUTF8(getName()),

@@ -19,16 +19,16 @@
 package com.nur1popcorn.basm.classfile.tree;
 
 import com.nur1popcorn.basm.classfile.AccessFlags;
-import com.nur1popcorn.basm.classfile.IClassVisitor;
+import com.nur1popcorn.basm.classfile.ClassVisitor;
 import com.nur1popcorn.basm.classfile.attributes.AttributeDeprecated;
 import com.nur1popcorn.basm.classfile.attributes.AttributeInfo;
 import com.nur1popcorn.basm.classfile.attributes.AttributeUnknown;
-import com.nur1popcorn.basm.classfile.attributes.IAttributeVisitor;
+import com.nur1popcorn.basm.classfile.attributes.AttributeVisitor;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class FieldMethodNode extends AccessFlags implements IAttributeVisitor {
+public abstract class FieldMethodNode extends AccessFlags implements AttributeVisitor {
     private String name,
                    desc;
     protected final List<AttributeInfo> attributes = new ArrayList<>();
@@ -41,7 +41,7 @@ public abstract class FieldMethodNode extends AccessFlags implements IAttributeV
         this.constantPool = constantPool;
     }
 
-    public abstract void accept(IClassVisitor visitor);
+    public abstract void accept(ClassVisitor visitor);
 
     @Override
     public void visit(AttributeDeprecated attribute) {

@@ -19,7 +19,7 @@
 package com.nur1popcorn.basm.classfile.tree.methods;
 
 import com.nur1popcorn.basm.classfile.FieldMethodInfo;
-import com.nur1popcorn.basm.classfile.IClassVisitor;
+import com.nur1popcorn.basm.classfile.ClassVisitor;
 import com.nur1popcorn.basm.classfile.attributes.*;
 import com.nur1popcorn.basm.classfile.tree.ConstantPoolGenerator;
 import com.nur1popcorn.basm.classfile.tree.FieldMethodNode;
@@ -52,13 +52,13 @@ public final class MethodNode extends FieldMethodNode {
     }
 
     @Override
-    public void accept(IClassVisitor visitor) {
+    public void accept(ClassVisitor visitor) {
         /*final List<AttributeInfo> attributes = new ArrayList<>();
         if(instructionList.size() != 0) {
             final AttributeCode code = new AttributeCode(constantPool.findUTF8("Code"));
             attributes.add(code);
         }*/
-        final IAttributeVisitor methodVisitor =
+        final AttributeVisitor methodVisitor =
             visitor.visitMethod(new FieldMethodInfo(
                 getAccessFlags(),
                 constantPool.findUTF8(getName()),

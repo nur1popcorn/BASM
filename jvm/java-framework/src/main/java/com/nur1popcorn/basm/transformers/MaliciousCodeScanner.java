@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public final class MaliciousCodeScanner implements ITransformer {
+public final class MaliciousCodeScanner implements Transformer {
 
     /*private static final String MALICIOUS_PATHS[] = {
         "java/io",

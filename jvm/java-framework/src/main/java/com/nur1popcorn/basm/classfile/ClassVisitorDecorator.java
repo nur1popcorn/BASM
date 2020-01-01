@@ -21,20 +21,20 @@ package com.nur1popcorn.basm.classfile;
 import com.nur1popcorn.basm.classfile.attributes.AttributeDeprecated;
 import com.nur1popcorn.basm.classfile.attributes.AttributeSourceFile;
 import com.nur1popcorn.basm.classfile.attributes.AttributeUnknown;
-import com.nur1popcorn.basm.classfile.attributes.IAttributeVisitor;
+import com.nur1popcorn.basm.classfile.attributes.AttributeVisitor;
 
 /**
  * @author Ben Kinney
  * @since 1.0.0-alpha
  */
-public abstract class ClassVisitorDecorator implements IClassVisitor {
+public abstract class ClassVisitorDecorator implements ClassVisitor {
 
-    private IClassVisitor parent;
+    private ClassVisitor parent;
 
     /**
      * @param parent Parent to the decorator.
      */
-    public ClassVisitorDecorator(IClassVisitor parent) {
+    public ClassVisitorDecorator(ClassVisitor parent) {
         this.parent = parent;
     }
 
@@ -54,12 +54,12 @@ public abstract class ClassVisitorDecorator implements IClassVisitor {
     }
 
     @Override
-    public IAttributeVisitor visitField(FieldMethodInfo field) {
+    public AttributeVisitor visitField(FieldMethodInfo field) {
         return parent.visitField(field);
     }
 
     @Override
-    public IAttributeVisitor visitMethod(FieldMethodInfo method) {
+    public AttributeVisitor visitMethod(FieldMethodInfo method) {
         return parent.visitMethod(method);
     }
 

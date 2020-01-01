@@ -31,7 +31,7 @@ import java.io.IOException;
  * @author nur1popcorn
  * @since 1.1.0-alpha
  */
-final class CodeFactory implements IAttributeInfoFactory<AttributeCode> {
+final class CodeFactory implements AttributeInfoFactory<AttributeCode> {
     @Override
     public AttributeCode createAttribute(DataInputStream in, int nameIndex, int attributeLength, ConstantPool cp) throws IOException {
         final int maxStack = in.readUnsignedShort();

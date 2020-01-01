@@ -19,7 +19,7 @@
 package com.nur1popcorn.basm.classfile;
 
 import com.nur1popcorn.basm.classfile.attributes.AttributeInfo;
-import com.nur1popcorn.basm.classfile.attributes.IAttributeVisitor;
+import com.nur1popcorn.basm.classfile.attributes.AttributeVisitor;
 import com.nur1popcorn.basm.classfile.attributes.factory.AttributeFactory;
 
 import java.io.DataInputStream;
@@ -36,9 +36,9 @@ import static com.nur1popcorn.basm.Constants.*;
  *
  * @see ConstantPool
  * @see FieldMethodInfo
- * @see IClassVisitor
+ * @see ClassVisitor
  *
- * @see #accept(IClassVisitor, int)
+ * @see #accept(ClassVisitor, int)
  *
  * @author nur1popcorn
  * @since 1.0.0-alpha
@@ -82,7 +82,7 @@ public final class ClassReader {
      * </ul>
      *
      * @see #readHead()
-     * @see #accept(IClassVisitor, int)
+     * @see #accept(ClassVisitor, int)
      */
     public static final int READ_HEAD = 0x1;
 
@@ -122,7 +122,7 @@ public final class ClassReader {
      * </ul>
      *
      * @see #readBody()
-     * @see #accept(IClassVisitor, int)
+     * @see #accept(ClassVisitor, int)
      */
     public static final int READ_BODY = 0x2;
 
@@ -133,7 +133,7 @@ public final class ClassReader {
      * </a>
      *
      * @see #readFields()
-     * @see #accept(IClassVisitor, int)
+     * @see #accept(ClassVisitor, int)
      */
     public static final int READ_FIELDS = 0x4;
 
@@ -144,7 +144,7 @@ public final class ClassReader {
      * </a>
      *
      * @see #readMethods()
-     * @see #accept(IClassVisitor, int)
+     * @see #accept(ClassVisitor, int)
      */
     public static final int READ_METHODS = 0x8;
 
@@ -171,7 +171,7 @@ public final class ClassReader {
     /**
      * Enables reading all parts of the JavaClass.
      *
-     * @see #accept(IClassVisitor, int)
+     * @see #accept(ClassVisitor, int)
      */
     public static final int READ_ALL = READ_HEAD    |
                                        READ_BODY    |
@@ -275,7 +275,7 @@ public final class ClassReader {
      *
      * @throws IOException if an error occurs during the process of reading from the {@link DataInputStream}.
      *
-     * @see #accept(IClassVisitor, int)
+     * @see #accept(ClassVisitor, int)
      */
     private void readHead() throws IOException {
         minorVersion = in.readUnsignedShort();
@@ -319,7 +319,7 @@ public final class ClassReader {
      *
      * @throws IOException if an error occurs during the process of reading from the {@link DataInputStream}.
      *
-     * @see #accept(IClassVisitor, int)
+     * @see #accept(ClassVisitor, int)
      */
     private void readBody() throws IOException {
         access = in.readUnsignedShort();
@@ -339,7 +339,7 @@ public final class ClassReader {
      *
      * @throws IOException if an error occurs during the process of reading from the {@link DataInputStream}.
      *
-     * @see #accept(IClassVisitor, int)
+     * @see #accept(ClassVisitor, int)
      */
     private void readFields() throws IOException {
         fields = new FieldMethodInfo[in.readUnsignedShort()];
@@ -357,7 +357,7 @@ public final class ClassReader {
      *
      * @throws IOException if an error occurs during the process of reading from the {@link DataInputStream}.
      *
-     * @see #accept(IClassVisitor, int)
+     * @see #accept(ClassVisitor, int)
      */
     private void readMethods() throws IOException {
         methods = new FieldMethodInfo[in.readUnsignedShort()];
@@ -387,7 +387,7 @@ public final class ClassReader {
      *
      * @throws IOException if an error occurs during the process of reading from the {@link DataInputStream}.
      *
-     * @see #accept(IClassVisitor, int)
+     * @see #accept(ClassVisitor, int)
      */
     private void readFooter() throws IOException {
         attributes = AttributeFactory.read(in, constantPool);
@@ -398,7 +398,7 @@ public final class ClassReader {
      *
      * @throws IOException if an error occurs during the process of skipping bytes.
      *
-     * @see #accept(IClassVisitor, int)
+     * @see #accept(ClassVisitor, int)
      */
     private void skipFieldMethods() throws IOException {
         final int fieldCount = in.readUnsignedShort();
@@ -427,13 +427,13 @@ public final class ClassReader {
      *
      * @throws IOException if an error occurs during the process of reading from the {@link DataInputStream}.
      *
-     * @see IClassVisitor
+     * @see ClassVisitor
      * @see #READ_HEAD
      * @see #READ_BODY
      * @see #READ_FIELDS
      * @see #READ_METHODS
      */
-    public void accept(IClassVisitor visitor, int read) throws IOException {
+    public void accept(ClassVisitor visitor, int read) throws IOException {
         assert((read & READ_HEAD) != 0 ||
                 ((read & READ_FIELDS) == 0 &&
                  (read & READ_METHODS) == 0));
@@ -491,7 +491,7 @@ public final class ClassReader {
         if((read & (READ_FIELDS)) != 0) {
             final int fieldsCount = in.readUnsignedShort();
             for(int i = 0; i < fieldsCount; i++) {
-                final IAttributeVisitor fieldVisitor =  visitor.visitField(
+                final AttributeVisitor fieldVisitor =  visitor.visitField(
                     new FieldMethodInfo(in.readUnsignedShort(),
                                         in.readUnsignedShort(),
                                         in.readUnsignedShort()));
@@ -509,7 +509,7 @@ public final class ClassReader {
         if((read & READ_METHODS) != 0) {
             final int methodsCount = in.readUnsignedShort();
             for(int i = 0; i < methodsCount; i++) {
-                final IAttributeVisitor fieldVisitor =  visitor.visitMethod(
+                final AttributeVisitor fieldVisitor =  visitor.visitMethod(
                     new FieldMethodInfo(in.readUnsignedShort(),
                                         in.readUnsignedShort(),
                                         in.readUnsignedShort()));

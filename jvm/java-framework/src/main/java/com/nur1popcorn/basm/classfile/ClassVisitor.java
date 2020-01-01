@@ -19,12 +19,12 @@
 package com.nur1popcorn.basm.classfile;
 
 import com.nur1popcorn.basm.classfile.attributes.AttributeInfo;
-import com.nur1popcorn.basm.classfile.attributes.IAttributeVisitor;;
+import com.nur1popcorn.basm.classfile.attributes.AttributeVisitor;;
 
 import java.io.IOException;
 
 /**
- * The {@link IClassVisitor} TODO: desc.
+ * The {@link ClassVisitor} TODO: desc.
  *
  * @see ClassReader
  * @see ConstantPool
@@ -34,7 +34,7 @@ import java.io.IOException;
  * @author nur1popcorn
  * @since 1.0.0-alpha
  */
-public interface IClassVisitor extends IAttributeVisitor {
+public interface ClassVisitor extends AttributeVisitor {
 
     /**
      * <p>Visits the head part of the class.</p>
@@ -89,7 +89,7 @@ public interface IClassVisitor extends IAttributeVisitor {
      *
      * @throws IOException if an error occurs while reading the JavaClass.
      */
-    default IAttributeVisitor visitField(FieldMethodInfo field) {
+    default AttributeVisitor visitField(FieldMethodInfo field) {
         throw new UnsupportedOperationException();
     }
 
@@ -100,7 +100,7 @@ public interface IClassVisitor extends IAttributeVisitor {
      *
      * @throws IOException if an error occurs while reading the JavaClass.
      */
-    default IAttributeVisitor visitMethod(FieldMethodInfo method) {
+    default AttributeVisitor visitMethod(FieldMethodInfo method) {
         throw new UnsupportedOperationException();
     }
 }

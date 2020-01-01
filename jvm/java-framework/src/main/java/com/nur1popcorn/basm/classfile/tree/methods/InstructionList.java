@@ -167,8 +167,8 @@ public final class InstructionList extends AbstractList<Instruction> implements 
         final Instruction old = instructions[index];
         instructions[index] = element;
         if(old.getType() == LABEL && element.getType() == LABEL) {
-            final IInstructionPointer pointers[] = ((Label)old).getPointers();
-            for(IInstructionPointer pointer : pointers)
+            final InstructionPointer pointers[] = ((Label)old).getPointers();
+            for(InstructionPointer pointer : pointers)
                 ((Label)element).addPointer(pointer);
         }
         element.setOffset(old.getOffset());
@@ -228,7 +228,7 @@ public final class InstructionList extends AbstractList<Instruction> implements 
      * Removes the {@link Instruction} at the specified index from the {@link InstructionList}.
      *
      * @param index The index of the {@link Instruction} which is to be removed.
-     * @throws InstructionLostException If the number of {@link IInstructionPointer}s pointing at the to
+     * @throws InstructionLostException If the number of {@link InstructionPointer}s pointing at the to
      *         be removed {@link Instruction} is greater than 0.
      * @return The {@link Instruction} which was removed.
      */
