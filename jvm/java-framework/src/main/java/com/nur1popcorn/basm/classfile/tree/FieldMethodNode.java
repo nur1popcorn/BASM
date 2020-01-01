@@ -45,12 +45,12 @@ public abstract class FieldMethodNode extends AccessFlags implements AttributeVi
 
     @Override
     public void visit(AttributeDeprecated attribute) {
-
+        attributes.add(attribute);
     }
 
     @Override
     public void visit(AttributeUnknown attribute) {
-
+        attributes.add(attribute);
     }
 
     /**
