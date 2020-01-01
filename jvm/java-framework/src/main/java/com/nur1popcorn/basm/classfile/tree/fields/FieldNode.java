@@ -40,7 +40,7 @@ import com.nur1popcorn.basm.classfile.tree.FieldMethodNode;
  * @author nur1popcorn
  * @since 1.0.0-alpha
  */
-public final class FieldNode extends FieldMethodNode implements IFieldNodeVisitor {
+public final class FieldNode extends FieldMethodNode {
     public FieldNode(int access, String name, String desc, ConstantPoolGenerator constantPool) {
         super(access, name, desc, constantPool);
     }

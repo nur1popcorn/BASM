@@ -147,7 +147,6 @@ public final class FieldMethodInfo extends AccessFlags implements IConstantPoolP
         return constantPool.getEntry(nameIndex, CONSTANT_UTF8);
     }
 
-
     /**
      * @param constantPool
      *

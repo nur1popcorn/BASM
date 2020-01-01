@@ -22,6 +22,7 @@ import com.nur1popcorn.basm.classfile.AccessFlags;
 import com.nur1popcorn.basm.classfile.IClassVisitor;
 import com.nur1popcorn.basm.classfile.attributes.AttributeDeprecated;
 import com.nur1popcorn.basm.classfile.attributes.AttributeInfo;
+import com.nur1popcorn.basm.classfile.attributes.AttributeUnknown;
 import com.nur1popcorn.basm.classfile.attributes.IAttributeVisitor;
 
 import java.util.ArrayList;
@@ -44,6 +45,11 @@ public abstract class FieldMethodNode extends AccessFlags implements IAttributeV
 
     @Override
     public void visit(AttributeDeprecated attribute) {
+
+    }
+
+    @Override
+    public void visit(AttributeUnknown attribute) {
 
     }
 

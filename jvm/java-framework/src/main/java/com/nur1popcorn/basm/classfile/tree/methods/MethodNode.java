@@ -26,7 +26,7 @@ import com.nur1popcorn.basm.classfile.tree.FieldMethodNode;
 
 import java.io.IOException;
 
-public final class MethodNode extends FieldMethodNode implements IMethodNodeVisitor {
+public final class MethodNode extends FieldMethodNode {
     private InstructionList instructionList = new InstructionList();
 
     public MethodNode(int access, String name, String desc, ConstantPoolGenerator constantPool) {
