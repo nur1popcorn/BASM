@@ -24,17 +24,19 @@ import com.nur1popcorn.basm.classfile.attributes.AttributeDeprecated;
 import com.nur1popcorn.basm.classfile.attributes.AttributeInfo;
 import com.nur1popcorn.basm.classfile.attributes.IAttributeVisitor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class FieldMethodNode extends AccessFlags implements IAttributeVisitor {
     private String name,
                    desc;
-    protected AttributeInfo attributes[];
+    protected final List<AttributeInfo> attributes = new ArrayList<>();
     protected ConstantPoolGenerator constantPool;
 
-    public FieldMethodNode(int access, String name, String desc, AttributeInfo attributes[], ConstantPoolGenerator constantPool) {
+    public FieldMethodNode(int access, String name, String desc, ConstantPoolGenerator constantPool) {
         super(access);
         this.name = name;
         this.desc = desc;
-        this.attributes = attributes;
         this.constantPool = constantPool;
     }
 

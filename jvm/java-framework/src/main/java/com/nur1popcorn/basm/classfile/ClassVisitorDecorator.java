@@ -18,9 +18,10 @@
 
 package com.nur1popcorn.basm.classfile;
 
-import com.nur1popcorn.basm.classfile.attributes.AttributeInfo;
-import com.nur1popcorn.basm.classfile.tree.fields.IFieldNodeVisitor;
-import com.nur1popcorn.basm.classfile.tree.methods.IMethodNodeVisitor;
+import com.nur1popcorn.basm.classfile.attributes.AttributeDeprecated;
+import com.nur1popcorn.basm.classfile.attributes.AttributeSourceFile;
+import com.nur1popcorn.basm.classfile.attributes.AttributeUnknown;
+import com.nur1popcorn.basm.classfile.attributes.IAttributeVisitor;
 
 /**
  * @author Ben Kinney
@@ -43,22 +44,37 @@ public abstract class ClassVisitorDecorator implements IClassVisitor {
     }
 
     @Override
-    public void visitBody(int access, int thisClass, int superClass, int[] interfaces) {
-        parent.visitBody(access, thisClass, superClass, interfaces);
+    public void visitBody(int access, int thisClass, int superClass) {
+        parent.visitBody(access, thisClass, superClass);
     }
 
     @Override
-    public void visitField(int access, int nameIndex, int descIndex, AttributeInfo[] attributes) {
-        parent.visitField(access, nameIndex, descIndex, attributes);
+    public void visitInterface(int index) {
+        parent.visitInterface(index);
     }
 
     @Override
-    public void visitMethod(int access, int nameIndex, int descIndex, AttributeInfo[] attributes) {
-        parent.visitMethod(access, nameIndex, descIndex, attributes);
+    public IAttributeVisitor visitField(FieldMethodInfo field) {
+        return parent.visitField(field);
     }
 
     @Override
-    public void visitFooter(AttributeInfo[] attributes) {
-        parent.visitFooter(attributes);
+    public IAttributeVisitor visitMethod(FieldMethodInfo method) {
+        return parent.visitMethod(method);
+    }
+
+    @Override
+    public void visit(AttributeSourceFile attribute) {
+        parent.visit(attribute);
+    }
+
+    @Override
+    public void visit(AttributeDeprecated attribute) {
+        parent.visit(attribute);
+    }
+
+    @Override
+    public void visit(AttributeUnknown attribute) {
+        parent.visit(attribute);
     }
 }

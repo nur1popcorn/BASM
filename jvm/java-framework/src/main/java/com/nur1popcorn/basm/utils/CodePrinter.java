@@ -20,7 +20,7 @@ package com.nur1popcorn.basm.utils;
 
 public final class CodePrinter {/* implements IInstructionVisitor {
     private static final String TAB = "  ";
-    
+
     private PrintWriter pw;
     private Map<Label, String> labelNameMap = new HashMap<>();
 

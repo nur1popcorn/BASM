@@ -19,6 +19,7 @@
 package com.nur1popcorn.basm.classfile;
 
 import com.nur1popcorn.basm.classfile.attributes.AttributeInfo;
+import com.nur1popcorn.basm.classfile.attributes.IAttributeVisitor;
 import com.nur1popcorn.basm.classfile.attributes.factory.AttributeFactory;
 
 import java.io.DataInputStream;
@@ -343,7 +344,9 @@ public final class ClassReader {
     private void readFields() throws IOException {
         fields = new FieldMethodInfo[in.readUnsignedShort()];
         for(int i = 0; i < fields.length; i++)
-            fields[i] = new FieldMethodInfo(in, constantPool);
+            fields[i] = new FieldMethodInfo(in.readUnsignedShort(),
+                                            in.readUnsignedShort(),
+                                            in.readUnsignedShort());
     }
 
     /**
@@ -359,7 +362,9 @@ public final class ClassReader {
     private void readMethods() throws IOException {
         methods = new FieldMethodInfo[in.readUnsignedShort()];
         for(int i = 0; i < methods.length; i++)
-            methods[i] = new FieldMethodInfo(in, constantPool);
+            methods[i] = new FieldMethodInfo(in.readUnsignedShort(),
+                                             in.readUnsignedShort(),
+                                             in.readUnsignedShort());
     }
 
     /**
@@ -465,9 +470,10 @@ public final class ClassReader {
             visitor.visitBody(
                 access,
                 thisClass,
-                superClass,
-                interfaces
+                superClass
             );
+            for(int index : interfaces)
+                visitor.visitInterface(index);
         } else {
             // https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.1-200-E
             // skip accessFlags, thisClass and superClass.
@@ -484,11 +490,14 @@ public final class ClassReader {
 
         if((read & (READ_FIELDS)) != 0) {
             final int fieldsCount = in.readUnsignedShort();
-            for(int i = 0; i < fieldsCount; i++)
-                visitor.visitField(in.readUnsignedShort(),
-                    in.readUnsignedShort(),
-                    in.readUnsignedShort(),
-                    AttributeFactory.read(in, constantPool));
+            for(int i = 0; i < fieldsCount; i++) {
+                final IAttributeVisitor fieldVisitor =  visitor.visitField(
+                    new FieldMethodInfo(in.readUnsignedShort(),
+                                        in.readUnsignedShort(),
+                                        in.readUnsignedShort()));
+                for(AttributeInfo attribute : AttributeFactory.read(in, constantPool))
+                    attribute.accept(fieldVisitor);
+            }
         } else
             skipFieldMethods();
 
@@ -499,17 +508,21 @@ public final class ClassReader {
 
         if((read & READ_METHODS) != 0) {
             final int methodsCount = in.readUnsignedShort();
-            for(int i = 0; i < methodsCount; i++)
-                visitor.visitMethod(in.readUnsignedShort(),
-                    in.readUnsignedShort(),
-                    in.readUnsignedShort(),
-                    AttributeFactory.read(in, constantPool));
+            for(int i = 0; i < methodsCount; i++) {
+                final IAttributeVisitor fieldVisitor =  visitor.visitMethod(
+                    new FieldMethodInfo(in.readUnsignedShort(),
+                                        in.readUnsignedShort(),
+                                        in.readUnsignedShort()));
+                for(AttributeInfo attribute : AttributeFactory.read(in, constantPool))
+                    attribute.accept(fieldVisitor);
+            }
         } else
             skipFieldMethods();
 
         if((read & READ_FOOTER) != 0) {
             readFooter();
-            visitor.visitFooter(attributes);
+            for(AttributeInfo attribute : attributes)
+                attribute.accept(visitor);
         }
 
         in.close();

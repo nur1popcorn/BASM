@@ -18,6 +18,7 @@
 
 package com.nur1popcorn.basm.classfile.tree.methods;
 
+import com.nur1popcorn.basm.classfile.FieldMethodInfo;
 import com.nur1popcorn.basm.classfile.IClassVisitor;
 import com.nur1popcorn.basm.classfile.attributes.*;
 import com.nur1popcorn.basm.classfile.tree.ConstantPoolGenerator;
@@ -28,8 +29,8 @@ import java.io.IOException;
 public final class MethodNode extends FieldMethodNode implements IMethodNodeVisitor {
     private InstructionList instructionList = new InstructionList();
 
-    public MethodNode(int access, String name, String desc, AttributeInfo attributes[], ConstantPoolGenerator constantPool) {
-        super(access, name, desc, attributes, constantPool);
+    public MethodNode(int access, String name, String desc, ConstantPoolGenerator constantPool) {
+        super(access, name, desc, constantPool);
     }
 
     @Override
@@ -39,10 +40,12 @@ public final class MethodNode extends FieldMethodNode implements IMethodNodeVisi
         } catch(IOException exception) {
             throw new RuntimeException(exception);
         }
+        attributes.add(attribute);
     }
 
     @Override
     public void visit(AttributeLineNumberTable attribute) {
+        attributes.add(attribute);
         for(LineNumberTableEntry lineNumberTableEntry : attribute.getTable()) {
 
         }
@@ -55,10 +58,14 @@ public final class MethodNode extends FieldMethodNode implements IMethodNodeVisi
             final AttributeCode code = new AttributeCode(constantPool.findUTF8("Code"));
             attributes.add(code);
         }*/
-        visitor.visitMethod(getAccessFlags(),
-            constantPool.findUTF8(getName()),
-            constantPool.findUTF8(getDesc()),
-            attributes);
+        final IAttributeVisitor methodVisitor =
+            visitor.visitMethod(new FieldMethodInfo(
+                getAccessFlags(),
+                constantPool.findUTF8(getName()),
+                constantPool.findUTF8(getDesc()))
+            );
+        for(AttributeInfo info : attributes)
+            info.accept(methodVisitor);
     }
 
     public InstructionList getInstructionList() {

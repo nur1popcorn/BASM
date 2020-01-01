@@ -18,17 +18,18 @@
 
 package com.nur1popcorn.basm.classfile;
 
-import com.nur1popcorn.basm.classfile.attributes.factory.AttributeFactory;
-import com.nur1popcorn.basm.classfile.attributes.AttributeInfo;
+import com.nur1popcorn.basm.classfile.attributes.*;
 import com.nur1popcorn.basm.classfile.constants.ConstantUTF8;
 import com.nur1popcorn.basm.classfile.constants.IConstantPoolPointer;
 
-import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.nur1popcorn.basm.Constants.CONSTANT_UTF8;
 
-public final class FieldMethodInfo extends AccessFlags implements IConstantPoolPointer  {
+public final class FieldMethodInfo extends AccessFlags implements IConstantPoolPointer, IAttributeVisitor {
     /*
      *
      */
@@ -37,39 +38,71 @@ public final class FieldMethodInfo extends AccessFlags implements IConstantPoolP
     /*
      *
      */
-    private AttributeInfo attributes[];
+    private final List<AttributeInfo> attributes = new ArrayList<>();
 
     /**
      * @param access
      * @param nameIndex
      * @param descIndex
-     * @param attributes
      */
-    public FieldMethodInfo(int access, int nameIndex, int descIndex, AttributeInfo attributes[]) {
+    public FieldMethodInfo(int access, int nameIndex, int descIndex) {
         super(access);
         this.nameIndex = nameIndex;
         this.descIndex = descIndex;
-        this.attributes = attributes;
     }
 
     /**
-     * @param in
-     * @param constantPool
+     * @param os
      *
      * @throws IOException
      */
-    public FieldMethodInfo(DataInputStream in, ConstantPool constantPool) throws IOException {
-        this(in.readUnsignedShort(),
-             in.readUnsignedShort(),
-             in.readUnsignedShort(),
-             AttributeFactory.read(in, constantPool));
+    public void write(DataOutputStream os, ConstantPool constantPool) throws IOException {
+        os.writeShort(getAccessFlags());
+        os.writeShort(nameIndex);
+        os.writeShort(descIndex);
+
+        os.writeShort(attributes.size());
+        for(AttributeInfo attributeInfo : attributes)
+            attributeInfo.write(os, constantPool);
+    }
+
+    @Override
+    public void visit(AttributeConstantValue attribute) {
+        attributes.add(attribute);
+    }
+
+    @Override
+    public void visit(AttributeCode attribute) {
+        attributes.add(attribute);
+    }
+
+    @Override
+    public void visit(AttributeLineNumberTable attribute) {
+        attributes.add(attribute);
+    }
+
+    @Override
+    public void visit(AttributeDeprecated attribute) {
+        attributes.add(attribute);
+    }
+
+    @Override
+    public void visit(AttributeUnknown attribute) {
+        attributes.add(attribute);
     }
 
     /**
      * @return
      */
-    public AttributeInfo[] getAttributes() {
-        return attributes;
+    public int getNameIndex() {
+        return nameIndex;
+    }
+
+    /**
+     * @return
+     */
+    public int getDescIndex() {
+        return descIndex;
     }
 
     /**
@@ -122,19 +155,5 @@ public final class FieldMethodInfo extends AccessFlags implements IConstantPoolP
      */
     private ConstantUTF8 indexDesc(ConstantPool constantPool) {
         return constantPool.getEntry(nameIndex, CONSTANT_UTF8);
-    }
-
-    /**
-     * @return
-     */
-    public int getNameIndex() {
-        return nameIndex;
-    }
-
-    /**
-     * @return
-     */
-    public int getDescIndex() {
-        return descIndex;
     }
 }

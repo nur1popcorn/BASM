@@ -18,7 +18,8 @@
 
 package com.nur1popcorn.basm.classfile;
 
-import com.nur1popcorn.basm.classfile.attributes.AttributeInfo;;
+import com.nur1popcorn.basm.classfile.attributes.AttributeInfo;
+import com.nur1popcorn.basm.classfile.attributes.IAttributeVisitor;;
 
 import java.io.IOException;
 
@@ -33,7 +34,7 @@ import java.io.IOException;
  * @author nur1popcorn
  * @since 1.0.0-alpha
  */
-public interface IClassVisitor {
+public interface IClassVisitor extends IAttributeVisitor {
 
     /**
      * <p>Visits the head part of the class.</p>
@@ -75,7 +76,10 @@ public interface IClassVisitor {
      *
      * @throws IOException if an error occurs while reading the JavaClass.
      */
-    default void visitBody(int access, int thisClass, int superClass, int interfaces[])
+    default void visitBody(int access, int thisClass, int superClass)
+    {}
+
+    default void visitInterface(int index)
     {}
 
     /**
@@ -85,8 +89,9 @@ public interface IClassVisitor {
      *
      * @throws IOException if an error occurs while reading the JavaClass.
      */
-    default void visitField(int access, int nameIndex, int descIndex, AttributeInfo attributes[])
-    {}
+    default IAttributeVisitor visitField(FieldMethodInfo field) {
+        throw new UnsupportedOperationException();
+    }
 
     /**
      * Visits the methods of the JavaClass.
@@ -95,16 +100,7 @@ public interface IClassVisitor {
      *
      * @throws IOException if an error occurs while reading the JavaClass.
      */
-    default void visitMethod(int access, int nameIndex, int descIndex, AttributeInfo attributes[])
-    {}
-
-    /**
-     * Visits the footer part of the JavaClass.
-     *
-     * @param attributes
-     *
-     * @throws IOException if an error occurs while reading the JavaClass.
-     */
-    default void visitFooter(AttributeInfo attributes[])
-    {}
+    default IAttributeVisitor visitMethod(FieldMethodInfo method) {
+        throw new UnsupportedOperationException();
+    }
 }

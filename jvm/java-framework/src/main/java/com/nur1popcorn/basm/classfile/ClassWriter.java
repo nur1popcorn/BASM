@@ -18,9 +18,7 @@
 
 package com.nur1popcorn.basm.classfile;
 
-import com.nur1popcorn.basm.classfile.attributes.AttributeInfo;
-import com.nur1popcorn.basm.classfile.tree.fields.FieldWriter;
-import com.nur1popcorn.basm.classfile.tree.methods.MethodWriter;
+import com.nur1popcorn.basm.classfile.attributes.*;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -42,12 +40,13 @@ public final class ClassWriter implements IClassVisitor {
     private ConstantPool constantPool;
 
     private int access, thisClass, superClass;
-    private int[] interfaces;
 
-    private final List<FieldWriter> fields = new ArrayList<>();
-    private final List<MethodWriter> methods = new ArrayList<>();
+    private List<Integer> interfaces = new ArrayList<>();
 
-    private AttributeInfo[] attributes;
+    private final List<FieldMethodInfo> fields = new ArrayList<>();
+    private final List<FieldMethodInfo> methods = new ArrayList<>();
+
+    private final List<AttributeInfo> attributes = new ArrayList<>();
 
     @Override
     public void visitHead(int minorVersion, int majorVersion, ConstantPool constantPool) {
@@ -57,30 +56,42 @@ public final class ClassWriter implements IClassVisitor {
     }
 
     @Override
-    public void visitBody(int access, int thisClass, int superClass, int[] interfaces) {
+    public void visitBody(int access, int thisClass, int superClass) {
         this.access = access;
         this.thisClass = thisClass;
         this.superClass = superClass;
-        this.interfaces = interfaces;
     }
 
     @Override
-    public void visitField(int access, int nameIndex, int descIndex, AttributeInfo attributes[]) {
-        final FieldWriter fieldWriter = new FieldWriter(access,
-            nameIndex, descIndex, attributes, constantPool);
-        fields.add(fieldWriter);
+    public void visitInterface(int index) {
+        interfaces.add(index);
     }
 
     @Override
-    public void visitMethod(int access, int nameIndex, int descIndex, AttributeInfo attributes[]) {
-        final MethodWriter methodWriter = new MethodWriter(access,
-            nameIndex, descIndex, attributes, constantPool);
-        methods.add(methodWriter);
+    public IAttributeVisitor visitField(FieldMethodInfo field) {
+        fields.add(field);
+        return field;
     }
 
     @Override
-    public void visitFooter(AttributeInfo[] attributes) {
-        this.attributes = attributes;
+    public IAttributeVisitor visitMethod(FieldMethodInfo method) {
+        methods.add(method);
+        return method;
+    }
+
+    @Override
+    public void visit(AttributeSourceFile attribute) {
+        attributes.add(attribute);
+    }
+
+    @Override
+    public void visit(AttributeDeprecated attribute) {
+        attributes.add(attribute);
+    }
+
+    @Override
+    public void visit(AttributeUnknown attribute) {
+        attributes.add(attribute);
     }
 
     public void write(OutputStream out) throws IOException {
@@ -101,19 +112,19 @@ public final class ClassWriter implements IClassVisitor {
         out.writeShort(thisClass);
         out.writeShort(superClass);
 
-        out.writeShort(interfaces.length);
+        out.writeShort(interfaces.size());
         for(int index : interfaces)
             out.writeShort(index);
 
         out.writeShort(fields.size());
-        for(FieldWriter field : fields)
-            field.write(out);
+        for(FieldMethodInfo field : fields)
+            field.write(out, constantPool);
 
         out.writeShort(methods.size());
-        for(MethodWriter method : methods)
-            method.write(out);
+        for(FieldMethodInfo method : methods)
+            method.write(out, constantPool);
 
-        out.writeShort(attributes.length);
+        out.writeShort(attributes.size());
         for(AttributeInfo attribute : attributes)
             attribute.write(out, constantPool);
     }
