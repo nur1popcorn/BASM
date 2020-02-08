@@ -38,4 +38,7 @@ public interface AttributeVisitor {
     default void visit(AttributeDeprecated attribute) {
         throw new UnsupportedOperationException();
     }
+    default void visit(AttributeBootstrapMethods attribute) {
+        throw new UnsupportedOperationException("");
+    }
 }

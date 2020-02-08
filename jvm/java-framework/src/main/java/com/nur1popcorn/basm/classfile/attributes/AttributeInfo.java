@@ -71,28 +71,36 @@ public abstract class AttributeInfo {
     /**
      * @return The index of the CONSTANT_UTF8 which identifies the type of {@link AttributeInfo}.
      */
-    public int getNameIndex() {
+    public final int getNameIndex() {
         return nameIndex;
     }
 
     /**
      * @param nameIndex The index of the CONSTANT_UTF8 which identifies the type of {@link AttributeInfo}.
      */
-    public void setNameIndex(int nameIndex) {
+    public final void setNameIndex(int nameIndex) {
         this.nameIndex = nameIndex;
+    }
+
+    /**
+     * @return The {@link AttributeInfo}'s full length including the six bytes the used for the
+     *         attribute_name_index attribute_length.
+     */
+    public int getRealAttributeLength() {
+        return attributeLength + 6;
     }
 
     /**
      * @return The {@link AttributeInfo}'s length in bytes.
      */
-    public int getAttributeLength() {
+    public final int getAttributeLength() {
         return attributeLength;
     }
 
     /**
      * @param attributeLength The {@link AttributeInfo}'s length in bytes.
      */
-    public void setAttributeLength(int attributeLength) {
+    public final void setAttributeLength(int attributeLength) {
         this.attributeLength = attributeLength;
     }
 }

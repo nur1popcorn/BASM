@@ -29,7 +29,7 @@ import java.util.Map;
 import static com.nur1popcorn.basm.Constants.CONSTANT_UTF8;
 
 /**
- * The {@link AttributeFactory} class, not to be confused with the AttributeInfoFactory interface, is
+ * The {@link AttributeFactory} class, not to be confused with the IAttributeInfoFactory interface, is
  * responsible for bootstrapping the reading process of all {@link AttributeInfo}s.
  *
  * @author nur1popcorn
@@ -48,7 +48,9 @@ public final class AttributeFactory {
         /* https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.12 */
         "LineNumberTable", new LineNumberTableFactory(),
         /* https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.15 */
-        "Deprecated", new DeprecatedFactory()
+        "Deprecated", new DeprecatedFactory(),
+        /* https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.23 */
+        "BootstrapMethods", new BootstrapMethodsFactory()
     );
 
     /**

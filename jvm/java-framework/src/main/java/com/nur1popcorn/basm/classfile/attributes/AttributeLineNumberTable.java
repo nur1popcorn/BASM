@@ -68,11 +68,8 @@ public final class AttributeLineNumberTable extends AttributeInfo {
      * @return The {@link AttributeInfo}'s length in bytes.
      */
     private int calculateLength() {
-        return  2 /* attribute_name_index */ +
-                4 /* attribute_length */ +
-
-                2 /* table_length */ +
-                table.length * 4 /* line_number_table */;
+        return 2 /* table_length */ +
+               table.length * 4 /* line_number_table */;
     }
 
     /**
