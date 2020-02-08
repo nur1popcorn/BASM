@@ -32,8 +32,7 @@ public final class BootstrapMethodsFactory implements AttributeInfoFactory<Attri
     @Override
     public AttributeBootstrapMethods createAttribute(DataInputStream in, int nameIndex, int attributeLength, ConstantPool cp) throws IOException {
         BootstrapMethodsEntry[] bootstrapMethods = new BootstrapMethodsEntry[in.readUnsignedShort()];
-        for(int i = 0; i < bootstrapMethods.length; i++)
-        {
+        for(int i = 0; i < bootstrapMethods.length; i++) {
             int methodRef = in.readUnsignedShort();
             int[] arguments = new int[in.readUnsignedShort()];
             for(int j = 0; j < arguments.length; j++)

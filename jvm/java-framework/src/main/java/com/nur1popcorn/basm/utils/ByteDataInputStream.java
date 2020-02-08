@@ -43,8 +43,7 @@ public final class ByteDataInputStream extends DataInputStream {
         this.in = in;
     }
 
-    public int getSkipLength(Opcode opcode) throws IOException
-    {
+    public int getSkipLength(Opcode opcode) throws IOException {
         in.mark(0);
         final int start = position();
         skip(opcode);
