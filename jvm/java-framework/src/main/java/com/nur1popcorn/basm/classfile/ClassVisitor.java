@@ -68,11 +68,6 @@ public interface ClassVisitor extends AttributeVisitor {
      *                   <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.1-200-G">
      *                       SuperClass 4.1-200-G
      *                   </a>
-     * @param interfaces <p>a table of pointers pointing into the {@link ConstantPool}, to instances of
-     *                      CONSTANT_Classes representing the classes-read's implemented interfaces.</p>
-     *                   <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.1-200-I">
-     *                       Interfaces 4.1-200-I
-     *                   </a>
      *
      * @throws IOException if an error occurs while reading the JavaClass.
      */

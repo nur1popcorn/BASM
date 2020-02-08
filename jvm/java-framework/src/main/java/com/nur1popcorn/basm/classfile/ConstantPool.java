@@ -127,6 +127,8 @@ public class ConstantPool implements Iterable<ConstantInfo> {
         os.writeShort(cpEntries.length);
         for(int i = 1 /* the cp's size is 1 less than given */; i < cpEntries.length; i++) {
             final ConstantInfo info = cpEntries[i];
+            if(info == null)
+                continue;
             info.write(os);
             // longs and doubles take up 2 spaces in the constant pool.
             final int tag = info.getTag();
@@ -212,12 +214,12 @@ public class ConstantPool implements Iterable<ConstantInfo> {
     /**
      * @return The constant pool's size.
      */
-    public final int getSize() {
+    public int getSize() {
         return cpEntries.length;
     }
 
     public int indexOf(ConstantInfo info) {
-        for(int i = 1 /* the cp's size is 1 less than given */; i < cpEntries.length; i++) {
+        for(int i = 1 /* the cp's size is 1 less than given */; i < getSize(); i++) {
             final ConstantInfo entry = cpEntries[i];
             if(entry.equals(info))
                 return i;

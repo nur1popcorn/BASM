@@ -32,7 +32,7 @@ import static com.nur1popcorn.basm.classfile.Opcode.TABLESWITCH;
 
 public final class ByteDataInputStream extends DataInputStream {
     private final Map<Integer, Label> labelMap = new HashMap<>();
-    private ByteArrayInputStreamDelegate in;
+    private final ByteArrayInputStreamDelegate in;
 
     public ByteDataInputStream(byte buffer[]) {
         this(new ByteArrayInputStreamDelegate(buffer));
@@ -43,7 +43,16 @@ public final class ByteDataInputStream extends DataInputStream {
         this.in = in;
     }
 
-    public void skip(Opcode opcode) throws IOException {
+    public int getSkipLength(Opcode opcode) throws IOException {
+        in.mark(0);
+        final int start = position();
+        skip(opcode);
+        final int skipLength = position() - start;
+        in.reset();
+        return skipLength;
+    }
+
+    public final void skip(Opcode opcode) throws IOException {
         switch(opcode.getType()) {
             case SWITCH_INS:
                 // skip padding bytes and skip default index.
@@ -64,11 +73,11 @@ public final class ByteDataInputStream extends DataInputStream {
         }
     }
 
-    public int position() {
+    public final int position() {
         return in.position();
     }
 
-    public Label readLabel(int offset) {
+    public final Label readLabel(int offset) {
         Label label = labelMap.get(offset);
         if(label == null) {
             label = new Label();
@@ -77,7 +86,7 @@ public final class ByteDataInputStream extends DataInputStream {
         return label;
     }
 
-    public Label getLabel(int offset) {
+    public final Label getLabel(int offset) {
         return labelMap.get(offset);
     }
 

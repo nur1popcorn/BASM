@@ -95,17 +95,14 @@ public final class AttributeCode extends AttributeInfo {
     private int calculateLength() {
         int length = 0;
         for(AttributeInfo info : attributes)
-            length += info.getAttributeLength();
-        return 2 /* attribute_name_index */ +
-               4 /* attribute_length */ +
-
-               2 /* max_stack */ +
+            length += info.getRealAttributeLength();
+        return 2 /* max_stack */ +
                2 /* max_locals */ +
 
                4 /* code_length */ +
                code.length /* code */ +
 
-               2 /* code_length */ +
+               2 /* exception_table_length */ +
                exceptionTable.length * 8 /* exception_table */ +
 
                2 /* attributes_length */ +
@@ -127,6 +124,7 @@ public final class AttributeCode extends AttributeInfo {
      */
     public void setCode(byte code[]) {
         this.code = code;
+        setAttributeLength(code.length);
         setAttributeLength(calculateLength());
     }
 
