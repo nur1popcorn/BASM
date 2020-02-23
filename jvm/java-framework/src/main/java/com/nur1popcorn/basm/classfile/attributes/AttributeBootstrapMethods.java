@@ -40,11 +40,20 @@ public final class AttributeBootstrapMethods extends AttributeInfo {
         this.bootstrapMethods = bootstrapMethods;
     }
 
+    /**
+     * Get a specific entry by an index.
+     * @param index The index.
+     * @return The entry.
+     */
     public BootstrapMethodsEntry getEntry(int index)
     {
         return bootstrapMethods[index];
     }
 
+    /**
+     * Get every entry.
+     * @return An array of {@link BootstrapMethodsEntry}.
+     */
     public BootstrapMethodsEntry[] getBootstrapMethods() {
         return bootstrapMethods;
     }

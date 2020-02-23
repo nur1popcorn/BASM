@@ -68,28 +68,50 @@ public final class BootstrapMethodsEntry {
      */
     private int[] argumentIndices;
 
-    public BootstrapMethodsEntry(int methodRefIndex, int[] argumentIndices)
-    {
+    public BootstrapMethodsEntry(int methodRefIndex, int[] argumentIndices) {
         this.methodRefIndex = methodRefIndex;
         this.argumentIndices = argumentIndices;
     }
 
+    /**
+     * Get the index of the {@link ConstantMethodRef}.
+     * @return The index.
+     */
     public int getMethodRefIndex() {
         return methodRefIndex;
     }
 
+    /**
+     * Get the indices where the argument values lie in the constant pool.
+     * @return The indices.
+     */
     public int[] getArgumentIndices() {
         return argumentIndices;
     }
 
+    /**
+     * Get the index for a specific argument in the constant pool.
+     * @param argument The argument number.
+     * @return The index.
+     */
     public int getArgumentIndex(int argument) {
         return argumentIndices[argument];
     }
 
+    /**
+     * Get the {@link ConstantMethodRef} in the constant pool.
+     * @param pool The constant pool.
+     * @return The {@link ConstantMethodRef}.
+     */
     public ConstantMethodRef indexMethodRef(ConstantPool pool) {
         return pool.getEntry(methodRefIndex, CONSTANT_METHOD_REF);
     }
 
+    /**
+     * Get the constants of the arguments in the constant pool.
+     * @param pool The constant pool.
+     * @return A {@link ConstantInfo} array.
+     */
     public ConstantInfo[] indexArguments(ConstantPool pool) {
         ConstantInfo[] arguments = new ConstantInfo[argumentIndices.length];
         for(int i = 0; i < argumentIndices.length; i++)
@@ -97,18 +119,37 @@ public final class BootstrapMethodsEntry {
         return arguments;
     }
 
+    /**
+     * Get the constant of a specific argument in the constant pool.
+     * @param pool The constant pool.
+     * @param argument The argument number.
+     * @return The {@link ConstantInfo}.
+     */
     public ConstantInfo indexArgument(ConstantPool pool, int argument) {
         return pool.getEntry(argumentIndices[argument]);
     }
 
+    /**
+     * Set the index that declares the bootstrap method.
+     * @param methodRefIndex The index.
+     */
     public void setMethodRefIndex(int methodRefIndex) {
         this.methodRefIndex = methodRefIndex;
     }
 
+    /**
+     * Set the argument indices.
+     * @param argumentIndices The indices.
+     */
     public void setArgumentIndices(int[] argumentIndices) {
         this.argumentIndices = argumentIndices;
     }
 
+    /**
+     * Set a specific argument index.
+     * @param argument The argument number.
+     * @param entryIndex The index of the entry.
+     */
     public void setArgumentIndex(int argument, int entryIndex) {
         argumentIndices[argument] = entryIndex;
     }
