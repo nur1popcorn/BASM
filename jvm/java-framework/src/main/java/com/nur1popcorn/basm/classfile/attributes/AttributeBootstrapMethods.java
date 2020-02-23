@@ -24,6 +24,11 @@ import java.io.IOException;
 import java.util.Arrays;
 
 /**
+ * The {@link AttributeBootstrapMethods} is an {@link AttributeInfo} which references the methods
+ * that are used to resolve the methods called by invokedynamic instructions.
+ *
+ * See the {@link BootstrapMethodsEntry} class for more information.
+ *
  * @author Ben Kinney
  * @since 1.0.0-alpha
  */
@@ -33,6 +38,11 @@ public final class AttributeBootstrapMethods extends AttributeInfo {
     public AttributeBootstrapMethods(int nameIndex, int attributeLength, BootstrapMethodsEntry[] bootstrapMethods) {
         super(nameIndex, attributeLength);
         this.bootstrapMethods = bootstrapMethods;
+    }
+
+    public BootstrapMethodsEntry getEntry(int index)
+    {
+        return bootstrapMethods[index];
     }
 
     public BootstrapMethodsEntry[] getBootstrapMethods() {

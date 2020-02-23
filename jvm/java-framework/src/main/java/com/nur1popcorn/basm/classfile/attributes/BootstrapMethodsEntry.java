@@ -17,37 +17,106 @@
  */
 package com.nur1popcorn.basm.classfile.attributes;
 
+import com.nur1popcorn.basm.classfile.ConstantPool;
+import com.nur1popcorn.basm.classfile.constants.ConstantInfo;
+import com.nur1popcorn.basm.classfile.constants.ConstantMethodRef;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
 
+import static com.nur1popcorn.basm.Constants.CONSTANT_METHOD_REF;
+
 /**
+ * The {@link BootstrapMethodsEntry} holds information about which method is called
+ * to resolve the method that will be called by invokedynamic instruction. These
+ * methods which resolve others are named 'bootstrap methods.' A bootstrap method
+ * accepts at least the following three parameters, in this order:
+ * - {@link java.lang.invoke.MethodHandles.Lookup}
+ * - {@link String}
+ * - {@link java.lang.invoke.MethodType}
+ *
+ * Additionally, a bootstrap method may accept more parameters. The value of these
+ * parameters are static and are denoted by indices in the constant pool. Entries
+ * are only valid if they are one of the following types in the constant pool:
+ * - {@link com.nur1popcorn.basm.classfile.constants.ConstantName}
+ * - {@link com.nur1popcorn.basm.classfile.constants.ConstantInteger}
+ * - {@link com.nur1popcorn.basm.classfile.constants.ConstantLong}
+ * - {@link com.nur1popcorn.basm.classfile.constants.ConstantMethodHandle}
+ * In order to add these extra parameters, they must be specified in the
+ * 'argumentIndices' array. The indices in this array will be the order that they
+ * are given in the method and will assume their literal types in the JRE.
+ *
+ * Finally, a bootstrap method must return a {@link java.lang.invoke.CallSite}.
+ * The value returned will be cached by the JVM and invoked anytime that the
+ * invokedynamic instruction referencing this entry is performed.
+ *
  * @author Ben Kinney
  * @since 1.0.0-alpha
  */
 public final class BootstrapMethodsEntry {
-    private int methodRef;
-    private int[] arguments;
+    /* The value of the 'methodRefIndex' variable is an index into the constant pool
+     * with the type of the entry being a ConstantMethodRef.
+     *
+     * The method being referenced will be the bootstrap method called by the JVM.
+     */
+    private int methodRefIndex;
 
-    public BootstrapMethodsEntry(int methodRef, int[] arguments)
+    /* The value of the 'argumentIndices' variable determines additional parameters
+     * that will be given to the bootstrap method by the JVM.
+     */
+    private int[] argumentIndices;
+
+    public BootstrapMethodsEntry(int methodRefIndex, int[] argumentIndices)
     {
-        this.methodRef = methodRef;
-        this.arguments = arguments;
+        this.methodRefIndex = methodRefIndex;
+        this.argumentIndices = argumentIndices;
     }
 
-    public int getMethodRef() {
-        return methodRef;
+    public int getMethodRefIndex() {
+        return methodRefIndex;
     }
 
-    public int[] getArguments() {
+    public int[] getArgumentIndices() {
+        return argumentIndices;
+    }
+
+    public int getArgumentIndex(int argument) {
+        return argumentIndices[argument];
+    }
+
+    public ConstantMethodRef indexMethodRef(ConstantPool pool) {
+        return pool.getEntry(methodRefIndex, CONSTANT_METHOD_REF);
+    }
+
+    public ConstantInfo[] indexArguments(ConstantPool pool) {
+        ConstantInfo[] arguments = new ConstantInfo[argumentIndices.length];
+        for(int i = 0; i < argumentIndices.length; i++)
+            arguments[i] = pool.getEntry(argumentIndices[i]);
         return arguments;
     }
 
+    public ConstantInfo indexArgument(ConstantPool pool, int argument) {
+        return pool.getEntry(argumentIndices[argument]);
+    }
+
+    public void setMethodRefIndex(int methodRefIndex) {
+        this.methodRefIndex = methodRefIndex;
+    }
+
+    public void setArgumentIndices(int[] argumentIndices) {
+        this.argumentIndices = argumentIndices;
+    }
+
+    public void setArgumentIndex(int argument, int entryIndex) {
+        argumentIndices[argument] = entryIndex;
+    }
+
     public void write(DataOutputStream os) throws IOException {
-        os.writeShort(methodRef);
-        os.writeShort(arguments.length);
-        for(int argument : arguments)
+        os.writeShort(methodRefIndex);
+        os.writeShort(argumentIndices.length);
+        for(int argument : argumentIndices)
             os.writeShort(argument);
     }
 
@@ -56,14 +125,14 @@ public final class BootstrapMethodsEntry {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         BootstrapMethodsEntry that = (BootstrapMethodsEntry) o;
-        return methodRef == that.methodRef &&
-            Arrays.equals(arguments, that.arguments);
+        return methodRefIndex == that.methodRefIndex &&
+               Arrays.equals(argumentIndices, that.argumentIndices);
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(methodRef);
-        result = 31 * result + Arrays.hashCode(arguments);
+        int result = Objects.hash(methodRefIndex);
+        result = 31 * result + Arrays.hashCode(argumentIndices);
         return result;
     }
 }

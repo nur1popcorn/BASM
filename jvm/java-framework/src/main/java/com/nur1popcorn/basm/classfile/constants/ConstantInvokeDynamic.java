@@ -19,6 +19,8 @@
 package com.nur1popcorn.basm.classfile.constants;
 
 import com.nur1popcorn.basm.classfile.ConstantPool;
+import com.nur1popcorn.basm.classfile.attributes.AttributeBootstrapMethods;
+import com.nur1popcorn.basm.classfile.attributes.BootstrapMethodsEntry;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -44,16 +46,19 @@ import static com.nur1popcorn.basm.Constants.CONSTANT_NAME_AND_TYPE;
  * @since 1.0.0-alpha
  */
 public final class ConstantInvokeDynamic extends ConstantInfo implements IConstantPoolPointer {
-    /* This 'bootstrapMethodAttrIndex' points to a method within the 'BootstrapMethods Attribute's' table and
-     * is used to obtain said method.
+    /* The value of the 'bootstrapMethodAttrIndex' references an index into the bootstrap methods
+     * attribute array.
+     *
+     * See the AttributeBootstrapMethods and BootstrapMethodsEntry classes for more information.
      */
     private int bootstrapMethodAttrIndex /* u2 */,
 
-    /* The value of this 'nameAndTypeIndex' seems to be almost fully ignored by the JVM, therefore
-     * I suggest to fully rely on the 'bootstrapMethodAttrIndex' as a way of obtaining the name and type
-     * of the method invoked.
+    /* The name and the type for the entry in the constant pool at the index of the 'nameAndTypeIndex'
+     * is passed to the bootstrap method (pointed to by the bootstrapMethodAttrIndex) when the JVM
+     * first encounters the invoke dynamic instruction. Other than that, the name and type are
+     * ignored by the JVM.
      *
-     * If someone could enlighten me on this i would be delighted :)
+     * See the AttributeBootstrapMethods and BootstrapMethodsEntry classes for more information.
      */
                 nameAndTypeIndex /* u2 */;
 
@@ -141,6 +146,10 @@ public final class ConstantInvokeDynamic extends ConstantInfo implements IConsta
             nameAndTypeIndex,
             CONSTANT_NAME_AND_TYPE
         );
+    }
+
+    public BootstrapMethodsEntry indexBootstrapMethod(AttributeBootstrapMethods attribute) {
+        return attribute.getEntry(bootstrapMethodAttrIndex);
     }
 
     @Override
