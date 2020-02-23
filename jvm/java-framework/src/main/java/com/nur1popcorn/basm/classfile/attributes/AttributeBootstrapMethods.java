@@ -45,8 +45,7 @@ public final class AttributeBootstrapMethods extends AttributeInfo {
      * @param index The index.
      * @return The entry.
      */
-    public BootstrapMethodsEntry getEntry(int index)
-    {
+    public BootstrapMethodsEntry getEntry(int index) {
         return bootstrapMethods[index];
     }
 
