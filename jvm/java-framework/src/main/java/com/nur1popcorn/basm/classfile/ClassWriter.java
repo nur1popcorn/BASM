@@ -94,6 +94,26 @@ public final class ClassWriter implements ClassVisitor {
         attributes.add(attribute);
     }
 
+    @Override
+    public void visit(AttributeConstantValue attribute) {
+        attributes.add(attribute);
+    }
+
+    @Override
+    public void visit(AttributeCode attribute) {
+        attributes.add(attribute);
+    }
+
+    @Override
+    public void visit(AttributeLineNumberTable attribute) {
+        attributes.add(attribute);
+    }
+
+    @Override
+    public void visit(AttributeBootstrapMethods attribute) {
+        attributes.add(attribute);
+    }
+
     public void write(OutputStream out) throws IOException {
         write(new DataOutputStream(out));
     }
