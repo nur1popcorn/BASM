@@ -19,6 +19,7 @@ package com.nur1popcorn.basm.classfile.attributes;
 
 import com.nur1popcorn.basm.classfile.ConstantPool;
 import com.nur1popcorn.basm.classfile.constants.ConstantInfo;
+import com.nur1popcorn.basm.classfile.constants.ConstantMethodHandle;
 import com.nur1popcorn.basm.classfile.constants.ConstantMethodRef;
 
 import java.io.DataOutputStream;
@@ -26,7 +27,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
 
-import static com.nur1popcorn.basm.Constants.CONSTANT_METHOD_REF;
+import static com.nur1popcorn.basm.Constants.CONSTANT_METHOD_HANDLE;
 
 /**
  * The {@link BootstrapMethodsEntry} holds information about which method is called
@@ -57,19 +58,19 @@ import static com.nur1popcorn.basm.Constants.CONSTANT_METHOD_REF;
  */
 public final class BootstrapMethodsEntry {
     /* The value of the 'methodRefIndex' variable is an index into the constant pool
-     * with the type of the entry being a ConstantMethodRef.
+     * with the type of the entry being a ConstantMethodHandle.
      *
      * The method being referenced will be the bootstrap method called by the JVM.
      */
-    private int methodRefIndex;
+    private int methodHandleIndex;
 
     /* The value of the 'argumentIndices' variable determines additional parameters
      * that will be given to the bootstrap method by the JVM.
      */
     private int[] argumentIndices;
 
-    public BootstrapMethodsEntry(int methodRefIndex, int[] argumentIndices) {
-        this.methodRefIndex = methodRefIndex;
+    public BootstrapMethodsEntry(int methodHandleIndex, int[] argumentIndices) {
+        this.methodHandleIndex = methodHandleIndex;
         this.argumentIndices = argumentIndices;
     }
 
@@ -77,8 +78,8 @@ public final class BootstrapMethodsEntry {
      * Get the index of the {@link ConstantMethodRef}.
      * @return The index.
      */
-    public int getMethodRefIndex() {
-        return methodRefIndex;
+    public int getMethodHandleIndex() {
+        return methodHandleIndex;
     }
 
     /**
@@ -99,12 +100,12 @@ public final class BootstrapMethodsEntry {
     }
 
     /**
-     * Get the {@link ConstantMethodRef} in the constant pool.
+     * Get the {@link ConstantMethodHandle} in the constant pool.
      * @param pool The constant pool.
-     * @return The {@link ConstantMethodRef}.
+     * @return The {@link ConstantMethodHandle}.
      */
-    public ConstantMethodRef indexMethodRef(ConstantPool pool) {
-        return pool.getEntry(methodRefIndex, CONSTANT_METHOD_REF);
+    public ConstantMethodHandle indexMethodHandle(ConstantPool pool) {
+        return pool.getEntry(methodHandleIndex, CONSTANT_METHOD_HANDLE);
     }
 
     /**
@@ -131,10 +132,10 @@ public final class BootstrapMethodsEntry {
 
     /**
      * Set the index that declares the bootstrap method.
-     * @param methodRefIndex The index.
+     * @param methodHandleIndex The index.
      */
-    public void setMethodRefIndex(int methodRefIndex) {
-        this.methodRefIndex = methodRefIndex;
+    public void setMethodHandleIndex(int methodHandleIndex) {
+        this.methodHandleIndex = methodHandleIndex;
     }
 
     /**
@@ -155,7 +156,7 @@ public final class BootstrapMethodsEntry {
     }
 
     public void write(DataOutputStream os) throws IOException {
-        os.writeShort(methodRefIndex);
+        os.writeShort(methodHandleIndex);
         os.writeShort(argumentIndices.length);
         for(int argument : argumentIndices)
             os.writeShort(argument);
@@ -166,13 +167,13 @@ public final class BootstrapMethodsEntry {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         BootstrapMethodsEntry that = (BootstrapMethodsEntry) o;
-        return methodRefIndex == that.methodRefIndex &&
+        return methodHandleIndex == that.methodHandleIndex &&
                Arrays.equals(argumentIndices, that.argumentIndices);
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(methodRefIndex);
+        int result = Objects.hash(methodHandleIndex);
         result = 31 * result + Arrays.hashCode(argumentIndices);
         return result;
     }
