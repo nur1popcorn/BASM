@@ -19,26 +19,19 @@
 package com.nur1popcorn.basm.classfile.attributes;
 
 public interface AttributeVisitor {
-    default void visit(AttributeUnknown attribute) {
-        throw new UnsupportedOperationException();
-    }
+    default void visit(AttributeUnknown attribute) {}
 
-    default void visit(AttributeConstantValue attribute) {
-        throw new UnsupportedOperationException();
-    }
-    default void visit(AttributeCode attribute) {
-        throw new UnsupportedOperationException();
-    }
-    default void visit(AttributeSourceFile attribute) {
-        throw new UnsupportedOperationException();
-    }
-    default void visit(AttributeLineNumberTable attribute) {
-        throw new UnsupportedOperationException();
-    }
-    default void visit(AttributeDeprecated attribute) {
-        throw new UnsupportedOperationException();
-    }
-    default void visit(AttributeBootstrapMethods attribute) {
-        throw new UnsupportedOperationException("");
-    }
+    default void visit(AttributeConstantValue attribute) {}
+
+    default void visit(AttributeCode attribute) {}
+
+    default void visit(AttributeSourceFile attribute) {}
+
+    default void visit(AttributeLineNumberTable attribute) {}
+
+    default void visit(AttributeDeprecated attribute) {}
+
+    default void visit(AttributeBootstrapMethods attribute) {}
+
+    default void visit(AttributeStackMapTable attribute) {}
 }

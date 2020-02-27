@@ -84,8 +84,6 @@ public final class AttributeCode extends AttributeInfo {
     @Override
     public void accept(AttributeVisitor v) {
         v.visit(this);
-        for(AttributeInfo info : attributes)
-            info.accept(v);
     }
 
     /**

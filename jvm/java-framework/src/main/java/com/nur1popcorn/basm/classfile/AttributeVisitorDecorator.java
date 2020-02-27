@@ -24,39 +24,50 @@ import com.nur1popcorn.basm.classfile.attributes.*;
  * @author Ben Kinney
  * @since 1.0.0-alpha
  */
-public abstract class ClassVisitorDecorator extends AttributeVisitorDecorator implements ClassVisitor {
-    private ClassVisitor parent;
+public abstract class AttributeVisitorDecorator implements AttributeVisitor {
+    private AttributeVisitor parent;
 
-    /**
-     * @param parent Parent to the decorator.
-     */
-    public ClassVisitorDecorator(ClassVisitor parent) {
-        super(parent);
+    public AttributeVisitorDecorator(AttributeVisitor parent) {
         this.parent = parent;
     }
 
     @Override
-    public void visitHead(int minorVersion, int majorVersion, ConstantPool constantPool) {
-        parent.visitHead(minorVersion, majorVersion, constantPool);
+    public void visit(AttributeSourceFile attribute) {
+        parent.visit(attribute);
     }
 
     @Override
-    public void visitBody(int access, int thisClass, int superClass) {
-        parent.visitBody(access, thisClass, superClass);
+    public void visit(AttributeDeprecated attribute) {
+        parent.visit(attribute);
     }
 
     @Override
-    public void visitInterface(int index) {
-        parent.visitInterface(index);
+    public void visit(AttributeConstantValue attribute) {
+        parent.visit(attribute);
     }
 
     @Override
-    public AttributeVisitor visitField(FieldMethodInfo field) {
-        return parent.visitField(field);
+    public void visit(AttributeCode attribute) {
+        parent.visit(attribute);
     }
 
     @Override
-    public AttributeVisitor visitMethod(FieldMethodInfo method) {
-        return parent.visitMethod(method);
+    public void visit(AttributeLineNumberTable attribute) {
+        parent.visit(attribute);
+    }
+
+    @Override
+    public void visit(AttributeBootstrapMethods attribute) {
+        parent.visit(attribute);
+    }
+
+    @Override
+    public void visit(AttributeStackMapTable attribute) {
+        parent.visit(attribute);
+    }
+
+    @Override
+    public void visit(AttributeUnknown attribute) {
+        parent.visit(attribute);
     }
 }
