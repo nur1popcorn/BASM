@@ -119,6 +119,11 @@ public final class ClassWriter implements ClassVisitor {
         attributes.add(attribute);
     }
 
+    @Override
+    public void visit(AttributeSynthetic attribute) {
+        attributes.add(attribute);
+    }
+
     public void write(OutputStream out) throws IOException {
         write(new DataOutputStream(out));
     }

@@ -19,14 +19,19 @@ package com.nur1popcorn.basm.classfile.attributes.factory;
 
 import com.nur1popcorn.basm.classfile.ConstantPool;
 import com.nur1popcorn.basm.classfile.attributes.AttributeBootstrapMethods;
+import com.nur1popcorn.basm.classfile.attributes.AttributeCode;
 import com.nur1popcorn.basm.classfile.attributes.BootstrapMethodsEntry;
 
 import java.io.DataInputStream;
 import java.io.IOException;
 
 /**
+ * The {@link BootstrapMethodsFactory} is responsible for reading {@link AttributeBootstrapMethods}.
+ *
+ * @see AttributeBootstrapMethods
+ *
  * @author Ben Kinney
- * @since 1.0.0-alpha
+ * @since 1.1.0-alpha
  */
 public final class BootstrapMethodsFactory implements AttributeInfoFactory<AttributeBootstrapMethods> {
     @Override

@@ -106,6 +106,16 @@ public final class FieldMethodInfo extends AccessFlags implements IConstantPoolP
         attributes.add(attribute);
     }
 
+    @Override
+    public void visit(AttributeSynthetic attribute) {
+        attributes.add(attribute);
+    }
+
+    @Override
+    public void visit(AttributeMethodParameters attribute) {
+        attributes.add(attribute);
+    }
+
     /**
      * @return
      */

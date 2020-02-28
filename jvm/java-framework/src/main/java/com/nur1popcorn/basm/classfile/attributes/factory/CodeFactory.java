@@ -28,6 +28,8 @@ import java.io.IOException;
 /**
  * The {@link CodeFactory} is responsible for reading {@link AttributeCode}s.
  *
+ * @see AttributeCode
+ *
  * @author nur1popcorn
  * @since 1.1.0-alpha
  */

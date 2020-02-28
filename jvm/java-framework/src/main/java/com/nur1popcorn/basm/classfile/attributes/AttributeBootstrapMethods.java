@@ -15,6 +15,7 @@
  * {BASM} is based on this document: https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html
  *
  */
+
 package com.nur1popcorn.basm.classfile.attributes;
 
 import com.nur1popcorn.basm.classfile.ConstantPool;
@@ -26,16 +27,19 @@ import java.util.Arrays;
 /**
  * The {@link AttributeBootstrapMethods} is an {@link AttributeInfo} which references the methods
  * that are used to resolve the methods called by invokedynamic instructions.
+ * <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.23">
+ *     4.7.23. The BootstrapMethods Attribute
+ * </a>
  *
- * See the {@link BootstrapMethodsEntry} class for more information.
+ * @see BootstrapMethodsEntry
  *
  * @author Ben Kinney
  * @since 1.0.0-alpha
  */
 public final class AttributeBootstrapMethods extends AttributeInfo {
-    private BootstrapMethodsEntry[] bootstrapMethods;
+    private BootstrapMethodsEntry bootstrapMethods[];
 
-    public AttributeBootstrapMethods(int nameIndex, int attributeLength, BootstrapMethodsEntry[] bootstrapMethods) {
+    public AttributeBootstrapMethods(int nameIndex, int attributeLength, BootstrapMethodsEntry bootstrapMethods[]) {
         super(nameIndex, attributeLength);
         this.bootstrapMethods = bootstrapMethods;
     }
