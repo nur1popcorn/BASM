@@ -16,25 +16,35 @@
  *
  */
 
-package com.nur1popcorn.basm.classfile.attributes.factory;
+package com.nur1popcorn.basm.classfile.attributes;
 
+import com.nur1popcorn.basm.classfile.AccessFlags;
 import com.nur1popcorn.basm.classfile.ConstantPool;
-import com.nur1popcorn.basm.classfile.attributes.AttributeDeprecated;
+import com.nur1popcorn.basm.classfile.constants.ConstantUTF8;
 
-import java.io.DataInputStream;
-import java.io.IOException;
+import static com.nur1popcorn.basm.Constants.CONSTANT_UTF8;
 
 /**
- * The {@link DeprecatedFactory} is responsible for reading {@link AttributeDeprecated}.
+ * The {@link MethodParameter} class holds the nameIndex and access flags of a method parameter.
  *
- * @see AttributeDeprecated
+ * @see AttributeMethodParameters
  *
- * @author nur1popcorn
+ * @author Ben Kinney
  * @since 1.1.0-alpha
  */
-public final class DeprecatedFactory implements AttributeInfoFactory<AttributeDeprecated> {
-    @Override
-    public AttributeDeprecated createAttribute(DataInputStream in, int nameIndex, int attributeLength, ConstantPool cp) throws IOException {
-        return new AttributeDeprecated(nameIndex, attributeLength);
+public final class MethodParameter extends AccessFlags {
+    private int nameIndex;
+
+    public MethodParameter(int nameIndex, int accessFlags) {
+        super(accessFlags);
+        this.nameIndex = nameIndex;
+    }
+
+    public int getNameIndex() {
+        return nameIndex;
+    }
+
+    public ConstantUTF8 indexName(ConstantPool constantPool) {
+        return constantPool.getEntry(nameIndex, CONSTANT_UTF8);
     }
 }

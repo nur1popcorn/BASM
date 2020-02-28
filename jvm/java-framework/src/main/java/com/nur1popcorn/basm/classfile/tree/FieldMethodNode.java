@@ -20,15 +20,12 @@ package com.nur1popcorn.basm.classfile.tree;
 
 import com.nur1popcorn.basm.classfile.AccessFlags;
 import com.nur1popcorn.basm.classfile.ClassVisitor;
-import com.nur1popcorn.basm.classfile.attributes.AttributeDeprecated;
-import com.nur1popcorn.basm.classfile.attributes.AttributeInfo;
-import com.nur1popcorn.basm.classfile.attributes.AttributeUnknown;
-import com.nur1popcorn.basm.classfile.attributes.AttributeVisitor;
+import com.nur1popcorn.basm.classfile.attributes.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class FieldMethodNode extends AccessFlags implements AttributeVisitor {
+public abstract class FieldMethodNode extends AccessFlags implements EmptyAttributeVisitor {
     private String name,
                    desc;
     protected final List<AttributeInfo> attributes = new ArrayList<>();

@@ -23,6 +23,15 @@ import com.nur1popcorn.basm.classfile.ConstantPool;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
+/**
+ * The {@link AttributeDeprecated} is an {@link AttributeInfo} which denotes a deprecated method.
+ * <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.15">
+ *     4.7.15. The Deprecated Attribute
+ * </a>
+ *
+ * @author nur1popcorn
+ * @since 1.1.0-alpha
+ */
 public final class AttributeDeprecated extends AttributeInfo {
     /**
      * @param nameIndex The index of the CONSTANT_UTF8 which identifies the type of {@link AttributeInfo}.

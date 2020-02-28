@@ -9,6 +9,8 @@ import java.io.IOException;
 /**
  * The {@link SourceFileFactory} is responsible for reading {@link AttributeSourceFile}s.
  *
+ * @see AttributeSourceFile
+ *
  * @author nur1popcorn
  * @since 1.1.0-alpha
  */

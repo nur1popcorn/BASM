@@ -27,6 +27,8 @@ import java.io.IOException;
 /**
  * The {@link ConstantValueFactory} is responsible for reading {@link AttributeConstantValue}s.
  *
+ * @see AttributeConstantValue
+ *
  * @author nur1popcorn
  * @since 1.1.0-alpha
  */

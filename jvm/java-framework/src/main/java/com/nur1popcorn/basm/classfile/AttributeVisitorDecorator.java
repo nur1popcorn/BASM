@@ -22,7 +22,7 @@ import com.nur1popcorn.basm.classfile.attributes.*;
 
 /**
  * @author Ben Kinney
- * @since 1.0.0-alpha
+ * @since 1.1.0-alpha
  */
 public abstract class AttributeVisitorDecorator implements AttributeVisitor {
     private AttributeVisitor parent;
@@ -68,6 +68,16 @@ public abstract class AttributeVisitorDecorator implements AttributeVisitor {
 
     @Override
     public void visit(AttributeUnknown attribute) {
+        parent.visit(attribute);
+    }
+
+    @Override
+    public void visit(AttributeSynthetic attribute) {
+        parent.visit(attribute);
+    }
+
+    @Override
+    public void visit(AttributeMethodParameters attribute) {
         parent.visit(attribute);
     }
 }

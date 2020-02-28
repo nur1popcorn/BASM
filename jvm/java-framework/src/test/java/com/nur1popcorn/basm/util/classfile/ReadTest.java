@@ -136,24 +136,30 @@ public final class ReadTest {
     }
 
     public static class TestVisitor extends ClassVisitorDecorator {
+        private ConstantPool constantPool;
+
         public TestVisitor(ClassVisitor writer) {
             super(writer);
         }
 
         @Override
+        public void visitHead(int minorVersion, int majorVersion, ConstantPool constantPool) {
+            this.constantPool = constantPool;
+            super.visitHead(minorVersion, majorVersion, constantPool);
+        }
+
+        @Override
         public AttributeVisitor visitMethod(FieldMethodInfo method) {
-            return new TestMethodVisitor(super.visitMethod(method));
+            return new TestMethodVisitor(super.visitMethod(method), constantPool);
         }
     }
 
     public static class TestMethodVisitor extends AttributeVisitorDecorator {
-        public TestMethodVisitor(AttributeVisitor parent) {
-            super(parent);
-        }
+        private ConstantPool constantPool;
 
-        @Override
-        public void visit(AttributeCode attribute) {
-            super.visit(attribute);
+        public TestMethodVisitor(AttributeVisitor parent, ConstantPool constantPool) {
+            super(parent);
+            this.constantPool = constantPool;
         }
     }
 }

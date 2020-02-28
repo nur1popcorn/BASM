@@ -19,22 +19,22 @@
 package com.nur1popcorn.basm.classfile.attributes.factory;
 
 import com.nur1popcorn.basm.classfile.ConstantPool;
-import com.nur1popcorn.basm.classfile.attributes.AttributeDeprecated;
+import com.nur1popcorn.basm.classfile.attributes.AttributeSynthetic;
 
 import java.io.DataInputStream;
 import java.io.IOException;
 
 /**
- * The {@link DeprecatedFactory} is responsible for reading {@link AttributeDeprecated}.
+ * The {@link SyntheticFactory} is responsible for reading {@link AttributeSynthetic}.
  *
- * @see AttributeDeprecated
+ * @see AttributeSynthetic
  *
- * @author nur1popcorn
+ * @author Ben Kinney
  * @since 1.1.0-alpha
  */
-public final class DeprecatedFactory implements AttributeInfoFactory<AttributeDeprecated> {
+public final class SyntheticFactory implements AttributeInfoFactory<AttributeSynthetic> {
     @Override
-    public AttributeDeprecated createAttribute(DataInputStream in, int nameIndex, int attributeLength, ConstantPool cp) throws IOException {
-        return new AttributeDeprecated(nameIndex, attributeLength);
+    public AttributeSynthetic createAttribute(DataInputStream in, int nameIndex, int attributeLength, ConstantPool cp) throws IOException {
+        return new AttributeSynthetic(nameIndex, attributeLength);
     }
 }

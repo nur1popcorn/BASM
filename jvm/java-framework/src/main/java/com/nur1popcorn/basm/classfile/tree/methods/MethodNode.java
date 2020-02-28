@@ -46,9 +46,16 @@ public final class MethodNode extends FieldMethodNode {
     @Override
     public void visit(AttributeLineNumberTable attribute) {
         attributes.add(attribute);
-        for(LineNumberTableEntry lineNumberTableEntry : attribute.getTable()) {
+    }
 
-        }
+    @Override
+    public void visit(AttributeSynthetic attribute) {
+        attributes.add(attribute);
+    }
+
+    @Override
+    public void visit(AttributeMethodParameters attribute) {
+        attributes.add(attribute);
     }
 
     @Override

@@ -135,6 +135,11 @@ public final class ClassFile extends AccessFlags implements ClassVisitor, ClassV
     }
 
     @Override
+    public void visit(AttributeSynthetic attribute) {
+        attributes.add(attribute);
+    }
+
+    @Override
     public void visit(AttributeSourceFile attribute) {
         attributes.add(attribute);
     }

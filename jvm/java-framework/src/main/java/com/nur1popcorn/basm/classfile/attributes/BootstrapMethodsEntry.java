@@ -53,8 +53,11 @@ import static com.nur1popcorn.basm.Constants.CONSTANT_METHOD_HANDLE;
  * The value returned will be cached by the JVM and invoked anytime that the
  * invokedynamic instruction referencing this entry is performed.
  *
+ * @see AttributeBootstrapMethods
+ * @see com.nur1popcorn.basm.classfile.tree.methods.instructions.InvokeDynamicInstruction
+ *
  * @author Ben Kinney
- * @since 1.0.0-alpha
+ * @since 1.1.0-alpha
  */
 public final class BootstrapMethodsEntry {
     /* The value of the 'methodRefIndex' variable is an index into the constant pool

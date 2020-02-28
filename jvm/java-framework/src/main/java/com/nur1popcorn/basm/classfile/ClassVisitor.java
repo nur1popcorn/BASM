@@ -19,7 +19,8 @@
 package com.nur1popcorn.basm.classfile;
 
 import com.nur1popcorn.basm.classfile.attributes.AttributeInfo;
-import com.nur1popcorn.basm.classfile.attributes.AttributeVisitor;;
+import com.nur1popcorn.basm.classfile.attributes.AttributeVisitor;
+import com.nur1popcorn.basm.classfile.attributes.EmptyAttributeVisitor;;
 
 import java.io.IOException;
 
@@ -34,7 +35,7 @@ import java.io.IOException;
  * @author nur1popcorn
  * @since 1.0.0-alpha
  */
-public interface ClassVisitor extends AttributeVisitor {
+public interface ClassVisitor extends EmptyAttributeVisitor {
 
     /**
      * <p>Visits the head part of the class.</p>
@@ -48,8 +49,7 @@ public interface ClassVisitor extends AttributeVisitor {
      *
      * @throws IOException if an error occurs while reading the JavaClass.
      */
-    default void visitHead(int minorVersion, int majorVersion, ConstantPool constantPool)
-    {}
+    default void visitHead(int minorVersion, int majorVersion, ConstantPool constantPool) {}
 
     /**
      * <p>Visits the body part of the class.</p>
@@ -71,11 +71,9 @@ public interface ClassVisitor extends AttributeVisitor {
      *
      * @throws IOException if an error occurs while reading the JavaClass.
      */
-    default void visitBody(int access, int thisClass, int superClass)
-    {}
+    default void visitBody(int access, int thisClass, int superClass) {}
 
-    default void visitInterface(int index)
-    {}
+    default void visitInterface(int index) {}
 
     /**
      * Visits the fields of the JavaClass.

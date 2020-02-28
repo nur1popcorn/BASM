@@ -43,6 +43,8 @@ public final class AttributeFactory {
         "ConstantValue", new ConstantValueFactory(),
         /* https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.3 */
         "Code", new CodeFactory(),
+        /* https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.8 */
+        "Synthetic", new SyntheticFactory(),
         /* https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.10 */
         "SourceFile", new SourceFileFactory(),
         /* https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.12 */
@@ -50,7 +52,9 @@ public final class AttributeFactory {
         /* https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.15 */
         "Deprecated", new DeprecatedFactory(),
         /* https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.23 */
-        "BootstrapMethods", new BootstrapMethodsFactory()
+        "BootstrapMethods", new BootstrapMethodsFactory(),
+        /* https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.24 */
+        "MethodParameters", new MethodParametersFactory()
     );
 
     /**

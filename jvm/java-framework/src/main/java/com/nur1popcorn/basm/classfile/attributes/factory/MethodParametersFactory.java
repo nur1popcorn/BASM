@@ -19,22 +19,26 @@
 package com.nur1popcorn.basm.classfile.attributes.factory;
 
 import com.nur1popcorn.basm.classfile.ConstantPool;
-import com.nur1popcorn.basm.classfile.attributes.AttributeDeprecated;
+import com.nur1popcorn.basm.classfile.attributes.AttributeMethodParameters;
+import com.nur1popcorn.basm.classfile.attributes.MethodParameter;
 
 import java.io.DataInputStream;
 import java.io.IOException;
 
 /**
- * The {@link DeprecatedFactory} is responsible for reading {@link AttributeDeprecated}.
+ * The {@link MethodParametersFactory} is responsible for reading {@link AttributeMethodParameters}.
  *
- * @see AttributeDeprecated
+ * @see AttributeMethodParameters
  *
- * @author nur1popcorn
+ * @author Ben Kinney
  * @since 1.1.0-alpha
  */
-public final class DeprecatedFactory implements AttributeInfoFactory<AttributeDeprecated> {
+public final class MethodParametersFactory implements AttributeInfoFactory<AttributeMethodParameters> {
     @Override
-    public AttributeDeprecated createAttribute(DataInputStream in, int nameIndex, int attributeLength, ConstantPool cp) throws IOException {
-        return new AttributeDeprecated(nameIndex, attributeLength);
+    public AttributeMethodParameters createAttribute(DataInputStream in, int nameIndex, int attributeLength, ConstantPool cp) throws IOException {
+        final MethodParameter parameters[] = new MethodParameter[in.readUnsignedByte()];
+        for(int i = 0; i < parameters.length; i++)
+            parameters[i] = new MethodParameter(in.readShort(), in.readShort());
+        return new AttributeMethodParameters(nameIndex, attributeLength, parameters);
     }
 }

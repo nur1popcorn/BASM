@@ -23,6 +23,7 @@ import com.nur1popcorn.basm.classfile.FieldMethodInfo;
 import com.nur1popcorn.basm.classfile.ClassVisitor;
 import com.nur1popcorn.basm.classfile.attributes.AttributeConstantValue;
 import com.nur1popcorn.basm.classfile.attributes.AttributeInfo;
+import com.nur1popcorn.basm.classfile.attributes.AttributeSynthetic;
 import com.nur1popcorn.basm.classfile.attributes.AttributeVisitor;
 import com.nur1popcorn.basm.classfile.tree.ConstantPoolGenerator;
 import com.nur1popcorn.basm.classfile.tree.FieldMethodNode;
@@ -47,6 +48,11 @@ public final class FieldNode extends FieldMethodNode {
 
     @Override
     public void visit(AttributeConstantValue attribute) {
+        attributes.add(attribute);
+    }
+
+    @Override
+    public void visit(AttributeSynthetic attribute) {
         attributes.add(attribute);
     }
 

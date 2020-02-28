@@ -86,7 +86,7 @@ public abstract class AttributeInfo {
      * @return The {@link AttributeInfo}'s full length including the six bytes the used for the
      *         attribute_name_index attribute_length.
      */
-    public int getRealAttributeLength() {
+    public final int getRealAttributeLength() {
         return attributeLength + 6;
     }
 

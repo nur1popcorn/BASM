@@ -16,25 +16,24 @@
  *
  */
 
-package com.nur1popcorn.basm.classfile.attributes.factory;
-
-import com.nur1popcorn.basm.classfile.ConstantPool;
-import com.nur1popcorn.basm.classfile.attributes.AttributeDeprecated;
-
-import java.io.DataInputStream;
-import java.io.IOException;
+package com.nur1popcorn.basm.classfile.attributes;
 
 /**
- * The {@link DeprecatedFactory} is responsible for reading {@link AttributeDeprecated}.
+ * The {@link AttributeSynthetic} is an optional attribute that denotes a synthetic class, field, or method.
+ * <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.8">
+ *     4.7.8. The Synthetic Attribute
+ * </a>
  *
- * @see AttributeDeprecated
- *
- * @author nur1popcorn
+ * @author Ben Kinney
  * @since 1.1.0-alpha
  */
-public final class DeprecatedFactory implements AttributeInfoFactory<AttributeDeprecated> {
+public final class AttributeSynthetic extends AttributeInfo {
+    public AttributeSynthetic(int nameIndex, int attributeLength) {
+        super(nameIndex, attributeLength);
+    }
+
     @Override
-    public AttributeDeprecated createAttribute(DataInputStream in, int nameIndex, int attributeLength, ConstantPool cp) throws IOException {
-        return new AttributeDeprecated(nameIndex, attributeLength);
+    public void accept(AttributeVisitor v) {
+        v.visit(this);
     }
 }
