@@ -124,8 +124,8 @@ public class ConstantPool implements Iterable<ConstantInfo> {
      * @throws IOException If an error occurs during the process of writing to the {@link DataOutputStream}.
      */
     public final void write(DataOutputStream os) throws IOException {
-        os.writeShort(cpEntries.length);
-        for(int i = 1 /* the cp's size is 1 less than given */; i < cpEntries.length; i++) {
+        os.writeShort(getSize());
+        for(int i = 1 /* the cp's size is 1 less than given */; i < getSize(); i++) {
             final ConstantInfo info = cpEntries[i];
             if(info == null)
                 continue;
@@ -221,6 +221,8 @@ public class ConstantPool implements Iterable<ConstantInfo> {
     public int indexOf(ConstantInfo info) {
         for(int i = 1 /* the cp's size is 1 less than given */; i < getSize(); i++) {
             final ConstantInfo entry = cpEntries[i];
+            if(entry == null)
+                continue;
             if(entry.equals(info))
                 return i;
             // longs and doubles take up 2 spaces in the constant pool.

@@ -76,7 +76,7 @@ public final class InstructionList extends AbstractList<Instruction> implements 
      * @throws IOException If an error occurs during the process of reading from the {@link ByteDataInputStream}.
      * @throws MalformedClassFileException If an {@link Instruction} is unknown or malformed.
      */
-    InstructionList(byte code[], ConstantPool constantPool) throws IOException {
+    public InstructionList(byte code[], ConstantPool constantPool) throws IOException {
         final ByteDataInputStream in = new ByteDataInputStream(code);
         int length = 0;
         for(;in.available() != 0; length++)
