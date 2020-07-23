@@ -38,4 +38,6 @@ public interface AttributeVisitor {
     void visit(AttributeSynthetic attribute);
 
     void visit(AttributeMethodParameters attribute);
+
+    void visit(AttributeLocalVariableTable attribute);
 }

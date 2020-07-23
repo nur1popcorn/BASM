@@ -65,6 +65,19 @@ public final class ConstantPoolGenerator extends ConstantPool {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public ConstantPoolGenerator(ConstantInfo[] cpEntries, ClassVersionProvider provider) {
+        super(cpEntries);
+        this.provider = provider;
+    }
+
+    @Override
+    public int getSize() {
+        return index;
+    }
+
+    /**
      *
      * @param info
      *
@@ -92,6 +105,7 @@ public final class ConstantPoolGenerator extends ConstantPool {
                 cpEntries,
                 index << 1
             );
+        int realIndex = index;
         cpEntries[index++] = info;
         if(info instanceof IConstantPoolPointer)
             ((IConstantPoolPointer) info)
@@ -101,7 +115,7 @@ public final class ConstantPoolGenerator extends ConstantPool {
         if(tag == CONSTANT_LONG ||
            tag == CONSTANT_DOUBLE)
             index++ /* padding */;
-        return index;
+        return realIndex;
     }
 
     private void removeSafe(int index) {

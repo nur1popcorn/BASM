@@ -1,6 +1,7 @@
 package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
 import com.nur1popcorn.basm.classfile.ConstantPool;
+import com.nur1popcorn.basm.classfile.attributes.BootstrapMethodsEntry;
 import com.nur1popcorn.basm.classfile.constants.ConstantInvokeDynamic;
 import com.nur1popcorn.basm.classfile.constants.ConstantNameAndType;
 import com.nur1popcorn.basm.classfile.tree.Type;
@@ -51,6 +52,10 @@ public final class InvokeDynamicInstruction extends CPInstruction<ConstantInvoke
             nameAndType.indexDesc(cp)
                 .bytes
         );
+    }
+
+    public ConstantInvokeDynamic getConstant() {
+        return info;
     }
 
     @Override

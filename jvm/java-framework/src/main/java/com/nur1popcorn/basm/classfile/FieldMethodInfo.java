@@ -116,6 +116,11 @@ public final class FieldMethodInfo extends AccessFlags implements IConstantPoolP
         attributes.add(attribute);
     }
 
+    @Override
+    public void visit(AttributeLocalVariableTable attribute) {
+        attributes.add(attribute);
+    }
+
     /**
      * @return
      */

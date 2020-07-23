@@ -46,8 +46,6 @@ public interface ClassVisitor extends EmptyAttributeVisitor {
      *                     </a>
      * @param majorVersion
      * @param constantPool
-     *
-     * @throws IOException if an error occurs while reading the JavaClass.
      */
     default void visitHead(int minorVersion, int majorVersion, ConstantPool constantPool) {}
 
@@ -68,8 +66,6 @@ public interface ClassVisitor extends EmptyAttributeVisitor {
      *                   <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.1-200-G">
      *                       SuperClass 4.1-200-G
      *                   </a>
-     *
-     * @throws IOException if an error occurs while reading the JavaClass.
      */
     default void visitBody(int access, int thisClass, int superClass) {}
 
@@ -79,21 +75,13 @@ public interface ClassVisitor extends EmptyAttributeVisitor {
      * Visits the fields of the JavaClass.
      *
      * @param field
-     *
-     * @throws IOException if an error occurs while reading the JavaClass.
      */
-    default AttributeVisitor visitField(FieldMethodInfo field) {
-        throw new UnsupportedOperationException();
-    }
+    AttributeVisitor visitField(FieldMethodInfo field);
 
     /**
      * Visits the methods of the JavaClass.
      *
      * @param method
-     *
-     * @throws IOException if an error occurs while reading the JavaClass.
      */
-    default AttributeVisitor visitMethod(FieldMethodInfo method) {
-        throw new UnsupportedOperationException();
-    }
+    AttributeVisitor visitMethod(FieldMethodInfo method);
 }

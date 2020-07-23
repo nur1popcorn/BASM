@@ -18,8 +18,19 @@
 
 package com.nur1popcorn.basm.classfile.attributes;
 
+/**
+ * The {@link AttributeLocalVariableTable} stores
+ * <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.13">
+ *     4.7.13. The LocalVariableTable Attribute
+ * </a>
+ *
+ * @see LocalVariableTableEntry
+ *
+ * @author Ben Kinney
+ * @since 1.1.0-alpha
+ */
 public class AttributeLocalVariableTable extends AttributeInfo {
-
+    
 
     /**
      * @param nameIndex The index of the CONSTANT_UTF8 which identifies the type of {@link AttributeInfo}.
@@ -31,6 +42,6 @@ public class AttributeLocalVariableTable extends AttributeInfo {
 
     @Override
     public void accept(AttributeVisitor v) {
-
+        v.visit(this);
     }
 }
