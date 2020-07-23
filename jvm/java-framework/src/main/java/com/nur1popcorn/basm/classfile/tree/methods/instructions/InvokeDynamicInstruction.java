@@ -54,8 +54,7 @@ public final class InvokeDynamicInstruction extends CPInstruction<ConstantInvoke
         );
     }
 
-    public ConstantInvokeDynamic getConstant()
-    {
+    public ConstantInvokeDynamic getConstant() {
         return info;
     }
 

@@ -8,7 +8,6 @@ package com.nur1popcorn.basm.classfile.attributes;
  * @author Ben Kinney
  * @since 1.1.0-alpha
  */
-public final class LocalVariableTableEntry
-{
+public final class LocalVariableTableEntry {
 
 }
