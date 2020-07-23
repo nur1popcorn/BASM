@@ -85,4 +85,9 @@ public abstract class AttributeVisitorDecorator implements AttributeVisitor {
     public void visit(AttributeLocalVariableTable attribute) {
         parent.visit(attribute);
     }
+
+    @Override
+    public void visit(AttributeLocalVariableTypeTable attribute) {
+        parent.visit(attribute);
+    }
 }

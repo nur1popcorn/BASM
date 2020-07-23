@@ -33,4 +33,7 @@ public interface EmptyAttributeVisitor extends AttributeVisitor {
 
     @Override
     default void visit(AttributeLocalVariableTable attribute) {}
+
+    @Override
+    default void visit(AttributeLocalVariableTypeTable attribute) {}
 }

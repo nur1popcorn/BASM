@@ -40,4 +40,6 @@ public interface AttributeVisitor {
     void visit(AttributeMethodParameters attribute);
 
     void visit(AttributeLocalVariableTable attribute);
+
+    void visit(AttributeLocalVariableTypeTable attribute);
 }
