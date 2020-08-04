@@ -30,16 +30,16 @@ import static com.nur1popcorn.basm.Constants.*;
 /**
  * The {@link ConstantInfo} class is the abstract super class which all constant pool entries base their
  * implementation on. The class mostly consists of two things: A tag, which is used to identify the
- * type of 'CONSTANT_Info' and a set of pointers, which denotes any kind of {@link IConstantPoolPointer}
+ * type of 'CONSTANT_Info' and a set of pointers, which denotes any kind of {@link ConstantPoolPointer}
  * pointing at this specific constant. The implementation closely follows this part of the JVM ClassFile document:
  * <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4">
  *     CONSTANT_Info 4.4
  * </a>
  *
- * @see IConstantPoolPointer
- * @see IConstantVisitor
+ * @see ConstantPoolPointer
+ * @see ConstantVisitor
  *
- * @see #accept(IConstantVisitor)
+ * @see #accept(ConstantVisitor)
  *
  * @see #read(DataInputStream)
  * @see #write(DataOutputStream)
@@ -51,7 +51,7 @@ public abstract class ConstantInfo {
     /* This set denotes the various pointers pointing to this constant and may be modified using the various
      * 'xxxPointer()' methods.
      */
-    private Set<IConstantPoolPointer> pointers;
+    private Set<ConstantPoolPointer> pointers;
 
     /* This tag denotes the type of 'CONSTANT_Info'.
      * The tag may be useful to index various tables such as the
@@ -89,12 +89,12 @@ public abstract class ConstantInfo {
     }
 
     /**
-     * Accepts a {@link IConstantVisitor}, calls the for the 'CONSTANT_Info' appropriate 'visitXXX()'
+     * Accepts a {@link ConstantVisitor}, calls the for the 'CONSTANT_Info' appropriate 'visitXXX()'
      * methods to notify the visitor of what type of 'CONSTANT_Info' is being entered.
      *
-     * @param visitor The {@link IConstantVisitor} whom's callbacks will be invoked.
+     * @param visitor The {@link ConstantVisitor} whom's callbacks will be invoked.
      */
-    public abstract void accept(IConstantVisitor visitor);
+    public abstract void accept(ConstantVisitor visitor);
 
     /**
      * @return A tag that denotes the type of 'CONSTANT_Info'.
@@ -108,7 +108,7 @@ public abstract class ConstantInfo {
      *
      * @param pointer The pointer, which should be removed from the set of pointers.
      */
-    public final void removePointer(IConstantPoolPointer pointer) {
+    public final void removePointer(ConstantPoolPointer pointer) {
         pointers.remove(pointer);
     }
 
@@ -117,7 +117,7 @@ public abstract class ConstantInfo {
      *
      * @param pointer The pointer, which should be added to the set of pointers.
      */
-    public final void addPointer(IConstantPoolPointer pointer) {
+    public final void addPointer(ConstantPoolPointer pointer) {
         if(pointers == null)
             pointers = new WeakHashSet<>();
         pointers.add(pointer);
@@ -134,10 +134,10 @@ public abstract class ConstantInfo {
     /**
      * @return An array of pointers.
      */
-    public final IConstantPoolPointer[] getPointers() {
+    public final ConstantPoolPointer[] getPointers() {
         if(pointers == null)
-            return new IConstantPoolPointer[0];
-        final IConstantPoolPointer arr[] = new IConstantPoolPointer[pointers.size()];
+            return new ConstantPoolPointer[0];
+        final ConstantPoolPointer arr[] = new ConstantPoolPointer[pointers.size()];
         pointers.toArray(arr);
         return arr;
     }

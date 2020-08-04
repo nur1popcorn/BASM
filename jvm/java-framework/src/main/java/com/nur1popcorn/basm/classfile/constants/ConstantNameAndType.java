@@ -40,7 +40,8 @@ import static com.nur1popcorn.basm.Constants.CONSTANT_UTF8;
  * @author nur1popcorn
  * @since 1.0.0-alpha
  */
-public final class ConstantNameAndType extends ConstantInfo implements IConstantPoolPointer {
+public final class ConstantNameAndType extends ConstantInfo implements ConstantPoolPointer
+{
     /*
      *
      */
@@ -77,7 +78,7 @@ public final class ConstantNameAndType extends ConstantInfo implements IConstant
      * {@inheritDoc}
      */
     @Override
-    public void accept(IConstantVisitor visitor) {
+    public void accept(ConstantVisitor visitor) {
         visitor.visitCPPointer(this);
         visitor.visitNameAndType(this);
     }
@@ -127,6 +128,22 @@ public final class ConstantNameAndType extends ConstantInfo implements IConstant
      */
     public int getDescIndex() {
         return descIndex;
+    }
+
+    /**
+     * Set the constant pool index to the {@link ConstantUTF8} which represents the name.
+     * @param nameIndex The index.
+     */
+    public void setNameIndex(int nameIndex) {
+        this.nameIndex = nameIndex;
+    }
+
+    /**
+     * Set the constant pool index to the {@link ConstantUTF8} which represents the descriptor.
+     * @param descIndex The index.
+     */
+    public void setDescIndex(int descIndex) {
+        this.descIndex = descIndex;
     }
 
     /**

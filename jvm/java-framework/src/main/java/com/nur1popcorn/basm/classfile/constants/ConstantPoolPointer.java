@@ -20,7 +20,8 @@ package com.nur1popcorn.basm.classfile.constants;
 
 import com.nur1popcorn.basm.classfile.ConstantPool;
 
-public interface IConstantPoolPointer {
+public interface ConstantPoolPointer
+{
     void attach(ConstantPool constantPool);
     void dispose(ConstantPool constantPool);
     void update(int oldIndex, int newIndex);

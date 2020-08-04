@@ -3,8 +3,8 @@ package com.nur1popcorn.basm.util.classfile;
 import com.nur1popcorn.basm.classfile.*;
 import com.nur1popcorn.basm.classfile.attributes.*;
 import com.nur1popcorn.basm.classfile.constants.ConstantInfo;
-import com.nur1popcorn.basm.classfile.constants.IConstantPoolPointer;
-import com.nur1popcorn.basm.classfile.constants.IConstantVisitor;
+import com.nur1popcorn.basm.classfile.constants.ConstantPoolPointer;
+import com.nur1popcorn.basm.classfile.constants.ConstantVisitor;
 import com.nur1popcorn.basm.classfile.tree.Type;
 import com.nur1popcorn.basm.classfile.tree.methods.InstructionList;
 import org.junit.Test;
@@ -25,10 +25,10 @@ import static org.junit.Assert.assertTrue;
 public final class ReadTest {
     /* A set of classes which should be compared. */
     private static final Class<?> CLASSES[] =
-        { ReadTest.class, ConstantPool.class, ClassReader.class, Opcode.class,
-          AttributeInfo.class, ConstantInfo.class, AccessFlags.class, Type.class,
-          InstructionList.class, ClassWriter.class, AttributeCode.class, AttributeStackMapTable.class,
-          ClassVisitor.class, AttributeVisitor.class, IConstantPoolPointer.class, IConstantVisitor.class };
+        {ReadTest.class, ConstantPool.class, ClassReader.class, Opcode.class,
+         AttributeInfo.class, ConstantInfo.class, AccessFlags.class, Type.class,
+         InstructionList.class, ClassWriter.class, AttributeCode.class, AttributeStackMapTable.class,
+         ClassVisitor.class, AttributeVisitor.class, ConstantPoolPointer.class, ConstantVisitor.class };
 
     @Test
     public void testBasic() throws IOException {

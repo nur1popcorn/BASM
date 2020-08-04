@@ -43,7 +43,8 @@ import static com.nur1popcorn.basm.Constants.CONSTANT_NAME_AND_TYPE;
  * @author nur1popcorn
  * @since 1.0.0-alpha
  */
-public final class ConstantMethodRef extends ConstantInfo implements IConstantPoolPointer{
+public final class ConstantMethodRef extends ConstantInfo implements ConstantPoolPointer
+{
     /*
      *
      */
@@ -81,7 +82,7 @@ public final class ConstantMethodRef extends ConstantInfo implements IConstantPo
      * {@inheritDoc}
      */
     @Override
-    public void accept(IConstantVisitor visitor) {
+    public void accept(ConstantVisitor visitor) {
         visitor.visitCPPointer(this);
         visitor.visitMethodRef(this);
     }
@@ -131,6 +132,22 @@ public final class ConstantMethodRef extends ConstantInfo implements IConstantPo
      */
     public int getNameAndTypeIndex() {
         return nameAndTypeIndex;
+    }
+
+    /**
+     * Set the constant pool index to the class the method/field is located inside.
+     * @param classIndex The index.
+     */
+    public void setClassIndex(int classIndex) {
+        this.classIndex = classIndex;
+    }
+
+    /**
+     * Set the constant pool index to the name and type of the method/field.
+     * @param nameAndTypeIndex The index.
+     */
+    public void setNameAndTypeIndex(int nameAndTypeIndex) {
+        this.nameAndTypeIndex = nameAndTypeIndex;
     }
 
     /**

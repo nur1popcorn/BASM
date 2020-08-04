@@ -18,7 +18,8 @@
 
 package com.nur1popcorn.basm.classfile.constants;
 
-public interface IConstantVisitor {
+public interface ConstantVisitor
+{
     default void visitInt(ConstantInteger info) {}
     default void visitFloat(ConstantInteger info) {}
     default void visitInvokeDynamic(ConstantInvokeDynamic info) {}
@@ -35,5 +36,5 @@ public interface IConstantVisitor {
     default void visitModule(ConstantName info) {}
     default void visitPackage(ConstantName info) {}
 
-    default void visitCPPointer(IConstantPoolPointer pointer) {}
+    default void visitCPPointer(ConstantPoolPointer pointer) {}
 }

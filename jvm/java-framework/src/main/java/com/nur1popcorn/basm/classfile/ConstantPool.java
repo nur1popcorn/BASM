@@ -19,8 +19,8 @@
 package com.nur1popcorn.basm.classfile;
 
 import com.nur1popcorn.basm.classfile.constants.ConstantInfo;
-import com.nur1popcorn.basm.classfile.constants.IConstantPoolPointer;
-import com.nur1popcorn.basm.classfile.constants.IConstantVisitor;
+import com.nur1popcorn.basm.classfile.constants.ConstantPoolPointer;
+import com.nur1popcorn.basm.classfile.constants.ConstantVisitor;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -52,13 +52,13 @@ import static com.nur1popcorn.basm.Constants.CONSTANT_LONG;
  * </ul>
  *
  * @see ConstantInfo
- * @see IConstantVisitor
+ * @see ConstantVisitor
  * @see ClassReader
  *
  * @see #read(DataInputStream)
  * @see #write(DataOutputStream)
  *
- * @see #accept(IConstantVisitor)
+ * @see #accept(ConstantVisitor)
  *
  * @author nur1popcorn
  * @since 1.0.0-alpha
@@ -106,8 +106,8 @@ public class ConstantPool implements Iterable<ConstantInfo> {
 
         for(int i = 1 /* the cp's size is 1 less than given */; i < cpSize; i++) {
             final ConstantInfo info = cpEntries[i];
-            if(info instanceof IConstantPoolPointer)
-                ((IConstantPoolPointer) info)
+            if(info instanceof ConstantPoolPointer)
+                ((ConstantPoolPointer) info)
                     .attach(this);
             // longs and doubles take up 2 spaces in the constant pool.
             final int tag = info.getTag();
@@ -140,13 +140,13 @@ public class ConstantPool implements Iterable<ConstantInfo> {
     }
 
     /**
-     * Accepts a {@link IConstantVisitor}, transverses the {@link ConstantPool} and calls the
+     * Accepts a {@link ConstantVisitor}, transverses the {@link ConstantPool} and calls the
      * for the 'CONSTANT_Info' appropriate 'visitXXX()' methods to notify the visitor of
      * what type of 'CONSTANT_Info' is being entered.
      *
-     * @param visitor The {@link IConstantVisitor} whose callbacks will be invoked.
+     * @param visitor The {@link ConstantVisitor} whose callbacks will be invoked.
      */
-    public final void accept(IConstantVisitor visitor) {
+    public final void accept(ConstantVisitor visitor) {
         for(int i = 1 /* the cp's size is 1 less than given */; i < cpEntries.length; i++) {
             final ConstantInfo info = cpEntries[i];
             info.accept(visitor);

@@ -69,6 +69,7 @@ public final class AttributeLocalVariableTypeTable extends AttributeInfo {
      */
     public void setEntries(LocalVariableTypeTableEntry[] entries) {
         this.entries = entries;
+        setAttributeLength(10 * entries.length);
     }
 
     @Override

@@ -71,7 +71,7 @@ public final class ConstantLong extends ConstantInfo {
      * {@inheritDoc}
      */
     @Override
-    public void accept(IConstantVisitor visitor) {
+    public void accept(ConstantVisitor visitor) {
         switch(getTag()) {
             case CONSTANT_LONG: visitor.visitLong(this); break;
             case CONSTANT_DOUBLE: visitor.visitDouble(this); break;

@@ -48,7 +48,8 @@ import static com.nur1popcorn.basm.Constants.*;
  * @author nur1popcorn
  * @since 1.0.0-alpha
  */
-public final class ConstantName extends ConstantInfo implements IConstantPoolPointer {
+public final class ConstantName extends ConstantInfo implements ConstantPoolPointer
+{
     /*
      *
      */
@@ -88,7 +89,7 @@ public final class ConstantName extends ConstantInfo implements IConstantPoolPoi
      * {@inheritDoc}
      */
     @Override
-    public void accept(IConstantVisitor visitor) {
+    public void accept(ConstantVisitor visitor) {
         visitor.visitCPPointer(this);
         switch(getTag()) {
             case CONSTANT_CLASS: visitor.visitClass(this); break;
@@ -130,6 +131,14 @@ public final class ConstantName extends ConstantInfo implements IConstantPoolPoi
      */
     public int getNameIndex() {
         return nameIndex;
+    }
+
+    /**
+     * Set the index in the constant pool to the utf8 structure that represents the name.
+     * @param nameIndex The index.
+     */
+    public void setNameIndex(int nameIndex) {
+        this.nameIndex = nameIndex;
     }
 
     /**

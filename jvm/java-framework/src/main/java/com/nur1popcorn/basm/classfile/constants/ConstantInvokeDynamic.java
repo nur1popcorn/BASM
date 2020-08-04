@@ -45,7 +45,8 @@ import static com.nur1popcorn.basm.Constants.CONSTANT_NAME_AND_TYPE;
  * @author nur1popcorn
  * @since 1.0.0-alpha
  */
-public final class ConstantInvokeDynamic extends ConstantInfo implements IConstantPoolPointer {
+public final class ConstantInvokeDynamic extends ConstantInfo implements ConstantPoolPointer
+{
     /* The value of the 'bootstrapMethodAttrIndex' references an index into the bootstrap methods
      * attribute array.
      *
@@ -86,7 +87,7 @@ public final class ConstantInvokeDynamic extends ConstantInfo implements IConsta
      * {@inheritDoc}
      */
     @Override
-    public void accept(IConstantVisitor visitor) {
+    public void accept(ConstantVisitor visitor) {
         visitor.visitCPPointer(this);
         if(getTag() == CONSTANT_INVOKEDYNAMIC)
             visitor.visitInvokeDynamic(this);
@@ -132,6 +133,22 @@ public final class ConstantInvokeDynamic extends ConstantInfo implements IConsta
      */
     public int getNameAndTypeIndex() {
         return nameAndTypeIndex;
+    }
+
+    /**
+     * Set the bootstrap method attribute entry index used for the name and type of the {@link ConstantInvokeDynamic}.
+     * @param bootstrapMethodAttrIndex The index.
+     */
+    public void setBootstrapMethodAttrIndex(int bootstrapMethodAttrIndex) {
+        this.bootstrapMethodAttrIndex = bootstrapMethodAttrIndex;
+    }
+
+    /**
+     * Set the constant pool index used for the name and type of the {@link ConstantInvokeDynamic}.
+     * @param nameAndTypeIndex The index.
+     */
+    public void setNameAndTypeIndex(int nameAndTypeIndex) {
+        this.nameAndTypeIndex = nameAndTypeIndex;
     }
 
     /**

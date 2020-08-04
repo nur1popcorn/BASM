@@ -107,8 +107,8 @@ public final class ConstantPoolGenerator extends ConstantPool {
             );
         int realIndex = index;
         cpEntries[index++] = info;
-        if(info instanceof IConstantPoolPointer)
-            ((IConstantPoolPointer) info)
+        if(info instanceof ConstantPoolPointer)
+            ((ConstantPoolPointer) info)
                 .attach(this);
         // longs and doubles take up 2 spaces in the constant pool.
         final int tag = info.getTag();
@@ -122,8 +122,8 @@ public final class ConstantPoolGenerator extends ConstantPool {
         for(int i = index + 1; i < cpEntries.length; i++) {
             final ConstantInfo info = cpEntries[i];
             if(info != null) {
-                final IConstantPoolPointer pointers[] = info.getPointers();
-                for(IConstantPoolPointer pointer : pointers) {
+                final ConstantPoolPointer pointers[] = info.getPointers();
+                for(ConstantPoolPointer pointer : pointers) {
                     pointer.update(i, i - 1);
                 }
             }
@@ -199,7 +199,7 @@ public final class ConstantPoolGenerator extends ConstantPool {
         }
         removeSafe(index);
 
-        final IConstantPoolPointer pointers[] = old.getPointers();
+        final ConstantPoolPointer pointers[] = old.getPointers();
         if(pointers.length != 0)
             throw new ConstantLostException(pointers);
     }

@@ -74,7 +74,7 @@ public final class ConstantInteger extends ConstantInfo {
      * {@inheritDoc}
      */
     @Override
-    public void accept(IConstantVisitor visitor) {
+    public void accept(ConstantVisitor visitor) {
         switch(getTag()) {
             case CONSTANT_INTEGER: visitor.visitInt(this); break;
             case CONSTANT_FLOAT: visitor.visitFloat(this); break;

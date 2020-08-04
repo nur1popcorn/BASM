@@ -19,13 +19,13 @@
 package com.nur1popcorn.basm.classfile.tree.methods.instructions;
 
 import com.nur1popcorn.basm.classfile.constants.ConstantInfo;
-import com.nur1popcorn.basm.classfile.constants.IConstantPoolPointer;
+import com.nur1popcorn.basm.classfile.constants.ConstantPoolPointer;
 
 public interface IInstructionVisitor {
     default void visitNoParameterInstruction(NoParameterInstruction instruction) {}
     default void visitPushInstruction(PushInstruction instruction) {}
 
-    default void visitCPPointer(IConstantPoolPointer pointer) {}
+    default void visitCPPointer(ConstantPoolPointer pointer) {}
     default <T extends ConstantInfo> void visitCPInstruction(CPInstruction<T> instruction) {}
     default void visitLDCInstruction(LDCInstruction instruction) {}
 
