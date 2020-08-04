@@ -45,8 +45,7 @@ import static com.nur1popcorn.basm.Constants.CONSTANT_NAME_AND_TYPE;
  * @author nur1popcorn
  * @since 1.0.0-alpha
  */
-public final class ConstantInvokeDynamic extends ConstantInfo implements ConstantPoolPointer
-{
+public final class ConstantInvokeDynamic extends ConstantInfo implements ConstantPoolPointer {
     /* The value of the 'bootstrapMethodAttrIndex' references an index into the bootstrap methods
      * attribute array.
      *

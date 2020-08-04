@@ -25,7 +25,7 @@ import static org.junit.Assert.assertTrue;
 public final class ReadTest {
     /* A set of classes which should be compared. */
     private static final Class<?> CLASSES[] =
-        {ReadTest.class, ConstantPool.class, ClassReader.class, Opcode.class,
+       { ReadTest.class, ConstantPool.class, ClassReader.class, Opcode.class,
          AttributeInfo.class, ConstantInfo.class, AccessFlags.class, Type.class,
          InstructionList.class, ClassWriter.class, AttributeCode.class, AttributeStackMapTable.class,
          ClassVisitor.class, AttributeVisitor.class, ConstantPoolPointer.class, ConstantVisitor.class };

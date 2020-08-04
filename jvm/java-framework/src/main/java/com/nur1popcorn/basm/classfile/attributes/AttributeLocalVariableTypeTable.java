@@ -47,8 +47,7 @@ public final class AttributeLocalVariableTypeTable extends AttributeInfo {
     }
 
     @Override
-    public void write(DataOutputStream os, ConstantPool cp) throws IOException
-    {
+    public void write(DataOutputStream os, ConstantPool cp) throws IOException {
         super.write(os, cp);
         os.writeShort(entries.length);
         for(LocalVariableTypeTableEntry entry : entries)

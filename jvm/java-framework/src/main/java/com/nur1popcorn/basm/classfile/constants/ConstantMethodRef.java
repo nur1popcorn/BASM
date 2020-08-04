@@ -43,8 +43,7 @@ import static com.nur1popcorn.basm.Constants.CONSTANT_NAME_AND_TYPE;
  * @author nur1popcorn
  * @since 1.0.0-alpha
  */
-public final class ConstantMethodRef extends ConstantInfo implements ConstantPoolPointer
-{
+public final class ConstantMethodRef extends ConstantInfo implements ConstantPoolPointer {
     /*
      *
      */

@@ -40,8 +40,7 @@ import static com.nur1popcorn.basm.Constants.CONSTANT_UTF8;
  * @author nur1popcorn
  * @since 1.0.0-alpha
  */
-public final class ConstantNameAndType extends ConstantInfo implements ConstantPoolPointer
-{
+public final class ConstantNameAndType extends ConstantInfo implements ConstantPoolPointer {
     /*
      *
      */

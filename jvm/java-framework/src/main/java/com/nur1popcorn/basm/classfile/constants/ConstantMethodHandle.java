@@ -39,8 +39,7 @@ import static com.nur1popcorn.basm.Constants.*;
  * @author nur1popcorn
  * @since 1.0.0-alpha
  */
-public final class ConstantMethodHandle extends ConstantInfo implements ConstantPoolPointer
-{
+public final class ConstantMethodHandle extends ConstantInfo implements ConstantPoolPointer {
     /*
      *
      */

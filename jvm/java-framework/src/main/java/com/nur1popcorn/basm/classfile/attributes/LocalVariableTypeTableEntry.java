@@ -16,7 +16,7 @@ import java.util.Objects;
  * @author Ben Kinney
  * @since 1.1.0-alpha
  */
-public class LocalVariableTypeTableEntry {
+public final class LocalVariableTypeTableEntry {
     /* The index in the code array where the variable starts
      */
     private int startPc, /* u2 */
