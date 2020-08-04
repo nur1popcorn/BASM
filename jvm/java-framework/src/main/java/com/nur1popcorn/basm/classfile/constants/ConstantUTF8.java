@@ -111,7 +111,7 @@ public final class ConstantUTF8 extends ConstantInfo {
      * {@inheritDoc}
      */
     @Override
-    public void accept(IConstantVisitor visitor) {
+    public void accept(ConstantVisitor visitor) {
         visitor.visitUTF8(this);
     }
 

@@ -1,15 +1,15 @@
 package com.nur1popcorn.basm.classfile.tree;
 
-import com.nur1popcorn.basm.classfile.constants.IConstantPoolPointer;
+import com.nur1popcorn.basm.classfile.constants.ConstantPoolPointer;
 
 public class ConstantLostException extends Exception {
-    private IConstantPoolPointer pointers[];
+    private ConstantPoolPointer pointers[];
 
-    public ConstantLostException(IConstantPoolPointer pointers[]) {
+    public ConstantLostException(ConstantPoolPointer pointers[]) {
         this.pointers = pointers;
     }
 
-    public IConstantPoolPointer[] getPointers() {
+    public ConstantPoolPointer[] getPointers() {
         return pointers;
     }
 }

@@ -39,11 +39,11 @@ import static com.nur1popcorn.basm.Constants.*;
  * @author nur1popcorn
  * @since 1.0.0-alpha
  */
-public final class ConstantMethodHandle extends ConstantInfo implements IConstantPoolPointer {
+public final class ConstantMethodHandle extends ConstantInfo implements ConstantPoolPointer {
     /*
      *
      */
-    private final byte refKind /* u1 */;
+    private byte refKind /* u1 */;
 
     /*
      *
@@ -77,7 +77,7 @@ public final class ConstantMethodHandle extends ConstantInfo implements IConstan
      * {@inheritDoc}
      */
     @Override
-    public void accept(IConstantVisitor visitor) {
+    public void accept(ConstantVisitor visitor) {
         visitor.visitCPPointer(this);
         visitor.visitMethodHandle(this);
     }
@@ -120,6 +120,33 @@ public final class ConstantMethodHandle extends ConstantInfo implements IConstan
      */
     public int getRefIndex() {
         return refIndex;
+    }
+
+    /**
+     * Set the type of method handle.
+     *
+     * @see com.nur1popcorn.basm.Constants#REF_GETFIELD
+     * @see com.nur1popcorn.basm.Constants#REF_GETSTATIC
+     * @see com.nur1popcorn.basm.Constants#REF_PUTFIELD
+     * @see com.nur1popcorn.basm.Constants#REF_PUTSTATIC
+     * @see com.nur1popcorn.basm.Constants#REF_INVOKEVIRTUAL
+     * @see com.nur1popcorn.basm.Constants#REF_INVOKESTATIC
+     * @see com.nur1popcorn.basm.Constants#REF_INVOKESPECIAL
+     * @see com.nur1popcorn.basm.Constants#REF_NEWINVOKESPECIAL
+     * @see com.nur1popcorn.basm.Constants#REF_INVOKEINTERFACE
+     *
+     * @param refKind The kind.
+     */
+    public void setRefKind(byte refKind) {
+        this.refKind = refKind;
+    }
+
+    /**
+     * Set the constant pool index to the field/method reference.
+     * @param refIndex The index.
+     */
+    public void setRefIndex(int refIndex) {
+        this.refIndex = refIndex;
     }
 
     /**

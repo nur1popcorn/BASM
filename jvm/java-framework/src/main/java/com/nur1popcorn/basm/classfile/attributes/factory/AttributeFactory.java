@@ -51,6 +51,8 @@ public final class AttributeFactory {
         "LineNumberTable", new LineNumberTableFactory(),
         /* https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.13 */
         "LocalVariableTable", new LocalVariableTableFactory(),
+        /* https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.14 */
+        "LocalVariableTypeTable", new LocalVariableTypeTableFactory(),
         /* https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.15 */
         "Deprecated", new DeprecatedFactory(),
         /* https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.23 */

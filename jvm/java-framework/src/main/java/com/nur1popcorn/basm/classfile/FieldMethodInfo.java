@@ -20,7 +20,7 @@ package com.nur1popcorn.basm.classfile;
 
 import com.nur1popcorn.basm.classfile.attributes.*;
 import com.nur1popcorn.basm.classfile.constants.ConstantUTF8;
-import com.nur1popcorn.basm.classfile.constants.IConstantPoolPointer;
+import com.nur1popcorn.basm.classfile.constants.ConstantPoolPointer;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -29,7 +29,7 @@ import java.util.List;
 
 import static com.nur1popcorn.basm.Constants.CONSTANT_UTF8;
 
-public final class FieldMethodInfo extends AccessFlags implements IConstantPoolPointer, AttributeVisitor {
+public final class FieldMethodInfo extends AccessFlags implements ConstantPoolPointer, AttributeVisitor {
     /*
      *
      */
@@ -121,6 +121,11 @@ public final class FieldMethodInfo extends AccessFlags implements IConstantPoolP
         attributes.add(attribute);
     }
 
+    @Override
+    public void visit(AttributeLocalVariableTypeTable attribute) {
+        attributes.add(attribute);
+    }
+
     /**
      * @return
      */
@@ -133,6 +138,22 @@ public final class FieldMethodInfo extends AccessFlags implements IConstantPoolP
      */
     public int getDescIndex() {
         return descIndex;
+    }
+
+    /**
+     * Sets the constant pool index of the name for the {@link FieldMethodInfo}.
+     * @param index The index.
+     */
+    public void setNameIndex(int index) {
+        nameIndex = index;
+    }
+
+    /**
+     * Sets the constant pool index of the desc for the {@link FieldMethodInfo}.
+     * @param index The index.
+     */
+    public void setDescIndex(int index) {
+        descIndex = index;
     }
 
     /**
